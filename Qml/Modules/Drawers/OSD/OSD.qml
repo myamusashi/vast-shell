@@ -33,6 +33,11 @@ Item {
         return totalHeight > 0 ? totalHeight + (padding * 2) : 0;
     }
 
+    anchors {
+        horizontalCenter: parent.horizontalCenter
+        verticalCenter: parent.verticalCenter
+    }
+
     implicitHeight: calculateHeight()
     implicitWidth: parent.width * 0.15
     visible: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) // qmllint disable
@@ -41,11 +46,6 @@ Item {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
         }
-    }
-
-    anchors {
-        horizontalCenter: parent.horizontalCenter
-        verticalCenter: parent.verticalCenter
     }
 
     StyledRect {

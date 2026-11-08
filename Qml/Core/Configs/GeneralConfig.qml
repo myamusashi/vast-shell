@@ -9,6 +9,7 @@ JsonObject {
     property int     coverBlurRadius: 16
     property bool    enableOuterBorder: false
     property bool    followFocusMonitor: true
+    property int     osdTimer: 1500
     property int     outerBorderSize: 10
     property bool    showHolidays: true
     property bool    transparent: false

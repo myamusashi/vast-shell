@@ -3,11 +3,13 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 
+import qs.Core.Configs
+
 Scope {
     id: root
 
     readonly property bool anyVisible: Object.keys(activeOSDs).some(k => activeOSDs[k] === true)
-    readonly property int  displayDuration: 5000
+    readonly property int  displayDuration: Configs.generals.osdTimer
     readonly property var  timers: ({
             "volume": volumeTimer,
             "capslock": capslockTimer,

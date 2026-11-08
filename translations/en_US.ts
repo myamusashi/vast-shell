@@ -4,7 +4,7 @@
 <context>
     <name>AQI</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/AQI.qml" line="46"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/AQI.qml" line="48"/>
         <source>AQI</source>
         <translation type="unfinished"></translation>
     </message>
@@ -19,22 +19,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="165"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="174"/>
         <source>United States AQI:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="169"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="174"/>
         <source>European AQi:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="223"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="210"/>
         <source>United States AQI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="223"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/AQI.qml" line="210"/>
         <source>European AQI</source>
         <translation type="unfinished"></translation>
     </message>
@@ -194,162 +194,162 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="120"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="119"/>
         <source>Material Scheme:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="119"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="118"/>
         <source>Material You color scheme variant for palette generation.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="138"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="137"/>
         <source>Typography System</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="145"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="144"/>
         <source>Sans Serif Font:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="144"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="143"/>
         <source>Primary font for UI text and labels.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="156"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="155"/>
         <source>Monospace Font:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="155"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="154"/>
         <source>Font for code and monospaced text.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="167"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="166"/>
         <source>Nerd Font:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="166"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="165"/>
         <source>Nerd font used for icon or font text.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="178"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="177"/>
         <source>Font Size Scale:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="177"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="176"/>
         <source>Global multiplier for all font sizes.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="200"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="199"/>
         <source>Icons</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="203"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="202"/>
         <source>Icon font used across the shell. Both sets ship with the shell; only the selected one is loaded.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="204"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="203"/>
         <source>Icon Set:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="237"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="236"/>
         <source>Rendering with &quot;%1&quot;%2%3.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="237"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="236"/>
         <source> (registered)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="237"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="236"/>
         <source> (system font)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="237"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="236"/>
         <source> Font file not found.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="265"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="264"/>
         <source>Shapes &amp; Layout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="272"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="271"/>
         <source>UI Corner Roundness (Normal):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="271"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="270"/>
         <source>Corner radius.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="286"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="285"/>
         <source>Element Spacing (Normal):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="285"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="284"/>
         <source>Default spacing between UI elements.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="300"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="299"/>
         <source>Padding (Normal):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="299"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="298"/>
         <source>Inner padding.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="314"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="313"/>
         <source>Margin (Normal):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="313"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="312"/>
         <source>Outer margin.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="329"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="328"/>
         <source>Motion &amp; Animation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="333"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="332"/>
         <source>Animation Durations Scale:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="332"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="331"/>
         <source>Multiplier for all animation durations. Higher is slower.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="431"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="392"/>
         <source>Search font...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="500"/>
+        <location filename="../Qml/Modules/Settings/Pages/AppearancePage.qml" line="463"/>
         <source>System default</source>
         <translation type="unfinished"></translation>
     </message>
@@ -357,17 +357,17 @@
 <context>
     <name>AppsInfo</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/AppsInfo.qml" line="12"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/AppsInfo.qml" line="32"/>
         <source>Installed apps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/AppsInfo.qml" line="29"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/AppsInfo.qml" line="46"/>
         <source>Graphic User Interfaces</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/AppsInfo.qml" line="33"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/AppsInfo.qml" line="46"/>
         <source>Terminal User Interfaces</source>
         <translation type="unfinished"></translation>
     </message>
@@ -505,7 +505,7 @@
 <context>
     <name>BatteryInfo</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="11"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="70"/>
         <source>Battery</source>
         <translation type="unfinished"></translation>
     </message>
@@ -515,52 +515,52 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="21"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="19"/>
         <source>Temperature</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="25"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="21"/>
         <source>Status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="26"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="48"/>
         <source>Charging</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="26"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="48"/>
         <source>Discharging</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="29"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="23"/>
         <source>Technology</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="33"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="25"/>
         <source>Overall Health</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="37"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="27"/>
         <source>Voltage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="43"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="34"/>
         <source>%1 - Design Capacity</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="47"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="36"/>
         <source>%1 - Current Capacity</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="51"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/BatteryInfo.qml" line="37"/>
         <source>%1 - Health</source>
         <translation type="unfinished"></translation>
     </message>
@@ -664,103 +664,104 @@
 <context>
     <name>BluetoothPage</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="18"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="19"/>
         <source>Bluetooth</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="21"/>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="101"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="22"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="102"/>
         <source>Adapter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="27"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="28"/>
         <source>No Bluetooth adapter found. Ensure Bluetooth hardware is present and BlueZ is running.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="34"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="35"/>
         <source>Enable Bluetooth:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="33"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="34"/>
         <source>Turn the Bluetooth adapter on or off.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="48"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="49"/>
         <source>Discoverable:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="47"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="48"/>
         <source>Allow nearby devices to discover this machine.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="61"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="62"/>
         <source>Pairable:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="60"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="61"/>
         <source>Allow nearby devices to request pairing.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="76"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="77"/>
         <source>Adapter is blocked by rfkill. Unblock it with: rfkill unblock bluetooth</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="84"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="85"/>
         <source>Enabling…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="91"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="92"/>
         <source>Disabling…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="100"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="101"/>
         <source>Local Bluetooth adapter.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="123"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="124"/>
         <source>Address</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="122"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="123"/>
         <source>Bluetooth device address.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="138"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="139"/>
         <source>Paired devices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="149"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="150"/>
         <source>No paired devices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="189"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="177"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="194"/>
         <source>Available devices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="216"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="221"/>
         <source>No devices found — turn on scanning to discover nearby devices.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="225"/>
+        <location filename="../Qml/Modules/Settings/Pages/BluetoothPage.qml" line="230"/>
         <source>Searching for devices…</source>
         <translation type="unfinished"></translation>
     </message>
@@ -999,27 +1000,27 @@
 <context>
     <name>Clipboard</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="61"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="76"/>
         <source>Clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="56"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="71"/>
         <source>Delete this entry? This cannot be undone.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="57"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="72"/>
         <source>Delete %1 entries? This cannot be undone.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="60"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="75"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="59"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Clipboard.qml" line="74"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1063,7 +1064,7 @@
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="75"/>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="105"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="104"/>
         <source>Height:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1078,8 +1079,23 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="104"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="103"/>
         <source>The maximum of entries to saving clipboard (default: 300)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="119"/>
+        <source>Preview Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="123"/>
+        <source>Show a notice at the bottom when preview text is truncated (default: true)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="124"/>
+        <source>Show Truncated Notice:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1113,17 +1129,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="121"/>
-        <source>Preview Dimensions</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="125"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="136"/>
         <source>Width of the clipboard preview in pixels (default: 300)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="126"/>
+        <location filename="../Qml/Modules/Settings/Pages/ClipboardPage.qml" line="137"/>
         <source>Preview Width:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1255,18 +1266,18 @@
 <context>
     <name>Configs</name>
     <message>
-        <location filename="../Qml/Core/Configs/Configs.qml" line="49"/>
+        <location filename="../Qml/Core/Configs/Configs.qml" line="50"/>
         <source>Failed to read config files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Configs/Configs.qml" line="49"/>
-        <location filename="../Qml/Core/Configs/Configs.qml" line="55"/>
+        <location filename="../Qml/Core/Configs/Configs.qml" line="50"/>
+        <location filename="../Qml/Core/Configs/Configs.qml" line="56"/>
         <source>Configuration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Configs/Configs.qml" line="55"/>
+        <location filename="../Qml/Core/Configs/Configs.qml" line="56"/>
         <source>Failed to save config: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1328,35 +1339,35 @@
 <context>
     <name>Content</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="100"/>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="210"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="102"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="218"/>
         <source>entry</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="100"/>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="210"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="102"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="218"/>
         <source>entries</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="101"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="103"/>
         <source>Copied %1 %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="101"/>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="211"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="103"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="219"/>
         <source>Clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="211"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Content.qml" line="219"/>
         <source>Deleted %1 %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Notifications/Components/Content.qml" line="166"/>
+        <location filename="../Qml/Modules/Drawers/Notifications/Components/Content.qml" line="170"/>
         <source>Reply…</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1374,32 +1385,32 @@
 <context>
     <name>Delegate</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="32"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="34"/>
         <source>just now</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="34"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="36"/>
         <source>%1m ago</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="36"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="38"/>
         <source>%1h ago</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="143"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="142"/>
         <source>Image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="143"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="142"/>
         <source>Files (%1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="143"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Delegate.qml" line="142"/>
         <source>(empty)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1582,37 +1593,37 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>DiskInfo</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="49"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="14"/>
         <source>Storage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="58"/>
-        <source> GB used</source>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="23"/>
+        <source> GiB used</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="65"/>
-        <source> GB total</source>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="30"/>
+        <source> GiB total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="81"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="43"/>
         <source>Root</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="86"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="43"/>
         <source>Boot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="91"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="43"/>
         <source>Free</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="126"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DiskInfo.qml" line="78"/>
         <source>Internal storage</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1620,42 +1631,42 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>DisplayInfo</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="47"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="91"/>
         <source>Display</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="18"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="17"/>
         <source>Monitor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="19"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="18"/>
         <source>Description</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="24"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="23"/>
         <source>Resolution</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="29"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="28"/>
         <source>Scale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="34"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="33"/>
         <source>Refresh Rate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="39"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="38"/>
         <source>Color Management</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="54"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="56"/>
         <source>GPU</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1665,33 +1676,33 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="59"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="64"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="77"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="79"/>
         <source>Not available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="63"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="60"/>
         <source>OpenGL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="68"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="62"/>
         <source>vaAPI Driver</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="73"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="64"/>
         <source>OpenGL Renderer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="78"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="66"/>
         <source>OpenGL Vendor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="121"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/DisplayInfo.qml" line="139"/>
         <source>N/A</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1867,12 +1878,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>EntryGrid</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/EntryGrid.qml" line="229"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/EntryGrid.qml" line="253"/>
         <source>No results for </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/EntryGrid.qml" line="229"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/EntryGrid.qml" line="253"/>
         <source>Clipboard is empty</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1923,17 +1934,17 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>Events</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Dashboard/Events/Events.qml" line="62"/>
+        <location filename="../Qml/Modules/Drawers/Dashboard/Events/Events.qml" line="67"/>
         <source>Add todo…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Dashboard/Events/Events.qml" line="130"/>
+        <location filename="../Qml/Modules/Drawers/Dashboard/Events/Events.qml" line="141"/>
         <source>No events</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Dashboard/Events/Events.qml" line="185"/>
+        <location filename="../Qml/Modules/Drawers/Dashboard/Events/Events.qml" line="200"/>
         <source>Edit todo…</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1941,12 +1952,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>FileDialog</name>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/FileDialog.qml" line="267"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/FileDialog.qml" line="266"/>
         <source>Search files…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Components/Dialog/FileDialog/FileDialog.qml" line="338"/>
+        <location filename="../Qml/Components/Dialog/FileDialog/FileDialog.qml" line="336"/>
         <source>Preview</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2013,47 +2024,47 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>ForecastDaily</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="42"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="47"/>
         <source>Daily Forecast</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="131"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="135"/>
         <source>Today</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="133"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="23"/>
         <source>Sun</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="133"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="23"/>
         <source>Mon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="133"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="23"/>
         <source>Tue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="133"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="23"/>
         <source>Wed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="133"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="23"/>
         <source>Thu</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="133"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="23"/>
         <source>Fri</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="133"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastDaily.qml" line="23"/>
         <source>Sat</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2061,7 +2072,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>ForecastHourly</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastHourly.qml" line="47"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/ForecastHourly.qml" line="49"/>
         <source>Hourly forecast</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2172,32 +2183,32 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>GeneralConfig</name>
     <message>
-        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="29"/>
+        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="30"/>
         <source>Low battery</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="30"/>
+        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="31"/>
         <source>You might want to plug in a charger</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="35"/>
+        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="36"/>
         <source>Did you see the previous message?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="36"/>
+        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="37"/>
         <source>You should probably plug in a charger &lt;b&gt;now&lt;/b&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="41"/>
+        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="42"/>
         <source>Critical battery level</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="42"/>
+        <location filename="../Qml/Core/Configs/GeneralConfig.qml" line="43"/>
         <source>PLUG THE CHARGER RIGHT NOW!!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2205,132 +2216,142 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>GeneralPage</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="20"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="34"/>
         <source>General Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="23"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="37"/>
         <source>Window &amp; Focus</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="27"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="41"/>
         <source>Follow Focus Monitor:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="62"/>
-        <source>Enable Transparent Mode:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="72"/>
-        <source>Transparency Alpha:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="125"/>
-        <source>How much radius blur for album cover:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="47"/>
-        <source>Enable Outer Border:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="37"/>
-        <source>Show Holidays in Calendar:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="26"/>
-        <source>Automatically switch the active drawers to the monitor where cursor in.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="36"/>
-        <source>Display public holidays inside the calendar widget (NOTE: not every country).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="46"/>
-        <source>Draw an outer border around shell.</source>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="60"/>
+        <source>OSD Timer:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="61"/>
+        <source>How long does the OSD stay on screen</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="87"/>
+        <source>Enable Transparent Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="97"/>
+        <source>Transparency Alpha:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="148"/>
+        <source>How much radius blur for album cover:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="74"/>
+        <source>Enable Outer Border:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="51"/>
+        <source>Show Holidays in Calendar:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="40"/>
+        <source>Automatically switch the active drawers to the monitor where cursor in.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="50"/>
+        <source>Display public holidays inside the calendar widget (NOTE: not every country).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="73"/>
+        <source>Draw an outer border around shell.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="86"/>
         <source>Enable translucent shell.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="71"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="96"/>
         <source>Lower is more transparent.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="138"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="161"/>
         <source>Charging indicator spreads on the screen edge:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="137"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="160"/>
         <source>Thickness of the glowing edge indicator when charging detected.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="152"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="175"/>
         <source>Default Applications</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="161"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="184"/>
         <source>Terminal:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="160"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="183"/>
         <source>Default terminal emulator for opening shell commands.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="169"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="192"/>
         <source>File Explorer:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="168"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="191"/>
         <source>Default file manager for opening folders.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="177"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="200"/>
         <source>Image Viewer:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="176"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="199"/>
         <source>Default app for viewing images.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="185"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="208"/>
         <source>Video Viewer:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="184"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="207"/>
         <source>Default app for playing videos.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="193"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="216"/>
         <source>Audio Settings:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="192"/>
+        <location filename="../Qml/Modules/Settings/Pages/GeneralPage.qml" line="215"/>
         <source>Default app for audio and sound configuration.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2338,18 +2359,18 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>GeneralServices</name>
     <message>
-        <location filename="../Qml/Services/Hyprland/GeneralServices.qml" line="59"/>
+        <location filename="../Qml/Services/Hyprland/GeneralServices.qml" line="129"/>
         <source>Failed to read Hyprland settings: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/GeneralServices.qml" line="59"/>
-        <location filename="../Qml/Services/Hyprland/GeneralServices.qml" line="62"/>
+        <location filename="../Qml/Services/Hyprland/GeneralServices.qml" line="129"/>
+        <location filename="../Qml/Services/Hyprland/GeneralServices.qml" line="132"/>
         <source>Hyprland</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/GeneralServices.qml" line="62"/>
+        <location filename="../Qml/Services/Hyprland/GeneralServices.qml" line="132"/>
         <source>Failed to save Hyprland settings: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2456,7 +2477,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>Headers</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="156"/>
+        <location filename="../Qml/Modules/Drawers/Weather/Headers.qml" line="161"/>
         <source>Feels like %1°</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2501,13 +2522,13 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>Humidity</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Humidity.qml" line="53"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Humidity.qml" line="55"/>
         <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Humidity.qml" line="37"/>
         <source>Humidity</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Humidity.qml" line="92"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Humidity.qml" line="94"/>
         <source>Dew point</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2520,2236 +2541,2236 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>HyprlandGeneralSchema</name>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="331"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="363"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="353"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="385"/>
         <source>Must be at least 1 for blur to apply.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="355"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="377"/>
         <source>Requires render.use_shader_blur_blend.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="379"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="401"/>
         <source>Selects which blur variant sub-options apply.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="405"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="427"/>
         <source>Disabled when blur.new_optimizations is false.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="755"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="777"/>
         <source>Falls back to glow.color when empty.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1081"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1103"/>
         <source>Step and points list; requires accel_profile set to custom.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1210"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1232"/>
         <source>Empty string stops auto-detection of the output.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1250"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1272"/>
         <source>Monitor name or current.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1335"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1345"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1357"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1367"/>
         <source>Negative means device default.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1405"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1427"/>
         <source>Requires drag_into_group set to 2 and merge_groups_on_drag enabled.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1434"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1456"/>
         <source>Falls back to misc.font_family when empty.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1620"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1628"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1642"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1650"/>
         <source>Falls back to text_color when empty.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1636"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1658"/>
         <source>Falls back to text_color_inactive when empty.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1700"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1722"/>
         <source>Requires disable_hyprland_logo enabled.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1708"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1730"/>
         <source>none or empty mutes, default uses the system sound, otherwise a path.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1751"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1947"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1978"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1773"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1969"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2000"/>
         <source>Monitor reload required.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1830"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1852"/>
         <source>-1 picks a random wallpaper.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1925"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="1947"/>
         <source>Requires session_lock_xray enabled.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2016"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2038"/>
         <source>0 disables the threshold.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2119"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2144"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2535"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2543"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2141"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2166"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2557"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2565"/>
         <source>Hyprland restart required.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2304"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2326"/>
         <source>0 means never hide.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2394"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2416"/>
         <source>-1 follows warp_on_change_workspace.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2427"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2449"/>
         <source>1.0 means no zoom.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2450"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2472"/>
         <source>Epilepsy warning: flashes the screen on damage.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2460"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2482"/>
         <source>Do not change.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2567"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2589"/>
         <source>Disables VFR for accurate results.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2618"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2640"/>
         <source>Space-separated, e.g. 4 3. Zero disables.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2642"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2664"/>
         <source>Xwayland restart required, Linux only.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2664"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2686"/>
         <source>Ignored on non-NVIDIA GPUs.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2812"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2904"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2932"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2946"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3006"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3020"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3048"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3072"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3100"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3124"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3152"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3184"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3198"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3226"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2827"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2919"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2947"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2961"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3021"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3035"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3063"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3087"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3115"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3139"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3167"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3199"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3213"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3241"/>
         <source>Off</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2816"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2831"/>
         <source>Non-Standard Events Only</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2820"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2835"/>
         <source>Force All</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2826"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2890"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3086"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3240"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3258"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3272"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2841"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2905"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3101"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3255"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3273"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3287"/>
         <source>Disabled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2830"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2845"/>
         <source>On Tiling-Float Switch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2834"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2849"/>
         <source>Also Float-To-Float</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2840"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2855"/>
         <source>Next Candidate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2844"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2859"/>
         <source>Window Under Cursor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2848"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2863"/>
         <source>Most Recently Used</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2854"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2964"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2978"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3286"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2869"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2979"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2993"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3301"/>
         <source>None</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2858"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3138"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2873"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3153"/>
         <source>Always</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2862"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2877"/>
         <source>Detached Click</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2866"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2881"/>
         <source>Fully Separate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2872"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2992"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2887"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3007"/>
         <source>Ignore</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2876"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2891"/>
         <source>Out-Of-Bound Coords</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2880"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2895"/>
         <source>Fake Closest Point</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2884"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2899"/>
         <source>Warp Cursor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2894"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2909"/>
         <source>Three Fingers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2898"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2913"/>
         <source>Four Fingers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2908"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2923"/>
         <source>With Timeout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2912"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2927"/>
         <source>Sticky</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2918"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2933"/>
         <source>No</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2922"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2937"/>
         <source>Yes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2926"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2941"/>
         <source>Yes Unless IME Client</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2936"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2950"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3024"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3052"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3104"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3128"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3188"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3202"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3230"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2951"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2965"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3039"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3067"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3119"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3143"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3203"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3217"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3245"/>
         <source>On</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2940"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2955"/>
         <source>Only Into Groupbar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2954"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2969"/>
         <source>Only Grouped</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2958"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2973"/>
         <source>Only Non-Grouped</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2968"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2982"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2983"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2997"/>
         <source>Partially Onscreen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2972"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2986"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2987"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3001"/>
         <source>Fully Onscreen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="2996"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3011"/>
         <source>Take Over</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3000"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3015"/>
         <source>Unfullscreen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3010"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3025"/>
         <source>Single-Shot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3014"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3029"/>
         <source>Persistent</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3028"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3043"/>
         <source>Fullscreen Only</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3032"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3047"/>
         <source>Fullscreen Video/Game</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3038"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3053"/>
         <source>Most Recent</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3042"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3057"/>
         <source>Longer Shared Edges</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3056"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3071"/>
         <source>Per Monitor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3062"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3077"/>
         <source>Cursor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3066"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3081"/>
         <source>Last Active Window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3076"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3091"/>
         <source>HDR</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3080"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3095"/>
         <source>HDR EDID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3090"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3244"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3262"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3276"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3105"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3259"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3277"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3291"/>
         <source>Enabled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3094"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3109"/>
         <source>Auto (No NVIDIA)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3108"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3206"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3123"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3221"/>
         <source>Auto (Game Content)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3114"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3290"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3129"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3305"/>
         <source>Monitor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3118"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3133"/>
         <source>Linear</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3132"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3147"/>
         <source>Auto</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3142"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3157"/>
         <source>Ignore Unfocused</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3146"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3216"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3161"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3231"/>
         <source>Never</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3156"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3171"/>
         <source>Whenever Possible</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3160"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3175"/>
         <source>DS + Passthrough</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3164"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3179"/>
         <source>Off + Ignore Issues</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3170"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3185"/>
         <source>Disabled In Fullscreen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3174"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3189"/>
         <source>Enabled In Fullscreen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3178"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3193"/>
         <source>Off For Media Content</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3192"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3207"/>
         <source>HDR Mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3212"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3227"/>
         <source>If Possible</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3220"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3235"/>
         <source>Auto When Tearing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3234"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3249"/>
         <source>Auto (NVIDIA)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3248"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3266"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3280"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3263"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3281"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3295"/>
         <source>Force (Ignores no_warps)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3254"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3269"/>
         <source>Follow Workspace Warp</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3294"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3309"/>
         <source>Full</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3300"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3315"/>
         <source>Top</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3304"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3319"/>
         <source>Bottom</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3310"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3325"/>
         <source>Not Allowed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3314"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3329"/>
         <source>Allowed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3320"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3335"/>
         <source>Allow fullscreen on pinned windows, restoring pin state after</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3321"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3336"/>
         <source>Workspaces remember their previous workspace, enabling cycle loops</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3322"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3337"/>
         <source>Let the layout handler manage client-requested fullscreen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3323"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3338"/>
         <source>Ignore apps that request to disable keybinds, e.g. VMs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3324"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3339"/>
         <source>Movement threshold in px for window drags and click/drag bind flags</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3325"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3340"/>
         <source>How directional focus picks a window when several match</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3326"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3341"/>
         <source>Hide the special workspace when changing workspaces</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3327"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3342"/>
         <source>Group move dispatchers ignore per-group locks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3328"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3343"/>
         <source>Directional focus can seek windows out of fullscreen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3329"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3344"/>
         <source>Directional focus cycles through group windows first</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3330"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3345"/>
         <source>Pass mouse events through while a keybind fires</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3331"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3346"/>
         <source>Delay in ms between scroll bind events</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3332"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3347"/>
         <source>Moving focus or a window past a monitor edge reaches the next monitor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3333"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3348"/>
         <source>Switching to the current workspace goes back to the previous one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3334"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3349"/>
         <source>What the cursor centers on when switching workspaces</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3335"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3350"/>
         <source>Monitor the cursor starts on, by name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3336"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3351"/>
         <source>Enable hyprcursor cursor theme support</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3337"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3352"/>
         <source>Hide the cursor while typing until the mouse moves</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3338"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3353"/>
         <source>Hide the cursor after tablet input until the mouse moves</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3339"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3354"/>
         <source>Hide the cursor after touch input until the mouse moves</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3340"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3355"/>
         <source>Padding in logical px between the cursor and screen edges</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3341"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3356"/>
         <source>Seconds of cursor inactivity before hiding it, 0 for never</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3342"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3357"/>
         <source>Do not render the cursor at all</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3343"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3358"/>
         <source>Minimum refresh rate for cursor updates when VRR is active</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3344"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3359"/>
         <source>Avoid cursor-driven frame spikes on fullscreen VRR apps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3345"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3360"/>
         <source>When to avoid hardware cursors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3346"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3361"/>
         <source>Never warp the cursor on focus changes or keybinds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3347"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3362"/>
         <source>Cursor returns to its last position within a refocused window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3348"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3363"/>
         <source>Sync the XCursor theme and size with GSettings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3349"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3364"/>
         <source>When hardware cursors use a CPU buffer; NVIDIA needs it</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3350"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3365"/>
         <source>Restore cursor position after it was moved by non-mouse input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3351"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3366"/>
         <source>Warp to the last focused window after changing workspaces</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3352"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3367"/>
         <source>Warp to the last focused window when changing monitors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3353"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3368"/>
         <source>Warp to the last focused window when toggling special workspaces</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3354"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3369"/>
         <source>When zoomed, only follow the cursor at screen edges</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3355"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3370"/>
         <source>Disable antialiasing while zoomed, making things pixelated</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3356"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3371"/>
         <source>Magnification factor around the cursor, 1 disables</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3357"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3372"/>
         <source>Zoom view follows the cursor rigidly instead of loosely</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3358"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3373"/>
         <source>Colorize stdout logs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3359"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3374"/>
         <source>Flash damaged areas on screen; epilepsy warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3360"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3375"/>
         <source>Redraw only damaged parts of the display; leave at Full</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3361"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3376"/>
         <source>Disable logging to a file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3362"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3377"/>
         <source>Skip scale verification; causes rounding artifacts</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3363"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3378"/>
         <source>Omit timestamps from logs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3364"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3379"/>
         <source>Direct scanout special case for unmodified buffers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3365"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3380"/>
         <source>Direct scanout FIFO variant of the same-buffer case</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3366"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3381"/>
         <source>Also log to stdout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3367"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3382"/>
         <source>How many config errors to display</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3368"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3383"/>
         <source>Which screen edge the config error bar sits on</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3369"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3384"/>
         <source>Workaround for empty FIFO pending lists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3370"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3385"/>
         <source>Claim support for all color-management protocol features</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3371"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3386"/>
         <source>Enable OpenGL and EGL debugging</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3372"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3387"/>
         <source>Whether buffer invalidation is allowed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3373"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3388"/>
         <source>Log damage events</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3374"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3389"/>
         <source>Show the debug performance overlay</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3375"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3390"/>
         <source>Debug render passes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3376"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3391"/>
         <source>Render solitary windows with empty damage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3377"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3392"/>
         <source>Hide config error popups</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3378"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3393"/>
         <source>Variable frame rate; leave enabled to save resources</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3379"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3394"/>
         <source>Opacity of focused windows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3380"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3395"/>
         <source>Count the border as part of the window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3381"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3396"/>
         <source>How much dim_around window rules dim</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3382"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3397"/>
         <source>Dim unfocused windows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3383"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3398"/>
         <source>Dim parents of modal windows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3384"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3399"/>
         <source>Dim the screen behind special workspaces</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3385"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3400"/>
         <source>How strongly inactive windows dim</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3386"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3401"/>
         <source>Opacity of fullscreen windows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3387"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3402"/>
         <source>Opacity of unfocused windows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3388"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3403"/>
         <source>Corner radius in layout pixels</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3389"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3404"/>
         <source>Corner curve shape: 2.0 is a circle, 4.0 a squircle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3390"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3405"/>
         <source>Path to a custom screen shader, empty to disable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3391"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3406"/>
         <source>Enable window background blur</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3392"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3407"/>
         <source>Blur brightness modulation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3393"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3408"/>
         <source>Blur contrast modulation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3394"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3409"/>
         <source>Blur windows regardless of their opacity</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3395"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3410"/>
         <source>Blur input method windows like fcitx5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3396"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3411"/>
         <source>Skip blurring pixels below this opacity</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3397"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3412"/>
         <source>Extra blur optimizations, recommended</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3398"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3413"/>
         <source>Noise applied to the blur</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3399"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3414"/>
         <source>Blur passes; needs at least 1 for blur to apply</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3400"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3415"/>
         <source>Blur popups like right-click menus</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3401"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3416"/>
         <source>Skip blurring popup pixels below this opacity</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3402"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3417"/>
         <source>Scale blur strength with pixel opacity</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3403"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3418"/>
         <source>Blur size (distance)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3404"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3419"/>
         <source>Blur behind the special workspace; expensive</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3405"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3420"/>
         <source>Blur pattern; heavier ones cost GPU time</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3406"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3421"/>
         <source>Boost saturation of blurred colors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3407"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3422"/>
         <source>How strongly vibrancy affects dark areas</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3408"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3423"/>
         <source>Floating windows ignore tiled windows in their blur</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3409"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3424"/>
         <source>Acrylic chromatic separation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3410"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3425"/>
         <source>Curved acrylic edge width in px</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3411"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3426"/>
         <source>Sharp backdrop passing through the acrylic</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3412"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3427"/>
         <source>Maximum acrylic lens displacement in px</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3413"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3428"/>
         <source>Acrylic tint color; alpha sets absorption</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3414"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3429"/>
         <source>First aurora color; alpha sets its contribution</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3415"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3430"/>
         <source>Second aurora color; alpha sets its contribution</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3416"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3431"/>
         <source>Aurora color strength</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3417"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3432"/>
         <source>Aurora animation speed, 0 freezes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3418"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3433"/>
         <source>Drops animation speed, 0 disables</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3419"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3434"/>
         <source>Fluid color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3420"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3435"/>
         <source>Fluid refraction distortion multiplier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3421"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3436"/>
         <source>How full the fluid container is</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3422"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3437"/>
         <source>Fluid inertial mass</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3423"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3438"/>
         <source>Fluid simulation precision multiplier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3424"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3439"/>
         <source>Fluid animation speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3425"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3440"/>
         <source>Interior fluid turbulence multiplier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3426"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3441"/>
         <source>Maximum glass refraction displacement in px</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3427"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3442"/>
         <source>Glass relief shading strength</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3428"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3443"/>
         <source>Glass pattern size in px</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3429"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3444"/>
         <source>Haze sheen strength</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3430"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3445"/>
         <source>Haze color-shift strength</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3431"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3446"/>
         <source>Shimmer animation speed, 0 disables</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3432"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3447"/>
         <source>Ripple duration in seconds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3433"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3448"/>
         <source>Ripple maximum radius in px</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3434"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3449"/>
         <source>Ripple maximum refraction in px</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3435"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3450"/>
         <source>Ripple wave width in px</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3436"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3451"/>
         <source>Water wave damping</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3437"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3452"/>
         <source>Water maximum duration in seconds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3438"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3453"/>
         <source>Water pointer radius in px</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3439"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3454"/>
         <source>Water propagation speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3440"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3455"/>
         <source>Water refraction and injection strength in px</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3441"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3456"/>
         <source>Active window glow color; alpha sets opacity</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3442"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3457"/>
         <source>Inactive glow color; empty falls back to color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3443"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3458"/>
         <source>Enable inner window glow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3444"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3459"/>
         <source>Glow size in px</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3445"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3460"/>
         <source>Glow falloff power; higher is a faster falloff</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3446"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3461"/>
         <source>Blur windows while they move or resize</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3447"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3462"/>
         <source>Motion blur samples; more is smoother but costlier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3448"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3463"/>
         <source>Enable window drop shadows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3449"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3464"/>
         <source>Shadow rendering offset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3450"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3465"/>
         <source>Shadow size in px</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3451"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3466"/>
         <source>Shadow falloff power; higher is a faster falloff</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3452"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3467"/>
         <source>Shadow scale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3453"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3468"/>
         <source>Render shadows sharp, as with infinite falloff power</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3454"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3469"/>
         <source>Wobble spring damping</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3455"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3470"/>
         <source>Wobble windows while they move or resize</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3456"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3471"/>
         <source>Wobble impulse multiplier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3457"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3472"/>
         <source>Wobble spring mass</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3458"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3473"/>
         <source>Wobble mesh vertices per edge</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3459"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3474"/>
         <source>Wobble spring stiffness</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3460"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3475"/>
         <source>Position delta treated as settled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3461"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3476"/>
         <source>Velocity delta treated as settled</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3462"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3477"/>
         <source>Enable the permission control system</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3463"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3478"/>
         <source>Hide the periodic donation popup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3464"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3479"/>
         <source>Hide the new-version news popup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3465"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3480"/>
         <source>Allow color-management protocol version 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3466"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3481"/>
         <source>Master switch for tearing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3467"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3482"/>
         <source>Window border width</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3468"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3483"/>
         <source>Extend the draggable border area; needs resize_on_border</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3469"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3484"/>
         <source>Gaps between floating windows and monitor edges, -1 for default</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3470"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3485"/>
         <source>Gaps between windows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3471"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3486"/>
         <source>Gaps between windows and monitor edges</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3472"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3487"/>
         <source>Gaps between workspaces, stacks with gaps_out</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3473"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3488"/>
         <source>Show a resize cursor icon on borders; needs resize_on_border</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3474"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3489"/>
         <source>Which tiling layout to use</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3475"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3490"/>
         <source>Override the system locale, e.g. en_US</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3476"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3491"/>
         <source>Keep parents of modal windows interactive</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3477"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3492"/>
         <source>No fallback window when directional focus finds none</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3478"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3493"/>
         <source>Force a resize corner for floating windows, 0 to disable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3479"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3494"/>
         <source>Resize windows by dragging borders and gaps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3480"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3495"/>
         <source>Snap floating windows to one border width apart</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3481"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3496"/>
         <source>Enable floating window snapping</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3482"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3497"/>
         <source>Snapping distance to monitor edges in px</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3483"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3498"/>
         <source>Snapping respects gaps_in</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3484"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3499"/>
         <source>Snapping distance between windows in px</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3485"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3500"/>
         <source>New windows join the focused unlocked group</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3486"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3501"/>
         <source>Whether dragging a window into a group merges them</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3487"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3502"/>
         <source>Focus the window just moved out of a group</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3488"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3503"/>
         <source>Blur the groupbar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3489"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3504"/>
         <source>Hide the groupbar for single-window groups</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3490"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3505"/>
         <source>Enable groupbars</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3491"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3506"/>
         <source>Groupbar font; empty uses misc.font_family</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3492"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3507"/>
         <source>Groupbar title font size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3493"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3508"/>
         <source>Active title font weight</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3494"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3509"/>
         <source>Inactive title font weight</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3495"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3510"/>
         <source>Gap between groupbar gradients</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3496"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3511"/>
         <source>Gap between gradients and the window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3497"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3512"/>
         <source>Gradient corner rounding</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3498"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3513"/>
         <source>Gradient corner curve shape</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3499"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3514"/>
         <source>Round only the groupbar gradient edges</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3500"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3515"/>
         <source>Enable groupbar gradients</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3501"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3516"/>
         <source>Groupbar height</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3502"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3517"/>
         <source>Gap between indicator and titles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3503"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3518"/>
         <source>Groupbar indicator height</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3504"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3519"/>
         <source>Keep the gap above the groupbar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3505"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3520"/>
         <source>Middle click on the groupbar closes the window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3506"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3521"/>
         <source>Groupbar decoration priority</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3507"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3522"/>
         <source>Render titles in the groupbar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3508"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3523"/>
         <source>Indicator corner rounding</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3509"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3524"/>
         <source>Indicator corner curve shape</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3510"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3525"/>
         <source>Round only the indicator edges</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3511"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3526"/>
         <source>Scrolling the groupbar switches windows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3512"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3527"/>
         <source>Render the groupbar vertically</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3513"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3528"/>
         <source>Active title color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3514"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3529"/>
         <source>Inactive title color; empty falls back to text_color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3515"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3530"/>
         <source>Locked-group active title color; falls back to text_color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3516"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3531"/>
         <source>Locked-group inactive title color; falls back to text_color_inactive</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3517"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3532"/>
         <source>Vertical title offset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3518"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3533"/>
         <source>Horizontal title padding</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3519"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3534"/>
         <source>Moving a window to a workspace merges it into its group</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3520"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3535"/>
         <source>New group windows spawn after the current one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3521"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3536"/>
         <source>Dragging a floating window into a groupbar merges it</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3522"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3537"/>
         <source>Groups can be dragged into other groups</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3523"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3538"/>
         <source>Dragging a group onto another groupbar merges them</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3524"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3539"/>
         <source>Pointer acceleration profile; empty uses libinput default</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3525"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3540"/>
         <source>Turn high-resolution scrolling into discrete scroll events</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3526"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3541"/>
         <source>Focus the cursor window on tiling-float switches</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3527"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3542"/>
         <source>What gets focus when a window closes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3528"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3543"/>
         <source>How cursor movement affects window focus</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3529"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3544"/>
         <source>Shrink inactive hitboxes to create focus dead zones in gaps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3530"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3545"/>
         <source>Minimum cursor travel before refocusing, in px</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3531"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3546"/>
         <source>Use raw pointer input without acceleration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3532"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3547"/>
         <source>Path to a custom XKB keymap file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3533"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3548"/>
         <source>XKB keyboard layout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3534"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3549"/>
         <source>XKB keyboard model</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3535"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3550"/>
         <source>XKB options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3536"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3551"/>
         <source>XKB rules</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3537"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3552"/>
         <source>XKB layout variant</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3538"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3553"/>
         <source>Swap left and right mouse buttons</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3539"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3554"/>
         <source>Refocus on window boundary crossings; needs follow_mouse 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3540"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3555"/>
         <source>Invert scrolling direction</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3541"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3556"/>
         <source>Turn numlock on at startup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3542"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3557"/>
         <source>How scroll events around a window edges behave</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3543"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3558"/>
         <source>Delay before key repeat kicks in, in ms</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3544"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3559"/>
         <source>Key repeats per second while held</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3545"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3560"/>
         <source>Match keybinds by symbol across keyboard layouts</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3546"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3561"/>
         <source>Device rotation in degrees clockwise</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3547"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3562"/>
         <source>Button used for on-button scrolling, 0 default</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3548"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3563"/>
         <source>Toggle scroll-button lock instead of holding it</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3549"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3564"/>
         <source>Scroll movement multiplier for mice</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3550"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3565"/>
         <source>How scrolling is performed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3551"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3566"/>
         <source>Custom scroll acceleration curve for accel_profile custom</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3552"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3567"/>
         <source>Mouse sensitivity in the libinput range</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3553"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3568"/>
         <source>Floating-only special workspaces do not block regular focus</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3554"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3569"/>
         <source>First click on an unfocused window only focuses it</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3555"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3570"/>
         <source>Treat region_position as absolute in the monitor layout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3556"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3571"/>
         <source>Tablet active area position in mm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3557"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3572"/>
         <source>Tablet active area size in mm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3558"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3573"/>
         <source>Enable tablet input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3559"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3574"/>
         <source>Rotate the tablet 180 degrees</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3560"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3575"/>
         <source>Monitor the tablet maps to; empty maps across all</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3561"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3576"/>
         <source>Mapped region position relative to the bound monitor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3562"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3577"/>
         <source>Map tablet input to this region size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3563"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3578"/>
         <source>Use relative tablet input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3564"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3579"/>
         <source>Transform applied to tablet input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3565"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3580"/>
         <source>Eraser button sends a button event instead of erasing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3566"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3581"/>
         <source>Which button the eraser button emulates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3567"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3582"/>
         <source>Tool pressure maximum; negative uses device default</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3568"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3583"/>
         <source>Tool pressure minimum; negative uses device default</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3569"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3584"/>
         <source>Enable touch device input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3570"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3585"/>
         <source>Monitor touch devices map to; empty string stops auto-detection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3571"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3586"/>
         <source>Transform applied to touch input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3572"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3587"/>
         <source>Multi-finger clicks send fixed buttons instead of by position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3573"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3588"/>
         <source>Disable the touchpad while typing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3574"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3589"/>
         <source>Enable multi-finger drag</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3575"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3590"/>
         <source>Keep dragging after lifting the finger</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3576"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3591"/>
         <source>Invert horizontal touchpad movement</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3577"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3592"/>
         <source>Invert vertical touchpad movement</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3578"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3593"/>
         <source>LMB and RMB together act as middle click</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3579"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3594"/>
         <source>Invert touchpad scrolling direction</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3580"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3595"/>
         <source>Touchpad scroll movement multiplier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3581"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3596"/>
         <source>Tap then hold to drag</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3582"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3597"/>
         <source>Finger-count to button mapping for taps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3583"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3598"/>
         <source>Taps send mouse clicks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3584"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3599"/>
         <source>Release held keys when the virtual keyboard closes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3585"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3600"/>
         <source>Share key and modifier states with other keyboards</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3586"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3601"/>
         <source>Also capture and forward modifier keys</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3587"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3602"/>
         <source>Error out on invalid pointer barriers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3588"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3603"/>
         <source>Let newly mapped layers render over a covering fullscreen window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3589"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3604"/>
         <source>Keyboard-interactive layers like launchers keep keyboard focus</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3590"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3605"/>
         <source>Pad the screen so a lone window matches the ratio, e.g. 4 3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3591"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3606"/>
         <source>Skip the aspect ratio when padding would be smaller than this</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3592"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3607"/>
         <source>Allow restarting a crashed lock screen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3593"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3608"/>
         <source>Focus follows the mouse during drag and drop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3594"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3609"/>
         <source>Animate manual window resizes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3595"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3610"/>
         <source>Animate windows dragged by the mouse</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3596"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3611"/>
         <source>Missed pings before the app-not-responding dialog shows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3597"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3612"/>
         <source>Background color; needs disable_hyprland_logo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3598"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3613"/>
         <source>System bell sound: none, default, or a wav/ogg path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3599"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3614"/>
         <source>Close special workspaces when their last window closes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3600"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3615"/>
         <source>Do not auto-reload the config on file changes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3601"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3616"/>
         <source>Hide the missing hyprland-guiutils warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3602"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3617"/>
         <source>Hide the Hyprland logo and anime background</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3603"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3618"/>
         <source>Hide the scale-failure notification popup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3604"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3619"/>
         <source>Hide the splash text on the background</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3605"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3620"/>
         <source>Hide the start-hyprland watchdog warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3606"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3621"/>
         <source>Hide the externally-managed XDG environment warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3607"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3622"/>
         <source>Show the app-not-responding dialog</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3608"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3623"/>
         <source>Enable window swallowing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3609"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3624"/>
         <source>Whether closing a fullscreen window fullscreenes the next one</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3610"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3625"/>
         <source>Keep existing floating windows on screen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3611"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3626"/>
         <source>Focus apps that request activation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3612"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3627"/>
         <source>Global default font</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3613"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3628"/>
         <source>Which default wallpaper to enforce, -1 random</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3614"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3629"/>
         <source>Seconds before workspace-tracking tokens expire</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3615"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3630"/>
         <source>Open windows on the workspace they were invoked from</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3616"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3631"/>
         <source>A key press wakes screensaver-off monitors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3617"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3632"/>
         <source>Delay before the lockdead screen shows, in ms</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3618"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3633"/>
         <source>Enable middle-click primary-selection paste</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3619"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3634"/>
         <source>Mouse movement wakes screensaver-off monitors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3620"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3635"/>
         <source>Hovering a monitor focuses it</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3621"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3636"/>
         <source>Name virtual keyboards after their creating process</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3622"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3637"/>
         <source>Keep newly spawned floating windows on screen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3623"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3638"/>
         <source>What happens when a tiled window is focused under fullscreen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3624"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3639"/>
         <source>FPS cap for windows rendered while unfocused</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3625"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3640"/>
         <source>Force 8-bit screen capture</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3626"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3641"/>
         <source>Blur the lock screen; needs session_lock_xray</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3627"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3642"/>
         <source>Keep rendering workspaces under the lock screen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3628"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3643"/>
         <source>Apply min and max size rules to tiled windows</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3629"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3644"/>
         <source>Splash text font</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3630"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3645"/>
         <source>Title regex for windows exempt from swallowing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3631"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3646"/>
         <source>Class regex of windows that swallow others, e.g. terminals</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3632"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3647"/>
         <source>Monitor adaptive-sync (VRR) mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3633"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3648"/>
         <source>Splash text color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3634"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3649"/>
         <source>Reduce NVIDIA flickering; may cost frames on weaker GPUs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3635"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3650"/>
         <source>Report HDR as the preferred mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3636"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3651"/>
         <source>Do not report dmabuf formats KMS cannot import</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3637"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3652"/>
         <source>Async DRM commits to cut cursor latency</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3638"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3653"/>
         <source>Auto-switch to HDR in fullscreen when content wants it</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3639"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3654"/>
         <source>Enable the color management pipeline</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3640"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3655"/>
         <source>Transfer function used for SDR content</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3641"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3656"/>
         <source>Fade animation for color temperature changes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3642"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3657"/>
         <source>Enable the commit timing protocol</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3643"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3658"/>
         <source>Direct scanout for fullscreen apps to reduce lag</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3644"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3659"/>
         <source>Expand undersized textures instead of stretching them</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3645"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3660"/>
         <source>Transfer function of the fp16 SDR workbuffer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3646"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3661"/>
         <source>Send VCGT ramps from ICC profiles to the display</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3647"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3662"/>
         <source>Keep an SDR frame copy for screen sharing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3648"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3663"/>
         <source>Automatic triple buffering; helps weaker GPUs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3649"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3664"/>
         <source>FIFO locking for surfaces that are not shown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3650"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3665"/>
         <source>When to use color management without shaders</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3651"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3666"/>
         <source>How external color temperature interacts with fullscreen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3652"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3667"/>
         <source>Report window content types for profile autoswitch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3653"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3668"/>
         <source>Use FP16 render buffers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3654"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3669"/>
         <source>Experimental blurred background blending</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3655"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3670"/>
         <source>Disable back buffer and bottom layer rendering</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3656"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3671"/>
         <source>Create the abstract Unix socket for Xwayland; needs restart</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3657"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3672"/>
         <source>Allow running X11 applications</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3658"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3673"/>
         <source>Force scale 1 on Xwayland windows under scaled displays</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3659"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandGeneralSchema.qml" line="3674"/>
         <source>Nearest-neighbor filtering for Xwayland; pixelated not blurry</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4757,43 +4778,43 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>HyprlandOptionRow</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionRow.qml" line="92"/>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionRow.qml" line="316"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionRow.qml" line="90"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionRow.qml" line="312"/>
         <source>Default</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionRow.qml" line="375"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionRow.qml" line="371"/>
         <source>X</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionRow.qml" line="394"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionRow.qml" line="390"/>
         <source>Y</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionRow.qml" line="421"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionRow.qml" line="417"/>
         <source>All</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionRow.qml" line="439"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionRow.qml" line="435"/>
         <source>T</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionRow.qml" line="457"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionRow.qml" line="453"/>
         <source>L</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionRow.qml" line="475"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionRow.qml" line="471"/>
         <source>R</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionRow.qml" line="493"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionRow.qml" line="489"/>
         <source>B</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4802,51 +4823,26 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     <name>HyprlandOptionsPage</name>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionsPage.qml" line="21"/>
-        <source>lua-cjson was not found in Hyprland&apos;s embedded Lua (5.5). vast_shell.lua does nothing without it. Install lua-cjson built for Lua 5.5 and copy its cjson.so into ~/.config/hypr/ (or extend package.cpath in vast_shell.lua).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionsPage.qml" line="27"/>
-        <source>vast_shell.lua is set up.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionsPage.qml" line="29"/>
-        <source>vast_shell.lua will be created.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionsPage.qml" line="33"/>
         <source>Hyprland </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionsPage.qml" line="42"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionsPage.qml" line="30"/>
         <source>Hyprland with Lua configuration was not detected. Values are saved, but only Hyprland applies them.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionsPage.qml" line="68"/>
-        <source>Add at the bottom of hyprland.lua: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionsPage.qml" line="87"/>
-        <source>vast-shell never edits hyprland.lua. It only creates %1 once, if missing.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionsPage.qml" line="100"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionsPage.qml" line="43"/>
         <source>Debug options are intended for development and testing only. Do not change them in a normal configuration.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionsPage.qml" line="137"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionsPage.qml" line="78"/>
         <source>Revert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionsPage.qml" line="144"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/HyprlandOptionsPage.qml" line="84"/>
         <source>Apply</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4854,18 +4850,29 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>HyprlandSetupServices</name>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandSetupServices.qml" line="277"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandSetupServices.qml" line="240"/>
         <source>Failed to create vast_shell.lua</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandSetupServices.qml" line="277"/>
-        <location filename="../Qml/Services/Hyprland/HyprlandSetupServices.qml" line="303"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandSetupServices.qml" line="226"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandSetupServices.qml" line="265"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandSetupServices.qml" line="339"/>
         <source>Hyprland</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/HyprlandSetupServices.qml" line="303"/>
+        <location filename="../Qml/Services/Hyprland/HyprlandSetupServices.qml" line="226"/>
+        <source>Failed to read lua/json.lua: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandSetupServices.qml" line="232"/>
+        <source>Failed to create vast_shell_json.lua</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/HyprlandSetupServices.qml" line="249"/>
         <source>Failed to create vast_shell_rules.lua</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4944,12 +4951,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>InputDevicesTab</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Volume/InputDevicesTab.qml" line="25"/>
+        <location filename="../Qml/Modules/Settings/Pages/Volume/InputDevicesTab.qml" line="26"/>
         <source>Input Devices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Volume/InputDevicesTab.qml" line="34"/>
+        <location filename="../Qml/Modules/Settings/Pages/Volume/InputDevicesTab.qml" line="35"/>
         <source>No input devices detected.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4957,102 +4964,102 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>InternetPage</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="55"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="54"/>
         <source>Network &amp; Internet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="74"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="73"/>
         <source>Hotspot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="90"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="89"/>
         <source>Enable hotspot &amp; sharing internet:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="89"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="88"/>
         <source>Toggle Wi-Fi hotspot and internet sharing.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="105"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="104"/>
         <source>User hotspot:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="104"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="103"/>
         <source>SSID broadcast name for the hotspot.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="111"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="109"/>
         <source>Default: MyHotspot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="120"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="117"/>
         <source>Password hotspot:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="119"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="116"/>
         <source>Password required.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="126"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="123"/>
         <source>Default: password123</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="135"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="132"/>
         <source>Hotspot interface:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="134"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="131"/>
         <source>Network interface used for hotspot sharing.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="141"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="137"/>
         <source>Default: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="141"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="137"/>
         <source>none detected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="149"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="144"/>
         <source>Bandwidth:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="148"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="143"/>
         <source>Wi-Fi band for the hotspot.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="174"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="169"/>
         <source>Apply &amp;&amp; Restart</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="190"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="185"/>
         <source>Wi-Fi</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="194"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="189"/>
         <source>Enable Wi-Fi:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="193"/>
+        <location filename="../Qml/Modules/Settings/Pages/InternetPage.qml" line="188"/>
         <source>Turn Wi-Fi scanning and connections.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5060,32 +5067,32 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>KDEConnectPage</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="18"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="19"/>
         <source>KDE Connect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="21"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="22"/>
         <source>Device Discovery</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="25"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="26"/>
         <source>Enable Polling:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="24"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="25"/>
         <source>Periodically poll for KDE Connect devices on the network.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="35"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="36"/>
         <source>Poll Interval (s):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="34"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="35"/>
         <source>How often to scan for devices, in seconds.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5115,27 +5122,27 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="79"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="77"/>
         <source>No devices paired</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="88"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="89"/>
         <source>Transfer</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="100"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="101"/>
         <source>Available Devices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="111"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="110"/>
         <source>No devices available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="120"/>
+        <location filename="../Qml/Modules/Settings/Pages/KDEConnectPage.qml" line="122"/>
         <source>Pair</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5226,7 +5233,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/LauncherServices.qml" line="87"/>
+        <location filename="../Qml/Services/LauncherServices.qml" line="88"/>
         <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5284,7 +5291,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="84"/>
+        <location filename="../Qml/Services/Hyprland/LayerRuleSchema.qml" line="85"/>
         <source>Layer namespace, e.g. waybar or shell:drawers.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5292,141 +5299,85 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>LayerRuleServices</name>
     <message>
-        <location filename="../Qml/Services/Hyprland/LayerRuleServices.qml" line="55"/>
+        <location filename="../Qml/Services/Hyprland/LayerRuleServices.qml" line="126"/>
         <source>Failed to read layer rules: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/LayerRuleServices.qml" line="55"/>
-        <location filename="../Qml/Services/Hyprland/LayerRuleServices.qml" line="57"/>
-        <source>Hyprland</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Hyprland/LayerRuleServices.qml" line="57"/>
+        <location filename="../Qml/Services/Hyprland/LayerRuleServices.qml" line="127"/>
         <source>Failed to save layer rules: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/LayerRuleServices.qml" line="218"/>
+        <location filename="../Qml/Services/Hyprland/LayerRuleServices.qml" line="91"/>
         <source>Add at least one match property.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/LayerRuleServices.qml" line="221"/>
+        <location filename="../Qml/Services/Hyprland/LayerRuleServices.qml" line="95"/>
         <source>This name is used by more than one rule; Hyprland merges rules with the same name.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/LayerRuleServices.qml" line="225"/>
+        <location filename="../Qml/Services/Hyprland/LayerRuleServices.qml" line="100"/>
         <source>Unknown match property: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/LayerRuleServices.qml" line="236"/>
+        <location filename="../Qml/Services/Hyprland/LayerRuleServices.qml" line="113"/>
         <source>Unknown effect: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/LayerRuleServices.qml" line="286"/>
-        <source>Must be a number.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Hyprland/LayerRuleServices.qml" line="288"/>
-        <source>Must be at least %1.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Hyprland/LayerRuleServices.qml" line="290"/>
-        <source>Must be at most %1.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Hyprland/LayerRuleServices.qml" line="295"/>
-        <source>Must be two values.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Hyprland/LayerRuleServices.qml" line="297"/>
-        <source>Both values are required.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Hyprland/LayerRuleServices.qml" line="301"/>
-        <source>Must be one of: %1.</source>
+        <location filename="../Qml/Services/Hyprland/LayerRuleServices.qml" line="128"/>
+        <source>Layer rules saved</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>LayerRulesPage</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="26"/>
-        <source>lua-cjson was not found in Hyprland&apos;s embedded Lua (5.5). vast_shell_rules.lua does nothing without it. Install lua-cjson built for Lua 5.5 and copy its cjson.so into ~/.config/hypr/ (or extend package.cpath in vast_shell_rules.lua).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="40"/>
-        <source>vast_shell_rules.lua is set up.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="42"/>
-        <source>vast_shell_rules.lua will be created.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="48"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="31"/>
         <source>Layer Rules</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="57"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="40"/>
         <source>Hyprland with Lua configuration was not detected. Rules are saved, but only Hyprland applies them.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="77"/>
-        <source>Rules are read by vast_shell_rules.lua, created once next to vast_shell.lua. vast-shell never edits hyprland.lua, and never overwrites its own Lua files afterwards.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="90"/>
-        <source>Add at the bottom of hyprland.lua: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="109"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="47"/>
         <source>Rules</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="113"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="51"/>
         <source>Rules apply top to bottom and the last matching rule wins. Only the namespace can be matched; the picker lists vast-shell&apos;s own namespaces first, then everything running.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="120"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="58"/>
         <source>No layer rules yet.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="143"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="97"/>
         <source>Add rule</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="155"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="77"/>
         <source>Fix the marked rules to apply.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="167"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="86"/>
         <source>Revert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="174"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/LayerRulesPage.qml" line="92"/>
         <source>Apply</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5446,6 +5397,26 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     <message>
         <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="45"/>
         <source>Source</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="59"/>
+        <source>Window Privacy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="62"/>
+        <source>Render windows on each monitor&apos;s active workspace blurred behind the lock screen.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="63"/>
+        <source>Blur windows on lock:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/LockscreenPage.qml" line="74"/>
+        <source>Blur radius:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -5506,7 +5477,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     <name>MonitorCard</name>
     <message>
         <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="29"/>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="194"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="192"/>
         <source>Normal</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5546,89 +5517,89 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="109"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="107"/>
         <source>connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="109"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="107"/>
         <source>not connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="121"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="119"/>
         <source>Modified — will be written on Apply</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="131"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="129"/>
         <source>Revert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="139"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="137"/>
         <source>Mode:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="166"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="164"/>
         <source>Scale:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="189"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="187"/>
         <source>Transform:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="209"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="207"/>
         <source>Bit depth:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="214"/>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="220"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="212"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="218"/>
         <source>10-bit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="214"/>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="217"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="212"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="215"/>
         <source>8-bit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="231"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="229"/>
         <source>Color preset:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="251"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="249"/>
         <source>SDR brightness:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="274"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="272"/>
         <source>SDR saturation:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="297"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="295"/>
         <source>ICC profile:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="303"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="301"/>
         <source>None</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="330"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="328"/>
         <source>Removes the monitor from the layout on Apply.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="331"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorCard.qml" line="329"/>
         <source>Disabled:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5641,12 +5612,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorLayoutCanvas.qml" line="103"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorLayoutCanvas.qml" line="105"/>
         <source>Drag monitors to arrange them. Positions snap to edges and overlaps are prevented; coordinates are shown while dragging.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorLayoutCanvas.qml" line="103"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorLayoutCanvas.qml" line="105"/>
         <source>With a single enabled monitor its position stays managed by Hyprland.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5654,18 +5625,18 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>MonitorServices</name>
     <message>
-        <location filename="../Qml/Services/Hyprland/MonitorServices.qml" line="33"/>
+        <location filename="../Qml/Services/Hyprland/MonitorServices.qml" line="337"/>
         <source>Failed to read monitor settings: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/MonitorServices.qml" line="33"/>
-        <location filename="../Qml/Services/Hyprland/MonitorServices.qml" line="35"/>
+        <location filename="../Qml/Services/Hyprland/MonitorServices.qml" line="337"/>
+        <location filename="../Qml/Services/Hyprland/MonitorServices.qml" line="339"/>
         <source>Hyprland</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/MonitorServices.qml" line="35"/>
+        <location filename="../Qml/Services/Hyprland/MonitorServices.qml" line="339"/>
         <source>Failed to save monitor settings: %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5673,62 +5644,53 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>MonitorsPage</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="26"/>
-        <source>lua-cjson was not found in Hyprland&apos;s embedded Lua (5.5). vast_shell.lua does nothing without it. Install lua-cjson built for Lua 5.5 and copy its cjson.so into ~/.config/hypr/ (or extend package.cpath in vast_shell.lua).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="32"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="31"/>
         <source>Multiple connected monitors share the same description (%1). Hyprland matches rules by description prefix, so the stored settings apply to all of them.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="37"/>
-        <source>vast_shell.lua is set up.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="39"/>
-        <source>vast_shell.lua will be created.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="53"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="73"/>
         <source>Hyprland Monitors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="62"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="82"/>
         <source>Hyprland with Lua configuration was not detected. Values are saved, but only Hyprland applies them.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="88"/>
-        <source>Add at the bottom of hyprland.lua: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="120"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="102"/>
         <source>Monitor Layout</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="138"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="122"/>
+        <source>Select a monitor from the layout above, or choose from previously connected monitors.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="131"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="131"/>
+        <source>History</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="161"/>
         <source>Revert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="145"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="167"/>
         <source>Apply</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="151"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="112"/>
         <source>Monitors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="155"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/MonitorsPage.qml" line="143"/>
         <source>No monitors detected.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5736,7 +5698,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>Moon</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Moon.qml" line="50"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Moon.qml" line="52"/>
         <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Moon.qml" line="36"/>
         <source>Moon</source>
         <translation type="unfinished"></translation>
@@ -5760,62 +5722,62 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>NetworkInfo</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="17"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="36"/>
         <source>Network</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="23"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="42"/>
         <source>Ethernet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="23"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="42"/>
         <source>Wi-Fi</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="29"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="46"/>
         <source>Status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="30"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="19"/>
         <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="30"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="19"/>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="33"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="46"/>
         <source>Link speed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="37"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="46"/>
         <source>Signal strength</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="41"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="46"/>
         <source>Total wireless upload</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="45"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="46"/>
         <source>Total wired upload</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="49"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="46"/>
         <source>Total wireless download</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="53"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/NetworkInfo.qml" line="46"/>
         <source>Total wired download</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5823,32 +5785,32 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>NetworkInfoColumn</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="145"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="151"/>
         <source>Ethernet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="159"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="165"/>
         <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="159"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="165"/>
         <source>Not Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="216"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="215"/>
         <source>Internet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="224"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="223"/>
         <source>WiFi Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="78"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/NetworkInfoColumn.qml" line="88"/>
         <source>Bluetooth</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5913,12 +5875,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>Notifications</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="54"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="50"/>
         <source>Clear all</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="238"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/Notifications.qml" line="231"/>
         <source>No notifications</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5988,7 +5950,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>OSInfo</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/OSInfo.qml" line="10"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/OSInfo.qml" line="12"/>
         <source>Operating system</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5998,12 +5960,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/OSInfo.qml" line="20"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/OSInfo.qml" line="16"/>
         <source>kernel name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/OSInfo.qml" line="24"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/OSInfo.qml" line="16"/>
         <source>architecture design</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6011,12 +5973,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>OutputDevicesTab</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Volume/OutputDevicesTab.qml" line="25"/>
+        <location filename="../Qml/Modules/Settings/Pages/Volume/OutputDevicesTab.qml" line="26"/>
         <source>Output Devices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Volume/OutputDevicesTab.qml" line="34"/>
+        <location filename="../Qml/Modules/Settings/Pages/Volume/OutputDevicesTab.qml" line="35"/>
         <source>No output devices detected.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6221,27 +6183,27 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="209"/>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="207"/>
         <source>Bluetooth Pairing Request</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="219"/>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="217"/>
         <source>Confirm the passkey matches your device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="221"/>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="219"/>
         <source>Enter a passkey / PIN to pair</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="223"/>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="221"/>
         <source>Allow this device to connect?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="224"/>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="222"/>
         <source>Pairing requested</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6276,12 +6238,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="137"/>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="135"/>
         <source>Enter PIN</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="137"/>
+        <location filename="../Qml/Modules/BluetoothAgent/PairingDialog.qml" line="135"/>
         <source>Enter 6-digit passkey</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6289,12 +6251,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>PanelScreenshot</name>
     <message>
-        <location filename="../Qml/Services/CaptureScreenImage/PanelScreenshot.qml" line="117"/>
+        <location filename="../Qml/Services/CaptureScreenImage/PanelScreenshot.qml" line="118"/>
         <source>Open Image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/CaptureScreenImage/PanelScreenshot.qml" line="121"/>
+        <location filename="../Qml/Services/CaptureScreenImage/PanelScreenshot.qml" line="122"/>
         <source>Show in Folder</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6302,116 +6264,116 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>Performances</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="61"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="76"/>
         <source>CPU status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="102"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="115"/>
         <source>CPU: %1°C</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="108"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="121"/>
         <source>GPU: %1°C</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="126"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="137"/>
         <source>Battery</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="165"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="175"/>
         <source>Charging</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="165"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="175"/>
         <source>Discharging</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="172"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="182"/>
         <source>Rem. </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="185"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="195"/>
         <source>Network</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="206"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="215"/>
         <source>Ethernet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="206"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="215"/>
         <source>Wi-Fi</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="212"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="219"/>
         <source>Download ↓</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="216"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="219"/>
         <source>Upload ↑</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="260"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="260"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="263"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="263"/>
         <source>Link speed: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="268"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="271"/>
         <source>Apps</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="288"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="290"/>
         <source>Total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="299"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="301"/>
         <source> GUI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="306"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="308"/>
         <source> CLI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="313"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="315"/>
         <source>Display</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="343"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="344"/>
         <source>%1x%2 @ %3Hz</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="351"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="352"/>
         <source>RAM</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="374"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="412"/>
-        <source> GB used</source>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="411"/>
+        <source> GiB used</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="381"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="419"/>
-        <source> GB total</source>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Performances.qml" line="418"/>
+        <source> GiB total</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -6471,12 +6433,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>PlaybackTab</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Volume/PlaybackTab.qml" line="26"/>
+        <location filename="../Qml/Modules/Settings/Pages/Volume/PlaybackTab.qml" line="27"/>
         <source>Playback</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Volume/PlaybackTab.qml" line="35"/>
+        <location filename="../Qml/Modules/Settings/Pages/Volume/PlaybackTab.qml" line="36"/>
         <source>No active playback streams.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6485,7 +6447,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     <name>Precipitation</name>
     <message>
         <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Precipitation.qml" line="40"/>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Precipitation.qml" line="37"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Precipitation.qml" line="39"/>
         <source>Precipitation</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6495,7 +6457,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Precipitation.qml" line="72"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Precipitation.qml" line="74"/>
         <source>Total rain for the day</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6504,7 +6466,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     <name>Pressure</name>
     <message>
         <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Pressure.qml" line="37"/>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pressure.qml" line="47"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pressure.qml" line="49"/>
         <source>Pressure</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6517,42 +6479,42 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>Preview</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="151"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="157"/>
         <source>Select an entry to preview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="179"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="187"/>
         <source>Couldn&apos;t load preview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="186"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="194"/>
         <source>Retry</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="227"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="236"/>
         <source>Image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="227"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="236"/>
         <source>Text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="288"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="297"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="354"/>
-        <source>Preview truncated (%1 of %2 shown) — copy to get the full content</source>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="359"/>
+        <source>Preview truncated (%1) — copy to get the full content</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="411"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/Preview.qml" line="470"/>
         <source>Loading…</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6671,17 +6633,17 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>QuickSettings</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/QuickSettings.qml" line="53"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/QuickSettings.qml" line="75"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/QuickSettings.qml" line="57"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/QuickSettings.qml" line="79"/>
         <source>Volume</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/QuickSettings.qml" line="61"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/QuickSettings.qml" line="83"/>
         <source>Performance</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6689,22 +6651,22 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>RamInfo</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/RamInfo.qml" line="11"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/RamInfo.qml" line="12"/>
         <source>Memory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/RamInfo.qml" line="23"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/RamInfo.qml" line="24"/>
         <source>RAM Size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/RamInfo.qml" line="41"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/RamInfo.qml" line="40"/>
         <source>Used</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/RamInfo.qml" line="45"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/PerformancePages/Popup/RamInfo.qml" line="40"/>
         <source>Free</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6749,50 +6711,90 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>RuleCard</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleCard.qml" line="43"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleCard.qml" line="42"/>
         <source>Static effects apply once when the window opens; dynamic ones are re-applied when a matched property changes.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleCard.qml" line="122"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleCard.qml" line="124"/>
         <source>Unique name (optional)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleCard.qml" line="190"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleCard.qml" line="184"/>
         <source>Match</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleCard.qml" line="201"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleCard.qml" line="195"/>
         <source>Add property</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleCard.qml" line="219"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleCard.qml" line="213"/>
         <source>Every property must match. Regular expressions must match the whole value; prefix with negative: to invert, e.g. ^(kitty)$.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleCard.qml" line="251"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleCard.qml" line="245"/>
         <source>Effects</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleCard.qml" line="262"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleCard.qml" line="256"/>
         <source>Add effect</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>RuleServicesBase</name>
+    <message>
+        <location filename="../Qml/Services/Hyprland/RuleServicesBase.qml" line="228"/>
+        <source>Must be a number.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/RuleServicesBase.qml" line="230"/>
+        <source>Must be at least %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/RuleServicesBase.qml" line="232"/>
+        <source>Must be at most %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/RuleServicesBase.qml" line="237"/>
+        <source>Must be two values.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/RuleServicesBase.qml" line="239"/>
+        <source>Both values are required.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/RuleServicesBase.qml" line="243"/>
+        <source>Must be one of: %1.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Qml/Services/Hyprland/RuleServicesBase.qml" line="258"/>
+        <location filename="../Qml/Services/Hyprland/RuleServicesBase.qml" line="260"/>
+        <location filename="../Qml/Services/Hyprland/RuleServicesBase.qml" line="263"/>
+        <source>Hyprland</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>RuleValueEditor</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleValueEditor.qml" line="58"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleValueEditor.qml" line="57"/>
         <source>Default</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleValueEditor.qml" line="177"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleValueEditor.qml" line="183"/>
         <source>X</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6805,17 +6807,17 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>RuleValueRow</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleValueRow.qml" line="58"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleValueRow.qml" line="56"/>
         <source>dynamic</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleValueRow.qml" line="58"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleValueRow.qml" line="56"/>
         <source>static</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleValueRow.qml" line="66"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/RuleValueRow.qml" line="68"/>
         <source>Pick from running</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6855,12 +6857,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>SearchBar</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/SearchBar.qml" line="63"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/SearchBar.qml" line="50"/>
         <source>Search clipboard…</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Clipboard/SearchBar.qml" line="102"/>
+        <location filename="../Qml/Modules/Drawers/Clipboard/SearchBar.qml" line="75"/>
         <source>VISUAL</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6868,7 +6870,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>SearchField</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/BottomDrawers/WallpaperSelector/SearchField.qml" line="30"/>
+        <location filename="../Qml/Modules/Drawers/BottomDrawers/WallpaperSelector/SearchField.qml" line="29"/>
         <source>Search wallpapers</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6914,195 +6916,195 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>Settings</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="63"/>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="67"/>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="185"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="65"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="69"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="187"/>
         <source>General</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="71"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="73"/>
         <source>Language</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="76"/>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="80"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="78"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="82"/>
         <source>Appearance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="84"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="86"/>
         <source>Wallpaper</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="89"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="91"/>
         <source>Modules</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="93"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="95"/>
         <source>Top Bar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="97"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="99"/>
         <source>Media Player</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="101"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="103"/>
         <source>Weather</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="105"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="107"/>
         <source>Notification</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="109"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="111"/>
         <source>Clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="113"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="115"/>
         <source>Capture Video</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="117"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="119"/>
         <source>Audio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="121"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="123"/>
         <source>Privacy Nodes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="125"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="127"/>
         <source>Dock</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="129"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="131"/>
         <source>Templates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="134"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="136"/>
         <source>Connectivity</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="138"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="140"/>
         <source>Network &amp; Internet</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="142"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="144"/>
         <source>Bluetooth</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="146"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="148"/>
         <source>KDE Connect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="151"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="153"/>
         <source>Session</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="155"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="157"/>
         <source>Greeter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="159"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="161"/>
         <source>Idle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="163"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="165"/>
         <source>Lockscreen</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="168"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="170"/>
         <source>System</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="172"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="174"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="177"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="179"/>
         <source>Hyprland Configurations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="181"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="183"/>
         <source>Monitors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="189"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="191"/>
         <source>Decoration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="193"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="195"/>
         <source>Input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="197"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="199"/>
         <source>Group</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="201"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="203"/>
         <source>Misc</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="205"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="207"/>
         <source>Binds</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="209"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="211"/>
         <source>Render</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="213"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="215"/>
         <source>Cursor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="217"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="219"/>
         <source>Debug</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="221"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="223"/>
         <source>Advanced</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="225"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="227"/>
         <source>Window Rules</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Settings.qml" line="229"/>
+        <location filename="../Qml/Modules/Settings/Settings.qml" line="231"/>
         <source>Layer Rules</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7110,7 +7112,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>SettingsSearchField</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Components/SettingsSearchField.qml" line="474"/>
+        <location filename="../Qml/Modules/Settings/Components/SettingsSearchField.qml" line="623"/>
         <source>Search settings…</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7132,7 +7134,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     <name>Sun</name>
     <message>
         <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Sun.qml" line="38"/>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Sun.qml" line="55"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Sun.qml" line="57"/>
         <source>Sun</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7275,7 +7277,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/UVIndex.qml" line="44"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/UVIndex.qml" line="49"/>
         <source>UV index</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7303,7 +7305,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     <name>Visibility</name>
     <message>
         <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Visibility.qml" line="36"/>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Visibility.qml" line="40"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Visibility.qml" line="42"/>
         <source>Visibility</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7316,27 +7318,27 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>VolumePage</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/VolumePage.qml" line="17"/>
+        <location filename="../Qml/Modules/Settings/Pages/VolumePage.qml" line="32"/>
         <source>Volume</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/VolumePage.qml" line="43"/>
+        <location filename="../Qml/Modules/Settings/Pages/VolumePage.qml" line="58"/>
         <source>Playback</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/VolumePage.qml" line="47"/>
+        <location filename="../Qml/Modules/Settings/Pages/VolumePage.qml" line="62"/>
         <source>Output Devices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/VolumePage.qml" line="51"/>
+        <location filename="../Qml/Modules/Settings/Pages/VolumePage.qml" line="66"/>
         <source>Input Devices</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/VolumePage.qml" line="55"/>
+        <location filename="../Qml/Modules/Settings/Pages/VolumePage.qml" line="70"/>
         <source>Configuration</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7349,12 +7351,12 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="165"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="164"/>
         <source>Browse and set a new wallpaper image or video.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="170"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="169"/>
         <source>Browse…</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7369,87 +7371,87 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="133"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="132"/>
         <source>Static</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="133"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="132"/>
         <source>Video</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="177"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="176"/>
         <source>Image Sourcing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="184"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="183"/>
         <source>Enable Wallpaper:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="183"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="182"/>
         <source>Show wallpaper.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="193"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="192"/>
         <source>Wallpaper Live Preview:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="204"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="203"/>
         <source>Wallpaper Directory Path:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="203"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="202"/>
         <source>Folder scanned for available wallpapers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="237"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="235"/>
         <source>Loaded Wallpaper Count:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="236"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="234"/>
         <source>Number of wallpapers kept in the picker carousel.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="254"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="252"/>
         <source>Transitions &amp; Performance</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="258"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="256"/>
         <source>Transition Animation Mode:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="257"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="255"/>
         <source>Animation used when switching wallpapers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="314"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="312"/>
         <source>Transition Low Performance Priority:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="313"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="311"/>
         <source>Reduce transition quality to improve performance on low-end hardware.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="324"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="322"/>
         <source>Transition Duration (ms):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="323"/>
+        <location filename="../Qml/Modules/Settings/Pages/WallpaperPage.qml" line="321"/>
         <source>Duration of the wallpaper switch animation in milliseconds.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7457,80 +7459,80 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>Weather</name>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="385"/>
-        <location filename="../Qml/Services/Weather.qml" line="553"/>
+        <location filename="../Qml/Services/Weather.qml" line="388"/>
+        <location filename="../Qml/Services/Weather.qml" line="547"/>
         <source>Invalid coordinates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="385"/>
-        <location filename="../Qml/Services/Weather.qml" line="414"/>
-        <location filename="../Qml/Services/Weather.qml" line="416"/>
-        <location filename="../Qml/Services/Weather.qml" line="420"/>
-        <location filename="../Qml/Services/Weather.qml" line="427"/>
+        <location filename="../Qml/Services/Weather.qml" line="388"/>
+        <location filename="../Qml/Services/Weather.qml" line="417"/>
+        <location filename="../Qml/Services/Weather.qml" line="419"/>
+        <location filename="../Qml/Services/Weather.qml" line="423"/>
+        <location filename="../Qml/Services/Weather.qml" line="430"/>
+        <location filename="../Qml/Services/Weather.qml" line="547"/>
         <location filename="../Qml/Services/Weather.qml" line="553"/>
-        <location filename="../Qml/Services/Weather.qml" line="559"/>
-        <location filename="../Qml/Services/Weather.qml" line="592"/>
-        <location filename="../Qml/Services/Weather.qml" line="596"/>
-        <location filename="../Qml/Services/Weather.qml" line="604"/>
-        <location filename="../Qml/Services/Weather.qml" line="876"/>
+        <location filename="../Qml/Services/Weather.qml" line="586"/>
+        <location filename="../Qml/Services/Weather.qml" line="590"/>
+        <location filename="../Qml/Services/Weather.qml" line="598"/>
+        <location filename="../Qml/Services/Weather.qml" line="874"/>
         <source>Weather</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="414"/>
+        <location filename="../Qml/Services/Weather.qml" line="417"/>
         <source>%1 updated</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="416"/>
+        <location filename="../Qml/Services/Weather.qml" line="419"/>
         <source>%1 failed: bad data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="420"/>
+        <location filename="../Qml/Services/Weather.qml" line="423"/>
         <source>%1 failed (%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="427"/>
+        <location filename="../Qml/Services/Weather.qml" line="430"/>
         <source>%1 %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="433"/>
-        <location filename="../Qml/Services/Weather.qml" line="611"/>
+        <location filename="../Qml/Services/Weather.qml" line="436"/>
+        <location filename="../Qml/Services/Weather.qml" line="605"/>
         <source>network error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="434"/>
-        <location filename="../Qml/Services/Weather.qml" line="612"/>
+        <location filename="../Qml/Services/Weather.qml" line="437"/>
+        <location filename="../Qml/Services/Weather.qml" line="606"/>
         <source>timed out</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="559"/>
+        <location filename="../Qml/Services/Weather.qml" line="553"/>
         <source>No astronomy API key configured</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="592"/>
+        <location filename="../Qml/Services/Weather.qml" line="586"/>
         <source>Astronomy failed: bad data</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="596"/>
+        <location filename="../Qml/Services/Weather.qml" line="590"/>
         <source>Astronomy failed (%1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="604"/>
+        <location filename="../Qml/Services/Weather.qml" line="598"/>
         <source>Astronomy %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Weather.qml" line="876"/>
+        <location filename="../Qml/Services/Weather.qml" line="874"/>
         <source>No cached weather data found, fetching fresh data</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7583,27 +7585,27 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="293"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="306"/>
         <source>Low</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="298"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="308"/>
         <source>Moderate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="303"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="310"/>
         <source>High</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="308"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="312"/>
         <source>Very High</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/WeatherFormatter.qml" line="312"/>
+        <location filename="../Qml/Services/WeatherFormatter.qml" line="313"/>
         <source>Extreme</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7731,62 +7733,62 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="31"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="30"/>
         <source>Longitude:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="30"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="29"/>
         <source>Longitude of your location for weather and astronomy data.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="44"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="42"/>
         <source>Astronomy API</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="48"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="46"/>
         <source>WeatherAPI.com Key:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="47"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="45"/>
         <source>API key from WeatherAPI.com for astronomy and forecast data.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="52"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="50"/>
         <source>Enter your WeatherAPI.com API key</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="61"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="58"/>
         <source>Sync &amp; Overview</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="65"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="62"/>
         <source>Enable Quick Summary Widget:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="64"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="61"/>
         <source>Show a compact weather summary in quick settings.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="75"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="72"/>
         <source>Weather Reload Time (s):</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="74"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="71"/>
         <source>Interval for refreshing weather data, in seconds.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="83"/>
+        <location filename="../Qml/Modules/Settings/Pages/WeatherPage.qml" line="80"/>
         <source>(%1 min)</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7794,7 +7796,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>WeatherSummary</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/Dashboard/WeatherSummary/WeatherSummary.qml" line="77"/>
+        <location filename="../Qml/Modules/Drawers/Dashboard/WeatherSummary/WeatherSummary.qml" line="97"/>
         <source>Feels like %1°</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7844,7 +7846,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     <name>Wind</name>
     <message>
         <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Pages/Wind.qml" line="40"/>
-        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Wind.qml" line="72"/>
+        <location filename="../Qml/Modules/Drawers/Weather/WeatherItem/Wind.qml" line="53"/>
         <source>Wind</source>
         <translation type="unfinished"></translation>
     </message>
@@ -7898,7 +7900,7 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
     </message>
     <message>
         <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="63"/>
-        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="468"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="470"/>
         <source>Content type of the window.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8208,87 +8210,87 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="462"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="463"/>
         <source>Window class.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="473"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="476"/>
         <source>Whether the window is floating.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="478"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="482"/>
         <source>Whether the window currently has focus.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="483"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="488"/>
         <source>Whether the window is fullscreen (covering or not).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="490"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="496"/>
         <source>Fullscreen state the client requested.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="497"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="504"/>
         <source>Fullscreen state the compositor uses.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="502"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="510"/>
         <source>Whether the window is in a group.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="508"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="517"/>
         <source>Class the window was created with.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="514"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="524"/>
         <source>Title the window was created with.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="519"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="530"/>
         <source>Whether the window is modal (e.g. confirmation popups).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="524"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="536"/>
         <source>Whether the window is pinned to all workspaces.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="529"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="542"/>
         <source>Tag name. Dynamic tags end with *.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="535"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="549"/>
         <source>Window title. Static effects only ever see the initial title.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="540"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="555"/>
         <source>Workspace selector, e.g. 3, name:web or special:magic.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="546"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="562"/>
         <source>XDG tag of the window.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="551"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="568"/>
         <source>Whether the window is an Xwayland window.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="557"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleSchema.qml" line="574"/>
         <source>Numbers or expressions such as monitor_w * 0.5, using monitor_w, monitor_h, window_x, window_y, window_w, window_h, cursor_x, cursor_y.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -8296,141 +8298,85 @@ Strong gusts can uproot trees, damage buildings, and make driving dangerous, esp
 <context>
     <name>WindowRuleServices</name>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="54"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="90"/>
         <source>Failed to read window rules: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="54"/>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="56"/>
-        <source>Hyprland</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="56"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="91"/>
         <source>Failed to save window rules: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="191"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="39"/>
         <source>Add at least one match property.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="194"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="43"/>
         <source>This name is used by more than one rule; Hyprland merges rules with the same name.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="198"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="48"/>
         <source>Unknown match property: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="209"/>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="61"/>
         <source>Unknown effect: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="278"/>
-        <source>Must be a number.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="280"/>
-        <source>Must be at least %1.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="282"/>
-        <source>Must be at most %1.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="287"/>
-        <source>Must be two values.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="289"/>
-        <source>Both values are required.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="293"/>
-        <source>Must be one of: %1.</source>
+        <location filename="../Qml/Services/Hyprland/WindowRuleServices.qml" line="92"/>
+        <source>Window rules saved</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>WindowRulesPage</name>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="26"/>
-        <source>lua-cjson was not found in Hyprland&apos;s embedded Lua (5.5). vast_shell_rules.lua does nothing without it. Install lua-cjson built for Lua 5.5 and copy its cjson.so into ~/.config/hypr/ (or extend package.cpath in vast_shell_rules.lua).</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="40"/>
-        <source>vast_shell_rules.lua is set up.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="42"/>
-        <source>vast_shell_rules.lua will be created.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="48"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="31"/>
         <source>Window Rules</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="57"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="40"/>
         <source>Hyprland with Lua configuration was not detected. Rules are saved, but only Hyprland applies them.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="77"/>
-        <source>Rules are read by vast_shell_rules.lua, created once next to vast_shell.lua. vast-shell never edits hyprland.lua, and never overwrites its own Lua files afterwards.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="90"/>
-        <source>Add at the bottom of hyprland.lua: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="109"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="47"/>
         <source>Rules</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="113"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="51"/>
         <source>Rules apply top to bottom and the last matching rule wins. A rule without any match property does nothing.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="120"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="58"/>
         <source>No window rules yet.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="143"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="97"/>
         <source>Add rule</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="155"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="77"/>
         <source>Fix the marked rules to apply.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="167"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="86"/>
         <source>Revert</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="174"/>
+        <location filename="../Qml/Modules/Settings/Pages/Hyprland/WindowRulesPage.qml" line="92"/>
         <source>Apply</source>
         <translation type="unfinished"></translation>
     </message>

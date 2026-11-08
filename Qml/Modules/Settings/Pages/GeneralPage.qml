@@ -57,6 +57,19 @@ SettingsPageBase {
         }
 
         SettingRow {
+            label: qsTr("OSD Timer:")
+            description: qsTr("How long does the OSD stay on screen")
+
+            MaterialTextField {
+                text: Configs.generals.osdTimer
+                Component.onCompleted: forceActiveFocus()
+                Keys.onEscapePressed: focus = false
+                onAccepted: Configs.generals.osdTimer = parseInt(text)
+                onTextEdited: Configs.generals.osdTimer = parseInt(text)
+            }
+        }
+
+        SettingRow {
             description: qsTr("Draw an outer border around shell.")
             label: qsTr("Enable Outer Border:")
 
@@ -68,8 +81,6 @@ SettingsPageBase {
 
         GridLayout {
             columns: 2
-
-            // transparency sections
 
             SettingRow {
                 description: qsTr("Enable translucent shell.")
@@ -132,8 +143,6 @@ SettingsPageBase {
                     onMoved: Configs.generals.alpha = value
                 }
             }
-
-            // transparency sections end
 
             SettingRow {
                 label: qsTr("How much radius blur for album cover:")
