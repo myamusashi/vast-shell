@@ -15,8 +15,8 @@ import "Markdown"
 Pages {
     id: root
 
-    content: Visibility {}
-    component Visibility: ScrollView {
+    content: PageContent {}
+    component PageContent: ScrollView {
         id: scroll
 
         ScrollBar.horizontal.policy: ScrollBar.AlwaysOff

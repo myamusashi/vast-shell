@@ -18,6 +18,8 @@ MaterialShape {
 
     color: Colours.m3Colors.m3SurfaceContainer
     shape: MaterialShape.Square
+    implicitHeight: 150
+    implicitWidth: 150
 
     ClippingWrapperRectangle {
         anchors.fill: parent
@@ -25,7 +27,7 @@ MaterialShape {
         bottomRightRadius: bottomLeftRadius
         color: "transparent"
 
-        Sun {}
+        SunArcShape {}
     }
 
     RowLayout {
@@ -136,7 +138,7 @@ MaterialShape {
         }
     }
 
-    component Sun: Shape {
+    component SunArcShape: Shape {
         id: sunShape
 
         property color hillColor: Colours.m3Colors.m3Primary

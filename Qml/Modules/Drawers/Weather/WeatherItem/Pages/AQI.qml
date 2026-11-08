@@ -16,8 +16,8 @@ import "Markdown"
 Pages {
     id: root
 
-    content: AQI {}
-    component AQI: ScrollView {
+    content: PageContent {}
+    component PageContent: ScrollView {
         id: scroll
 
         ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
@@ -160,25 +160,18 @@ Pages {
                     }
 
                     Repeater {
-                        model: [
-                            {
-                                text: qsTr("United States AQI:"),
-                                value: Weather.usAQI
-                            },
-                            {
-                                text: qsTr("European AQi:"),
-                                value: Weather.europeanAQI
-                            }
-                        ]
+                        model: 2
                         delegate: RowLayout {
                             id: aqiDelegate
 
-                            required property var modelData
+                            required property int  index
+
+                            readonly property bool isUSA: aqiDelegate.index === 0
 
                             StyledText {
                                 color: Colours.m3Colors.m3OnSurface
                                 font.pixelSize: Appearance.fonts.size.large
-                                text: aqiDelegate.modelData.text
+                                text: aqiDelegate.isUSA ? qsTr("United States AQI:") : qsTr("European AQi:")
                             }
 
                             Item {
@@ -187,15 +180,9 @@ Pages {
 
                             StyledRect {
                                 color: Colours.m3Colors.m3Primary
-                                implicitHeight: aqiMetrics.height + 5
-                                implicitWidth: aqiMetrics.advanceWidth(aqiTextValue.text) + 20
+                                implicitHeight: aqiTextValue.implicitHeight + 5
+                                implicitWidth: aqiTextValue.implicitWidth + 20
                                 radius: Appearance.rounding.full
-
-                                FontMetrics {
-                                    id: aqiMetrics
-
-                                    font: aqiTextValue.font
-                                }
 
                                 StyledText {
                                     id: aqiTextValue
@@ -203,7 +190,7 @@ Pages {
                                     anchors.centerIn: parent
                                     color: Colours.m3Colors.m3OnPrimary
                                     font.pixelSize: Appearance.fonts.size.large
-                                    text: aqiDelegate.modelData.value
+                                    text: aqiDelegate.isUSA ? Weather.usAQI : Weather.europeanAQI
                                 }
                             }
                         }

@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import Quickshell.Widgets
 
@@ -20,6 +22,7 @@ WrapperRectangle {
     opacity: isOpen ? 1.0 : 0.0
     scale: isOpen ? 1.0 : 0.5
     transformOrigin: Item.Center
+    visible: isOpen || opacity > 0
     Behavior on opacity {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -50,7 +53,14 @@ WrapperRectangle {
     }
 
     Loader {
-        active: root.isOpen
+        active: root.visible
+
+        anchors {
+            fill: parent
+            leftMargin: 20
+            rightMargin: 20
+        }
+
         asynchronous: true
         sourceComponent: root.content
     }

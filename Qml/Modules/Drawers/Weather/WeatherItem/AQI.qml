@@ -16,6 +16,8 @@ MaterialShape {
 
     color: Colours.m3Colors.m3SurfaceContainer
     shape: MaterialShape.Square
+    implicitHeight: 150
+    implicitWidth: 150
 
     ColumnLayout {
         spacing: Appearance.spacing.small

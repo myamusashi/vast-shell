@@ -16,8 +16,8 @@ import "Markdown"
 Pages {
     id: root
 
-    content: Humidity {}
-    component Humidity: ScrollView {
+    content: PageContent {}
+    component PageContent: ScrollView {
         id: scroll
 
         ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
@@ -94,11 +94,12 @@ Pages {
                                     StyledText {
                                         color: Colours.m3Colors.m3OnBackground
                                         font.pixelSize: Appearance.fonts.size.normal
-                                        text: FormatTimeUtils.convertTo12HourCompact(parent.modelData.time)
+                                        text: parent.modelData.compactTime || FormatTimeUtils.convertTo12HourCompact(parent.modelData.time)
                                     }
                                 }
                                 model: ScriptModel {
-                                    values: Weather.hourlyFromNow(Weather.hourlyForecast)
+                                    objectProp: "fullTime"
+                                    values: Weather.upcomingHourlyForecast
                                 }
                             }
                         }

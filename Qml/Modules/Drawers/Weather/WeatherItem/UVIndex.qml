@@ -12,9 +12,14 @@ import qs.Components.Base
 MaterialShape {
     id: canvas
 
-    property var uvColors: [Colours.m3Colors.m3Green, Colours.m3Colors.m3Yellow, Colours.m3Colors.m3Orange, Colours.m3Colors.m3Red, Colours.m3Colors.m3Purple]
-    property int uvIndex: Weather.uvIndex
+    readonly property int  currentCategory: Weather.uvCategoryIndex(uvIndex)
+    readonly property real indicatorDistance: Math.min(width, height) * 0.38
 
+    property var           uvColors: [Colours.m3Colors.m3Green, Colours.m3Colors.m3Yellow, Colours.m3Colors.m3Orange, Colours.m3Colors.m3Red, Colours.m3Colors.m3Purple]
+    property int           uvIndex: Weather.uvIndex
+
+    implicitHeight: 150
+    implicitWidth: 150
     color: Colours.m3Colors.m3SurfaceContainer
     shape: MaterialShape.Cookie12Sided
 
@@ -74,18 +79,16 @@ MaterialShape {
             StyledRect {
                 id: indicator
 
-                required property int index
+                required property int  index
 
-                property real         angle: 150 - (index * 30)
-                property int          currentCategory: Weather.uvCategoryIndex(canvas.uvIndex)
-                property real         distance: Math.min(parent.width, parent.height) * 0.38
+                readonly property real angle: 150 - (index * 30)
 
-                color: index === currentCategory ? canvas.uvColors[index] : Qt.alpha(canvas.uvColors[index], 0.3)
+                color: index === canvas.currentCategory ? canvas.uvColors[index] : Qt.alpha(canvas.uvColors[index], 0.3)
                 height: 18
                 radius: Appearance.rounding.normal
                 width: 18
-                x: parent.width / 2 + Math.cos(angle * Math.PI / 180) * distance - width / 2
-                y: parent.height / 2 + Math.sin(angle * Math.PI / 180) * distance - height / 2
+                x: parent.width / 2 + Math.cos(angle * Math.PI / 180) * canvas.indicatorDistance - width / 2
+                y: parent.height / 2 + Math.sin(angle * Math.PI / 180) * canvas.indicatorDistance - height / 2
             }
         }
     }

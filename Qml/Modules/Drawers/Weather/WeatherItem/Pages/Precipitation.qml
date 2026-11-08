@@ -16,8 +16,8 @@ import "Markdown"
 Pages {
     id: root
 
-    content: Precipitation {}
-    component Precipitation: ScrollView {
+    content: PageContent {}
+    component PageContent: ScrollView {
         id: scroll
 
         anchors {
@@ -96,7 +96,8 @@ Pages {
 
                             Repeater {
                                 model: ScriptModel {
-                                    values: Weather.hourlyFromNow(Weather.hourlyForecast)
+                                    objectProp: "fullTime"
+                                    values: Weather.upcomingHourlyForecast
                                 }
                                 delegate: ColumnLayout {
                                     id: precipitationDelegate
@@ -116,7 +117,7 @@ Pages {
                                     StyledText {
                                         color: Colours.m3Colors.m3OnBackground
                                         font.pixelSize: Appearance.fonts.size.normal
-                                        text: FormatTimeUtils.convertTo12HourCompact(precipitationDelegate.modelData.time)
+                                        text: precipitationDelegate.modelData.compactTime || FormatTimeUtils.convertTo12HourCompact(precipitationDelegate.modelData.time)
                                     }
                                 }
                             }

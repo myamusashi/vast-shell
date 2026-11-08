@@ -17,6 +17,8 @@ MaterialShape {
     animationDuration: 0
     color: Colours.m3Colors.m3SurfaceContainer
     shape: MaterialShape.Square
+    implicitHeight: 150
+    implicitWidth: 150
 
     ClippingWrapperRectangle {
         anchors.fill: shape
@@ -132,7 +134,7 @@ MaterialShape {
                 if (fillHeight <= 0)
                     return "M 0 0";
 
-                var points   = 100;
+                var points   = 40;
                 var pathData = "M 0 " + heightPx + " L 0 " + waveY;
 
                 for (var i = 0; i <= points; i++) {

@@ -17,8 +17,8 @@ Pages {
 
     property real sunriseProgress: CelestialProgress.progressBetween(Weather.sunRise, Weather.sunSet)
 
-    content: Sun {}
-    component Sun: ScrollView {
+    content: PageContent {}
+    component PageContent: ScrollView {
         id: scroll
 
         ScrollBar.horizontal.policy: ScrollBar.AlwaysOff

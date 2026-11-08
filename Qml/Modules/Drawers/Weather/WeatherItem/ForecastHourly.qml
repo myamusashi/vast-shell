@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -84,12 +86,15 @@ StyledRect {
                                 Layout.preferredHeight: 40
                                 Layout.preferredWidth: 40
 
-                                MaterialShape {
+                                Loader {
+                                    active: delegate.isCurrentHour
                                     anchors.fill: parent
                                     anchors.rightMargin: 3
-                                    color: Colours.m3Colors.m3Primary
-                                    shape: MaterialShape.Cookie4Sided
-                                    visible: delegate.isCurrentHour
+                                    visible: active
+                                    sourceComponent: MaterialShape {
+                                        color: Colours.m3Colors.m3Primary
+                                        shape: MaterialShape.Cookie4Sided
+                                    }
                                 }
 
                                 StyledText {
@@ -101,16 +106,12 @@ StyledRect {
                                 }
                             }
 
-                            RowLayout {
+                            StyledText {
                                 Layout.alignment: Qt.AlignHCenter
-                                spacing: 2
-
-                                StyledText {
-                                    color: Colours.m3Colors.m3Primary
-                                    font.pixelSize: Appearance.fonts.size.small
-                                    font.weight: Font.Bold
-                                    text: (parseInt(delegate.modelData.humidity) || 0) + "%"
-                                }
+                                color: Colours.m3Colors.m3Primary
+                                font.pixelSize: Appearance.fonts.size.small
+                                font.weight: Font.Bold
+                                text: `${parseInt(delegate.modelData.humidity) || 0}%`
                             }
 
                             Icon {
@@ -126,12 +127,13 @@ StyledRect {
                                 color: Colours.m3Colors.m3OnSurface
                                 font.pixelSize: Appearance.fonts.size.small
                                 font.weight: Font.Bold
-                                text: FormatTimeUtils.convertTo12HourCompact((delegate.modelData.time || "").split(" ")[1] || delegate.modelData.time || "")
+                                text: delegate.modelData.compactTime || FormatTimeUtils.convertTo12HourCompact((delegate.modelData.time || "").split(" ")[1] || delegate.modelData.time || "")
                             }
                         }
                     }
                     model: ScriptModel {
-                        values: Weather.hourlyFromNow(Weather.hourlyForecast)
+                        objectProp: "fullTime"
+                        values: Weather.upcomingHourlyForecast
                     }
                 }
             }

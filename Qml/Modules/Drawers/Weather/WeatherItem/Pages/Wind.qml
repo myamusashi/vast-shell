@@ -16,8 +16,8 @@ import "Markdown"
 Pages {
     id: root
 
-    content: Wind {}
-    component Wind: ScrollView {
+    content: PageContent {}
+    component PageContent: ScrollView {
         id: scroll
 
         anchors {
@@ -94,7 +94,8 @@ Pages {
 
                             Repeater {
                                 model: ScriptModel {
-                                    values: Weather.hourlyFromNow(Weather.hourlyForecast)
+                                    objectProp: "fullTime"
+                                    values: Weather.upcomingHourlyForecast
                                 }
                                 delegate: ColumnLayout {
                                     required property var modelData
@@ -130,7 +131,7 @@ Pages {
                                         Layout.alignment: Qt.AlignCenter
                                         color: Colours.m3Colors.m3OnBackground
                                         font.pixelSize: Appearance.fonts.size.normal
-                                        text: FormatTimeUtils.convertTo12HourCompact(parent.modelData.time)
+                                        text: parent.modelData.compactTime || FormatTimeUtils.convertTo12HourCompact(parent.modelData.time)
                                     }
 
                                     Item {

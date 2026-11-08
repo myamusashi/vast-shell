@@ -18,6 +18,8 @@ MaterialShape {
 
     color: Colours.m3Colors.m3SurfaceContainer
     shape: MaterialShape.Square
+    implicitHeight: 150
+    implicitWidth: 150
 
     ClippingWrapperRectangle {
         anchors.fill: parent
@@ -25,7 +27,7 @@ MaterialShape {
         bottomRightRadius: bottomLeftRadius
         color: "transparent"
 
-        Moon {}
+        MoonArcShape {}
     }
 
     RowLayout {
@@ -134,11 +136,11 @@ MaterialShape {
         }
     }
 
-    component Moon: Shape {
+    component MoonArcShape: Shape {
         id: moonShape
 
         property color hillColor: Colours.m3Colors.m3Primary
-        property color moonColor: Colours.m3Colors.m3OnSurfaceVariant
+        property color moonColor: Colours.m3Colors.m3OnSurface
         property real  moonSize: 20
 
         anchors.fill: parent
@@ -149,7 +151,7 @@ MaterialShape {
         ShapePath {
             fillColor: moonShape.hillColor
             startX: 0
-            startY: moonGeo.heightPx
+            startY: moonShape.height
             strokeColor: "transparent"
 
             PathLine {
@@ -167,13 +169,13 @@ MaterialShape {
             }
 
             PathLine {
-                x: moonGeo.widthPx
-                y: moonGeo.heightPx
+                x: moonShape.width
+                y: moonShape.height
             }
 
             PathLine {
                 x: 0
-                y: moonGeo.heightPx
+                y: moonShape.height
             }
         }
 
@@ -197,8 +199,8 @@ MaterialShape {
         QtObject {
             id: moonGeo
 
-            readonly property real heightPx: moonShape.parent.height
-            readonly property real widthPx: moonShape.parent.width
+            readonly property real heightPx: moonShape.height
+            readonly property real widthPx: moonShape.width
 
             property real          hillBaseY: heightPx - hillHeight
             property real          hillControlPoint1X: widthPx * 0.3

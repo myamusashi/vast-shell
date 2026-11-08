@@ -283,38 +283,34 @@ Singleton {
     }
 
     function uvCategoryIndex(index) {
-        return uvCategoryInfo(index).index;
+        if (index <= 2)
+            return 0;
+        if (index <= 5)
+            return 1;
+        if (index <= 7)
+            return 2;
+        if (index <= 10)
+            return 3;
+        return 4;
     }
 
     function uvCategoryInfo(index) {
-        if (index <= 2)
-            return {
-                index: 0,
-                label: qsTr("Low")
-            };
-        if (index <= 5)
-            return {
-                index: 1,
-                label: qsTr("Moderate")
-            };
-        if (index <= 7)
-            return {
-                index: 2,
-                label: qsTr("High")
-            };
-        if (index <= 10)
-            return {
-                index: 3,
-                label: qsTr("Very High")
-            };
         return {
-            index: 4,
-            label: qsTr("Extreme")
+            index: uvCategoryIndex(index),
+            label: uvCategoryLabel(index)
         };
     }
 
     function uvCategoryLabel(index) {
-        return uvCategoryInfo(index).label;
+        if (index <= 2)
+            return qsTr("Low");
+        if (index <= 5)
+            return qsTr("Moderate");
+        if (index <= 7)
+            return qsTr("High");
+        if (index <= 10)
+            return qsTr("Very High");
+        return qsTr("Extreme");
     }
 
     function weatherStatus(code) {

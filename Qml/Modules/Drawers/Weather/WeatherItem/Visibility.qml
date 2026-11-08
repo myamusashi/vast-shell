@@ -12,6 +12,8 @@ import qs.Components.Base
 MaterialShape {
     color: Colours.m3Colors.m3SurfaceContainer
     shape: MaterialShape.Circle
+    implicitHeight: 150
+    implicitWidth: 150
 
     Cookie {
 

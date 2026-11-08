@@ -20,8 +20,10 @@ MaterialShape {
     animationDuration: 0
     color: Colours.m3Colors.m3SurfaceContainer
     shape: MaterialShape.Circle
+    implicitHeight: 150
+    implicitWidth: 150
 
-    Pressure {
+    PressureGaugeShape {
 
         ColumnLayout {
 
@@ -65,7 +67,7 @@ MaterialShape {
         }
     }
 
-    component Pressure: Shape {
+    component PressureGaugeShape: Shape {
         id: gaugeShape
 
         property real normalizedValue: (canvas.pressure - canvas.minPressure) / (canvas.maxPressure - canvas.minPressure)

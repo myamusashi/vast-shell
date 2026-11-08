@@ -26,9 +26,30 @@ Singleton {
     function              progressBetween(rise, set) {
         const riseMinutes = minutesOf(rise);
         const setMinutes  = minutesOf(set);
-        if (riseMinutes < 0 || setMinutes < 0 || setMinutes <= riseMinutes)
+        if (riseMinutes < 0 || setMinutes < 0 || riseMinutes === setMinutes)
             return 0;
-        return Math.max(0, Math.min(1, (nowMinutes - riseMinutes) / (setMinutes - riseMinutes)));
+
+        if (setMinutes > riseMinutes) {
+            if (nowMinutes < riseMinutes)
+                return 0;
+            if (nowMinutes > setMinutes)
+                return 1;
+            return (nowMinutes - riseMinutes) / (setMinutes - riseMinutes);
+        } else {
+            const totalDuration = (1440 - riseMinutes) + setMinutes;
+            if (totalDuration <= 0)
+                return 0;
+
+            if (nowMinutes >= riseMinutes) {
+                const elapsed = nowMinutes - riseMinutes;
+                return Math.max(0, Math.min(1, elapsed / totalDuration));
+            } else if (nowMinutes <= setMinutes) {
+                const elapsed = (1440 - riseMinutes) + nowMinutes;
+                return Math.max(0, Math.min(1, elapsed / totalDuration));
+            } else {
+                return (nowMinutes - setMinutes) < (riseMinutes - nowMinutes) ? 1 : 0;
+            }
+        }
     }
 
     Timer {

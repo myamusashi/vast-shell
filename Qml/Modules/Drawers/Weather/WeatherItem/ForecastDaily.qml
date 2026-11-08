@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
@@ -17,6 +19,9 @@ StyledRect {
 
     ColumnLayout {
         id: content
+
+        readonly property var    dayNames: [qsTr("Sun"), qsTr("Mon"), qsTr("Tue"), qsTr("Wed"), qsTr("Thu"), qsTr("Fri"), qsTr("Sat")]
+        readonly property string todayDateString: new Date().toDateString()
 
         implicitWidth: parent.width
         spacing: Appearance.spacing.small
@@ -125,36 +130,24 @@ StyledRect {
                                     const date = delegate.modelData.date || "";
                                     if (!date)
                                         return "";
-                                    const today        = new Date().toDateString();
                                     const forecastDate = new Date(date);
-                                    if (forecastDate.toDateString() === today) {
+                                    if (forecastDate.toDateString() === content.todayDateString)
                                         return qsTr("Today");
-                                    }
-                                    const days = [qsTr("Sun"), qsTr("Mon"), qsTr("Tue"), qsTr("Wed"), qsTr("Thu"), qsTr("Fri"), qsTr("Sat")];
-                                    return days[forecastDate.getDay()];
+                                    return content.dayNames[forecastDate.getDay()] || "";
                                 }
-                                wrapMode: Text.WordWrap
                             }
 
                             StyledText {
                                 Layout.alignment: Qt.AlignCenter
                                 color: Colours.m3Colors.m3OnSurface
                                 font.pixelSize: Appearance.fonts.size.medium
-                                text: {
-                                    const date = delegate.modelData.date || "";
-                                    if (!date)
-                                        return "";
-                                    const parts = date.split("-");
-                                    if (parts.length >= 3) {
-                                        return parts[2] + "/" + parts[1];
-                                    }
-                                    return date;
-                                }
+                                text: delegate.modelData.dateFormatted || delegate.modelData.date || ""
                             }
                         }
                     }
                     model: ScriptModel {
-                        values: [...Weather.dailyForecast]
+                        objectProp: "date"
+                        values: Weather.dailyForecast
                     }
                 }
             }

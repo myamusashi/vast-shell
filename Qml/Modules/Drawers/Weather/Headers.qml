@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 
@@ -18,6 +20,7 @@ ColumnLayout {
     Progress {
         Layout.alignment: Qt.AlignTop
         Layout.fillWidth: true
+        Layout.preferredHeight: condition ? 4 : 0
         condition: Weather.isInitialLoading || Weather.isRefreshing
     }
 
@@ -41,13 +44,11 @@ ColumnLayout {
             }
 
             StyledText {
+                Layout.fillWidth: true
                 color: Colours.m3Colors.m3OnSurface
+                elide: Text.ElideRight
                 font.pixelSize: Appearance.fonts.size.large
                 text: Weather.locationName + ", " + Weather.locationRegion + ", " + Weather.locationCountry
-            }
-
-            Item {
-                Layout.fillWidth: true
             }
 
             FloatingButton {
@@ -102,35 +103,39 @@ ColumnLayout {
                 Layout.alignment: Qt.AlignBottom | Qt.AlignLeft
                 spacing: Appearance.spacing.normal
 
-                Repeater {
-                    model: [
-                        {
-                            text: Weather.temperatureMax + "°",
-                            icon: "arrow_upward"
-                        },
-                        {
-                            text: Weather.temperatureMin + "°",
-                            icon: "arrow_downward"
-                        }
-                    ]
-                    delegate: RowLayout {
-                        required property var modelData
+                RowLayout {
+                    spacing: Appearance.spacing.small
 
-                        spacing: Appearance.spacing.small
+                    Icon {
+                        color: Colours.m3Colors.m3OnSurface
+                        font.pixelSize: Appearance.fonts.size.normal
+                        icon: "arrow_upward"
+                        type: Icon.Material
+                    }
 
-                        Icon {
-                            color: Colours.m3Colors.m3OnSurface
-                            font.pixelSize: Appearance.fonts.size.normal
-                            icon: parent.modelData.icon
-                            type: Icon.Material
-                        }
+                    StyledText {
+                        color: Colours.m3Colors.m3OnSurface
+                        font.pixelSize: Appearance.fonts.size.large
+                        font.weight: Font.DemiBold
+                        text: `${Weather.temperatureMax}°`
+                    }
+                }
 
-                        StyledText {
-                            color: Colours.m3Colors.m3OnSurface
-                            font.pixelSize: Appearance.fonts.size.large
-                            font.weight: Font.DemiBold
-                            text: parent.modelData.text
-                        }
+                RowLayout {
+                    spacing: Appearance.spacing.small
+
+                    Icon {
+                        color: Colours.m3Colors.m3OnSurface
+                        font.pixelSize: Appearance.fonts.size.normal
+                        icon: "arrow_downward"
+                        type: Icon.Material
+                    }
+
+                    StyledText {
+                        color: Colours.m3Colors.m3OnSurface
+                        font.pixelSize: Appearance.fonts.size.large
+                        font.weight: Font.DemiBold
+                        text: `${Weather.temperatureMin}°`
                     }
                 }
             }

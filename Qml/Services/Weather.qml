@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 pragma Singleton
 
 import QtQuick
@@ -12,55 +13,57 @@ import qs.Services
 Singleton {
     id: root
 
-    readonly property bool canRefresh: !isLoading
-    readonly property bool hasData: loaded
+    readonly property bool   canRefresh: !isLoading
+    readonly property bool   hasData: loaded
+    readonly property string quickSummaryText: WeatherFormatter.quickSummary(root)
+    readonly property var    upcomingHourlyForecast: WeatherFormatter.hourlyFromNow(root.hourlyForecast, CelestialProgress.nowMinutes)
 
-    property var           activeAQIRequest: null
-    property var           activeAstronomyRequest: null
-    property var           activeWeatherRequest: null
-    property bool          aqiLoaded: false
-    property bool          aqiLoading: false
-    property bool          astronomyLoaded: false
-    property bool          astronomyLoading: false
-    property int           cloudCover: 0
-    property string        configLatitude: Configs.weather.latitude
-    property string        configLongitude: Configs.weather.longitude
-    property var           dailyForecast: []
-    property string        dayLength: ""
-    property real          dewPoint: 0.0
-    property string        dominantPollutant: ""
-    property real          elevation: 0.0
-    property int           europeanAQI: 0
-    property string        europeanAQICategory: ""
-    property string        europeanAQIColor: ""
-    property string        europeanDescription: ""
-    property int           feelsLike: 0
-    property string        healthRecommendation: ""
-    property var           hourlyAQIForecast: []
-    property var           hourlyForecast: []
-    property int           humidity: 0
-    property bool          isDay: true
+    property var             activeAQIRequest: null
+    property var             activeAstronomyRequest: null
+    property var             activeWeatherRequest: null
+    property bool            aqiLoaded: false
+    property bool            aqiLoading: false
+    property bool            astronomyLoaded: false
+    property bool            astronomyLoading: false
+    property int             cloudCover: 0
+    property string          configLatitude: Configs.weather.latitude
+    property string          configLongitude: Configs.weather.longitude
+    property var             dailyForecast: []
+    property string          dayLength: ""
+    property real            dewPoint: 0.0
+    property string          dominantPollutant: ""
+    property real            elevation: 0.0
+    property int             europeanAQI: 0
+    property string          europeanAQICategory: ""
+    property string          europeanAQIColor: ""
+    property string          europeanDescription: ""
+    property int             feelsLike: 0
+    property string          healthRecommendation: ""
+    property var             hourlyAQIForecast: []
+    property var             hourlyForecast: []
+    property int             humidity: 0
+    property bool            isDay: true
 
     // readonly loading states
-    readonly property bool isInitialLoading: isLoading && !loaded
-    readonly property bool isLoading: weatherLoading || aqiLoading || astronomyLoading
-    readonly property bool isRefreshing: isLoading && loaded
+    readonly property bool   isInitialLoading: isLoading && !loaded
+    readonly property bool   isLoading: weatherLoading || aqiLoading || astronomyLoading
+    readonly property bool   isRefreshing: isLoading && loaded
 
-    property bool          isMoonUp: false
-    property bool          isSunUp: false
+    property bool            isMoonUp: false
+    property bool            isSunUp: false
 
     // AQI properties
-    property string        lastUpdateAQI
-    property string        lastUpdateAstronomy
-    property string        lastUpdateWeather
+    property string          lastUpdateAQI
+    property string          lastUpdateAstronomy
+    property string          lastUpdateWeather
 
     // Weather properties
-    property real          latitude: 0.0
-    property bool          loaded: weatherLoaded && aqiLoaded && astronomyLoaded
-    property string        locationCountry: ""
+    property real            latitude: 0.0
+    property bool            loaded: weatherLoaded && aqiLoaded && astronomyLoaded
+    property string          locationCountry: ""
 
     // Locations
-    readonly property var  weatherIcons: ({
+    readonly property var    weatherIcons: ({
             "0": WeatherIcon.daySunny,
             "1": WeatherIcon.dayCloudy,
             "2": WeatherIcon.dayCloudy,
@@ -90,45 +93,45 @@ Singleton {
             "96": WeatherIcon.thunderstorm,
             "99": WeatherIcon.thunderstorm
         })
-    readonly property var  weatherIconsNight: ({
+    readonly property var    weatherIconsNight: ({
             "0": WeatherIcon.nightClear,
             "1": WeatherIcon.nightCloudy,
             "2": WeatherIcon.nightCloudy
         })
 
-    property string        locationName: ""
-    property string        locationRegion: ""
-    property real          longitude: 0.0
-    property int           moonIllumination: 0
-    property string        moonPhase: ""
-    property string        moonRise: ""
-    property string        moonSet: ""
-    property real          pm10: 0.0
-    property real          pm25: 0.0
-    property real          precipitation: 0.0
-    property real          precipitationDaily: 0.0
-    property int           pressure: 0
-    property int           reloadInterval: (Configs.weather.reloadTime || 1800) * 1000
-    property string        sunRise: ""
-    property string        sunSet: ""
-    property int           temperature: 0
-    property int           temperatureMax: 0
-    property int           temperatureMin: 0
-    property string        timezone: ""
-    property string        timeZoneIdentifier: ""
-    property int           usAQI: 0
-    property string        usAQICategory: ""
-    property string        usAQIColor: ""
-    property string        usDescription: ""
-    property int           uvIndex: 0
-    property real          visibility: 0.0
-    property int           weatherCode: 0
-    property string        weatherCondition: ""
-    property string        weatherDescription: ""
-    property string        weatherIcon: "air"
+    property string          locationName: ""
+    property string          locationRegion: ""
+    property real            longitude: 0.0
+    property int             moonIllumination: 0
+    property string          moonPhase: ""
+    property string          moonRise: ""
+    property string          moonSet: ""
+    property real            pm10: 0.0
+    property real            pm25: 0.0
+    property real            precipitation: 0.0
+    property real            precipitationDaily: 0.0
+    property int             pressure: 0
+    property int             reloadInterval: (Configs.weather.reloadTime || 1800) * 1000
+    property string          sunRise: ""
+    property string          sunSet: ""
+    property int             temperature: 0
+    property int             temperatureMax: 0
+    property int             temperatureMin: 0
+    property string          timezone: ""
+    property string          timeZoneIdentifier: ""
+    property int             usAQI: 0
+    property string          usAQICategory: ""
+    property string          usAQIColor: ""
+    property string          usDescription: ""
+    property int             uvIndex: 0
+    property real            visibility: 0.0
+    property int             weatherCode: 0
+    property string          weatherCondition: ""
+    property string          weatherDescription: ""
+    property string          weatherIcon: "air"
 
     // Loading states
-    readonly property var  weatherSchema: [
+    readonly property var    weatherSchema: [
         {
             key: "latitude",
             def: 0.0
@@ -347,13 +350,13 @@ Singleton {
         }
     ]
 
-    property bool          weatherLoaded: false
-    property bool          weatherLoading: false
-    property string        windDirection: ""
-    property int           windDirectionDegrees: 0
-    property int           windSpeed: 0
+    property bool            weatherLoaded: false
+    property bool            weatherLoading: false
+    property string          windDirection: ""
+    property int             windDirectionDegrees: 0
+    property int             windSpeed: 0
 
-    function               buildSaveData() {
+    function                 buildSaveData() {
         const data = {
             timestamp: Date.now()
         };
@@ -362,11 +365,11 @@ Singleton {
         return data;
     }
 
-    function               calculateDayLength() {
+    function                 calculateDayLength() {
         return WeatherFormatter.calculateDayLength(sunRise, sunSet);
     }
 
-    function               cleanupRequest(request) {
+    function                 cleanupRequest(request) {
         if (request) {
             try {
                 request.onreadystatechange = null;
@@ -378,7 +381,7 @@ Singleton {
         }
     }
 
-    function               fetchData(config) {
+    function                 fetchData(config) {
         const lat = parseFloat(configLatitude);
         const lon = parseFloat(configLongitude);
         if (isNaN(lat) || isNaN(lon)) {
@@ -440,84 +443,75 @@ Singleton {
         request.send();
     }
 
-    function               forecastHour(entry) {
+    function                 forecastHour(entry) {
         return WeatherFormatter.forecastHour(entry);
     }
 
-    function               formatDate(dateStr) {
+    function                 formatDate(dateStr) {
         return WeatherFormatter.formatDate(dateStr);
     }
 
-    function               formatHourOfDay(timeStr) {
+    function                 formatHourOfDay(timeStr) {
         return WeatherFormatter.formatHourOfDay(timeStr);
     }
 
-    function               getDominantPollutant(pm25, pm10) {
+    function                 getDominantPollutant(pm25, pm10) {
         return WeatherFormatter.dominantPollutant(pm25, pm10);
     }
 
-    function               getEuropeanAQIInfo(aqi) {
+    function                 getEuropeanAQIInfo(aqi) {
         return WeatherFormatter.europeanAQIInfo(aqi);
     }
 
-    function               getHealthRecommendation(euAQI, usAQI, pm25, pm10) {
+    function                 getHealthRecommendation(euAQI, usAQI, pm25, pm10) {
         return WeatherFormatter.healthRecommendation(euAQI, usAQI, pm25, pm10);
     }
 
-    function               getQuickSummary() {
-        return WeatherFormatter.quickSummary({
-            weatherLoaded: weatherLoaded,
-            humidity: humidity,
-            temperature: temperature,
-            europeanAQI: europeanAQI,
-            usAQI: usAQI,
-            uvIndex: uvIndex,
-            precipitation: precipitation,
-            windSpeed: windSpeed,
-            temperatureMax: temperatureMax,
-            temperatureMin: temperatureMin,
-            visibility: visibility,
-            feelsLike: feelsLike
-        });
+    function                 getQuickSummary() {
+        return root.quickSummaryText;
     }
 
-    function               getUSAQIInfo(aqi) {
+    function                 getUSAQIInfo(aqi) {
         return WeatherFormatter.usAQIInfo(aqi);
     }
 
-    function               getWeatherIconFromCode(code, isDayTime) {
+    function                 getWeatherIconFromCode(code, isDayTime) {
         return WeatherFormatter.iconFor(code, isDayTime, weatherIcons, weatherIconsNight);
     }
 
-    function               getWeatherStatus(code) {
+    function                 getWeatherStatus(code) {
         return WeatherFormatter.weatherStatus(code);
     }
 
-    function               getWindDirectionText(degrees) {
+    function                 getWindDirectionText(degrees) {
         return WeatherFormatter.windDirectionText(degrees);
     }
 
-    function               hourlyFromNow(forecast) {
+    function                 hourlyFromNow(forecast) {
         return WeatherFormatter.hourlyFromNow(forecast, CelestialProgress.nowMinutes);
     }
 
-    function               isCurrentForecastHour(entry) {
+    function                 isCurrentForecastHour(entry) {
         return WeatherFormatter.isCurrentForecastHour(entry, CelestialProgress.nowMinutes);
     }
 
-    function               moonPhaseText(phase) {
+    function                 moonPhaseText(phase) {
         return WeatherFormatter.moonPhaseText(phase);
     }
 
-    function               parseAstronomyTime(timeStr) {
+    function                 parseAstronomyTime(timeStr) {
         return WeatherFormatter.parseAstronomyTime(timeStr);
     }
 
-    function               pressureTrendIcon(currentPressure, index) {
-        return WeatherFormatter.pressureTrendIcon(currentPressure, hourlyForecast.map(entry => entry.pressure), index);
+    function                 pressureTrendIcon(currentPressure, index) {
+        const prevEntry = index > 0 ? root.hourlyForecast[index - 1] : null;
+        const diff      = prevEntry ? currentPressure - prevEntry.pressure : 0;
+        if (Math.abs(diff) < 1.0)
+            return "arrow_forward";
+        return diff > 0 ? "arrow_upward" : "arrow_downward";
     }
 
-    function               refresh() {
+    function                 refresh() {
         if (canRefresh) {
             console.log("[WEATHER SERVICES] Refresh/reload weather data");
             reload();
@@ -528,13 +522,13 @@ Singleton {
         }
     }
 
-    function               reload() {
+    function                 reload() {
         reloadWeather();
         reloadAQI();
         reloadAstronomy();
     }
 
-    function               reloadAQI() {
+    function                 reloadAQI() {
         console.log("[WEATHER] Fetching AQI data from Open-Meteo...");
         fetchData({
             url: "https://air-quality-api.open-meteo.com/v1/air-quality" + "?current=european_aqi,us_aqi" + "&hourly=pm10,pm2_5,european_aqi,us_aqi" + "&timezone=auto&forecast_days=1",
@@ -545,7 +539,7 @@ Singleton {
         });
     }
 
-    function               reloadAstronomy() {
+    function                 reloadAstronomy() {
         console.log("[WEATHER] Fetching astronomy data from WeatherAPI.com...");
         var lat = parseFloat(configLatitude);
         var lon = parseFloat(configLongitude);
@@ -617,12 +611,12 @@ Singleton {
         request.send();
     }
 
-    function               reloadIfLoaded() {
+    function                 reloadIfLoaded() {
         if (weatherLoaded || aqiLoaded || astronomyLoaded)
             reload();
     }
 
-    function               reloadWeather() {
+    function                 reloadWeather() {
         console.log("[WEATHER] Fetching weather data from Open-Meteo...");
         fetchData({
             url: "https://api.open-meteo.com/v1/forecast" + "?current=precipitation,rain,wind_speed_10m,wind_direction_10m,cloud_cover,surface_pressure,weather_code,relative_humidity_2m,temperature_2m,apparent_temperature,is_day" + "&daily=sunrise,sunset,uv_index_max,weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,precipitation_hours,rain_sum,showers_sum,surface_pressure_mean,visibility_mean,wind_speed_10m_mean,wind_direction_10m_dominant,relative_humidity_2m_max,relative_humidity_2m_min,relative_humidity_2m_mean,dew_point_2m_mean,cloud_cover_mean" + "&hourly=temperature_2m,weather_code,wind_speed_10m,precipitation,precipitation_probability,rain,visibility,cloud_cover,surface_pressure,wind_direction_10m,relative_humidity_2m,uv_index,is_day,showers,dew_point_2m" + "&timezone=auto&forecast_days=7",
@@ -633,12 +627,12 @@ Singleton {
         });
     }
 
-    function               restoreFromCache(data) {
+    function                 restoreFromCache(data) {
         for (const field of weatherSchema)
             root[field.key] = data[field.key] ?? field.def;
     }
 
-    function               updateAQIData(json) {
+    function                 updateAQIData(json) {
         try {
             var cur         = json.current || {}, hourly = json.hourly || {};
 
@@ -698,7 +692,7 @@ Singleton {
         }
     }
 
-    function               updateAstronomyData(json) {
+    function                 updateAstronomyData(json) {
         try {
             const astro         = json.astronomy?.astro || {}, loc = json.location || {};
             astronomyLoaded     = true;
@@ -728,7 +722,7 @@ Singleton {
         }
     }
 
-    function               updateWeatherData(json) {
+    function                 updateWeatherData(json) {
         try {
             var cur              = json.current || {}, hourly = json.hourly || {}, daily = json.daily || {};
 
@@ -767,9 +761,12 @@ Singleton {
 
             var newHourly        = [];
             for (var i = 0; i < (hourly.time || []).length && i < 24; i++) {
-                var hIsDay = hourly.is_day?.[i] === 1;
+                var hIsDay        = hourly.is_day?.[i] === 1;
+                var formattedTime = formatHourOfDay(hourly.time[i]);
+                var pressureVal   = hourly.surface_pressure?.[i] || 0.0;
                 newHourly.push({
-                    time: formatHourOfDay(hourly.time[i]),
+                    time: formattedTime,
+                    compactTime: FormatTimeUtils.convertTo12HourCompact(formattedTime),
                     fullTime: hourly.time[i],
                     temperature: Math.round(hourly.temperature_2m?.[i] || 0),
                     humidity: hourly.relative_humidity_2m?.[i] || 0,
@@ -778,7 +775,8 @@ Singleton {
                     isDay: hIsDay,
                     precipitation: hourly.precipitation?.[i] || 0.0,
                     probability: hourly.precipitation_probability?.[i] || 0,
-                    pressure: hourly.surface_pressure?.[i] || 0.0,
+                    pressure: pressureVal,
+                    pressureTrendIcon: WeatherFormatter.pressureTrendIcon(pressureVal, hourly.surface_pressure, i),
                     uvIndex: hourly.uv_index?.[i] ?? 0.0,
                     windSpeed: hourly.wind_speed_10m?.[i] || 0.0,
                     windDirectionDegrees: hourly.wind_direction_10m?.[i] || 0,
@@ -820,11 +818,11 @@ Singleton {
         }
     }
 
-    function               uvCategoryIndex(index) {
+    function                 uvCategoryIndex(index) {
         return WeatherFormatter.uvCategoryIndex(index);
     }
 
-    function               uvCategoryLabel(index) {
+    function                 uvCategoryLabel(index) {
         return WeatherFormatter.uvCategoryLabel(index);
     }
 
@@ -846,8 +844,8 @@ Singleton {
         id: reloadTimer
 
         interval: root.reloadInterval
-        repeat: GlobalStates.isWeatherPanelOpen
-        running: GlobalStates.isWeatherPanelOpen
+        repeat: true
+        running: root.reloadInterval > 0
         triggeredOnStart: false
         onTriggered: root.reload()
     }
@@ -890,7 +888,6 @@ Singleton {
                 console.log(`Loaded weather data from cache (${age} minutes old)`);
                 console.log("Fetching fresh weather data in background...");
 
-                reloadTimer.start();
                 root.reload();
             } catch (error) {
                 console.error("Failed to load weather cache:", error);

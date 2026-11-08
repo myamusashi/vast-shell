@@ -16,8 +16,8 @@ import "Markdown"
 Pages {
     id: root
 
-    content: Pressure {}
-    component Pressure: ScrollView {
+    content: PageContent {}
+    component PageContent: ScrollView {
         id: scroll
 
         ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
@@ -92,7 +92,8 @@ Pages {
 
                             Repeater {
                                 model: ScriptModel {
-                                    values: Weather.hourlyFromNow(Weather.hourlyForecast)
+                                    objectProp: "fullTime"
+                                    values: Weather.upcomingHourlyForecast
                                 }
                                 delegate: ColumnLayout {
                                     id: hourlyDelegate
@@ -105,7 +106,7 @@ Pages {
                                     HourlyValueSlider {
                                         Layout.alignment: Qt.AlignHCenter
                                         from: 0
-                                        handleIcon: Weather.pressureTrendIcon(hourlyDelegate.modelData.pressure, hourlyDelegate.index)
+                                        handleIcon: hourlyDelegate.modelData.pressureTrendIcon || Weather.pressureTrendIcon(hourlyDelegate.modelData.pressure, hourlyDelegate.index)
                                         implicitWidth: 30
                                         to: 1500
                                         value: hourlyDelegate.modelData.pressure
@@ -125,7 +126,7 @@ Pages {
                                             Layout.alignment: Qt.AlignHCenter
                                             color: Colours.m3Colors.m3OnBackground
                                             font.pixelSize: Appearance.fonts.size.normal
-                                            text: FormatTimeUtils.convertTo12HourCompact(hourlyDelegate.modelData.time)
+                                            text: hourlyDelegate.modelData.compactTime || FormatTimeUtils.convertTo12HourCompact(hourlyDelegate.modelData.time)
                                         }
                                     }
                                 }
