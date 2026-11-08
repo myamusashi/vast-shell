@@ -10,40 +10,6 @@ import qs.Components.Base
 PopupWidget {
     id: diskInfo
 
-    function syncFilesystems() {
-        const list = SystemUsage.filesystemNames;
-
-        for (let modelIndex = filesystemModel.count - 1; modelIndex >= 0; modelIndex--) {
-            if (!list.some(entry => entry.name === filesystemModel.get(modelIndex).filesystem))
-                filesystemModel.remove(modelIndex, 1);
-        }
-
-        for (let entryIndex = 0; entryIndex < list.length; entryIndex++) {
-            const entry       = list[entryIndex];
-            const row         = {
-                filesystem: entry.name,
-                filesystemType: entry.type,
-                mountPoint: entry.mountpoint,
-                totalMountPointData: SystemUsage.formatKB(entry.totalKB),
-                totalUsed: SystemUsage.formatKB(entry.usedKB),
-                freeSize: SystemUsage.formatKB(entry.freeKB),
-                usedValue: entry.usedKB / 1024 / 1024,
-                totalValue: entry.totalKB / 1024 / 1024
-            };
-            let existingIndex = -1;
-            for (let modelIndex = 0; modelIndex < filesystemModel.count; modelIndex++) {
-                if (filesystemModel.get(modelIndex).filesystem === entry.name) {
-                    existingIndex = modelIndex;
-                    break;
-                }
-            }
-            if (existingIndex >= 0)
-                filesystemModel.set(existingIndex, row);
-            else
-                filesystemModel.append(row);
-        }
-    }
-
     icon: "storage"
     text: qsTr("Storage")
     content: ColumnLayout {
@@ -113,28 +79,26 @@ PopupWidget {
         }
 
         Repeater {
-            model: filesystemModel
+            model: SystemUsage.filesystems
             delegate: ColumnLayout {
                 id: delegate
 
-                required property var    modelData
-
-                readonly property string filesystem: modelData.filesystem
-                readonly property string filesystemType: modelData.filesystemType
-                readonly property string freeSize: modelData.freeSize
-                readonly property string mountPoint: modelData.mountPoint
-                readonly property string totalMountPointData: modelData.totalMountPointData
-                readonly property string totalUsed: modelData.totalUsed
-                readonly property real   totalValue: modelData.totalValue
-                readonly property real   usedValue: modelData.usedValue
+                required property string deviceName
+                required property string filesystemType
+                required property string mountPoint
+                required property string formattedTotal
+                required property string formattedUsed
+                required property string formattedFree
+                required property real   totalKiB
+                required property real   usedKiB
 
                 RowLayout {
 
                     StyledText {
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.normal
-                        text: delegate.filesystem + ": "
-                        visible: delegate.filesystem !== ""
+                        text: delegate.deviceName + ": "
+                        visible: delegate.deviceName !== ""
                     }
 
                     Item {
@@ -166,8 +130,8 @@ PopupWidget {
                     StyledText {
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.normal
-                        text: delegate.totalMountPointData
-                        visible: delegate.totalMountPointData !== ""
+                        text: delegate.formattedTotal
+                        visible: delegate.formattedTotal !== ""
                     }
                 }
 
@@ -176,8 +140,8 @@ PopupWidget {
                     StyledText {
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.normal
-                        text: delegate.totalUsed
-                        visible: delegate.totalUsed !== ""
+                        text: delegate.formattedUsed
+                        visible: delegate.formattedUsed !== ""
                     }
 
                     Item {
@@ -187,36 +151,21 @@ PopupWidget {
                     StyledText {
                         color: Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.normal
-                        text: delegate.freeSize
-                        visible: delegate.freeSize !== ""
+                        text: delegate.formattedFree
+                        visible: delegate.formattedFree !== ""
                     }
                 }
 
                 Slider2Values {
                     Layout.fillWidth: true
                     Layout.topMargin: Appearance.spacing.small
-                    totalValue: delegate.totalValue / 1048576
-                    usedValue: delegate.usedValue / 1048576
-                    visible: delegate.usedValue > 0 || delegate.totalValue > 0
+                    totalValue: delegate.totalKiB
+                    usedValue: delegate.usedKiB
+                    visible: delegate.usedKiB > 0 || delegate.totalKiB > 0
                 }
             }
         }
     }
-    Component.onCompleted: syncFilesystems()
-
-    ListModel {
-        id: filesystemModel
-    }
-
-    Connections {
-
-        function onFilesystemNamesChanged() {
-            diskInfo.syncFilesystems();
-        }
-
-        target: SystemUsage
-    }
-
     component Slider2Values: Item {
         id: root
 

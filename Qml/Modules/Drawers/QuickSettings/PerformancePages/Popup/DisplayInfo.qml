@@ -9,7 +9,6 @@ import qs.Components.Base
 
 PopupWidget {
     id: root
-
     readonly property var monitorModel: {
         let model = [];
         for (let name in Hypr.monitorData) {
@@ -87,6 +86,7 @@ PopupWidget {
         }
     }
 
+    Component.onCompleted: SystemUsage.ensureGraphicsInfoLoaded()
     icon: "computer"
     text: qsTr("Display")
     content: ColumnLayout {

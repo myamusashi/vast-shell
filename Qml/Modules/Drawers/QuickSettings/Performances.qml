@@ -82,13 +82,13 @@ Item {
                             rows: 4
 
                             Repeater {
-                                model: SystemUsage.cpuCores.length
+                                model: SystemUsage.cpuCores
                                 delegate: StyledText {
-                                    required property int index
+                                    required property int freqMHz
 
                                     color: Colours.m3Colors.m3OnSurfaceVariant
                                     font.pixelSize: Appearance.fonts.size.large
-                                    text: (SystemUsage.cpuCores[index]?.freqMHz ?? 0).toFixed(0) + " MHz"
+                                    text: `${freqMHz} MHz`
                                 }
                             }
                         }

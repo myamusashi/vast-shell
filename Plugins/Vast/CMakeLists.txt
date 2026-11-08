@@ -19,6 +19,7 @@ add_subdirectory(Keylock)
 add_subdirectory(Lyrics)
 add_subdirectory(MaterialColor)
 add_subdirectory(Search)
+add_subdirectory(SystemUsage)
 add_subdirectory(Translation)
 add_subdirectory(Utils)
 
