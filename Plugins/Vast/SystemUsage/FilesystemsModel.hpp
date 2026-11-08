@@ -20,7 +20,7 @@ namespace vast {
 
     class FilesystemsModel final : public QAbstractListModel {
         Q_OBJECT
-        QML_ELEMENT
+        QML_NAMED_ELEMENT(FilesystemsModel)
         QML_UNCREATABLE("Access via SystemUsageMonitor.filesystems")
 
         Q_PROPERTY(qsizetype count READ count NOTIFY countChanged)

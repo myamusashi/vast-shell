@@ -22,7 +22,7 @@ namespace vast {
 
     class SystemUsageMonitor final : public QObject {
         Q_OBJECT
-        QML_ELEMENT
+        QML_NAMED_ELEMENT(SystemUsageMonitor)
         QML_SINGLETON
 
         Q_PROPERTY(bool running READ isRunning WRITE setRunning NOTIFY runningChanged)
@@ -238,8 +238,8 @@ namespace vast {
             return mGraphicsSummary.vaApiDriver;
         }
 
-        [[nodiscard]] Q_INVOKABLE static QString formatKB(quint64 kib) {
-            return sysusage::formatKiB(kib);
+        [[nodiscard]] Q_INVOKABLE static QString formatKB(double kib) {
+            return sysusage::formatKiB(kib < 0.0 ? 0ULL : static_cast<quint64>(std::llround(kib)));
         }
         [[nodiscard]] Q_INVOKABLE static QString formatUsage(double usageMiB) {
             return sysusage::formatUsageMiB(usageMiB);

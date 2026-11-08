@@ -25,7 +25,7 @@ namespace vast {
 
     class CpuCoresModel final : public QAbstractListModel {
         Q_OBJECT
-        QML_ELEMENT
+        QML_NAMED_ELEMENT(CpuCoresModel)
         QML_UNCREATABLE("Access via SystemUsageMonitor.cpuCores")
 
         Q_PROPERTY(qsizetype count READ count NOTIFY countChanged)
