@@ -22,13 +22,13 @@ PopupWidget {
         case 2:
             return root.isWired ? "0 dBm" : "-70 dBm";
         case 3:
-            return SystemUsage.formatUsage(SystemUsage.totalWirelessUploadUsage);
+            return SystemUsage.formatUsageMiB(SystemUsage.totalWirelessUploadUsage);
         case 4:
-            return SystemUsage.formatUsage(SystemUsage.totalWiredUploadUsage);
+            return SystemUsage.formatUsageMiB(SystemUsage.totalWiredUploadUsage);
         case 5:
-            return SystemUsage.formatUsage(SystemUsage.totalWirelessDownloadUsage);
+            return SystemUsage.formatUsageMiB(SystemUsage.totalWirelessDownloadUsage);
         default:
-            return SystemUsage.formatUsage(SystemUsage.totalWiredDownloadUsage);
+            return SystemUsage.formatUsageMiB(SystemUsage.totalWiredDownloadUsage);
         }
     }
 

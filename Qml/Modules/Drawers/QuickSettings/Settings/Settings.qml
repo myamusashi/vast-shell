@@ -50,13 +50,13 @@ Item {
             StyledText {
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.small
-                text: root.isConnected ? `${SystemUsage.formatUsage(SystemUsage.totalWiredDownloadUsage)} used today (${SystemUsage.wiredInterface})` : "Not connected"
+                text: root.isConnected ? `${SystemUsage.formatUsageMiB(SystemUsage.totalWiredDownloadUsage)} used today (${SystemUsage.wiredInterface})` : "Not connected"
             }
 
             StyledText {
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.small
-                text: Networking.wifiEnabled ? `${SystemUsage.formatUsage(SystemUsage.totalWirelessDownloadUsage)} used today (${root.wifiConnectedName})` : "Not connected"
+                text: Networking.wifiEnabled ? `${SystemUsage.formatUsageMiB(SystemUsage.totalWirelessDownloadUsage)} used today (${root.wifiConnectedName})` : "Not connected"
             }
         }
 

@@ -50,15 +50,15 @@ Singleton {
     // CPU & Memory
     readonly property var    cpuCores: SystemUsageMonitor.cpuCores
     readonly property int    cpuPerc: SystemUsageMonitor.cpuPerc
-    readonly property real   memProp: SystemUsageMonitor.memProp
     readonly property real   memTotal: SystemUsageMonitor.memTotal
     readonly property real   memUsed: SystemUsageMonitor.memUsed
+    readonly property real   memUsedGiB: SystemUsageMonitor.memUsedGiB
 
     // Storage & Filesystems
     readonly property real   diskPercent: SystemUsageMonitor.diskPercent
-    readonly property real   diskProp: SystemUsageMonitor.diskProp
     readonly property real   diskTotal: SystemUsageMonitor.diskTotal
     readonly property real   diskUsed: SystemUsageMonitor.diskUsed
+    readonly property real   diskUsedGiB: SystemUsageMonitor.diskUsedGiB
     readonly property var    filesystemNames: SystemUsageMonitor.filesystems
     readonly property var    filesystems: SystemUsageMonitor.filesystems
     readonly property real   storageAppsData: SystemUsageMonitor.storageAppsData
@@ -94,16 +94,16 @@ Singleton {
         SystemUsageMonitor.ensureGraphicsInfoLoaded();
     }
 
-    function                 formatKB(kib: int): string {
-        return SystemUsageMonitor.formatKB(kib);
+    function                 formatKiB(kib: real): string {
+        return SystemUsageMonitor.formatKiB(kib);
     }
 
-    function                 formatSpeed(speedMBps: real): string {
-        return SystemUsageMonitor.formatSpeed(speedMBps);
+    function                 formatSpeedMiBps(speedMiBps: real): string {
+        return SystemUsageMonitor.formatSpeedMiBps(speedMiBps);
     }
 
-    function                 formatUsage(usageMiB: real): string {
-        return SystemUsageMonitor.formatUsage(usageMiB);
+    function                 formatUsageMiB(usageMiB: real): string {
+        return SystemUsageMonitor.formatUsageMiB(usageMiB);
     }
 
     function                 sampleNow(): void {

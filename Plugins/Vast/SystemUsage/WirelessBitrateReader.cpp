@@ -1,64 +1,86 @@
 #include "WirelessBitrateReader.hpp"
 
-#include <qdbusconnection.h>
-#include <qdbusinterface.h>
+#include <qdbusextratypes.h>
 #include <qdbusmessage.h>
-#include <qdbusreply.h>
+#include <qdbuspendingcall.h>
+#include <qdbuspendingreply.h>
 #include <qvariant.h>
+
+#include <utility>
 
 namespace vast {
 
-    WirelessBitrateReader::WirelessBitrateReader() = default;
+    WirelessBitrateReader::WirelessBitrateReader(QObject* parent, QDBusConnection bus, const QString& serviceName) :
+        QObject(parent), mBus(std::move(bus)), mServiceName(serviceName) {}
 
-    QString WirelessBitrateReader::resolveDevicePath(const QString& interfaceName) {
-        if (interfaceName.isEmpty())
-            return {};
+    bool WirelessBitrateReader::requestBitrateMbps(const QString& interfaceName) {
+        if (interfaceName.isEmpty() || mRequestInFlight)
+            return false;
 
-        const auto existingIterator = mDevicePaths.find(interfaceName);
-        if (existingIterator != mDevicePaths.end()) {
-            return existingIterator.value();
+        if (!mBus.isConnected()) {
+            emit bitrateResolved(interfaceName, 0);
+            return false;
         }
 
-        auto systemBus = QDBusConnection::systemBus();
-        if (!systemBus.isConnected())
-            return {};
-
-        QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.freedesktop.NetworkManager"), QStringLiteral("/org/freedesktop/NetworkManager"),
-                                                              QStringLiteral("org.freedesktop.NetworkManager"), QStringLiteral("GetDeviceByIpIface"));
-        message << interfaceName;
-
-        const QDBusReply<QDBusObjectPath> reply = systemBus.call(message);
-        if (!reply.isValid())
-            return {};
-
-        QString path = reply.value().path();
-        mDevicePaths.insert(interfaceName, path);
-        return path;
+        mRequestInFlight = true;
+        resolveDevicePath(interfaceName);
+        return true;
     }
 
-    int WirelessBitrateReader::queryBitrateMbps(const QString& interfaceName) {
-        if (interfaceName.isEmpty())
-            return 0;
-
-        const QString devicePath = resolveDevicePath(interfaceName);
-        if (devicePath.isEmpty())
-            return 0;
-
-        auto systemBus = QDBusConnection::systemBus();
-        if (!systemBus.isConnected())
-            return 0;
-
-        QDBusInterface wirelessDevice(QStringLiteral("org.freedesktop.NetworkManager"), devicePath, QStringLiteral("org.freedesktop.NetworkManager.Device.Wireless"), systemBus);
-
-        const QVariant bitrateVariant = wirelessDevice.property("Bitrate");
-        if (!bitrateVariant.isValid()) {
-            // Path might be stale; clear cached path for next retry
-            mDevicePaths.remove(interfaceName);
-            return 0;
+    void WirelessBitrateReader::resolveDevicePath(const QString& interfaceName) {
+        const auto cachedPathIterator = mDevicePaths.find(interfaceName);
+        if (cachedPathIterator != mDevicePaths.end()) {
+            queryBitrate(interfaceName, cachedPathIterator.value());
+            return;
         }
 
-        const quint32 bitrateKbps = bitrateVariant.toUInt();
-        return static_cast<int>(bitrateKbps / 1000);
+        auto message = QDBusMessage::createMethodCall(mServiceName, QStringLiteral("/org/freedesktop/NetworkManager"), QStringLiteral("org.freedesktop.NetworkManager"),
+                                                      QStringLiteral("GetDeviceByIpIface"));
+        message << interfaceName;
+
+        auto* watcher = new QDBusPendingCallWatcher(mBus.asyncCall(message), this);
+        connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, watcher, interfaceName](const QDBusPendingCall* call) {
+            watcher->deleteLater();
+
+            QDBusPendingReply<QDBusObjectPath> reply(*call);
+            if (!reply.isValid()) {
+                finishRequest(interfaceName, 0, false);
+                return;
+            }
+
+            const QString devicePath = reply.value().path();
+            if (devicePath.isEmpty() || devicePath == QStringLiteral("/")) {
+                finishRequest(interfaceName, 0, true);
+                return;
+            }
+
+            mDevicePaths.insert(interfaceName, devicePath);
+            queryBitrate(interfaceName, devicePath);
+        });
+    }
+
+    void WirelessBitrateReader::queryBitrate(const QString& interfaceName, const QString& devicePath) {
+        auto message = QDBusMessage::createMethodCall(mServiceName, devicePath, QStringLiteral("org.freedesktop.DBus.Properties"), QStringLiteral("Get"));
+        message << QStringLiteral("org.freedesktop.NetworkManager.Device.Wireless") << QStringLiteral("Bitrate");
+
+        auto* watcher = new QDBusPendingCallWatcher(mBus.asyncCall(message), this);
+        connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, watcher, interfaceName](const QDBusPendingCall* call) {
+            watcher->deleteLater();
+            QDBusPendingReply<QDBusVariant> reply(*call);
+            if (!reply.isValid()) {
+                finishRequest(interfaceName, 0, true);
+                return;
+            }
+            const quint32 bitrateKbps = reply.value().variant().toUInt();
+            finishRequest(interfaceName, static_cast<int>(bitrateKbps / 1000), false);
+        });
+    }
+
+    void WirelessBitrateReader::finishRequest(const QString& interfaceName, int bitrateMbps, bool invalidateCachedPath) {
+        if (invalidateCachedPath)
+            mDevicePaths.remove(interfaceName);
+        mRequestInFlight = false;
+        emit bitrateResolved(interfaceName, bitrateMbps);
     }
 
 } // namespace vast

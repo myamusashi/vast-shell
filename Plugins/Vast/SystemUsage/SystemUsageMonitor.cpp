@@ -2,18 +2,23 @@
 #include "../Jobs/JobExecutor.hpp"
 #include "StorageCollector.hpp"
 
+#include <qcoreapplication.h>
 #include <qdir.h>
 #include <qfile.h>
 #include <qfileinfo.h>
+#include <qpointer.h>
 #include <qprocess.h>
 #include <qstringview.h>
 
 #include <sys/utsname.h>
+#include <algorithm>
 #include <cmath>
 
 namespace vast {
 
     namespace {
+        constexpr qint64         STORAGE_SAMPLE_INTERVAL_MILLISECONDS  = 8000;
+        constexpr qint64         WIRELESS_SAMPLE_INTERVAL_MILLISECONDS = 8000;
 
         [[nodiscard]] QByteArray readFileTrimmed(const QString& path) {
             QFile file(path);
@@ -35,13 +40,15 @@ namespace vast {
                 if (ueventContent.isEmpty())
                     continue;
 
-                const QString text  = QString::fromUtf8(ueventContent.data(), static_cast<qsizetype>(ueventContent.size()));
-                const auto    lines = QStringView(text).split(u'\n');
+                const QString                text  = QString::fromUtf8(ueventContent.data(), ueventContent.size());
+                const auto                   lines = QStringView(text).split(u'\n');
 
-                QString       pciSlot;
+                static constexpr QStringView pciSlotPrefix = u"PCI_SLOT_NAME=";
+
+                QString                      pciSlot;
                 for (const auto& line : lines) {
-                    if (line.startsWith(u"PCI_SLOT_NAME=")) {
-                        pciSlot = line.mid(14).trimmed().toString();
+                    if (line.startsWith(pciSlotPrefix)) {
+                        pciSlot = line.mid(pciSlotPrefix.size()).trimmed().toString();
                         break;
                     }
                 }
@@ -57,34 +64,55 @@ namespace vast {
                 }
             }
 
-            // Fallback: run lspci directly if udev data is absent
-            QProcess process;
-            process.start(QStringLiteral("lspci"), {});
-            if (process.waitForFinished(1000)) {
-                const QString lspciOut = QString::fromUtf8(process.readAllStandardOutput());
-                const auto    lines    = QStringView(lspciOut).split(u'\n');
-                for (const auto& line : lines) {
-                    if (line.contains(u"VGA compatible controller:", Qt::CaseInsensitive) || line.contains(u"3D controller:", Qt::CaseInsensitive) ||
-                        line.contains(u"Display controller:", Qt::CaseInsensitive)) {
-                        const qsizetype colon = line.indexOf(u':', line.indexOf(u':') + 1);
-                        if (colon >= 0) {
-                            return line.mid(colon + 1).trimmed().toString();
-                        }
-                    }
-                }
-            }
-
             return {};
         }
 
     } // namespace
 
-    SystemUsageMonitor::SystemUsageMonitor(QObject* parent) : QObject(parent), mCpuCoresModel(new CpuCoresModel(this)), mFilesystemsModel(new FilesystemsModel(this)) {
+    SystemUsageMonitor::SystemUsageMonitor(QObject* parent, QString procNetDevPath, QString lspciProgram, QString sysRoot) :
+        QObject(parent), mTimer(new QTimer(this)), mSensorScanner(std::move(sysRoot)), mWirelessReader(new WirelessBitrateReader(this)), mCpuCoresModel(new CpuCoresModel(this)),
+        mFilesystemsModel(new FilesystemsModel(this)), mProcNetDevPath(std::move(procNetDevPath)), mLspciProgram(std::move(lspciProgram)) {
         initializeStaticInfo();
 
-        mTimer = new QTimer(this);
+        connect(mWirelessReader, &WirelessBitrateReader::bitrateResolved, this, [this](const QString& interfaceName, int bitrateMbps) {
+            if (interfaceName != mWirelessInterface)
+                return;
+            if (bitrateMbps != mWirelessLinkSpeed) {
+                mWirelessLinkSpeed = bitrateMbps;
+                emit wirelessLinkSpeedChanged();
+            }
+        });
+
         mTimer->setInterval(2000);
         connect(mTimer, &QTimer::timeout, this, &SystemUsageMonitor::sampleNow);
+    }
+
+    void SystemUsageMonitor::detectGpuNameFromLspciAsync() {
+        auto* process = new QProcess(this);
+        auto* timeout = new QTimer(process);
+        timeout->setSingleShot(true);
+        timeout->setInterval(1000);
+        connect(timeout, &QTimer::timeout, process, &QProcess::kill);
+
+        connect(process, &QProcess::finished, this, [this, process](int exitCode, QProcess::ExitStatus exitStatus) {
+            if (exitStatus == QProcess::NormalExit && exitCode == 0)
+                applyGpuName(sysusage::parseLspciGpuName(process->readAllStandardOutput()));
+            process->deleteLater();
+        });
+        connect(process, &QProcess::errorOccurred, this, [process](QProcess::ProcessError error) {
+            if (error == QProcess::FailedToStart)
+                process->deleteLater();
+        });
+
+        process->start(mLspciProgram, {});
+        timeout->start();
+    }
+
+    void SystemUsageMonitor::applyGpuName(const QString& name) {
+        if (!name.isEmpty() && name != mGpuName) {
+            mGpuName = name;
+            emit gpuNameChanged();
+        }
     }
 
     void SystemUsageMonitor::setRunning(bool running) {
@@ -100,6 +128,8 @@ namespace vast {
             mTimer->start();
         } else {
             mTimer->stop();
+            mPreviousCpuStat = sysusage::CpuStatSnapshot{};
+            mPreviousNetCounters.clear();
         }
     }
 
@@ -146,14 +176,19 @@ namespace vast {
         if (!cpuinfoContent.isEmpty()) {
             mCpuName = sysusage::parseCpuModelName(cpuinfoContent);
         }
-
         // 4. GPU model name
         mGpuName = detectGpuNameFromSysfs();
 
         // 5. Sensor scanner init
         mSensorScanner.scan();
         mBatteryTechnologies = mSensorScanner.readBatteryTechnology();
-        mWirelessInterface   = mSensorScanner.detectWirelessInterface();
+        for (const auto& coreInfo : mSensorScanner.coreFrequencyPaths())
+            mFrequencyPathByCoreId.insert(coreInfo.coreId, coreInfo.frequencyPath);
+        mWirelessInterface = mSensorScanner.detectWirelessInterface();
+
+        // 6. lspci fallback is async; skip entirely when udev already resolved the name
+        if (mGpuName.isEmpty())
+            detectGpuNameFromLspciAsync();
     }
 
     void SystemUsageMonitor::sampleNow() {
@@ -165,10 +200,10 @@ namespace vast {
         sampleSensors();
         sampleNetwork(elapsedSeconds);
 
-        if (mStorageTickCounter % 4 == 0) {
+        if (!mLastStorageSample.isValid() || mLastStorageSample.elapsed() >= STORAGE_SAMPLE_INTERVAL_MILLISECONDS) {
             sampleStorageAsync();
+            mLastStorageSample.restart();
         }
-        ++mStorageTickCounter;
     }
 
     void SystemUsageMonitor::sampleCpu() {
@@ -188,24 +223,27 @@ namespace vast {
             }
         }
 
-        // Sample per-core frequencies and usage
-        const auto&         corePaths = mSensorScanner.coreFrequencyPaths();
+        // Sample per-core frequencies and usage; driven by /proc/stat so no-cpufreq systems still list cores
         QList<CpuCoreEntry> coreEntries;
-        coreEntries.reserve(corePaths.size());
+        coreEntries.reserve(currentStat.perCore.size());
 
-        for (const auto& corePair : corePaths) {
-            const int        coreId   = corePair.first;
-            const QString&   freqPath = corePair.second;
-
-            int              freqMHz     = 0;
-            const QByteArray freqContent = readFileTrimmed(freqPath);
-            if (auto parsedFreq = sysusage::parseCoreFrequency(freqPath, freqContent)) {
-                freqMHz = parsedFreq->second;
+        for (auto coreIterator = currentStat.perCore.cbegin(); coreIterator != currentStat.perCore.cend(); ++coreIterator) {
+            const int  coreId                = coreIterator.key();
+            int        freqMHz               = 0;
+            const auto frequencyPathIterator = mFrequencyPathByCoreId.constFind(coreId);
+            if (frequencyPathIterator != mFrequencyPathByCoreId.constEnd()) {
+                const QByteArray freqContent = readFileTrimmed(frequencyPathIterator.value());
+                if (auto parsedFreq = sysusage::parseFrequencyMHz(freqContent)) {
+                    freqMHz = *parsedFreq;
+                }
             }
 
             int coreUsage = 0;
-            if (mPreviousCpuStat.valid && mPreviousCpuStat.perCore.contains(coreId) && currentStat.perCore.contains(coreId)) {
-                coreUsage = sysusage::computeCpuUsagePercent(mPreviousCpuStat.perCore.value(coreId), currentStat.perCore.value(coreId));
+            if (mPreviousCpuStat.valid) {
+                const auto previousIterator = mPreviousCpuStat.perCore.constFind(coreId);
+                if (previousIterator != mPreviousCpuStat.perCore.constEnd()) {
+                    coreUsage = sysusage::computeCpuUsagePercent(previousIterator.value(), coreIterator.value());
+                }
             }
 
             coreEntries.append(CpuCoreEntry{
@@ -236,10 +274,10 @@ namespace vast {
             mMemUsed = mem.usedKiB;
             emit         memUsedChanged();
 
-            const double prop = static_cast<double>(mMemUsed) / 1048576.0;
-            if (std::abs(prop - mMemProp) >= 0.001) {
-                mMemProp = prop;
-                emit memPropChanged();
+            const double usedGiB = static_cast<double>(mMemUsed) / 1048576.0;
+            if (std::abs(usedGiB - mMemUsedGiB) >= 0.001) {
+                mMemUsedGiB = usedGiB;
+                emit memUsedGiBChanged();
             }
         }
     }
@@ -258,27 +296,75 @@ namespace vast {
         }
     }
 
+    void SystemUsageMonitor::updateTemperature(std::optional<double> reading, double& cachedValue, void (SystemUsageMonitor::*changedSignal)()) {
+        if (reading) {
+            if (std::abs(*reading - cachedValue) >= 0.1) {
+                cachedValue = *reading;
+                emit(this->*changedSignal)();
+            }
+        } else if (cachedValue != 0.0) {
+            cachedValue = 0.0;
+            emit(this->*changedSignal)();
+        }
+    }
+
     void SystemUsageMonitor::sampleSensors() {
-        const double cpuT = mSensorScanner.readCpuTemperature();
-        if (std::abs(cpuT - mCpuTemp) >= 0.1) {
-            mCpuTemp = cpuT;
-            emit cpuTempChanged();
-        }
+        updateTemperature(mSensorScanner.readCpuTemperature(), mCpuTemp, &SystemUsageMonitor::cpuTempChanged);
+        updateTemperature(mSensorScanner.readGpuTemperature(), mGpuTemp, &SystemUsageMonitor::gpuTempChanged);
+        updateTemperature(mSensorScanner.readBatteryTemperature(), mBatteryTemp, &SystemUsageMonitor::batteryTempChanged);
+    }
 
-        const double gpuT = mSensorScanner.readGpuTemperature();
-        if (std::abs(gpuT - mGpuTemp) >= 0.1) {
-            mGpuTemp = gpuT;
-            emit gpuTempChanged();
+    void SystemUsageMonitor::resetWiredState() {
+        if (mWiredDownloadSpeed > 0.0) {
+            mWiredDownloadSpeed = 0.0;
+            emit wiredDownloadSpeedChanged();
         }
+        if (mWiredUploadSpeed > 0.0) {
+            mWiredUploadSpeed = 0.0;
+            emit wiredUploadSpeedChanged();
+        }
+    }
 
-        const double batT = mSensorScanner.readBatteryTemperature();
-        if (std::abs(batT - mBatteryTemp) >= 0.1) {
-            mBatteryTemp = batT;
-            emit batteryTempChanged();
+    void SystemUsageMonitor::resetWirelessState() {
+        if (!mWirelessInterface.isEmpty()) {
+            mWirelessInterface.clear();
+            emit wirelessInterfaceChanged();
+        }
+        if (mWirelessLinkSpeed != 0) {
+            mWirelessLinkSpeed = 0;
+            emit wirelessLinkSpeedChanged();
+        }
+        if (mWirelessDownloadSpeed > 0.0) {
+            mWirelessDownloadSpeed = 0.0;
+            emit wirelessDownloadSpeedChanged();
+        }
+        if (mWirelessUploadSpeed > 0.0) {
+            mWirelessUploadSpeed = 0.0;
+            emit wirelessUploadSpeedChanged();
         }
     }
 
     void SystemUsageMonitor::sampleNetwork(double elapsedSeconds) {
+        const QByteArray netdevContent = readFileTrimmed(mProcNetDevPath);
+        if (netdevContent.isEmpty()) {
+            mSensorScanner.updateInterfaces({});
+            resetWiredState();
+            resetWirelessState();
+            if (mStatusVPNInterface != QStringLiteral("disconnected")) {
+                mStatusVPNInterface = QStringLiteral("disconnected");
+                emit statusVPNInterfaceChanged();
+            }
+            mPreviousNetCounters.clear();
+            return;
+        }
+
+        const auto currentCounters = sysusage::parseNetDev(netdevContent);
+        mSensorScanner.updateInterfaces(currentCounters.keys());
+
+        if (!mWirelessInterface.isEmpty() && !currentCounters.contains(mWirelessInterface)) {
+            resetWirelessState();
+        }
+
         if (mWirelessInterface.isEmpty()) {
             const QString wireless = mSensorScanner.detectWirelessInterface();
             if (!wireless.isEmpty()) {
@@ -286,12 +372,6 @@ namespace vast {
                 emit wirelessInterfaceChanged();
             }
         }
-
-        const QByteArray netdevContent = readFileTrimmed(QStringLiteral("/proc/net/dev"));
-        if (netdevContent.isEmpty())
-            return;
-
-        const auto currentCounters = sysusage::parseNetDev(netdevContent);
 
         // Process wired interface metrics
         if (!mWiredInterface.isEmpty() && currentCounters.contains(mWiredInterface)) {
@@ -310,8 +390,8 @@ namespace vast {
 
             if (mPreviousNetCounters.contains(mWiredInterface)) {
                 const auto   prev      = mPreviousNetCounters.value(mWiredInterface);
-                const double downSpeed = sysusage::computeNetSpeedMBps(prev.rxBytes, current.rxBytes, elapsedSeconds);
-                const double upSpeed   = sysusage::computeNetSpeedMBps(prev.txBytes, current.txBytes, elapsedSeconds);
+                const double downSpeed = sysusage::computeNetSpeedMiBps(prev.rxBytes, current.rxBytes, elapsedSeconds);
+                const double upSpeed   = sysusage::computeNetSpeedMiBps(prev.txBytes, current.txBytes, elapsedSeconds);
 
                 if (std::abs(downSpeed - mWiredDownloadSpeed) >= 0.005) {
                     mWiredDownloadSpeed = downSpeed;
@@ -322,11 +402,8 @@ namespace vast {
                     emit wiredUploadSpeedChanged();
                 }
             }
-        } else if (mWiredDownloadSpeed > 0.0 || mWiredUploadSpeed > 0.0) {
-            mWiredDownloadSpeed = 0.0;
-            mWiredUploadSpeed   = 0.0;
-            emit wiredDownloadSpeedChanged();
-            emit wiredUploadSpeedChanged();
+        } else {
+            resetWiredState();
         }
 
         // Process wireless interface metrics
@@ -346,8 +423,8 @@ namespace vast {
 
             if (mPreviousNetCounters.contains(mWirelessInterface)) {
                 const auto   prev      = mPreviousNetCounters.value(mWirelessInterface);
-                const double downSpeed = sysusage::computeNetSpeedMBps(prev.rxBytes, current.rxBytes, elapsedSeconds);
-                const double upSpeed   = sysusage::computeNetSpeedMBps(prev.txBytes, current.txBytes, elapsedSeconds);
+                const double downSpeed = sysusage::computeNetSpeedMiBps(prev.rxBytes, current.rxBytes, elapsedSeconds);
+                const double upSpeed   = sysusage::computeNetSpeedMiBps(prev.txBytes, current.txBytes, elapsedSeconds);
 
                 if (std::abs(downSpeed - mWirelessDownloadSpeed) >= 0.005) {
                     mWirelessDownloadSpeed = downSpeed;
@@ -358,11 +435,8 @@ namespace vast {
                     emit wirelessUploadSpeedChanged();
                 }
             }
-        } else if (mWirelessDownloadSpeed > 0.0 || mWirelessUploadSpeed > 0.0) {
-            mWirelessDownloadSpeed = 0.0;
-            mWirelessUploadSpeed   = 0.0;
-            emit wirelessDownloadSpeedChanged();
-            emit wirelessUploadSpeedChanged();
+        } else {
+            resetWirelessState();
         }
 
         mPreviousNetCounters = currentCounters;
@@ -374,59 +448,72 @@ namespace vast {
             emit statusVPNInterfaceChanged();
         }
 
-        // Query wireless bitrate every 4 ticks (8s)
-        if (mStorageTickCounter % 4 == 0 && !mWirelessInterface.isEmpty()) {
-            const int linkSpeed = mWirelessReader.queryBitrateMbps(mWirelessInterface);
-            if (linkSpeed != mWirelessLinkSpeed) {
-                mWirelessLinkSpeed = linkSpeed;
-                emit wirelessLinkSpeedChanged();
+        // Request wireless bitrate every 8s by deadline, independent of sampleNow() call rate
+        if ((!mLastWirelessSample.isValid() || mLastWirelessSample.elapsed() >= WIRELESS_SAMPLE_INTERVAL_MILLISECONDS) && !mWirelessInterface.isEmpty()) {
+            if (mWirelessReader->requestBitrateMbps(mWirelessInterface)) {
+                mLastWirelessSample.restart();
             }
         }
     }
 
     void SystemUsageMonitor::sampleStorageAsync() {
-        JobExecutor::instance().post([this]() {
-            auto summary = StorageCollector::collect();
+        if (mStorageCollectionInFlight)
+            return;
+
+        mStorageCollectionInFlight = true;
+        const QPointer<SystemUsageMonitor> self(this);
+        JobExecutor::instance().post([self]() {
+            auto  summary = sysusage::collectStorage();
+            auto* app     = QCoreApplication::instance();
+            if (!app)
+                return;
 
             QMetaObject::invokeMethod(
-                this,
-                [this, summary = std::move(summary)]() {
-                    mFilesystemsModel->updateFilesystems(summary.filesystems);
-
-                    if (summary.totalKiB != mDiskTotal) {
-                        mDiskTotal = summary.totalKiB;
-                        emit diskTotalChanged();
-                    }
-                    if (summary.totalUsedKiB != mDiskUsed) {
-                        mDiskUsed = summary.totalUsedKiB;
-                        emit         diskUsedChanged();
-
-                        const double prop = static_cast<double>(mDiskUsed) / 1048576.0;
-                        if (std::abs(prop - mDiskProp) >= 0.001) {
-                            mDiskProp = prop;
-                            emit diskPropChanged();
-                        }
-                    }
-                    const double percent = mDiskTotal > 0 ? (static_cast<double>(mDiskUsed) * 100.0 / static_cast<double>(mDiskTotal)) : 0.0;
-                    if (std::abs(percent - mDiskPercent) >= 0.01) {
-                        mDiskPercent = percent;
-                        emit diskPercentChanged();
-                    }
-                    if (summary.appsUsedKiB != mStorageAppsData) {
-                        mStorageAppsData = summary.appsUsedKiB;
-                        emit storageAppsDataChanged();
-                    }
-                    if (summary.systemUsedKiB != mStorageSystem) {
-                        mStorageSystem = summary.systemUsedKiB;
-                        emit storageSystemChanged();
-                    }
-                    if (summary.totalFreeKiB != mStorageFree) {
-                        mStorageFree = summary.totalFreeKiB;
-                        emit storageFreeChanged();
-                    }
+                app,
+                [self, summary = std::move(summary)]() {
+                    if (self.isNull())
+                        return;
+                    self->applyStorageSummary(summary);
                 },
                 Qt::QueuedConnection);
         });
+    }
+
+    void SystemUsageMonitor::applyStorageSummary(const sysusage::StorageSummary& summary) {
+        mStorageCollectionInFlight = false;
+        mFilesystemsModel->updateFilesystems(summary.filesystems);
+
+        if (summary.totalKiB != mDiskTotal) {
+            mDiskTotal = summary.totalKiB;
+            emit diskTotalChanged();
+        }
+        if (summary.totalUsedKiB != mDiskUsed) {
+            mDiskUsed = summary.totalUsedKiB;
+            emit         diskUsedChanged();
+
+            const double usedGiB = static_cast<double>(mDiskUsed) / 1048576.0;
+            if (std::abs(usedGiB - mDiskUsedGiB) >= 0.001) {
+                mDiskUsedGiB = usedGiB;
+                emit diskUsedGiBChanged();
+            }
+        }
+        const double percent = mDiskTotal > 0 ? (static_cast<double>(mDiskUsed) * 100.0 / static_cast<double>(mDiskTotal)) : 0.0;
+        if (std::abs(percent - mDiskPercent) >= 0.01) {
+            mDiskPercent = percent;
+            emit diskPercentChanged();
+        }
+        if (summary.appsUsedKiB != mStorageAppsData) {
+            mStorageAppsData = summary.appsUsedKiB;
+            emit storageAppsDataChanged();
+        }
+        if (summary.systemUsedKiB != mStorageSystem) {
+            mStorageSystem = summary.systemUsedKiB;
+            emit storageSystemChanged();
+        }
+        if (summary.totalFreeKiB != mStorageFree) {
+            mStorageFree = summary.totalFreeKiB;
+            emit storageFreeChanged();
+        }
     }
 
 } // namespace vast

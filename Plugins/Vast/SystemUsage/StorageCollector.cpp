@@ -4,11 +4,13 @@
 #include <qstorageinfo.h>
 #include <qstring.h>
 
-namespace vast {
+#include <algorithm>
 
-    sysusage::StorageSummary StorageCollector::collect() {
-        const auto                          mountedVolumes = QStorageInfo::mountedVolumes();
-        QList<sysusage::FilesystemRawEntry> rawEntries;
+namespace vast::sysusage {
+
+    StorageSummary collectStorage() {
+        const auto                mountedVolumes = QStorageInfo::mountedVolumes();
+        QList<FilesystemRawEntry> rawEntries;
         rawEntries.reserve(mountedVolumes.size());
 
         for (const auto& storage : mountedVolumes) {
@@ -28,7 +30,7 @@ namespace vast {
             const auto    freeKiB        = static_cast<quint64>(availableBytes / 1024);
             const quint64 usedKiB        = (totalKiB >= freeKiB) ? (totalKiB - freeKiB) : 0;
 
-            rawEntries.append(sysusage::FilesystemRawEntry{
+            rawEntries.append(FilesystemRawEntry{
                 .deviceName     = device,
                 .filesystemType = QString::fromUtf8(storage.fileSystemType()),
                 .mountPoint     = storage.rootPath(),
@@ -38,7 +40,7 @@ namespace vast {
             });
         }
 
-        return sysusage::deduplicateFilesystems(rawEntries);
+        return deduplicateFilesystems(rawEntries);
     }
 
-} // namespace vast
+} // namespace vast::sysusage

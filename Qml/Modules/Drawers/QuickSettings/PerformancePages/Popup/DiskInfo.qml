@@ -20,14 +20,14 @@ PopupWidget {
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.large
                 font.weight: Font.DemiBold
-                text: SystemUsage.diskProp.toFixed(0) + qsTr(" GB used")
+                text: SystemUsage.diskUsedGiB.toFixed(0) + qsTr(" GiB used")
             }
 
             StyledText {
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.large
                 font.weight: Font.DemiBold
-                text: (SystemUsage.diskTotal / 1048576).toFixed(0) + qsTr(" GB total")
+                text: (SystemUsage.diskTotal / 1048576).toFixed(0) + qsTr(" GiB total")
             }
         }
 
@@ -66,7 +66,7 @@ PopupWidget {
                 StyledText {
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.normal
-                    text: storageSummaryRow.index === 0 ? SystemUsage.formatKB(SystemUsage.storageAppsData) : storageSummaryRow.index === 1 ? SystemUsage.formatKB(SystemUsage.storageSystem) : SystemUsage.formatKB(SystemUsage.storageFree)
+                    text: storageSummaryRow.index === 0 ? SystemUsage.formatKiB(SystemUsage.storageAppsData) : storageSummaryRow.index === 1 ? SystemUsage.formatKiB(SystemUsage.storageSystem) : SystemUsage.formatKiB(SystemUsage.storageFree)
                 }
             }
         }

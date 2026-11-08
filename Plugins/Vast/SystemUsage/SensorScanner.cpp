@@ -7,6 +7,9 @@
 #include <qstringview.h>
 
 #include <algorithm>
+#include <limits>
+#include <ranges>
+#include <utility>
 
 namespace vast {
 
@@ -19,28 +22,43 @@ namespace vast {
             return file.readAll().trimmed();
         }
 
-        [[nodiscard]] double parseTemperatureValue(const QString& filePath) {
+        [[nodiscard]] std::optional<double> parseTemperatureValue(const QString& filePath, double divisor) {
             const QByteArray content = readAllTrimmed(filePath);
             if (content.isEmpty())
-                return 0.0;
+                return std::nullopt;
 
             bool         ok       = false;
             const double rawValue = content.toDouble(&ok);
-            if (!ok || rawValue <= 0.0)
-                return 0.0;
+            if (!ok)
+                return std::nullopt;
 
-            if (rawValue > 1000.0) {
-                return rawValue / 1000.0;
-            }
-            if (rawValue > 100.0) {
-                return rawValue / 10.0;
-            }
-            return rawValue;
+            const double scaledValue = rawValue / divisor;
+            if (scaledValue < -50.0 || scaledValue > 150.0)
+                return std::nullopt;
+
+            return scaledValue;
         }
+
+        [[nodiscard]] bool hasNumericSuffix(QStringView name, QStringView prefix) {
+            if (!name.startsWith(prefix))
+                return false;
+            const auto suffix = name.mid(prefix.size());
+            return !suffix.isEmpty() && std::ranges::all_of(suffix, [](QChar character) { return character.isDigit(); });
+        }
+
+        [[nodiscard]] bool isVpnName(QStringView interfaceName) {
+            return hasNumericSuffix(interfaceName, u"tun") || hasNumericSuffix(interfaceName, u"tap") || interfaceName.startsWith(u"wg") ||
+                interfaceName.contains(u"CloudflareWARP", Qt::CaseInsensitive);
+        }
+
+        struct SensorCandidate {
+            QString path;
+            int     rank{std::numeric_limits<int>::max()};
+        };
 
     } // namespace
 
-    SensorScanner::SensorScanner(const QString& sysRoot) : mSysRoot(sysRoot), mCoreFrequencyPaths() {}
+    SensorScanner::SensorScanner(QString sysRoot) : mSysRoot(std::move(sysRoot)) {}
 
     void SensorScanner::scan() {
         scanHwmonSensors();
@@ -49,17 +67,15 @@ namespace vast {
     }
 
     void SensorScanner::scanHwmonSensors() {
-        mCpuTempPath.clear();
-        mGpuTempPath.clear();
+        mCpuTemperatureSource = TemperatureSource{};
+        mGpuTemperatureSource = TemperatureSource{};
 
-        // 1. Scan /sys/class/hwmon/hwmon*
-        const QDir hwmonDir(mSysRoot + u"/class/hwmon");
-        const auto hwmonEntries = hwmonDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
+        // 1. Scan /sys/class/hwmon/hwmon*; lower rank wins, first seen wins on ties
+        const QDir      hwmonDir(mSysRoot + u"/class/hwmon");
+        const auto      hwmonEntries = hwmonDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
 
-        QString    preferredCpuInput;
-        QString    fallbackCpuInput;
-        QString    preferredGpuInput;
-        QString    fallbackGpuInput;
+        SensorCandidate bestCpuCandidate;
+        SensorCandidate bestGpuCandidate;
 
         for (const auto& hwmonInfo : hwmonEntries) {
             const QString hwmonPath  = hwmonInfo.absoluteFilePath();
@@ -77,67 +93,57 @@ namespace vast {
                 const QString labelFile = inputFile.left(inputFile.size() - 5) + u"label";
                 const QString label     = QString::fromUtf8(readAllTrimmed(hwmonPath + u'/' + labelFile));
 
-                if (isIntelCpu) {
-                    if (label.contains(u"Package id", Qt::CaseInsensitive) || label.contains(u"Physical id", Qt::CaseInsensitive)) {
-                        preferredCpuInput = inputPath;
-                    } else if (fallbackCpuInput.isEmpty() && label.contains(u"Core 0", Qt::CaseInsensitive)) {
-                        fallbackCpuInput = inputPath;
-                    } else if (fallbackCpuInput.isEmpty()) {
-                        fallbackCpuInput = inputPath;
-                    }
-                } else if (isAmdCpu) {
-                    if (label.contains(u"Tdie", Qt::CaseInsensitive)) {
-                        preferredCpuInput = inputPath;
-                    } else if (label.contains(u"Tctl", Qt::CaseInsensitive) && preferredCpuInput.isEmpty()) {
-                        preferredCpuInput = inputPath;
-                    } else if (fallbackCpuInput.isEmpty()) {
-                        fallbackCpuInput = inputPath;
-                    }
-                } else if (isGenericCpu && fallbackCpuInput.isEmpty()) {
-                    fallbackCpuInput = inputPath;
-                }
+                int           cpuRank = std::numeric_limits<int>::max();
+                if ((isIntelCpu && (label.contains(u"Package id", Qt::CaseInsensitive) || label.contains(u"Physical id", Qt::CaseInsensitive))) ||
+                    (isAmdCpu && label.contains(u"Tdie", Qt::CaseInsensitive)))
+                    cpuRank = 0;
+                else if (isAmdCpu && label.contains(u"Tctl", Qt::CaseInsensitive))
+                    cpuRank = 1;
+                else if (isIntelCpu || isAmdCpu)
+                    cpuRank = 2;
+                else if (isGenericCpu)
+                    cpuRank = 3;
+
+                if (cpuRank < bestCpuCandidate.rank)
+                    bestCpuCandidate = SensorCandidate{.path = inputPath, .rank = cpuRank};
 
                 if (isGpu) {
-                    if (label.contains(u"edge", Qt::CaseInsensitive) || label.contains(u"junction", Qt::CaseInsensitive)) {
-                        preferredGpuInput = inputPath;
-                    } else if (fallbackGpuInput.isEmpty()) {
-                        fallbackGpuInput = inputPath;
-                    }
+                    const int gpuRank = (label.contains(u"edge", Qt::CaseInsensitive) || label.contains(u"junction", Qt::CaseInsensitive)) ? 0 : 1;
+                    if (gpuRank < bestGpuCandidate.rank)
+                        bestGpuCandidate = SensorCandidate{.path = inputPath, .rank = gpuRank};
                 }
             }
         }
 
-        mCpuTempPath = !preferredCpuInput.isEmpty() ? preferredCpuInput : fallbackCpuInput;
+        if (!bestCpuCandidate.path.isEmpty())
+            mCpuTemperatureSource = TemperatureSource{.path = bestCpuCandidate.path, .divisor = 1000.0};
+        if (!bestGpuCandidate.path.isEmpty())
+            mGpuTemperatureSource = TemperatureSource{.path = bestGpuCandidate.path, .divisor = 1000.0};
 
         // 2. Scan /sys/class/drm/card*/device/hwmon/hwmon*/temp1_input for GPU temp if not found
-        if (mGpuTempPath.isEmpty()) {
-            const QString candidateGpu = !preferredGpuInput.isEmpty() ? preferredGpuInput : fallbackGpuInput;
-            if (!candidateGpu.isEmpty()) {
-                mGpuTempPath = candidateGpu;
-            } else {
-                const QDir drmDir(mSysRoot + u"/class/drm");
-                const auto cards = drmDir.entryList(QStringList{QStringLiteral("card*")}, QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
-                for (const auto& card : cards) {
-                    if (card.contains(u'-'))
-                        continue;
-                    const QDir cardHwmonDir(mSysRoot + u"/class/drm/" + card + u"/device/hwmon");
-                    const auto cardHwmons = cardHwmonDir.entryList(QStringList{QStringLiteral("hwmon*")}, QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
-                    for (const auto& subHwmon : cardHwmons) {
-                        const QString tempInput = cardHwmonDir.absoluteFilePath(subHwmon) + u"/temp1_input";
-                        if (QFile::exists(tempInput)) {
-                            mGpuTempPath = tempInput;
-                            break;
-                        }
-                    }
-                    if (!mGpuTempPath.isEmpty())
+        if (mGpuTemperatureSource.path.isEmpty()) {
+            const QDir drmDir(mSysRoot + u"/class/drm");
+            const auto cards = drmDir.entryList(QStringList{QStringLiteral("card*")}, QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
+            for (const auto& card : cards) {
+                if (card.contains(u'-'))
+                    continue;
+                const QDir cardHwmonDir(mSysRoot + u"/class/drm/" + card + u"/device/hwmon");
+                const auto cardHwmons = cardHwmonDir.entryList(QStringList{QStringLiteral("hwmon*")}, QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
+                for (const auto& subHwmon : cardHwmons) {
+                    const QString tempInput = cardHwmonDir.absoluteFilePath(subHwmon) + u"/temp1_input";
+                    if (QFile::exists(tempInput)) {
+                        mGpuTemperatureSource = TemperatureSource{.path = tempInput, .divisor = 1000.0};
                         break;
+                    }
                 }
+                if (!mGpuTemperatureSource.path.isEmpty())
+                    break;
             }
         }
     }
 
     void SensorScanner::scanBatterySensors() {
-        mBatteryTempPath.clear();
+        mBatteryTemperatureSource = TemperatureSource{};
         mBatteryTechPath.clear();
 
         const QDir powerDir(mSysRoot + u"/class/power_supply");
@@ -147,13 +153,13 @@ namespace vast {
             const QString tempFile    = batteryPath + u"/temp";
             const QString techFile    = batteryPath + u"/technology";
 
-            if (QFile::exists(tempFile) && mBatteryTempPath.isEmpty()) {
-                mBatteryTempPath = tempFile;
+            if (QFile::exists(tempFile) && mBatteryTemperatureSource.path.isEmpty()) {
+                mBatteryTemperatureSource = TemperatureSource{.path = tempFile, .divisor = 10.0};
             }
             if (QFile::exists(techFile) && mBatteryTechPath.isEmpty()) {
                 mBatteryTechPath = techFile;
             }
-            if (!mBatteryTempPath.isEmpty() && !mBatteryTechPath.isEmpty())
+            if (!mBatteryTemperatureSource.path.isEmpty() && !mBatteryTechPath.isEmpty())
                 break;
         }
     }
@@ -172,29 +178,29 @@ namespace vast {
             bool       ok              = false;
             const int  coreId          = coreIndexString.toInt(&ok);
             if (ok) {
-                mCoreFrequencyPaths.append(qMakePair(coreId, freqPath));
+                mCoreFrequencyPaths.append(SensorCoreInfo{.coreId = coreId, .frequencyPath = freqPath});
             }
         }
 
-        std::sort(mCoreFrequencyPaths.begin(), mCoreFrequencyPaths.end(), [](const auto& first, const auto& second) { return first.first < second.first; });
+        std::ranges::sort(mCoreFrequencyPaths, {}, &SensorCoreInfo::coreId);
     }
 
-    double SensorScanner::readCpuTemperature() const {
-        if (mCpuTempPath.isEmpty())
-            return 0.0;
-        return parseTemperatureValue(mCpuTempPath);
+    std::optional<double> SensorScanner::readCpuTemperature() const {
+        if (mCpuTemperatureSource.path.isEmpty())
+            return std::nullopt;
+        return parseTemperatureValue(mCpuTemperatureSource.path, mCpuTemperatureSource.divisor);
     }
 
-    double SensorScanner::readGpuTemperature() const {
-        if (mGpuTempPath.isEmpty())
-            return 0.0;
-        return parseTemperatureValue(mGpuTempPath);
+    std::optional<double> SensorScanner::readGpuTemperature() const {
+        if (mGpuTemperatureSource.path.isEmpty())
+            return std::nullopt;
+        return parseTemperatureValue(mGpuTemperatureSource.path, mGpuTemperatureSource.divisor);
     }
 
-    double SensorScanner::readBatteryTemperature() const {
-        if (mBatteryTempPath.isEmpty())
-            return 0.0;
-        return parseTemperatureValue(mBatteryTempPath);
+    std::optional<double> SensorScanner::readBatteryTemperature() const {
+        if (mBatteryTemperatureSource.path.isEmpty())
+            return std::nullopt;
+        return parseTemperatureValue(mBatteryTemperatureSource.path, mBatteryTemperatureSource.divisor);
     }
 
     QString SensorScanner::readBatteryTechnology() const {
@@ -203,7 +209,56 @@ namespace vast {
         return QString::fromUtf8(readAllTrimmed(mBatteryTechPath));
     }
 
-    QString SensorScanner::detectWirelessInterface() const {
+    void SensorScanner::updateInterfaces(const QList<QString>& names) {
+        QList<QString> sortedNames = names;
+        std::ranges::sort(sortedNames);
+        if (sortedNames == mInterfaceNames)
+            return;
+
+        mInterfaceNames  = std::move(sortedNames);
+        mWirelessScanned = false;
+        mCachedWirelessInterface.clear();
+        mVpnCandidates.clear();
+
+        if (mInterfaceNames.isEmpty())
+            return;
+
+        refreshVpnCandidates();
+    }
+
+    QString SensorScanner::detectWirelessInterface() {
+        if (!mWirelessScanned) {
+            mCachedWirelessInterface = scanWirelessInterface();
+            mWirelessScanned         = true;
+        }
+        return mCachedWirelessInterface;
+    }
+
+    QString SensorScanner::detectVpnStatus() {
+        for (const auto& candidate : std::as_const(mVpnCandidates)) {
+            const QString ifacePath = mSysRoot + u"/class/net/" + candidate;
+            const QString operstate = QString::fromUtf8(readAllTrimmed(ifacePath + u"/operstate"));
+            if (operstate == u"up" || operstate == u"unknown")
+                return QStringLiteral("connected");
+        }
+
+        return QStringLiteral("disconnected");
+    }
+
+    void SensorScanner::refreshVpnCandidates() {
+        mVpnCandidates.clear();
+        for (const auto& candidate : std::as_const(mInterfaceNames)) {
+            if (isVpnName(candidate)) {
+                mVpnCandidates.append(candidate);
+                continue;
+            }
+            const QByteArray uevent = readAllTrimmed(mSysRoot + u"/class/net/" + candidate + u"/uevent");
+            if (uevent.contains("DEVTYPE=wireguard"))
+                mVpnCandidates.append(candidate);
+        }
+    }
+
+    QString SensorScanner::scanWirelessInterface() const {
         const QDir netDir(mSysRoot + u"/class/net");
         const auto interfaces = netDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
 
@@ -214,26 +269,6 @@ namespace vast {
         }
 
         return {};
-    }
-
-    QString SensorScanner::detectVpnStatus() const {
-        const QDir netDir(mSysRoot + u"/class/net");
-        const auto interfaces = netDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
-
-        for (const auto& iface : interfaces) {
-            const QString ifacePath = netDir.absoluteFilePath(iface);
-            const QString operstate = QString::fromUtf8(readAllTrimmed(ifacePath + u"/operstate"));
-            if (operstate == u"down")
-                continue;
-
-            const QByteArray uevent = readAllTrimmed(ifacePath + u"/uevent");
-            if (uevent.contains("DEVTYPE=wireguard") || iface.startsWith(u"wg") || iface.startsWith(u"tun") || iface.startsWith(u"tap") ||
-                iface.contains(u"CloudflareWARP", Qt::CaseInsensitive)) {
-                return QStringLiteral("connected");
-            }
-        }
-
-        return QStringLiteral("disconnected");
     }
 
 } // namespace vast

@@ -1,7 +1,20 @@
 #include "FilesystemsModel.hpp"
+#include "ModelDiffHelper.hpp"
 #include "SystemFormatters.hpp"
 
+#include <algorithm>
+
 namespace vast {
+
+    namespace {
+
+        const QList<int> CHANGED_FILESYSTEM_ROLES{
+            FilesystemsModel::DeviceNameRole,    FilesystemsModel::FilesystemTypeRole, FilesystemsModel::MountPointRole,  FilesystemsModel::UsedKiBRole,
+            FilesystemsModel::FreeKiBRole,       FilesystemsModel::TotalKiBRole,       FilesystemsModel::UsedPercentRole, FilesystemsModel::FormattedTotalRole,
+            FilesystemsModel::FormattedUsedRole, FilesystemsModel::FormattedFreeRole,
+        };
+
+    } // namespace
 
     FilesystemsModel::FilesystemsModel(QObject* parent) : QAbstractListModel(parent) {}
 
@@ -66,7 +79,11 @@ namespace vast {
     }
 
     void FilesystemsModel::updateFilesystems(std::span<const sysusage::FilesystemEntry> filesystems) {
-        if (mFilesystems.size() != static_cast<qsizetype>(filesystems.size())) {
+        const bool sizeChanged = mFilesystems.size() != static_cast<qsizetype>(filesystems.size());
+        const bool devicesChanged =
+            !sizeChanged && !std::ranges::equal(mFilesystems, filesystems, {}, &sysusage::FilesystemEntry::deviceName, &sysusage::FilesystemEntry::deviceName);
+
+        if (sizeChanged || devicesChanged) {
             beginResetModel();
             mFilesystems.assign(filesystems.begin(), filesystems.end());
             endResetModel();
@@ -74,13 +91,10 @@ namespace vast {
             return;
         }
 
-        for (qsizetype index = 0; index < mFilesystems.size(); ++index) {
-            if (mFilesystems.at(index) != filesystems[static_cast<size_t>(index)]) {
-                mFilesystems[index]   = filesystems[static_cast<size_t>(index)];
-                const auto modelIndex = createIndex(static_cast<int>(index), 0);
-                emit       dataChanged(modelIndex, modelIndex);
-            }
-        }
+        updateChangedRows(mFilesystems, filesystems, [this](int row) {
+            const auto modelIndex = index(row);
+            emit       dataChanged(modelIndex, modelIndex, CHANGED_FILESYSTEM_ROLES);
+        });
     }
 
 } // namespace vast

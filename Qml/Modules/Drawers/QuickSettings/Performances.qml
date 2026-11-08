@@ -248,7 +248,7 @@ Item {
                                         font.weight: Font.DemiBold
                                         horizontalAlignment: Text.AlignRight
                                         maximumLineCount: 2
-                                        text: networkSpeedRow.index === 0 ? (network.isWired ? SystemUsage.formatSpeed(SystemUsage.wiredDownloadSpeed) : SystemUsage.formatSpeed(SystemUsage.wirelessDownloadSpeed)) : (network.isWired ? SystemUsage.formatSpeed(SystemUsage.wiredUploadSpeed) : SystemUsage.formatSpeed(SystemUsage.wirelessUploadSpeed))
+                                        text: networkSpeedRow.index === 0 ? (network.isWired ? SystemUsage.formatSpeedMiBps(SystemUsage.wiredDownloadSpeed) : SystemUsage.formatSpeedMiBps(SystemUsage.wirelessDownloadSpeed)) : (network.isWired ? SystemUsage.formatSpeedMiBps(SystemUsage.wiredUploadSpeed) : SystemUsage.formatSpeedMiBps(SystemUsage.wirelessUploadSpeed))
                                         wrapMode: Text.WordWrap
                                     }
                                 }
@@ -371,14 +371,14 @@ Item {
                                 color: Colours.m3Colors.m3OnSurface
                                 font.pixelSize: Appearance.fonts.size.normal
                                 font.weight: Font.DemiBold
-                                text: SystemUsage.memProp.toFixed(0) + qsTr(" GB used")
+                                text: SystemUsage.memUsedGiB.toFixed(0) + qsTr(" GiB used")
                             }
 
                             StyledText {
                                 color: Colours.m3Colors.m3OnSurfaceVariant
                                 font.pixelSize: Appearance.fonts.size.normal
                                 font.weight: Font.DemiBold
-                                text: (SystemUsage.memTotal / 1048576).toFixed(0) + qsTr(" GB total")
+                                text: (SystemUsage.memTotal / 1048576).toFixed(0) + qsTr(" GiB total")
                             }
                         }
                     }
@@ -408,14 +408,14 @@ Item {
                                 color: Colours.m3Colors.m3OnSurface
                                 font.pixelSize: Appearance.fonts.size.normal
                                 font.weight: Font.DemiBold
-                                text: SystemUsage.diskProp.toFixed(0) + qsTr(" GB used")
+                                text: SystemUsage.diskUsedGiB.toFixed(0) + qsTr(" GiB used")
                             }
 
                             StyledText {
                                 color: Colours.m3Colors.m3OnSurfaceVariant
                                 font.pixelSize: Appearance.fonts.size.normal
                                 font.weight: Font.DemiBold
-                                text: (SystemUsage.diskTotal / 1048576).toFixed(0) + qsTr(" GB total")
+                                text: (SystemUsage.diskTotal / 1048576).toFixed(0) + qsTr(" GiB total")
                             }
                         }
                     }

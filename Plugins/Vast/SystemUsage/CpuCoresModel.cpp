@@ -1,6 +1,13 @@
 #include "CpuCoresModel.hpp"
+#include "ModelDiffHelper.hpp"
 
 namespace vast {
+
+    namespace {
+
+        const QList<int> CHANGED_CPU_CORE_ROLES{CpuCoresModel::CoreIdRole, CpuCoresModel::FreqMHzRole, CpuCoresModel::UsagePercentRole};
+
+    } // namespace
 
     CpuCoresModel::CpuCoresModel(QObject* parent) : QAbstractListModel(parent) {}
 
@@ -52,13 +59,10 @@ namespace vast {
             return;
         }
 
-        for (qsizetype index = 0; index < mCores.size(); ++index) {
-            if (mCores.at(index) != cores[static_cast<size_t>(index)]) {
-                mCores[index]         = cores[static_cast<size_t>(index)];
-                const auto modelIndex = createIndex(static_cast<int>(index), 0);
-                emit       dataChanged(modelIndex, modelIndex);
-            }
-        }
+        updateChangedRows(mCores, cores, [this](int row) {
+            const auto modelIndex = index(row);
+            emit       dataChanged(modelIndex, modelIndex, CHANGED_CPU_CORE_ROLES);
+        });
     }
 
 } // namespace vast

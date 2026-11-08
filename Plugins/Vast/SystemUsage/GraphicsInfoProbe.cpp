@@ -1,21 +1,21 @@
 #include "GraphicsInfoProbe.hpp"
-#include "../Jobs/JobExecutor.hpp"
 
-#include <qbytearray.h>
 #include <qdir.h>
 #include <qfileinfo.h>
-#include <qprocess.h>
 #include <qstringlist.h>
+
+#include <utility>
 
 namespace vast {
 
     namespace {
 
-        [[nodiscard]] QString findDriDevice() {
-            if (QFileInfo::exists(QStringLiteral("/dev/dri/renderD128"))) {
-                return QStringLiteral("/dev/dri/renderD128");
+        [[nodiscard]] QString findDriDevice(const QString& driDirectory) {
+            QString renderDefault = driDirectory + QStringLiteral("/renderD128");
+            if (QFileInfo::exists(renderDefault)) {
+                return renderDefault;
             }
-            const QDir driDir(QStringLiteral("/dev/dri"));
+            const QDir driDir(driDirectory);
             const auto renders = driDir.entryList(QStringList{QStringLiteral("renderD*")}, QDir::System | QDir::Files, QDir::Name);
             if (!renders.isEmpty()) {
                 return driDir.absoluteFilePath(renders.first());
@@ -29,64 +29,111 @@ namespace vast {
 
     } // namespace
 
-    GraphicsInfoProbe::GraphicsInfoProbe(QObject* parent) : QObject(parent) {}
-
-    void GraphicsInfoProbe::startProbe() {
-        if (mLoaded.load() || mRunning.exchange(true))
-            return;
-
-        JobExecutor::instance().post([this]() { executeProbe(); });
+    GraphicsInfoProbe::GraphicsInfoProbe(QObject* parent, int probeTimeoutMilliseconds, QString driDirectory) :
+        QObject(parent), mProcessTimeout(new QTimer(this)), mDriDirectory(std::move(driDirectory)) {
+        mProcessTimeout->setSingleShot(true);
+        mProcessTimeout->setInterval(probeTimeoutMilliseconds);
+        connect(mProcessTimeout, &QTimer::timeout, this, [this]() {
+            if (mActiveProcess)
+                mActiveProcess->kill();
+        });
     }
 
-    void GraphicsInfoProbe::executeProbe() {
-        // 1. Run vulkaninfo --summary
-        QByteArray vulkanOutput;
-        {
-            QProcess process;
-            process.start(QStringLiteral("vulkaninfo"), {QStringLiteral("--summary")});
-            if (process.waitForFinished(3000)) {
-                vulkanOutput = process.readAllStandardOutput();
-            }
+    void GraphicsInfoProbe::startProbe() {
+        if (mLoaded || mRunning)
+            return;
+
+        mRunning             = true;
+        mProbeStep           = ProbeStep::Vulkan;
+        mOpenGlFallbackTried = false;
+        startNextTool();
+    }
+
+    void GraphicsInfoProbe::startNextTool() {
+        if (mProbeStep == ProbeStep::Done) {
+            finishProbe();
+            return;
         }
 
-        // 2. Run eglinfo -B <device>, fallback to glxinfo -B
-        QByteArray    openglOutput;
-        const QString driDevice = findDriDevice();
-        if (!driDevice.isEmpty()) {
-            QProcess process;
-            process.start(QStringLiteral("eglinfo"), {QStringLiteral("-B"), driDevice});
-            if (process.waitForFinished(3000) && process.exitCode() == 0) {
-                openglOutput = process.readAllStandardOutput();
-            }
+        if (mProbeStep == ProbeStep::Vulkan) {
+            launchTool(QStringLiteral("vulkaninfo"), {QStringLiteral("--summary")});
+            return;
         }
-        if (openglOutput.isEmpty()) {
-            QProcess process;
-            process.start(QStringLiteral("glxinfo"), {QStringLiteral("-B")});
-            if (process.waitForFinished(3000)) {
-                openglOutput = process.readAllStandardOutput();
+        if (mProbeStep == ProbeStep::OpenGl) {
+            const QString driDevice = findDriDevice(mDriDirectory);
+            if (!driDevice.isEmpty()) {
+                launchTool(QStringLiteral("eglinfo"), {QStringLiteral("-B"), driDevice});
+            } else {
+                // No DRI device available: skip eglinfo, go straight to glxinfo
+                mOpenGlFallbackTried = true;
+                launchTool(QStringLiteral("glxinfo"), {QStringLiteral("-B")});
             }
+            return;
+        }
+        launchTool(QStringLiteral("vainfo"), {});
+    }
+
+    void GraphicsInfoProbe::launchTool(const QString& program, const QStringList& arguments) {
+        mActiveProcess = new QProcess(this);
+        connect(mActiveProcess, &QProcess::finished, this, [this, process = mActiveProcess]() { onProcessFinished(process); });
+        connect(mActiveProcess, &QProcess::errorOccurred, this, [this, process = mActiveProcess](QProcess::ProcessError error) {
+            if (error == QProcess::FailedToStart)
+                onProcessFinished(process);
+        });
+        mProcessTimeout->start();
+        mActiveProcess->start(program, arguments);
+    }
+
+    void GraphicsInfoProbe::onProcessFinished(QProcess* process) {
+        if (process != mActiveProcess)
+            return;
+
+        mProcessTimeout->stop();
+        const bool normalExit = (mActiveProcess->exitStatus() == QProcess::NormalExit) && (mActiveProcess->exitCode() == 0);
+
+        if (mProbeStep == ProbeStep::Vulkan) {
+            const QByteArray output = mActiveProcess->readAllStandardOutput();
+            if (!output.isEmpty())
+                mVulkanOutput = output;
+        } else if (mProbeStep == ProbeStep::OpenGl) {
+            const QByteArray output = mActiveProcess->readAllStandardOutput();
+            if (!mOpenGlFallbackTried) {
+                if (normalExit && !output.isEmpty()) {
+                    mOpenGlOutput = output;
+                } else {
+                    mOpenGlFallbackTried = true;
+                    mActiveProcess->deleteLater();
+                    mActiveProcess = nullptr;
+                    launchTool(QStringLiteral("glxinfo"), {QStringLiteral("-B")});
+                    return;
+                }
+            } else if (!output.isEmpty()) {
+                mOpenGlOutput = output;
+            }
+        } else if (mProbeStep == ProbeStep::VaApi) {
+            const QByteArray output = mActiveProcess->readAllStandardOutput() + mActiveProcess->readAllStandardError();
+            if (!output.isEmpty())
+                mVaApiOutput = output;
         }
 
-        // 3. Run vainfo (reads both stdout and stderr)
-        QByteArray vaApiOutput;
-        {
-            QProcess process;
-            process.start(QStringLiteral("vainfo"), {});
-            if (process.waitForFinished(3000)) {
-                vaApiOutput = process.readAllStandardOutput() + process.readAllStandardError();
-            }
-        }
+        mActiveProcess->deleteLater();
+        mActiveProcess = nullptr;
 
-        auto summary = sysusage::parseGraphicsOutputs(vulkanOutput, openglOutput, vaApiOutput);
+        if (mProbeStep == ProbeStep::Vulkan)
+            mProbeStep = ProbeStep::OpenGl;
+        else if (mProbeStep == ProbeStep::OpenGl)
+            mProbeStep = ProbeStep::VaApi;
+        else
+            mProbeStep = ProbeStep::Done;
 
-        QMetaObject::invokeMethod(
-            this,
-            [this, summary = std::move(summary)]() mutable {
-                mLoaded.store(true);
-                mRunning.store(false);
-                emit finished(summary);
-            },
-            Qt::QueuedConnection);
+        startNextTool();
+    }
+
+    void GraphicsInfoProbe::finishProbe() {
+        auto summary = sysusage::parseGraphicsOutputs(mVulkanOutput, mOpenGlOutput, mVaApiOutput);
+        mLoaded      = true;
+        mRunning     = false;
+        QTimer::singleShot(0, this, [this, summary = std::move(summary)]() { emit finished(summary); });
     }
 
 } // namespace vast

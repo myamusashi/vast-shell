@@ -1,21 +1,34 @@
 #pragma once
 
-#include <qcontainerfwd.h>
+#include <qdbusconnection.h>
 #include <qhash.h>
+#include <qobject.h>
 #include <qstring.h>
+#include <qtmetamacros.h>
 
 namespace vast {
 
-    class WirelessBitrateReader {
-      public:
-        WirelessBitrateReader();
+    class WirelessBitrateReader final : public QObject {
+        Q_OBJECT
 
-        [[nodiscard]] int queryBitrateMbps(const QString& interfaceName);
+      public:
+        explicit WirelessBitrateReader(QObject* parent = nullptr, QDBusConnection bus = QDBusConnection::systemBus(),
+                                       const QString& serviceName = QStringLiteral("org.freedesktop.NetworkManager"));
+
+        bool requestBitrateMbps(const QString& interfaceName);
+
+      signals:
+        void bitrateResolved(const QString& interfaceName, int bitrateMbps);
 
       private:
-        QHash<QString, QString> mDevicePaths;
+        void                    resolveDevicePath(const QString& interfaceName);
+        void                    queryBitrate(const QString& interfaceName, const QString& devicePath);
+        void                    finishRequest(const QString& interfaceName, int bitrateMbps, bool invalidateCachedPath);
 
-        [[nodiscard]] QString   resolveDevicePath(const QString& interfaceName);
+        QDBusConnection         mBus;
+        QString                 mServiceName;
+        QHash<QString, QString> mDevicePaths;
+        bool                    mRequestInFlight{false};
     };
 
 } // namespace vast

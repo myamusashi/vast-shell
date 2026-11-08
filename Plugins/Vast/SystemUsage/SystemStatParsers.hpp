@@ -10,7 +10,6 @@
 #include <qstringview.h>
 #include <qtypes.h>
 
-#include <cmath>
 #include <optional>
 #include <span>
 #include <utility>
@@ -59,26 +58,21 @@ namespace vast::sysusage {
     };
 
     struct FilesystemRawEntry {
-        QString deviceName;
-        QString filesystemType;
-        QString mountPoint;
-        quint64 usedKiB{0};
-        quint64 freeKiB{0};
-        quint64 totalKiB{0};
-    };
-
-    struct FilesystemEntry {
         QString            deviceName;
         QString            filesystemType;
         QString            mountPoint;
         quint64            usedKiB{0};
         quint64            freeKiB{0};
         quint64            totalKiB{0};
+
+        [[nodiscard]] bool operator==(const FilesystemRawEntry& other) const noexcept = default;
+    };
+
+    struct FilesystemEntry : FilesystemRawEntry {
         double             usedPercent{0.0};
 
         [[nodiscard]] bool operator==(const FilesystemEntry& other) const noexcept {
-            return deviceName == other.deviceName && filesystemType == other.filesystemType && mountPoint == other.mountPoint && usedKiB == other.usedKiB &&
-                freeKiB == other.freeKiB && totalKiB == other.totalKiB && std::abs(usedPercent - other.usedPercent) < 0.0001;
+            return FilesystemRawEntry::operator==(other);
         }
     };
 
@@ -110,15 +104,16 @@ namespace vast::sysusage {
 
     [[nodiscard]] CpuStatSnapshot                      parseCpuStat(QByteArrayView content);
     [[nodiscard]] int                                  computeCpuUsagePercent(const CpuJiffies& previous, const CpuJiffies& current) noexcept;
-    [[nodiscard]] std::optional<std::pair<int, int>>   parseCoreFrequency(QStringView sysfsPath, QByteArrayView content) noexcept;
+    [[nodiscard]] std::optional<int>                   parseFrequencyMHz(QByteArrayView content) noexcept;
     [[nodiscard]] MemInfoSnapshot                      parseMemInfo(QByteArrayView content) noexcept;
     [[nodiscard]] std::optional<quint64>               parseUptimeSeconds(QByteArrayView content) noexcept;
     [[nodiscard]] QHash<QString, NetInterfaceCounters> parseNetDev(QByteArrayView content);
-    [[nodiscard]] double                               computeNetSpeedMBps(quint64 previousBytes, quint64 currentBytes, double elapsedSeconds) noexcept;
+    [[nodiscard]] double                               computeNetSpeedMiBps(quint64 previousBytes, quint64 currentBytes, double elapsedSeconds) noexcept;
     [[nodiscard]] StorageSummary                       deduplicateFilesystems(std::span<const FilesystemRawEntry> entries);
     [[nodiscard]] OsReleaseInfo                        parseOsRelease(QByteArrayView content);
     [[nodiscard]] QString                              parseCpuModelName(QByteArrayView cpuinfoContent);
     [[nodiscard]] QString                              parseUdevPciGpuName(QByteArrayView udevDataContent);
+    [[nodiscard]] QString                              parseLspciGpuName(QByteArrayView lspciOutput);
     [[nodiscard]] GraphicsSummary                      parseGraphicsOutputs(QByteArrayView vulkanOutput, QByteArrayView openglOutput, QByteArrayView vaApiOutput);
 
 } // namespace vast::sysusage

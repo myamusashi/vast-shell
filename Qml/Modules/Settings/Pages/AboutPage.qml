@@ -128,7 +128,7 @@ SettingsPageBase {
             StyledText {
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.normal
-                text: qsTr("RAM: %1 / %2").arg(SystemUsage.formatKB(SystemUsage.memUsed)).arg(SystemUsage.formatKB(SystemUsage.memTotal))
+                text: qsTr("RAM: %1 / %2").arg(SystemUsage.formatKiB(SystemUsage.memUsed)).arg(SystemUsage.formatKiB(SystemUsage.memTotal))
             }
 
             Rectangle {
@@ -151,7 +151,7 @@ SettingsPageBase {
                 Layout.topMargin: Appearance.spacing.normal
                 color: Colours.m3Colors.m3OnSurface
                 font.pixelSize: Appearance.fonts.size.normal
-                text: qsTr("Storage: %1 / %2").arg(SystemUsage.formatKB(SystemUsage.diskUsed)).arg(SystemUsage.formatKB(SystemUsage.diskTotal))
+                text: qsTr("Storage: %1 / %2").arg(SystemUsage.formatKiB(SystemUsage.diskUsed)).arg(SystemUsage.formatKiB(SystemUsage.diskTotal))
             }
 
             Rectangle {

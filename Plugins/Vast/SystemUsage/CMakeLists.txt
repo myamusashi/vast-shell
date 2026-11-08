@@ -6,6 +6,7 @@ vast_module(vast-systemusage
         CpuCoresModel.cpp
         FilesystemsModel.hpp
         FilesystemsModel.cpp
+        ModelDiffHelper.hpp
         GraphicsInfoProbe.hpp
         GraphicsInfoProbe.cpp
         SensorScanner.hpp

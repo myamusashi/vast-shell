@@ -17,6 +17,9 @@
 #include <qtimer.h>
 #include <qtmetamacros.h>
 #include <qtypes.h>
+#include <cmath>
+
+class tst_SystemUsage;
 
 namespace vast {
 
@@ -47,12 +50,12 @@ namespace vast {
         Q_PROPERTY(vast::CpuCoresModel* cpuCores READ cpuCores CONSTANT)
         Q_PROPERTY(quint64 memTotal READ memTotal NOTIFY memTotalChanged)
         Q_PROPERTY(quint64 memUsed READ memUsed NOTIFY memUsedChanged)
-        Q_PROPERTY(double memProp READ memProp NOTIFY memPropChanged)
+        Q_PROPERTY(double memUsedGiB READ memUsedGiB NOTIFY memUsedGiBChanged)
 
         // Storage & Filesystems
         Q_PROPERTY(quint64 diskTotal READ diskTotal NOTIFY diskTotalChanged)
         Q_PROPERTY(quint64 diskUsed READ diskUsed NOTIFY diskUsedChanged)
-        Q_PROPERTY(double diskProp READ diskProp NOTIFY diskPropChanged)
+        Q_PROPERTY(double diskUsedGiB READ diskUsedGiB NOTIFY diskUsedGiBChanged)
         Q_PROPERTY(double diskPercent READ diskPercent NOTIFY diskPercentChanged)
         Q_PROPERTY(quint64 storageAppsData READ storageAppsData NOTIFY storageAppsDataChanged)
         Q_PROPERTY(quint64 storageSystem READ storageSystem NOTIFY storageSystemChanged)
@@ -86,7 +89,8 @@ namespace vast {
         Q_PROPERTY(QString vaApiDriver READ vaApiDriver NOTIFY graphicsInfoChanged)
 
       public:
-        explicit SystemUsageMonitor(QObject* parent = nullptr);
+        explicit SystemUsageMonitor(QObject* parent = nullptr, QString procNetDevPath = QStringLiteral("/proc/net/dev"), QString lspciProgram = QStringLiteral("lspci"),
+                                    QString sysRoot = QStringLiteral("/sys"));
         ~SystemUsageMonitor() override                           = default;
         SystemUsageMonitor(const SystemUsageMonitor&)            = delete;
         SystemUsageMonitor& operator=(const SystemUsageMonitor&) = delete;
@@ -95,30 +99,30 @@ namespace vast {
         [[nodiscard]] bool  isRunning() const noexcept {
             return mRunning;
         }
-        void                  setRunning(bool running);
+        void                         setRunning(bool running);
 
-        [[nodiscard]] QString archDesign() const noexcept {
+        [[nodiscard]] const QString& archDesign() const noexcept {
             return mArchDesign;
         }
-        [[nodiscard]] QString kernelName() const noexcept {
+        [[nodiscard]] const QString& kernelName() const noexcept {
             return mKernelName;
         }
-        [[nodiscard]] QString osId() const noexcept {
+        [[nodiscard]] const QString& osId() const noexcept {
             return mOsId;
         }
-        [[nodiscard]] QString osIdLike() const noexcept {
+        [[nodiscard]] const QString& osIdLike() const noexcept {
             return mOsIdLike;
         }
-        [[nodiscard]] QString osPrettyName() const noexcept {
+        [[nodiscard]] const QString& osPrettyName() const noexcept {
             return mOsPrettyName;
         }
-        [[nodiscard]] QString cpuName() const noexcept {
+        [[nodiscard]] const QString& cpuName() const noexcept {
             return mCpuName;
         }
-        [[nodiscard]] QString gpuName() const noexcept {
+        [[nodiscard]] const QString& gpuName() const noexcept {
             return mGpuName;
         }
-        [[nodiscard]] QString batteryTechnologies() const noexcept {
+        [[nodiscard]] const QString& batteryTechnologies() const noexcept {
             return mBatteryTechnologies;
         }
 
@@ -144,8 +148,8 @@ namespace vast {
         [[nodiscard]] quint64 memUsed() const noexcept {
             return mMemUsed;
         }
-        [[nodiscard]] double memProp() const noexcept {
-            return mMemProp;
+        [[nodiscard]] double memUsedGiB() const noexcept {
+            return mMemUsedGiB;
         }
 
         [[nodiscard]] quint64 diskTotal() const noexcept {
@@ -154,8 +158,8 @@ namespace vast {
         [[nodiscard]] quint64 diskUsed() const noexcept {
             return mDiskUsed;
         }
-        [[nodiscard]] double diskProp() const noexcept {
-            return mDiskProp;
+        [[nodiscard]] double diskUsedGiB() const noexcept {
+            return mDiskUsedGiB;
         }
         [[nodiscard]] double diskPercent() const noexcept {
             return mDiskPercent;
@@ -173,22 +177,22 @@ namespace vast {
             return mFilesystemsModel;
         }
 
-        [[nodiscard]] QString uptimeFormatted() const noexcept {
+        [[nodiscard]] const QString& uptimeFormatted() const noexcept {
             return mUptimeFormatted;
         }
 
-        [[nodiscard]] QString wiredInterface() const noexcept {
+        [[nodiscard]] const QString& wiredInterface() const noexcept {
             return mWiredInterface;
         }
-        void                  setWiredInterface(const QString& iface);
+        void                         setWiredInterface(const QString& iface);
 
-        [[nodiscard]] QString wirelessInterface() const noexcept {
+        [[nodiscard]] const QString& wirelessInterface() const noexcept {
             return mWirelessInterface;
         }
         [[nodiscard]] int wirelessLinkSpeed() const noexcept {
             return mWirelessLinkSpeed;
         }
-        [[nodiscard]] QString statusVPNInterface() const noexcept {
+        [[nodiscard]] const QString& statusVPNInterface() const noexcept {
             return mStatusVPNInterface;
         }
         [[nodiscard]] double wiredDownloadSpeed() const noexcept {
@@ -219,33 +223,33 @@ namespace vast {
         [[nodiscard]] bool vulkanAvailable() const noexcept {
             return mGraphicsSummary.vulkanAvailable;
         }
-        [[nodiscard]] QString vulkanVersion() const noexcept {
+        [[nodiscard]] const QString& vulkanVersion() const noexcept {
             return mGraphicsSummary.vulkanVersion;
         }
         [[nodiscard]] bool openglAvailable() const noexcept {
             return mGraphicsSummary.openglAvailable;
         }
-        [[nodiscard]] QString openglVersion() const noexcept {
+        [[nodiscard]] const QString& openglVersion() const noexcept {
             return mGraphicsSummary.openglVersion;
         }
-        [[nodiscard]] QString openglVendor() const noexcept {
+        [[nodiscard]] const QString& openglVendor() const noexcept {
             return mGraphicsSummary.openglVendor;
         }
-        [[nodiscard]] QString openglRenderer() const noexcept {
+        [[nodiscard]] const QString& openglRenderer() const noexcept {
             return mGraphicsSummary.openglRenderer;
         }
-        [[nodiscard]] QString vaApiDriver() const noexcept {
+        [[nodiscard]] const QString& vaApiDriver() const noexcept {
             return mGraphicsSummary.vaApiDriver;
         }
 
-        [[nodiscard]] Q_INVOKABLE static QString formatKB(double kib) {
+        [[nodiscard]] Q_INVOKABLE static QString formatKiB(double kib) {
             return sysusage::formatKiB(kib < 0.0 ? 0ULL : static_cast<quint64>(std::llround(kib)));
         }
-        [[nodiscard]] Q_INVOKABLE static QString formatUsage(double usageMiB) {
+        [[nodiscard]] Q_INVOKABLE static QString formatUsageMiB(double usageMiB) {
             return sysusage::formatUsageMiB(usageMiB);
         }
-        [[nodiscard]] Q_INVOKABLE static QString formatSpeed(double speedMBps) {
-            return sysusage::formatSpeedMBps(speedMBps);
+        [[nodiscard]] Q_INVOKABLE static QString formatSpeedMiBps(double speedMiBps) {
+            return sysusage::formatSpeedMiBps(speedMiBps);
         }
         Q_INVOKABLE void ensureGraphicsInfoLoaded();
         Q_INVOKABLE void sampleNow();
@@ -260,10 +264,10 @@ namespace vast {
         void cpuPercChanged();
         void memTotalChanged();
         void memUsedChanged();
-        void memPropChanged();
+        void memUsedGiBChanged();
         void diskTotalChanged();
         void diskUsedChanged();
-        void diskPropChanged();
+        void diskUsedGiBChanged();
         void diskPercentChanged();
         void storageAppsDataChanged();
         void storageSystemChanged();
@@ -286,7 +290,9 @@ namespace vast {
       private:
         bool          mRunning{false};
         QTimer*       mTimer{nullptr};
-        int           mStorageTickCounter{0};
+        QElapsedTimer mLastStorageSample;
+        QElapsedTimer mLastWirelessSample;
+        bool          mStorageCollectionInFlight{false};
         QElapsedTimer mLastSampleTime;
 
         // Static info
@@ -302,10 +308,12 @@ namespace vast {
         // State snapshots
         sysusage::CpuStatSnapshot                      mPreviousCpuStat;
         QHash<QString, sysusage::NetInterfaceCounters> mPreviousNetCounters;
+        QHash<int, QString>                            mFrequencyPathByCoreId;
         SensorScanner                                  mSensorScanner;
-        WirelessBitrateReader                          mWirelessReader;
-        GraphicsInfoProbe*                             mGraphicsProbe{nullptr};
-        sysusage::GraphicsSummary                      mGraphicsSummary;
+        // Owned via Qt parent-child. Not exposed to QML directly; results arrive via bitrateResolved.
+        WirelessBitrateReader*    mWirelessReader{nullptr};
+        GraphicsInfoProbe*        mGraphicsProbe{nullptr};
+        sysusage::GraphicsSummary mGraphicsSummary;
 
         // Models
         CpuCoresModel*    mCpuCoresModel{nullptr};
@@ -318,10 +326,10 @@ namespace vast {
         int     mCpuPerc{0};
         quint64 mMemTotal{0};
         quint64 mMemUsed{0};
-        double  mMemProp{0.0};
+        double  mMemUsedGiB{0.0};
         quint64 mDiskTotal{0};
         quint64 mDiskUsed{0};
-        double  mDiskProp{0.0};
+        double  mDiskUsedGiB{0.0};
         double  mDiskPercent{0.0};
         quint64 mStorageAppsData{0};
         quint64 mStorageSystem{0};
@@ -341,13 +349,24 @@ namespace vast {
         double  mTotalWirelessDownloadUsage{0.0};
         double  mTotalWirelessUploadUsage{0.0};
 
+        QString mProcNetDevPath;
+        QString mLspciProgram;
+
         void    initializeStaticInfo();
+        void    detectGpuNameFromLspciAsync();
+        void    applyGpuName(const QString& name);
         void    sampleCpu();
         void    sampleMemory();
         void    sampleUptime();
+        void    updateTemperature(std::optional<double> reading, double& cachedValue, void (SystemUsageMonitor::*changedSignal)());
         void    sampleSensors();
         void    sampleNetwork(double elapsedSeconds);
+        void    resetWiredState();
+        void    resetWirelessState();
         void    sampleStorageAsync();
+        void    applyStorageSummary(const sysusage::StorageSummary& summary);
+
+        friend class ::tst_SystemUsage;
     };
 
 } // namespace vast

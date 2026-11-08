@@ -32,7 +32,7 @@ PopupWidget {
                 color: Colours.m3Colors.m3Green
                 font.pixelSize: Appearance.fonts.size.large
                 font.weight: Font.DemiBold
-                text: (SystemUsage.memTotal / 1048576).toFixed(2) + " GB"
+                text: (SystemUsage.memTotal / 1048576).toFixed(2) + " GiB"
             }
         }
 
@@ -62,7 +62,7 @@ PopupWidget {
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.normal
                     horizontalAlignment: Text.AlignRight
-                    text: row.index === 0 ? (SystemUsage.memUsed / 1048576).toFixed(2) + " GB" : ((SystemUsage.memTotal - SystemUsage.memUsed) / 1048576).toFixed(2) + " GB"
+                    text: row.index === 0 ? (SystemUsage.memUsed / 1048576).toFixed(2) + " GiB" : ((SystemUsage.memTotal - SystemUsage.memUsed) / 1048576).toFixed(2) + " GiB"
                 }
             }
         }

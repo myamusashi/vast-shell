@@ -1,43 +1,59 @@
 #pragma once
 
-#include <qcontainerfwd.h>
 #include <qlist.h>
-#include <qpair.h>
 #include <qstring.h>
 
 #include <optional>
 
 namespace vast {
 
+    struct SensorCoreInfo {
+        int     coreId{0};
+        QString frequencyPath;
+    };
+
     class SensorScanner {
       public:
-        explicit SensorScanner(const QString& sysRoot = QStringLiteral("/sys"));
+        explicit SensorScanner(QString sysRoot = QStringLiteral("/sys"));
 
-        void                                            scan();
+        void                                       scan();
 
-        [[nodiscard]] double                            readCpuTemperature() const;
-        [[nodiscard]] double                            readGpuTemperature() const;
-        [[nodiscard]] double                            readBatteryTemperature() const;
-        [[nodiscard]] QString                           readBatteryTechnology() const;
+        [[nodiscard]] std::optional<double>        readCpuTemperature() const;
+        [[nodiscard]] std::optional<double>        readGpuTemperature() const;
+        [[nodiscard]] std::optional<double>        readBatteryTemperature() const;
+        [[nodiscard]] QString                      readBatteryTechnology() const;
 
-        [[nodiscard]] const QList<QPair<int, QString>>& coreFrequencyPaths() const noexcept {
+        [[nodiscard]] const QList<SensorCoreInfo>& coreFrequencyPaths() const noexcept {
             return mCoreFrequencyPaths;
         }
 
-        [[nodiscard]] QString detectWirelessInterface() const;
-        [[nodiscard]] QString detectVpnStatus() const;
+        void                  updateInterfaces(const QList<QString>& names);
+        [[nodiscard]] QString detectWirelessInterface();
+        [[nodiscard]] QString detectVpnStatus();
 
       private:
-        QString                    mSysRoot;
-        QString                    mCpuTempPath;
-        QString                    mGpuTempPath;
-        QString                    mBatteryTempPath;
-        QString                    mBatteryTechPath;
-        QList<QPair<int, QString>> mCoreFrequencyPaths;
+        struct TemperatureSource {
+            QString path;
+            double  divisor{1000.0};
+        };
 
-        void                       scanHwmonSensors();
-        void                       scanBatterySensors();
-        void                       scanCpuFreqPaths();
+        QString               mSysRoot;
+        TemperatureSource     mCpuTemperatureSource;
+        TemperatureSource     mGpuTemperatureSource;
+        TemperatureSource     mBatteryTemperatureSource;
+        QString               mBatteryTechPath;
+        QList<SensorCoreInfo> mCoreFrequencyPaths;
+
+        QList<QString>        mInterfaceNames;
+        QList<QString>        mVpnCandidates;
+        QString               mCachedWirelessInterface;
+        bool                  mWirelessScanned{false};
+
+        void                  scanHwmonSensors();
+        void                  scanBatterySensors();
+        void                  scanCpuFreqPaths();
+        void                  refreshVpnCandidates();
+        [[nodiscard]] QString scanWirelessInterface() const;
     };
 
 } // namespace vast

@@ -6,7 +6,11 @@
 #include <qstringview.h>
 
 #include <algorithm>
+#include <array>
+#include <cctype>
+#include <charconv>
 #include <cmath>
+#include <iterator>
 #include <string_view>
 
 namespace vast::sysusage {
@@ -15,6 +19,22 @@ namespace vast::sysusage {
 
         [[nodiscard]] std::string_view toStringView(QByteArrayView byteView) noexcept {
             return {byteView.data(), static_cast<size_t>(byteView.size())};
+        }
+
+        [[nodiscard]] std::optional<quint64> consumeUnsigned(std::string_view& text) noexcept {
+            size_t offset = 0;
+            while (offset < text.size() && std::isspace(static_cast<unsigned char>(text[offset])))
+                ++offset;
+            text.remove_prefix(offset);
+
+            quint64 value = 0;
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic,bugprone-suspicious-stringview-data-usage)
+            const auto result = std::from_chars(text.data(), text.data() + text.size(), value);
+            if (result.ec != std::errc{})
+                return std::nullopt;
+            // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic,bugprone-suspicious-stringview-data-usage)
+            text.remove_prefix(static_cast<size_t>(std::distance(text.data(), result.ptr)));
+            return value;
         }
 
         [[nodiscard]] QString cleanQuotedValue(QStringView text) {
@@ -27,32 +47,20 @@ namespace vast::sysusage {
 
         [[nodiscard]] std::optional<CpuJiffies> parseJiffiesLine(std::string_view line) noexcept {
             CpuJiffies jiffies;
-            size_t     offset = 0;
 
             // Skip cpu label
-            while (offset < line.size() && !std::isspace(static_cast<unsigned char>(line[offset]))) {
-                ++offset;
+            while (!line.empty() && !std::isspace(static_cast<unsigned char>(line.front()))) {
+                line.remove_prefix(1);
             }
 
             const std::array<quint64*, 8> destinations = {&jiffies.user,   &jiffies.nice, &jiffies.system,  &jiffies.idle,
                                                           &jiffies.iowait, &jiffies.irq,  &jiffies.softirq, &jiffies.steal};
             for (quint64* destination : destinations) {
-                while (offset < line.size() && std::isspace(static_cast<unsigned char>(line[offset]))) {
-                    ++offset;
-                }
-                if (offset >= line.size())
+                if (auto value = consumeUnsigned(line)) {
+                    *destination = *value;
+                } else {
                     return std::nullopt;
-
-                quint64 value      = 0;
-                size_t  digitCount = 0;
-                while (offset < line.size() && std::isdigit(static_cast<unsigned char>(line[offset]))) {
-                    value = value * 10 + static_cast<quint64>(line[offset] - '0');
-                    ++offset;
-                    ++digitCount;
                 }
-                if (digitCount == 0)
-                    return std::nullopt;
-                *destination = value;
             }
 
             return jiffies;
@@ -79,17 +87,12 @@ namespace vast::sysusage {
                     snapshot.valid     = true;
                 }
             } else if (line.starts_with("cpu")) {
-                size_t offset = 3;
-                int    coreId = 0;
-                size_t digits = 0;
-                while (offset < line.size() && std::isdigit(static_cast<unsigned char>(line[offset]))) {
-                    coreId = coreId * 10 + (line[offset] - '0');
-                    ++offset;
-                    ++digits;
-                }
-                if (digits > 0 && offset < line.size() && std::isspace(static_cast<unsigned char>(line[offset]))) {
-                    if (auto jiffies = parseJiffiesLine(line)) {
-                        snapshot.perCore.insert(coreId, *jiffies);
+                std::string_view remainder = line.substr(3);
+                if (auto coreId = consumeUnsigned(remainder)) {
+                    if (!remainder.empty() && std::isspace(static_cast<unsigned char>(remainder.front()))) {
+                        if (auto jiffies = parseJiffiesLine(line)) {
+                            snapshot.perCore.insert(static_cast<int>(*coreId), *jiffies);
+                        }
                     }
                 }
             }
@@ -117,72 +120,30 @@ namespace vast::sysusage {
         return std::clamp(static_cast<int>(std::round(percent)), 0, 100);
     }
 
-    std::optional<std::pair<int, int>> parseCoreFrequency(QStringView sysfsPath, QByteArrayView content) noexcept {
-        static constexpr QStringView pattern        = u"/cpu";
-        qsizetype                    searchPosition = 0;
-        int                          coreId         = -1;
-
-        while (searchPosition < sysfsPath.size()) {
-            const qsizetype matchIndex = sysfsPath.indexOf(pattern, searchPosition);
-            if (matchIndex < 0)
-                break;
-
-            qsizetype offset     = matchIndex + pattern.size();
-            int       currentId  = 0;
-            qsizetype digitCount = 0;
-            while (offset < sysfsPath.size() && sysfsPath[offset].isDigit()) {
-                currentId = currentId * 10 + sysfsPath[offset].digitValue();
-                ++offset;
-                ++digitCount;
-            }
-            if (digitCount > 0) {
-                coreId = currentId;
-                break;
-            }
-            searchPosition = matchIndex + pattern.size();
+    std::optional<int> parseFrequencyMHz(QByteArrayView content) noexcept {
+        std::string_view text = toStringView(content);
+        if (auto frequencyKhz = consumeUnsigned(text)) {
+            return static_cast<int>(*frequencyKhz / 1000);
         }
-
-        if (coreId < 0)
-            return std::nullopt;
-        const std::string_view text       = toStringView(content);
-        size_t                 textOffset = 0;
-        while (textOffset < text.size() && std::isspace(static_cast<unsigned char>(text[textOffset]))) {
-            ++textOffset;
-        }
-
-        quint64 frequencyKhz = 0;
-        size_t  valueDigits  = 0;
-        while (textOffset < text.size() && std::isdigit(static_cast<unsigned char>(text[textOffset]))) {
-            frequencyKhz = frequencyKhz * 10 + static_cast<quint64>(text[textOffset] - '0');
-            ++textOffset;
-            ++valueDigits;
-        }
-        if (valueDigits == 0)
-            return std::nullopt;
-
-        const int frequencyMHz = static_cast<int>(frequencyKhz / 1000);
-        return std::make_pair(coreId, frequencyMHz);
+        return std::nullopt;
     }
 
     MemInfoSnapshot parseMemInfo(QByteArrayView content) noexcept {
         MemInfoSnapshot        snapshot;
-        const std::string_view text      = toStringView(content);
-        size_t                 lineStart = 0;
+        const std::string_view text           = toStringView(content);
+        size_t                 lineStart      = 0;
+        bool                   totalFound     = false;
+        bool                   availableFound = false;
+        std::optional<quint64> freeKiB;
+        std::optional<quint64> buffersKiB;
+        std::optional<quint64> cachedKiB;
 
-        auto                   parseKbValue = [](std::string_view line) -> quint64 {
+        auto                   parseKbValue = [](std::string_view line) -> std::optional<quint64> {
             const size_t colon = line.find(':');
             if (colon == std::string_view::npos)
-                return 0;
-            size_t offset = colon + 1;
-            while (offset < line.size() && std::isspace(static_cast<unsigned char>(line[offset]))) {
-                ++offset;
-            }
-            quint64 value = 0;
-            while (offset < line.size() && std::isdigit(static_cast<unsigned char>(line[offset]))) {
-                value = value * 10 + static_cast<quint64>(line[offset] - '0');
-                ++offset;
-            }
-            return value;
+                return std::nullopt;
+            std::string_view rest = line.substr(colon + 1);
+            return consumeUnsigned(rest);
         };
 
         while (lineStart < text.size()) {
@@ -194,13 +155,35 @@ namespace vast::sysusage {
             lineStart                   = lineEnd + 1;
 
             if (line.starts_with("MemTotal:")) {
-                snapshot.totalKiB = parseKbValue(line);
+                if (auto val = parseKbValue(line)) {
+                    snapshot.totalKiB = *val;
+                    totalFound        = true;
+                }
             } else if (line.starts_with("MemAvailable:")) {
-                snapshot.availableKiB = parseKbValue(line);
+                if (auto val = parseKbValue(line)) {
+                    snapshot.availableKiB = *val;
+                    availableFound        = true;
+                }
+            } else if (line.starts_with("MemFree:")) {
+                freeKiB = parseKbValue(line);
+            } else if (line.starts_with("Buffers:")) {
+                buffersKiB = parseKbValue(line);
+            } else if (line.starts_with("Cached:")) {
+                cachedKiB = parseKbValue(line);
+            }
+
+            if (totalFound && availableFound)
+                break;
+        }
+
+        if (!availableFound) {
+            if (freeKiB.has_value() || buffersKiB.has_value() || cachedKiB.has_value()) {
+                snapshot.availableKiB = freeKiB.value_or(0) + buffersKiB.value_or(0) + cachedKiB.value_or(0);
+                availableFound        = true;
             }
         }
 
-        if (snapshot.totalKiB > 0) {
+        if (totalFound && availableFound && snapshot.totalKiB > 0) {
             snapshot.valid = true;
             if (snapshot.totalKiB >= snapshot.availableKiB) {
                 snapshot.usedKiB = snapshot.totalKiB - snapshot.availableKiB;
@@ -211,22 +194,8 @@ namespace vast::sysusage {
     }
 
     std::optional<quint64> parseUptimeSeconds(QByteArrayView content) noexcept {
-        const std::string_view text   = toStringView(content);
-        size_t                 offset = 0;
-        while (offset < text.size() && std::isspace(static_cast<unsigned char>(text[offset]))) {
-            ++offset;
-        }
-        if (offset >= text.size() || !std::isdigit(static_cast<unsigned char>(text[offset]))) {
-            return std::nullopt;
-        }
-
-        quint64 integerPart = 0;
-        while (offset < text.size() && std::isdigit(static_cast<unsigned char>(text[offset]))) {
-            integerPart = integerPart * 10 + static_cast<quint64>(text[offset] - '0');
-            ++offset;
-        }
-
-        return integerPart;
+        std::string_view text = toStringView(content);
+        return consumeUnsigned(text);
     }
 
     QHash<QString, NetInterfaceCounters> parseNetDev(QByteArrayView content) {
@@ -267,32 +236,20 @@ namespace vast::sysusage {
             const QString interfaceName = QString::fromUtf8(sub.data(), static_cast<qsizetype>(sub.size()));
 
             // Parse numbers after colon: token 0 is rxBytes, token 8 is txBytes
-            size_t               offset = colon + 1;
+            std::string_view     remaining = line.substr(colon + 1);
             NetInterfaceCounters counters;
             bool                 rxFound = false;
 
             for (int tokenIndex = 0; tokenIndex < 16; ++tokenIndex) {
-                while (offset < line.size() && std::isspace(static_cast<unsigned char>(line[offset]))) {
-                    ++offset;
-                }
-                if (offset >= line.size())
-                    break;
-
-                quint64 value      = 0;
-                size_t  digitCount = 0;
-                while (offset < line.size() && std::isdigit(static_cast<unsigned char>(line[offset]))) {
-                    value = value * 10 + static_cast<quint64>(line[offset] - '0');
-                    ++offset;
-                    ++digitCount;
-                }
-                if (digitCount == 0)
-                    break;
-
-                if (tokenIndex == 0) {
-                    counters.rxBytes = value;
-                    rxFound          = true;
-                } else if (tokenIndex == 8) {
-                    counters.txBytes = value;
+                if (auto value = consumeUnsigned(remaining)) {
+                    if (tokenIndex == 0) {
+                        counters.rxBytes = *value;
+                        rxFound          = true;
+                    } else if (tokenIndex == 8) {
+                        counters.txBytes = *value;
+                        break;
+                    }
+                } else {
                     break;
                 }
             }
@@ -305,7 +262,7 @@ namespace vast::sysusage {
         return result;
     }
 
-    double computeNetSpeedMBps(quint64 previousBytes, quint64 currentBytes, double elapsedSeconds) noexcept {
+    double computeNetSpeedMiBps(quint64 previousBytes, quint64 currentBytes, double elapsedSeconds) noexcept {
         if (currentBytes < previousBytes || elapsedSeconds <= 0.1)
             return 0.0;
         const quint64 byteDelta   = currentBytes - previousBytes;
@@ -323,17 +280,9 @@ namespace vast::sysusage {
 
             const double          percent = rawEntry.totalKiB > 0 ? (static_cast<double>(rawEntry.usedKiB) * 100.0 / static_cast<double>(rawEntry.totalKiB)) : 0.0;
 
-            const FilesystemEntry entry{
-                .deviceName     = rawEntry.deviceName,
-                .filesystemType = rawEntry.filesystemType,
-                .mountPoint     = rawEntry.mountPoint,
-                .usedKiB        = rawEntry.usedKiB,
-                .freeKiB        = rawEntry.freeKiB,
-                .totalKiB       = rawEntry.totalKiB,
-                .usedPercent    = percent,
-            };
+            const FilesystemEntry entry{rawEntry, percent};
 
-            auto existingIterator = deduplicated.find(entry.deviceName);
+            auto                  existingIterator = deduplicated.find(entry.deviceName);
             if (existingIterator == deduplicated.end()) {
                 deduplicated.insert(entry.deviceName, entry);
             } else {
@@ -409,17 +358,20 @@ namespace vast::sysusage {
     }
 
     QString parseUdevPciGpuName(QByteArrayView udevDataContent) {
-        const QString text  = QString::fromUtf8(udevDataContent.data(), udevDataContent.size());
-        const auto    lines = QStringView(text).split(u'\n');
+        const QString                text  = QString::fromUtf8(udevDataContent.data(), udevDataContent.size());
+        const auto                   lines = QStringView(text).split(u'\n');
 
-        QString       vendor;
-        QString       model;
+        static constexpr QStringView modelPrefix  = u"E:ID_MODEL_FROM_DATABASE=";
+        static constexpr QStringView vendorPrefix = u"E:ID_VENDOR_FROM_DATABASE=";
+
+        QString                      vendor;
+        QString                      model;
 
         for (const auto& line : lines) {
-            if (line.startsWith(u"E:ID_MODEL_FROM_DATABASE=")) {
-                model = line.mid(25).trimmed().toString();
-            } else if (line.startsWith(u"E:ID_VENDOR_FROM_DATABASE=")) {
-                vendor = line.mid(26).trimmed().toString();
+            if (line.startsWith(modelPrefix)) {
+                model = line.mid(modelPrefix.size()).trimmed().toString();
+            } else if (line.startsWith(vendorPrefix)) {
+                vendor = line.mid(vendorPrefix.size()).trimmed().toString();
             }
         }
 
@@ -430,6 +382,21 @@ namespace vast::sysusage {
         }
 
         return vendor + u' ' + model;
+    }
+
+    QString parseLspciGpuName(QByteArrayView lspciOutput) {
+        const QString text  = QString::fromUtf8(lspciOutput.data(), lspciOutput.size());
+        const auto    lines = QStringView(text).split(u'\n');
+        for (const auto& line : lines) {
+            if (line.contains(u"VGA compatible controller:", Qt::CaseInsensitive) || line.contains(u"3D controller:", Qt::CaseInsensitive) ||
+                line.contains(u"Display controller:", Qt::CaseInsensitive)) {
+                const qsizetype colon = line.indexOf(u':', line.indexOf(u':') + 1);
+                if (colon >= 0) {
+                    return line.mid(colon + 1).trimmed().toString();
+                }
+            }
+        }
+        return {};
     }
 
     GraphicsSummary parseGraphicsOutputs(QByteArrayView vulkanOutput, QByteArrayView openglOutput, QByteArrayView vaApiOutput) {

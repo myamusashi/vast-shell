@@ -2,11 +2,8 @@
 
 #include "SystemStatParsers.hpp"
 
-namespace vast {
+namespace vast::sysusage {
 
-    class StorageCollector {
-      public:
-        [[nodiscard]] static sysusage::StorageSummary collect();
-    };
+    [[nodiscard]] StorageSummary collectStorage();
 
-} // namespace vast
+} // namespace vast::sysusage

@@ -2,10 +2,14 @@
 
 #include "SystemStatParsers.hpp"
 
+#include <qbytearray.h>
 #include <qobject.h>
+#include <qprocess.h>
+#include <qstring.h>
+#include <qtimer.h>
 #include <qtmetamacros.h>
 
-#include <atomic>
+#include <cstdint>
 
 namespace vast {
 
@@ -13,7 +17,7 @@ namespace vast {
         Q_OBJECT
 
       public:
-        explicit GraphicsInfoProbe(QObject* parent = nullptr);
+        explicit GraphicsInfoProbe(QObject* parent = nullptr, int probeTimeoutMilliseconds = 3000, QString driDirectory = QStringLiteral("/dev/dri"));
         ~GraphicsInfoProbe() override                          = default;
         GraphicsInfoProbe(const GraphicsInfoProbe&)            = delete;
         GraphicsInfoProbe& operator=(const GraphicsInfoProbe&) = delete;
@@ -30,10 +34,28 @@ namespace vast {
         void finished(const vast::sysusage::GraphicsSummary& summary);
 
       private:
-        std::atomic<bool> mLoaded{false};
-        std::atomic<bool> mRunning{false};
+        enum class ProbeStep : std::uint8_t {
+            Vulkan,
+            OpenGl,
+            VaApi,
+            Done
+        };
 
-        void              executeProbe();
+        bool       mLoaded{false};
+        bool       mRunning{false};
+        QTimer*    mProcessTimeout{nullptr};
+        QProcess*  mActiveProcess{nullptr};
+        QString    mDriDirectory;
+        QByteArray mVulkanOutput;
+        QByteArray mOpenGlOutput;
+        QByteArray mVaApiOutput;
+        ProbeStep  mProbeStep{ProbeStep::Vulkan};
+        bool       mOpenGlFallbackTried{false};
+
+        void       startNextTool();
+        void       launchTool(const QString& program, const QStringList& arguments);
+        void       onProcessFinished(QProcess* process);
+        void       finishProbe();
     };
 
 } // namespace vast
