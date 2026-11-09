@@ -12,18 +12,18 @@ GridLayout {
     id: connectedGrid
 
     property bool  checkable: false
-    property color checkedColor: Colours.m3Colors.m3Primary
+    property color checkedColor: Colours.m3Colors.m3SecondaryContainer
     property int   checkedIndex: -1
-    property color checkedTextColor: Colours.m3Colors.m3OnPrimary
-    property color hoverColor: Qt.alpha(Colours.m3Colors.m3Primary, 0.45)
+    property color checkedTextColor: Colours.m3Colors.m3OnSecondaryContainer
+    property color hoverColor: Qt.alpha(Colours.m3Colors.m3SecondaryContainer, 0.45)
     property int   iconType: Icon.Weather
-    property color idleColor: Qt.alpha(Colours.m3Colors.m3Primary, 0.3)
+    property color idleColor: Colours.m3Colors.m3SurfaceContainerHigh
     property real  innerRadius: 4
     property bool  interactive: true
     property var   model: []
     property real  outerRadius: 28
-    property color pressedColor: Qt.alpha(Colours.m3Colors.m3Primary, 0.6)
-    property color textColor: Colours.m3Colors.m3Primary
+    property color pressedColor: Qt.alpha(Colours.m3Colors.m3SecondaryContainer, 0.6)
+    property color textColor: Colours.m3Colors.m3OnSurfaceVariant
 
     signal         buttonClicked(int buttonIndex)
 
@@ -55,6 +55,7 @@ GridLayout {
             }
 
             Layout.fillWidth: true
+            implicitWidth: buttonContent.implicitWidth + Appearance.spacing.large
             Layout.preferredHeight: buttonContent.implicitHeight + Appearance.spacing.large
             bottomLeftRadius: cornerRadius(isLastRow && isFirstColumn)
             bottomRightRadius: cornerRadius(isLastRow && isLastColumn)
@@ -73,30 +74,35 @@ GridLayout {
                 CAnim {}
             }
 
-            Row {
+            RowLayout {
                 id: buttonContent
 
-                anchors.centerIn: parent
+                anchors.fill: parent
+                anchors.leftMargin: 10
+                anchors.rightMargin: 10
                 spacing: 4
 
                 Icon {
-                    anchors.verticalCenter: parent.verticalCenter
+                    Layout.alignment: Qt.AlignVCenter
                     color: {
                         if (button.modelData.iconColor !== undefined)
                             return button.modelData.iconColor;
                         return button.isChecked ? connectedGrid.checkedTextColor : connectedGrid.textColor;
                     }
                     font.pixelSize: Appearance.fonts.size.larger
-                    icon: button.modelData.icon
+                    icon: button.modelData.icon ?? ""
                     type: connectedGrid.iconType
                     visible: button.modelData.icon !== undefined
                 }
 
                 StyledText {
-                    anchors.verticalCenter: parent.verticalCenter
+                    Layout.alignment: Qt.AlignVCenter
+                    Layout.fillWidth: true
                     color: button.isChecked ? connectedGrid.checkedTextColor : connectedGrid.textColor
-                    font.pixelSize: Appearance.fonts.size.normal
-                    text: button.modelData.label
+                    elide: Text.ElideRight
+                    font.pixelSize: Appearance.fonts.size.small
+                    horizontalAlignment: Text.AlignHCenter
+                    text: button.modelData.label ?? ""
                     visible: button.modelData.label !== undefined
                 }
             }

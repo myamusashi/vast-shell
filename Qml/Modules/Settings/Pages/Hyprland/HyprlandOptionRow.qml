@@ -225,18 +225,34 @@ SettingRow {
     Component {
         id: choiceEditor
 
-        SplitButton {
-            id: choiceButton
+        Loader {
+            sourceComponent: root.choices.length === 4 ? choiceGridEditor : choiceGroupEditor
+        }
+    }
 
-            text: root.currentChoiceLabel()
+    Component {
+        id: choiceGroupEditor
+
+        ConnectedButtonGroup {
+            textSize: Appearance.fonts.size.small
+            model: root.choices.map(choice => choice.label)
+            currentIndex: root.choiceIndex()
+            onClicked: index => root.writeValue(root.choices[index].value)
+        }
+    }
+
+    Component {
+        id: choiceGridEditor
+
+        ConnectedButtonGrid {
+            checkable: true
+            checkedIndex: root.choiceIndex()
             model: root.choices.map(choice => {
                 return {
-                    text: choice.label
+                    label: choice.label
                 };
             })
-            currentIndex: root.choiceIndex()
-            onClicked: choiceButton.openMenu()
-            onMenuItemActivated: index => root.writeValue(root.choices[index].value)
+            onButtonClicked: index => root.writeValue(root.choices[index].value)
         }
     }
 
@@ -303,6 +319,22 @@ SettingRow {
     Component {
         id: enumEditor
 
+        Loader {
+            sourceComponent: root.descriptor.values.length <= 4 ? enumButtonEditor : enumDropdown
+        }
+    }
+
+    Component {
+        id: enumButtonEditor
+
+        Loader {
+            sourceComponent: root.descriptor.values.length === 4 ? enumGridEditor : enumGroupEditor
+        }
+    }
+
+    Component {
+        id: enumDropdown
+
         SplitButton {
             id: enumButton
 
@@ -316,6 +348,32 @@ SettingRow {
             showScrollBar: true
             onClicked: enumButton.openMenu()
             onMenuItemActivated: index => root.writeValue(root.descriptor.values[index])
+        }
+    }
+
+    Component {
+        id: enumGroupEditor
+
+        ConnectedButtonGroup {
+            textSize: Appearance.fonts.size.small
+            model: root.descriptor.values.map(value => value === "" ? qsTr("Default") : value)
+            currentIndex: root.enumIndex()
+            onClicked: index => root.writeValue(root.descriptor.values[index])
+        }
+    }
+
+    Component {
+        id: enumGridEditor
+
+        ConnectedButtonGrid {
+            checkable: true
+            checkedIndex: root.enumIndex()
+            model: root.descriptor.values.map(value => {
+                return {
+                    label: value === "" ? qsTr("Default") : value
+                };
+            })
+            onButtonClicked: index => root.writeValue(root.descriptor.values[index])
         }
     }
 

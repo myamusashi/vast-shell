@@ -39,7 +39,7 @@ Item {
         reportedSegmentWidths = widths;
     }
 
-    implicitHeight: 40
+    implicitHeight: 32
     implicitWidth: segmentRow.implicitWidth
     opacity: enabled ? 1 : 0.38
 
