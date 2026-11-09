@@ -2,9 +2,9 @@
 
 [Back to README](../README.md)
 
-## Project Structure
+## Project structure
 
-```
+```text
 vast-shell/
 ├── CMakeLists.txt / CMakePresets.json   # C++ plugin build (Ninja + clang + mold)
 ├── archInstall.sh                       # Arch installer
@@ -256,7 +256,7 @@ Assets/shell/qmllint_qs.sh
 
 ---
 
-## Upcoming Features
+## Upcoming features
 
 > [!NOTE]
 > These features are planned and may change in scope or priority. Contributions are welcome!

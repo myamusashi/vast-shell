@@ -90,7 +90,7 @@ shell
 
 **Runtime** (what `archInstall.sh` actually installs via `pacman -S`):
 
-```
+```text
 base-devel git cmake ninja clang mold extra-cmake-modules patchelf pkgconf
 qt6-base qt6-declarative qt6-wayland qt6-svg qt6-graphs qt6-multimedia
 qt6-5compat qt6-shadertools qt6-tools rust pipewire ddcutil i2c-tools go python
@@ -245,7 +245,7 @@ sudo xbps-install -S pipewire iw libnotify polkit \
 
 The shell's Bluetooth UI (`BluetoothServices`) calls `BluetoothDevice.pair()` via [`Quickshell.Bluetooth`](https://quickshell.org/docs/v0.3.2/types/Quickshell.Bluetooth/BluetoothDevice/). BlueZ **requires a registered pairing agent** (`org.bluez.AgentManager1`) to answer SSP confirmations; without one you get:
 
-```
+```text
 [SIGNAL] BREDR.Disconnected - org.bluez.Reason.Local  Connection terminated by local host
 WARN quickshell.bluetooth.device: Failed to pair ... "Authentication Failed"
 ```

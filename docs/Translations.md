@@ -11,8 +11,7 @@ Vast-shell uses Qt's built-in translation system. Translation files live in `tra
 |---|---|
 | `en_US` | English (source/identity locale) |
 | `id_ID` | Indonesian |
->
-> `en_US` is also the fallback: `TranslationManager` initialises to it, and a locale with no `.qm` on disk falls back to untranslated source strings.
+`en_US` is also the fallback: `TranslationManager` initialises to it, and a locale with no `.qm` on disk falls back to untranslated source strings.
 
 > [!NOTE]
 > `lupdate` and `lrelease` are provided by `qt6-tools` (Arch), `qt6-tools-dev-tools` (Debian/Ubuntu), or `qt6.qttools` (NixOS).
@@ -21,24 +20,20 @@ Vast-shell uses Qt's built-in translation system. Translation files live in `tra
 
 The recommended way to translate vast-shell is with **Qt Linguist**, a GUI editor that ships with `qt6-tools`. It shows every string in context, tracks translation progress, and warns about missing or outdated entries.
 
-<img src="https://github.com/user-attachments/assets/c5569311-99a3-4f99-9709-464ceda68495" width="720"/>
+<img src="https://github.com/user-attachments/assets/c5569311-99a3-4f99-9709-464ceda68495" width="720" alt="Qt Linguist"/>
 
-<table>
-  <tr>
-    <td>✅ Visual side-by-side editing</td>
-    <td>✅ Progress tracker per file</td>
-  </tr>
-  <tr>
-    <td>✅ Marks unfinished and obsolete strings</td>
-    <td>✅ Built-in phrase book and search</td>
-  </tr>
-</table>
+| Feature | Supported |
+|---|---|
+| Visual side-by-side editing | Yes |
+| Progress tracker per file | Yes |
+| Marks unfinished and obsolete strings | Yes |
+| Built-in phrase book and search | Yes |
 
 ```bash
 linguist translations/your_locale.ts
 ```
 
-## Adding a New Language
+## Adding a new language
 
 ```bash
 # 1. Generate the .ts file
@@ -53,7 +48,7 @@ lrelease translations/your_locale.ts
 
 Replace `your_locale` with a standard locale code, e.g. `fr_FR`, `ja_JP`, `de_DE`.
 
-## Updating an Existing Translation
+## Updating an existing translation
 
 ```bash
 # Sync new strings without overwriting existing translations

@@ -10,8 +10,7 @@ cmake --build --preset test
 ctest --test-dir build/test --output-on-failure
 ```
 
-`enable_testing()` is called at the top level only when `VAST_BUILD_TESTS=ON`, since
-`add_test()` outside a testing-enabled top level is an error. 28 binaries.
+`enable_testing()` is called at the top level only when `VAST_BUILD_TESTS=ON`, since `add_test()` outside a testing-enabled top level is an error. There are 28 binaries.
 
 ### Verbose output
 
@@ -183,7 +182,7 @@ file afterwards. Each clipboard test gets its own SQLite file, because
 Suites are grouped by the module under test. `Plugins/Vast/Tests/CMakeLists.txt` only
 dispatches; each subdirectory owns its targets.
 
-```
+```text
 Plugins/Vast/Tests/
 ├── CMakeLists.txt                    # find_package(Qt6 Test) + add_subdirectory
 ├── Audio/                            # Vast.Audio

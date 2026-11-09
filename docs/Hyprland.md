@@ -9,8 +9,6 @@ The Settings window has a **Hyprland Configurations** section that lets you edit
 
 ## How it works
 
-JSON is the data, Lua is a static reader:
-
 1. **Apply** (per page) writes the draft to `~/.config/vast-shell/monitor.json`, `~/.config/vast-shell/generals.json`, `~/.config/vast-shell/windowrules.json` and/or `~/.config/vast-shell/layerrules.json`, then runs `hyprctl reload`.
 2. On every Hyprland (re)load, `~/.config/hypr/vast_shell.lua` reads the first two JSON files and applies them with `hl.monitor{...}` and `hl.config{...}`, and `~/.config/hypr/vast_shell_rules.lua` reads the rules files and registers them with `hl.window_rule{...}` / `hl.layer_rule{...}` in array order.
 
@@ -27,27 +25,16 @@ require("vast_shell_rules")
 
 The pages show these lines with copy buttons. They must be at the bottom because the last call wins: values and rules written by vast-shell shadow whatever your own config set earlier. If you prefer the opposite precedence, put the `require` lines above your own options instead.
 
-## Requirements
-
-- **lua-cjson** must be requireable from Hyprland's embedded Lua (PUC Lua **5.5**). Without it `vast_shell.lua` silently does nothing. Hyprland does not touch `package.cpath`, so the module has to be reachable from Lua's compiled-in module path, the generated `vast_shell.lua` prepends `~/.config/hypr/?.so` for you, so the easiest fix is to drop a Lua 5.5 `cjson.so` into `~/.config/hypr/`:
-  - Nix: Just declared `lua55Packages.lua-cjson` into systemPackages (nix fixes this).
-  - Otherwise: install any `lua-cjson` built against Lua 5.5 and copy (or symlink) its `cjson.so` there, or extend `package.cpath` at the top of `vast_shell.lua`.
-
 ## Files
 
-| File | Written by | Purpose |
-|---|---|---|
-| `~/.config/vast-shell/monitor.json` | vast-shell | Monitors you modified and applied, under a `"monitors"` key |
-| `~/.config/vast-shell/generals.json` | vast-shell | Config options you changed and applied, under a `"generals"` key |
-| `~/.config/vast-shell/windowrules.json` | vast-shell | Window rules you applied, under a `"rules"` key |
-| `~/.config/vast-shell/layerrules.json` | vast-shell | Layer rules you applied, under a `"rules"` key |
-| `~/.config/hypr/vast_shell.lua` | vast-shell (once) | Yours to edit afterwards |
-| `~/.config/hypr/vast_shell_rules.lua` | vast-shell (once) | Yours to edit afterwards |
+- `~/.config/vast-shell/monitor.json`
+- `~/.config/vast-shell/generals.json`
+- `~/.config/vast-shell/windowrules.json`
+- `~/.config/vast-shell/layerrules.json`
+- `~/.config/hypr/vast_shell.lua`
+- `~/.config/hypr/vast_shell_rules.lua`
 
-`monitor.json` only contains monitors you actually modified and applied, a missing file means vast-shell emits nothing and your setup is untouched. Monitors are identified by their `description` (falling back to `model`), never by connector name, so settings survive unplug/replug. Hyprland matches `desc:` by **prefix**, so two connected monitors with the same description receive the same settings; the UI warns when that happens.
-
-> [!IMPORTANT]
-> `require("vast_shell")` runs **last**, on every reload. For every monitor stored in `monitor.json`, its `hl.monitor` call overrides the fields it sets in rules your own config set earlier (a rule that does not set a field, like `icc` when the field is empty, leaves that field alone). If you have your own monitor profiles (e.g. re-applied on `monitor.added`), a stored vast-shell entry wins for mode/position/scale/etc. on reconnect. Keep such monitors out of the UI (Revert + Apply removes the entry) or move those fields into the UI.
+`monitor.json` only contains monitors you actually modified and applied. A missing file means vast-shell emits nothing and your setup is untouched. Monitors are identified by their `description` (falling back to `model`), never by connector name, so settings survive unplug/replug.
 
 ## Window & layer rules
 

@@ -303,11 +303,13 @@ See [Usage](Usage.md#color-templates) for the placeholder syntax and the naming 
 | `showPeakLevels` | `true` | Live input and output level meters in the volume page. |
 
 > [!NOTE]
-> Quickshell has this error: 
->```txt
->ERROR quickshell.service.pipewire.peak: PwNode(0x73f807e5a400, id=46/bound) is missing channels present in capture stream. Node channels: QList(qs::service::pipewire::PwAudioChannel::Mono) Stream channels: QList(qs::service::pipewire::PwAudioChannel::FrontLeft, qs::service::pipewire::PwAudioChannel::FrontRight)
->```
-> We can just wait until the issue is fixes
+> Quickshell has this error:
+>
+> ```txt
+> ERROR quickshell.service.pipewire.peak: PwNode(0x73f807e5a400, id=46/bound) is missing channels present in capture stream. Node channels: QList(qs::service::pipewire::PwAudioChannel::Mono) Stream channels: QList(qs::service::pipewire::PwAudioChannel::FrontLeft, qs::service::pipewire::PwAudioChannel::FrontRight)
+> ```
+>
+> Wait until the issue is fixed.
 
 ### Media Player
 
@@ -512,10 +514,6 @@ vastctl color from "#ce8fd6" --mode light --scheme vibrant
     "surfaceVariant": "#4d444c",
     "tertiary": "#f5b8af",
     "tertiaryContainer": "#673b35",
-    "onTertiary": "#4c2520",
-    "onTertiaryContainer": "#ffdad5",
-    "onTertiaryFixed": "#33110d",
-    "onTertiaryFixedVariant": "#673b35",
     "success": "#7ddb8f",
     "onSuccess": "#00391a",
     "successContainer": "#005227",
@@ -525,7 +523,3 @@ vastctl color from "#ce8fd6" --mode light --scheme vibrant
 ```
 
 </details>
-
----
-
-## Material Colors
