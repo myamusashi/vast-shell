@@ -6,6 +6,7 @@ import Quickshell
 import M3Shapes
 
 import qs.Components.Base
+import qs.Components.Button
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -50,114 +51,43 @@ ColumnLayout {
         }
     }
 
-    GridLayout {
+    ConnectedButtonGrid {
         id: statsGrid
 
-        readonly property int   currentMinutes: CelestialProgress.nowMinutes
-        readonly property real  innerRadius: 4
-        readonly property bool  isSunriseDone: currentMinutes >= CelestialProgress.minutesOf(Weather.sunRise)
-        readonly property bool  isSunsetDone: currentMinutes >= CelestialProgress.minutesOf(Weather.sunSet)
-        readonly property real  outerRadius: 28
-        readonly property bool  showSunset: isSunriseDone && !isSunsetDone
-        readonly property int   statCount: 6
-        readonly property color textColor: Colours.m3Colors.m3Primary
+        readonly property int  currentMinutes: CelestialProgress.nowMinutes
+        readonly property bool isSunriseDone: currentMinutes >= CelestialProgress.minutesOf(Weather.sunRise)
+        readonly property bool isSunsetDone: currentMinutes >= CelestialProgress.minutesOf(Weather.sunSet)
+        readonly property bool showSunset: isSunriseDone && !isSunsetDone
 
-        function                statIcon(cellIndex: int): string {
-            switch (cellIndex) {
-            case 0:
-                return WeatherIcon.windy;
-            case 1:
-                return WeatherIcon.humidity;
-            case 2:
-                return WeatherIcon.hot;
-            case 3:
-                return WeatherIcon.thermometer;
-            case 4:
-                return WeatherIcon.raindrops;
-            default:
-                return showSunset ? WeatherIcon.sunset : WeatherIcon.sunrise;
-            }
-        }
-
-        function                statIconColor(cellIndex: int): color {
-            if (cellIndex === 5)
-                return showSunset ? Colours.m3Colors.m3Orange : Colours.m3Colors.m3Yellow;
-            return textColor;
-        }
-
-        function                statLabel(cellIndex: int): string {
-            switch (cellIndex) {
-            case 0:
-                return `${Weather.usAQI} AQI`;
-            case 1:
-                return `${Weather.humidity}%`;
-            case 2:
-                return `${Weather.uvIndex} UVI`;
-            case 3:
-                return qsTr("Feels like %1°").arg(Weather.feelsLike);
-            case 4:
-                return `${Weather.precipitationDaily} mm`;
-            default:
-                return showSunset ? Weather.sunSet : Weather.sunRise;
-            }
-        }
-
-        Layout.fillHeight: false
-        Layout.fillWidth: true
-        columnSpacing: 2
         columns: 3
-        rowSpacing: 2
-        rows: 2
-
-        Repeater {
-            model: statsGrid.statCount
-            delegate: Rectangle {
-                id: cell
-
-                required property int  index
-
-                readonly property int  columnIndex: index % statsGrid.columns
-                readonly property bool isFirstColumn: columnIndex === 0
-                readonly property bool isFirstRow: rowIndex === 0
-                readonly property bool isLastColumn: columnIndex === statsGrid.columns - 1
-                readonly property bool isLastRow: rowIndex === statsGrid.rows - 1
-                readonly property int  rowIndex: Math.floor(index / statsGrid.columns)
-
-                function               cornerRadius(isOuterCorner: bool): real {
-                    return isOuterCorner ? statsGrid.outerRadius : statsGrid.innerRadius;
-                }
-
-                Layout.fillWidth: true
-                Layout.preferredHeight: cellContent.implicitHeight + Appearance.spacing.large
-                bottomLeftRadius: cornerRadius(isLastRow && isFirstColumn)
-                bottomRightRadius: cornerRadius(isLastRow && isLastColumn)
-                color: Qt.alpha(Colours.m3Colors.m3Primary, 0.3)
-                topLeftRadius: cornerRadius(isFirstRow && isFirstColumn)
-                topRightRadius: cornerRadius(isFirstRow && isLastColumn)
-
-                Row {
-                    id: cellContent
-
-                    anchors.centerIn: parent
-                    spacing: 4
-
-                    Icon {
-                        anchors.verticalCenter: parent.verticalCenter
-                        color: statsGrid.statIconColor(cell.index)
-                        font.pixelSize: Appearance.fonts.size.larger
-                        icon: statsGrid.statIcon(cell.index)
-                        type: Icon.Weather
-                    }
-
-                    StyledText {
-                        anchors.verticalCenter: parent.verticalCenter
-                        color: statsGrid.textColor
-                        font.pixelSize: Appearance.fonts.size.normal
-                        text: statsGrid.statLabel(cell.index)
-                    }
-                }
+        interactive: false
+        model: [
+            {
+                icon: WeatherIcon.windy,
+                label: `${Weather.usAQI} AQI`
+            },
+            {
+                icon: WeatherIcon.humidity,
+                label: `${Weather.humidity}%`
+            },
+            {
+                icon: WeatherIcon.hot,
+                label: `${Weather.uvIndex} UVI`
+            },
+            {
+                icon: WeatherIcon.thermometer,
+                label: qsTr("Feels like %1°").arg(Weather.feelsLike)
+            },
+            {
+                icon: WeatherIcon.raindrops,
+                label: `${Weather.precipitationDaily} mm`
+            },
+            {
+                icon: showSunset ? WeatherIcon.sunset : WeatherIcon.sunrise,
+                iconColor: showSunset ? Colours.m3Colors.m3Orange : Colours.m3Colors.m3Yellow,
+                label: showSunset ? Weather.sunSet : Weather.sunRise
             }
-        }
+        ]
     }
 
     Rectangle {
