@@ -15,6 +15,17 @@ Singleton {
         values: {
             let options = [
                 {
+                    "id": "record-portal",
+                    "name": qsTr("Portal"),
+                    "icon": "desktop_windows",
+                    "action": () => {
+                        if (CaptureScreenVideo.isRecording)
+                            CaptureScreenVideo.stopRecording();
+                        else
+                            CaptureScreenVideo.startRecording("");
+                    }
+                },
+                {
                     "id": "record-selection",
                     "name": qsTr("Selection"),
                     "icon": "select",
@@ -26,20 +37,6 @@ Singleton {
                     }
                 }
             ];
-
-            Quickshell.screens.forEach(screen => {
-                options.push({
-                    "id": `record-output-${screen.name}`,
-                    "name": screen.name,
-                    "icon": "monitor",
-                    "action": () => {
-                        if (CaptureScreenVideo.isRecording)
-                            CaptureScreenVideo.stopRecording();
-                        else
-                            CaptureScreenVideo.startRecording("", screen.name);
-                    }
-                });
-            });
 
             return options;
         }
@@ -85,20 +82,8 @@ Singleton {
             select.open();
     }
 
-    function     recordWindow(): void {
-        if (CaptureScreenVideo.isRecording) {
-            CaptureScreenVideo.stopRecording();
-            return;
-        }
-        GlobalStates.isRecordingPanelOpen = false;
-        CaptureScreenImage.pickWindowForRecord(appId => {
-            if (appId)
-                CaptureScreenVideo.recordToplevel(appId);
-        });
-    }
-
-    function     startRecording(output: string): void {
-        CaptureScreenVideo.startRecording("", output);
+    function     startRecording(): void {
+        CaptureScreenVideo.startRecording("");
     }
 
     function     stopRecording(): void {

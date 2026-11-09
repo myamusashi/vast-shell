@@ -103,27 +103,27 @@ StyledRect {
                 }
 
                 SettingSection {
-                    label: qsTr("Bitrate")
+                    label: qsTr("Quality")
                     model: [
                         {
-                            text: "1 MB",
-                            value: "1 MB"
+                            text: qsTr("Medium"),
+                            value: "medium"
                         },
                         {
-                            text: "5 MB",
-                            value: "5 MB"
+                            text: qsTr("High"),
+                            value: "high"
                         },
                         {
-                            text: "10 MB",
-                            value: "10 MB"
+                            text: qsTr("Very High"),
+                            value: "very_high"
                         },
                         {
-                            text: "20 MB",
-                            value: "20 MB"
+                            text: qsTr("Ultra"),
+                            value: "ultra"
                         }
                     ]
-                    selectedValue: CaptureScreenVideo.bitrate
-                    onSelected: value => CaptureScreenVideo.bitrate = value
+                    selectedValue: CaptureScreenVideo.quality
+                    onSelected: value => CaptureScreenVideo.quality = value
                 }
 
                 SettingSection {
@@ -134,8 +134,8 @@ StyledRect {
                             value: ""
                         },
                         {
-                            text: "AVC",
-                            value: "avc"
+                            text: "H.264",
+                            value: "h264"
                         },
                         {
                             text: "HEVC",
@@ -174,10 +174,6 @@ StyledRect {
                             value: "mp3"
                         },
                         {
-                            text: "FLAC",
-                            value: "flac"
-                        },
-                        {
                             text: "Opus",
                             value: "opus"
                         }
@@ -187,32 +183,12 @@ StyledRect {
                 }
 
                 SettingSection {
-                    label: qsTr("Power Mode")
-                    model: [
-                        {
-                            text: qsTr("Auto"),
-                            value: "auto"
-                        },
-                        {
-                            text: qsTr("Low"),
-                            value: "on"
-                        },
-                        {
-                            text: qsTr("Normal"),
-                            value: "off"
-                        }
-                    ]
-                    selectedValue: CaptureScreenVideo.lowPower
-                    onSelected: value => CaptureScreenVideo.lowPower = value
-                }
-
-                SettingSection {
                     extraActive: item => {
                         switch (item.value) {
                         case "cursor":
                             return CaptureScreenVideo.showCursor;
-                        case "history":
-                            return CaptureScreenVideo.historyMode;
+                        case "lowPower":
+                            return CaptureScreenVideo.lowPower;
                         default:
                             return false;
                         }
@@ -224,8 +200,8 @@ StyledRect {
                             value: "cursor"
                         },
                         {
-                            text: qsTr("Replay Buffer"),
-                            value: "history"
+                            text: qsTr("Low Power"),
+                            value: "lowPower"
                         }
                     ]
                     selectedValue: ""
@@ -234,8 +210,8 @@ StyledRect {
                         case "cursor":
                             CaptureScreenVideo.showCursor = !CaptureScreenVideo.showCursor;
                             break;
-                        case "history":
-                            CaptureScreenVideo.historyMode = !CaptureScreenVideo.historyMode;
+                        case "lowPower":
+                            CaptureScreenVideo.lowPower = !CaptureScreenVideo.lowPower;
                             break;
                         }
                     }

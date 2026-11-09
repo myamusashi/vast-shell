@@ -26,7 +26,6 @@ Scope {
     property string          pendingAction: ""
     property int             pendingCaptureCount: 0
     property string          pendingWindowAction: ""
-    property var             pickForRecordCallback: null
     property real            regionScale: 1
     property rect            selectionCropRect: Qt.rect(0, 0, 0, 0)
     property bool            selectionDragging: false
@@ -124,15 +123,6 @@ Scope {
         ]);
     }
 
-    function                 pickWindowForRecord(callback) {
-        console.log("pickWindowForRecord: opening window picker for recording");
-        root.pickForRecordCallback = callback;
-        Hyprland.refreshToplevels();
-        Hyprland.refreshWorkspaces();
-        Hyprland.refreshMonitors();
-        root.windowPickerOpen = true;
-    }
-
     function                 screenshotAllOutputs(action) {
         delayTimer.running   = false;
         delayTimer.pendingFn = null;
@@ -192,8 +182,7 @@ Scope {
 
     function                 screenshotWindow(action) {
         console.log("screenshotWindow: opening window picker, action:", action);
-        root.pickForRecordCallback = null;
-        root.pendingWindowAction   = action || "save+copy";
+        root.pendingWindowAction = action || "save+copy";
         Hyprland.refreshToplevels();
         Hyprland.refreshWorkspaces();
         Hyprland.refreshMonitors();
@@ -795,8 +784,7 @@ Scope {
                 focus: true
                 Component.onCompleted: forceActiveFocus()
                 Keys.onEscapePressed: {
-                    root.pickForRecordCallback = null;
-                    root.windowPickerOpen      = false;
+                    root.windowPickerOpen = false;
                 }
             }
 
@@ -807,8 +795,7 @@ Scope {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        root.pickForRecordCallback = null;
-                        root.windowPickerOpen      = false;
+                        root.windowPickerOpen = false;
                     }
                 }
             }
@@ -933,14 +920,6 @@ Scope {
                         cursorShape: Qt.PointingHandCursor
                         hoverEnabled: true
                         onClicked: {
-                            if (root.pickForRecordCallback) {
-                                const appId                = modelData.lastIpcObject?.class;
-                                const cb                   = root.pickForRecordCallback;
-                                root.pickForRecordCallback = null;
-                                root.windowPickerOpen      = false;
-                                cb(appId);
-                                return;
-                            }
                             const ipc                    = modelData.lastIpcObject;
                             const size                   = ipc?.size ?? [0, 0];
                             const at                     = ipc?.at ?? [0, 0];

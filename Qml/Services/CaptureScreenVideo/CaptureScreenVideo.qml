@@ -15,31 +15,30 @@ Singleton {
 
     readonly property int    audioDevicesCount: AudioDevicesWatcher.devices.count
     readonly property bool   connectedAudioDevice: AudioDevicesWatcher.connected
-    readonly property string pidFile: "/tmp/wl-screenrec.pid"
+    readonly property string pidFile: "/tmp/gpu-screen-recorder.pid"
     readonly property string thumbnailDir: Quickshell.env("HOME") + "/.cache/thumbnails/normal"
     readonly property string videoDir: Quickshell.env("HOME") + "/Videos/Shell"
-    readonly property string videoStateFile: "/tmp/wl-screenrec.video"
+    readonly property string videoStateFile: "/tmp/gpu-screen-recorder.video"
 
     property string          audioCodec: ""
     property string          audioDevice: ""
     property string          audioDeviceDescription: ""
-    property string          bitrate: "5 MB"
     property string          currentOutputFile: ""
     property var             defaultSink: sinks()[0] ?? null
     property var             defaultSource: sources()[0] ?? null
     property var             deviceCache: []
-    property string          driDevice: ""
-    property string          encodeResolution: ""
-    property bool            historyMode: false
     property bool            includeAudio: false
+    property bool            isPaused: false
     property bool            isRecording: false
     property bool            loadingFromConfig: false
-    property string          lowPower: "auto"
+    property bool            lowPower: false
     property int             maxFps: 60
+    property string          quality: "very_high"
     property int             recordingElapsedSeconds: 0
     property int             recordingPid: -1
     property bool            showCursor: true
     property string          videoCodec: ""
+    property bool            waitingForFile: false
 
     signal                   devicesChanged
 
@@ -113,22 +112,7 @@ Singleton {
             stopRecording();
             return;
         }
-        startRecording(geometry, "");
-    }
-
-    function                 recordToplevel(appId) {
-        if (isRecording) {
-            stopRecording();
-            return;
-        }
-        startRecordingToplevel(appId);
-    }
-
-    function                 saveHistory() {
-        if (isRecording && recordingPid > 0) {
-            recordingProcess.signal(10);
-            CaptureNotify.sendNotification("Replay Saved", "History buffer written to disk.", "normal", "", "screenrecord");
-        }
+        startRecording(geometry);
     }
 
     function                 sinks() {
@@ -139,7 +123,7 @@ Singleton {
         return deviceCache.filter(d => d.mediaClass === "source" && !d.isMonitor);
     }
 
-    function                 startRecording(geometry, output) {
+    function                 startRecording(geometry = "") {
         if (isRecording) {
             CaptureNotify.sendNotification("Recording Active", "A recording is already in progress.", "critical", "dialog-warning", "Screen Record");
             return;
@@ -148,13 +132,10 @@ Singleton {
         const cfg         = {
             videoCodec: videoCodec,
             audioCodec: audioCodec,
-            encodeResolution: encodeResolution,
-            driDevice: driDevice,
             lowPower: lowPower,
             maxFps: maxFps,
-            bitrate: bitrate,
+            quality: quality,
             showCursor: showCursor,
-            historyMode: historyMode,
             includeAudio: includeAudio,
             audioDevice: audioDevice
         };
@@ -162,38 +143,8 @@ Singleton {
         const path        = Utils.videoPath(videoDir);
         currentOutputFile = path;
 
-        const args        = Utils.buildWlScreenrecArgs(cfg, geometry, output);
-        args.push("-f", path);
-
-        recordingProcess.command = args;
-        recordingProcess.running = true;
-    }
-
-    function                 startRecordingToplevel(appId) {
-        if (isRecording) {
-            CaptureNotify.sendNotification("Recording Active", "A recording is already in progress.", "critical", "dialog-warning", "Screen Record");
-            return;
-        }
-
-        const cfg         = {
-            videoCodec: videoCodec,
-            audioCodec: audioCodec,
-            encodeResolution: encodeResolution,
-            driDevice: driDevice,
-            lowPower: lowPower,
-            maxFps: maxFps,
-            bitrate: bitrate,
-            showCursor: showCursor,
-            historyMode: historyMode,
-            includeAudio: includeAudio,
-            audioDevice: audioDevice
-        };
-
-        const path        = Utils.videoPath(videoDir);
-        currentOutputFile = path;
-
-        const args        = Utils.buildWlScreenrecArgs(cfg, "", "", "app-id=" + appId);
-        args.push("-f", path);
+        const args        = Utils.buildGpuScreenRecorderArgs(cfg, geometry);
+        args.push("-o", path);
 
         recordingProcess.command = args;
         recordingProcess.running = true;
@@ -212,6 +163,20 @@ Singleton {
         killTimer.running  = true;
     }
 
+    function                 togglePause() {
+        if (!isRecording || recordingPid <= 0)
+            return;
+        if (recordingProcess.running)
+            recordingProcess.signal(12);
+        else
+            Quickshell.execDetached({
+                command: ["kill", "-s", "12", String(recordingPid)]
+            });
+        isPaused = !isPaused;
+        if (!isPaused && !waitingForFile)
+            elapsedTimer.start();
+    }
+
     Component.onCompleted: {
         Quickshell.execDetached({
             command: ["mkdir", "-p", videoDir, thumbnailDir]
@@ -222,13 +187,12 @@ Singleton {
         loadingFromConfig = true;
         const cfg         = Configs.captureScreenVideo;
         if (cfg) {
-            maxFps      = cfg.maxFps;
-            bitrate     = cfg.bitrate;
-            videoCodec  = cfg.videoCodec;
-            audioCodec  = cfg.audioCodec;
-            lowPower    = cfg.lowPower;
-            showCursor  = cfg.showCursor;
-            historyMode = cfg.historyMode;
+            maxFps     = cfg.maxFps;
+            quality    = cfg.quality || "very_high";
+            videoCodec = cfg.videoCodec;
+            audioCodec = cfg.audioCodec;
+            lowPower   = cfg.lowPower;
+            showCursor = cfg.showCursor;
         }
         loadingFromConfig = false;
     }
@@ -238,23 +202,18 @@ Singleton {
     }
     onAudioDeviceChanged: {}
     onAudioDeviceDescriptionChanged: {}
-    onBitrateChanged: {
-        if (!loadingFromConfig)
-            Configs.captureScreenVideo.bitrate = bitrate;
-    }
     onCurrentOutputFileChanged: {}
-    onDriDeviceChanged: {}
-    onEncodeResolutionChanged: {}
-    onHistoryModeChanged: {
-        if (!loadingFromConfig)
-            Configs.captureScreenVideo.historyMode = historyMode;
-    }
     onIncludeAudioChanged: {}
     onIsRecordingChanged: {
         if (isRecording) {
             recordingElapsedSeconds = 0;
-            elapsedTimer.start();
+            isPaused                = false;
+            waitingForFile          = true;
+            filePollTimer.start();
         } else {
+            isPaused       = false;
+            waitingForFile = false;
+            filePollTimer.stop();
             elapsedTimer.stop();
         }
     }
@@ -265,6 +224,10 @@ Singleton {
     onMaxFpsChanged: {
         if (!loadingFromConfig)
             Configs.captureScreenVideo.maxFps = maxFps;
+    }
+    onQualityChanged: {
+        if (!loadingFromConfig)
+            Configs.captureScreenVideo.quality = quality;
     }
     onShowCursorChanged: {
         if (!loadingFromConfig)
@@ -298,12 +261,15 @@ Singleton {
             // qmllint enable
             root.recordingPid = -1;
             if (root.isRecording) {
+                const wasWaiting       = root.waitingForFile;
                 root.isRecording       = false;
                 const vid              = root.currentOutputFile;
                 root.currentOutputFile = "";
                 killTimer.running      = false;
+                filePollTimer.stop();
                 root.cleanupFiles();
-                root.onRecordingStopped(vid);
+                if (!wasWaiting)
+                    root.onRecordingStopped(vid);
             }
         }
         onStarted: {
@@ -328,7 +294,44 @@ Singleton {
 
         interval: 1000
         repeat: true
-        onTriggered: root.recordingElapsedSeconds++
+        onTriggered: {
+            if (!root.isPaused)
+                root.recordingElapsedSeconds++;
+        }
+    }
+
+    Timer {
+        id: filePollTimer
+
+        interval: 250
+        repeat: true
+        onTriggered: {
+            if (!root.isRecording || !root.waitingForFile) {
+                filePollTimer.stop();
+                return;
+            }
+            if (!fileCheckProcess.running) {
+                fileCheckProcess.command = ["stat", "-c", "%s", root.currentOutputFile];
+                fileCheckProcess.running = true;
+            }
+        }
+    }
+
+    Process {
+        id: fileCheckProcess
+
+        running: false
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const size = parseInt(text.trim(), 10);
+                if (root.waitingForFile && root.isRecording && size > 0) {
+                    root.waitingForFile = false;
+                    filePollTimer.stop();
+                    if (!root.isPaused)
+                        elapsedTimer.start();
+                }
+            }
+        }
     }
 
     Process {
@@ -341,7 +344,7 @@ Singleton {
     Process {
         id: checkProcess
 
-        command: ["sh", "-c", "cat /tmp/wl-screenrec.pid 2>/dev/null; echo '---'; cat /tmp/wl-screenrec.video 2>/dev/null"]
+        command: ["sh", "-c", "cat /tmp/gpu-screen-recorder.pid 2>/dev/null; echo '---'; cat /tmp/gpu-screen-recorder.video 2>/dev/null"]
         running: false
         stdout: StdioCollector {
             onStreamFinished: {
@@ -403,8 +406,12 @@ Singleton {
 
     IpcHandler {
 
+        function pause(): void {
+            CaptureScreenVideo.togglePause();
+        }
+
         function start(): void {
-            CaptureScreenVideo.startRecording("", Quickshell.screens[0]?.name ?? "");
+            CaptureScreenVideo.startRecording("");
         }
 
         function status(): bool {
@@ -416,7 +423,7 @@ Singleton {
         }
 
         function toggle(): void {
-            CaptureScreenVideo.isRecording ? CaptureScreenVideo.stopRecording() : CaptureScreenVideo.startRecording("", Quickshell.screens[0]?.name ?? "");
+            CaptureScreenVideo.isRecording ? CaptureScreenVideo.stopRecording() : CaptureScreenVideo.startRecording("");
         }
 
         target: "captureScreenVideo"

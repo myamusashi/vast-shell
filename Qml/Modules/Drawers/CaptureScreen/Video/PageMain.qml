@@ -16,7 +16,6 @@ StyledRect {
     id: root
 
     property string audioLabel: qsTr("No Audio")
-    property string selectedMonitor: Quickshell.screens[0]?.name ?? ""
     property int    sourceMode: 0
 
     signal          openAudio
@@ -98,16 +97,12 @@ StyledRect {
                         Repeater {
                             model: [
                                 {
-                                    name: qsTr("Full Screen"),
-                                    icon: "monitor"
+                                    name: qsTr("Portal"),
+                                    icon: "desktop_windows"
                                 },
                                 {
                                     name: qsTr("Region"),
                                     icon: "select"
-                                },
-                                {
-                                    name: qsTr("Window"),
-                                    icon: "select_window_2"
                                 }
                             ]
                             delegate: StyledRect {
@@ -152,57 +147,6 @@ StyledRect {
                                     cursorShape: Qt.PointingHandCursor
                                     hoverEnabled: true
                                     onClicked: root.sourceMode = mainDelegate.index
-                                }
-                            }
-                        }
-                    }
-
-                    Loader {
-                        Layout.fillHeight: true
-                        Layout.preferredHeight: active ? implicitHeight : 0
-                        active: root.sourceMode === 0
-                        sourceComponent: ColumnLayout {
-                            spacing: Appearance.spacing.small
-
-                            StyledText {
-                                color: Colours.m3Colors.m3OnSurfaceVariant
-                                font.pixelSize: Appearance.fonts.size.normal
-                                text: qsTr("Monitor:")
-                            }
-
-                            Repeater {
-                                model: Quickshell.screens
-                                delegate: StyledRect {
-                                    id: screensDelegate
-
-                                    required property int         index
-                                    required property ShellScreen modelData
-
-                                    Layout.preferredHeight: Appearance.spacing.small + Appearance.fonts.size.medium
-                                    // qmlformat off
-                                    color: modelData.name === root.selectedMonitor ? Qt.alpha(Colours.m3Colors.m3Primary, 0.2) : (monitorButtonMouseArea.containsMouse ? Qt.alpha(Colours.m3Colors.m3Primary, 0.08) : "transparent")
-                                    implicitWidth: monitorLabel.implicitWidth + Appearance.margin.smaller
-                                    // qmlformat on
-                                    radius: Appearance.rounding.small
-
-                                    StyledText {
-                                        id: monitorLabel
-
-                                        anchors.centerIn: parent
-                                        color: screensDelegate.modelData.name === root.selectedMonitor ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurface
-                                        font.pixelSize: Appearance.fonts.size.normal
-                                        font.weight: screensDelegate.modelData.name === root.selectedMonitor ? Font.DemiBold : Font.Normal
-                                        text: screensDelegate.modelData.name
-                                    }
-
-                                    MArea {
-                                        id: monitorButtonMouseArea
-
-                                        anchors.fill: parent
-                                        cursorShape: Qt.PointingHandCursor
-                                        hoverEnabled: true
-                                        onClicked: root.selectedMonitor = screensDelegate.modelData.name
-                                    }
                                 }
                             }
                         }
@@ -370,6 +314,46 @@ StyledRect {
 
                     StyledRect {
                         Layout.preferredHeight: Appearance.spacing.normal + Appearance.spacing.large
+                        border.color: Colours.m3Colors.m3Primary
+                        border.width: 2
+                        color: pauseButtonMouseArea.containsMouse ? Qt.alpha(Colours.m3Colors.m3Primary, 0.3) : Qt.alpha(Colours.m3Colors.m3Primary, 0.2)
+                        implicitWidth: pauseButtonRow.implicitWidth + Appearance.margin.large + 15
+                        radius: Appearance.rounding.full
+                        visible: CaptureScreenVideo.isRecording
+
+                        RowLayout {
+                            id: pauseButtonRow
+
+                            anchors.centerIn: parent
+                            spacing: Appearance.padding.small
+
+                            Icon {
+                                color: Colours.m3Colors.m3Primary
+                                font.pixelSize: Appearance.fonts.size.medium
+                                icon: CaptureScreenVideo.isPaused ? "play_arrow" : "pause"
+                                type: Icon.Material
+                            }
+
+                            StyledText {
+                                color: Colours.m3Colors.m3Primary
+                                font.pixelSize: Appearance.fonts.size.normal
+                                font.weight: Font.DemiBold
+                                text: CaptureScreenVideo.isPaused ? qsTr("Resume") : qsTr("Pause")
+                            }
+                        }
+
+                        MArea {
+                            id: pauseButtonMouseArea
+
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            hoverEnabled: true
+                            onClicked: CaptureScreenVideo.togglePause()
+                        }
+                    }
+
+                    StyledRect {
+                        Layout.preferredHeight: Appearance.spacing.normal + Appearance.spacing.large
                         border.color: CaptureScreenVideo.isRecording ? Colours.m3Colors.m3Error : Colours.m3Colors.m3Red
                         border.width: 2
                         // qmlformat off
@@ -416,24 +400,17 @@ StyledRect {
                                 } else {
                                     switch (root.sourceMode) {
                                     case 0:
-                                        CaptureScreenVideo.startRecording("", root.selectedMonitor);
+                                        CaptureScreenVideo.startRecording("");
                                         GlobalStates.isRecordingPanelOpen = false;
                                         break;
                                     case 1:
                                         GlobalStates.isRecordingPanelOpen = false;
                                         ScreenCapture.openRegionSelector();
                                         break;
-                                    case 2:
-                                        ScreenCapture.recordWindow();
-                                        break;
                                     }
                                 }
                             }
                         }
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
                     }
                 }
             }

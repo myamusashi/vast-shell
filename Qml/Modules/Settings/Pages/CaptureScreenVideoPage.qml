@@ -50,37 +50,37 @@ SettingsPageBase {
             }
 
             SettingRow {
-                description: qsTr("Bitrate limit for recordings. Higher values give sharper video but larger files.")
-                label: qsTr("Bitrate")
+                description: qsTr("Encoding quality preset for recordings. Higher presets increase sharpness and file size.")
+                label: qsTr("Quality")
 
                 SplitButton {
-                    readonly property int selectedIndex: model.findIndex(entry => entry.value === Configs.captureScreenVideo.bitrate)
+                    readonly property int selectedIndex: model.findIndex(entry => entry.value === Configs.captureScreenVideo.quality)
 
                     currentIndex: selectedIndex
                     icon.name: "shutter_speed"
                     model: [
                         {
-                            display: "1 MB",
-                            value: "1 MB"
+                            display: qsTr("Medium"),
+                            value: "medium"
                         },
                         {
-                            display: "5 MB",
-                            value: "5 MB"
+                            display: qsTr("High"),
+                            value: "high"
                         },
                         {
-                            display: "10 MB",
-                            value: "10 MB"
+                            display: qsTr("Very High"),
+                            value: "very_high"
                         },
                         {
-                            display: "20 MB",
-                            value: "20 MB"
+                            display: qsTr("Ultra"),
+                            value: "ultra"
                         }
                     ]
                     text: model[selectedIndex]?.display ?? ""
                     textRole: "display"
                     onMenuItemActivated: index => {
-                        Configs.captureScreenVideo.bitrate = model[index].value;
-                        CaptureScreenVideo.bitrate         = model[index].value;
+                        Configs.captureScreenVideo.quality = model[index].value;
+                        CaptureScreenVideo.quality         = model[index].value;
                     }
                 }
             }
@@ -100,8 +100,8 @@ SettingsPageBase {
                             value: ""
                         },
                         {
-                            display: "AVC",
-                            value: "avc"
+                            display: "H.264",
+                            value: "h264"
                         },
                         {
                             display: "HEVC",
@@ -152,10 +152,6 @@ SettingsPageBase {
                             value: "mp3"
                         },
                         {
-                            display: "FLAC",
-                            value: "flac"
-                        },
-                        {
                             display: "Opus",
                             value: "opus"
                         }
@@ -165,38 +161,6 @@ SettingsPageBase {
                     onMenuItemActivated: index => {
                         Configs.captureScreenVideo.audioCodec = model[index].value;
                         CaptureScreenVideo.audioCodec         = model[index].value;
-                    }
-                }
-            }
-
-            SettingRow {
-                description: qsTr("Power profile for recording. Low saves battery, Normal favors quality.")
-                label: qsTr("Power Mode")
-
-                SplitButton {
-                    readonly property int selectedIndex: model.findIndex(entry => entry.value === Configs.captureScreenVideo.lowPower)
-
-                    currentIndex: selectedIndex
-                    icon.name: "power"
-                    model: [
-                        {
-                            display: qsTr("Auto"),
-                            value: "auto"
-                        },
-                        {
-                            display: qsTr("Low"),
-                            value: "on"
-                        },
-                        {
-                            display: qsTr("Normal"),
-                            value: "off"
-                        }
-                    ]
-                    text: model[selectedIndex]?.display ?? ""
-                    textRole: "display"
-                    onMenuItemActivated: index => {
-                        Configs.captureScreenVideo.lowPower = model[index].value;
-                        CaptureScreenVideo.lowPower         = model[index].value;
                     }
                 }
             }
@@ -216,13 +180,14 @@ SettingsPageBase {
         }
 
         SettingRow {
-            label: qsTr("Replay Buffer")
+            description: qsTr("Allow the GPU to enter a lower power state while recording (AMD only).")
+            label: qsTr("Low Power Mode")
 
             StyledSwitch {
-                checked: Configs.captureScreenVideo.historyMode
+                checked: Configs.captureScreenVideo.lowPower
                 onCheckedChanged: {
-                    Configs.captureScreenVideo.historyMode = checked;
-                    CaptureScreenVideo.historyMode         = checked;
+                    Configs.captureScreenVideo.lowPower = checked;
+                    CaptureScreenVideo.lowPower         = checked;
                 }
             }
         }

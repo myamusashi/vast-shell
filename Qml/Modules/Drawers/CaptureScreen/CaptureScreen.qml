@@ -135,7 +135,7 @@ Drawer {
                         radius: Appearance.padding.small
                         SequentialAnimation on opacity {
                             loops: Animation.Infinite
-                            running: CaptureScreenVideo.isRecording
+                            running: CaptureScreenVideo.isRecording && !CaptureScreenVideo.isPaused
 
                             PropertyAnimation {
                                 duration: 600
@@ -153,7 +153,7 @@ Drawer {
                         color: Colours.m3Colors.m3Red
                         font.pixelSize: Appearance.fonts.size.normal
                         font.weight: Font.DemiBold
-                        text: qsTr("Recording")
+                        text: CaptureScreenVideo.isPaused ? qsTr("Paused") : qsTr("Recording")
                     }
 
                     Item {

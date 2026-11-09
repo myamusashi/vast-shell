@@ -10,7 +10,7 @@ func TestRecord(t *testing.T) {
 	}{
 		{"start", []string{"record", "start"}, []string{"captureScreenVideo", "start"}},
 		{"stop", []string{"record", "stop"}, []string{"captureScreenVideo", "stop"}},
-		{"toggle", []string{"record", "toggle"}, []string{"captureScreenVideo", "toggle"}},
+		{"pause", []string{"record", "pause"}, []string{"captureScreenVideo", "pause"}},
 		{"status", []string{"record", "status"}, []string{"captureScreenVideo", "status"}},
 		{"the full command name is still accepted", []string{"captureScreenVideo", "start"}, []string{"captureScreenVideo", "start"}},
 	} {

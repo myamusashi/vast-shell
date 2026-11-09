@@ -3,10 +3,6 @@
 
     inputs = {
         nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-        wl-screenrec-fork = {
-            url = "github:myamusashi/wl-screenrec";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
         another-ripple = {
             url = "github:myamusashi/Another-Ripple";
             inputs.nixpkgs.follows = "nixpkgs";
@@ -31,7 +27,6 @@
         m3Shapes,
         quickshell,
         another-ripple,
-        wl-screenrec-fork,
         qmlformat-rs,
     }: let
         version = "0.1.0";
@@ -61,7 +56,7 @@
             in
                 pkgs.callPackage ./nix/default.nix {
                     quickshell = quickshellDerivation;
-                    inherit wl-screenrec-fork another-ripple m3Shapes;
+                    inherit another-ripple m3Shapes;
                     inherit version revision;
                 }
         );
@@ -76,7 +71,6 @@
                 vastShell = pkgs.callPackage ./nix/default.nix {
                     inherit
                         quickshell
-                        wl-screenrec-fork
                         another-ripple
                         m3Shapes
                         ;
@@ -99,7 +93,6 @@
                 vastShell = pkgs.callPackage ./nix/default.nix {
                     inherit
                         quickshell
-                        wl-screenrec-fork
                         another-ripple
                         m3Shapes
                         ;

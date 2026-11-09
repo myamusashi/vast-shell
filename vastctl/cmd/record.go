@@ -35,6 +35,14 @@ var recordToggleCmd = &cobra.Command{
 	},
 }
 
+var recordPauseCmd = &cobra.Command{
+	Use:   "pause",
+	Short: "Pause or resume the active recording",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return ipcCallVoid("captureScreenVideo", "pause")
+	},
+}
+
 var recordStatusCmd = &cobra.Command{
 	Use:   "status",
 	Short: "Check if recording is active",
@@ -47,6 +55,7 @@ func init() {
 	rootCmd.AddCommand(recordCmd)
 	recordCmd.AddCommand(recordStartCmd)
 	recordCmd.AddCommand(recordStopCmd)
+	recordCmd.AddCommand(recordPauseCmd)
 	recordCmd.AddCommand(recordToggleCmd)
 	recordCmd.AddCommand(recordStatusCmd)
 }

@@ -52,34 +52,27 @@ function totalBounds(screens) {
     return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
 }
 
-function buildWlScreenrecArgs(cfg, geometry, output, toplevelFilter) {
-    const args = ["wl-screenrec", "--capture-backend", "ext-image-copy-capture"];
-    if (cfg.videoCodec && cfg.videoCodec !== "auto")
-        args.push("--codec", cfg.videoCodec);
-    if (cfg.audioCodec && cfg.audioCodec !== "auto")
-        args.push("--audio-codec", cfg.audioCodec);
-    if (cfg.encodeResolution)
-        args.push("--encode-resolution", cfg.encodeResolution);
-    if (cfg.driDevice)
-        args.push("--dri-device", cfg.driDevice);
-    if (cfg.lowPower && cfg.lowPower !== "auto")
-        args.push("--low-power", cfg.lowPower);
-    args.push("--max-fps", String(cfg.maxFps));
-    args.push("--bitrate", cfg.bitrate);
-    if (!cfg.showCursor)
-        args.push("--no-cursor");
-    if (cfg.historyMode)
-        args.push("--history", "30");
-    if (cfg.includeAudio) {
-        args.push("--audio");
-        if (cfg.audioDevice)
-            args.push("--audio-device", cfg.audioDevice);
+function buildGpuScreenRecorderArgs(cfg, geometry) {
+    const args = ["gpu-screen-recorder"];
+    if (geometry)
+        args.push("-w", geometry);
+    else
+        args.push("-w", "portal");
+
+    if (cfg.videoCodec && cfg.videoCodec !== "auto") {
+        const codec = cfg.videoCodec === "avc" ? "h264" : cfg.videoCodec;
+        args.push("-k", codec);
     }
-    if (toplevelFilter)
-        args.push("--toplevel", toplevelFilter);
-    else if (geometry)
-        args.push("-g", geometry);
-    else if (output)
-        args.push("-o", output);
+    if (cfg.audioCodec && cfg.audioCodec !== "auto" && cfg.audioCodec !== "flac")
+        args.push("-ac", cfg.audioCodec);
+
+    args.push("-f", String(cfg.maxFps || 60));
+    args.push("-q", cfg.quality || "very_high");
+    args.push("-low-power", cfg.lowPower ? "yes" : "no");
+    args.push("-cursor", cfg.showCursor ? "yes" : "no");
+
+    if (cfg.includeAudio)
+        args.push("-a", cfg.audioDevice ? cfg.audioDevice : "default_output");
+
     return args;
 }

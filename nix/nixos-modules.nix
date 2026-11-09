@@ -78,6 +78,8 @@ in {
     config = lib.mkIf cfg.enable {
         environment.systemPackages = [cfg.package] ++ cfg.extraPackages;
 
+        programs.gpu-screen-recorder.enable = true;
+
         fonts.packages = lib.optionals cfg.installFonts [
             pkgs.weather-icons
         ];

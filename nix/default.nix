@@ -11,7 +11,7 @@
     libnotify,
     iw,
     quickshell,
-    wl-screenrec-fork,
+    gpu-screen-recorder,
     another-ripple,
     m3Shapes,
     util-linux,
@@ -46,7 +46,7 @@
         polkit
         weather-icons
         wl-clipboard
-        wl-screenrec-fork
+        gpu-screen-recorder
         ffmpeg
         foot
         hyprland

@@ -117,7 +117,7 @@ Scope {
                         root.cancelled();
                         return;
                     }
-                    root.geometrySelected(`${Math.round(x)},${Math.round(y)} ${Math.round(w)}x${Math.round(h)}`);
+                    root.geometrySelected(`${Math.round(w)}x${Math.round(h)}+${Math.round(x)}+${Math.round(y)}`);
                 }
             }
 

@@ -26,10 +26,6 @@ Singleton {
         internal.getMonitors(callback);
     }
 
-    function                 pickWindowForRecord(callback) {
-        internal.pickWindowForRecord(callback);
-    }
-
     function                 screenshotAllOutputs(action) {
         internal.screenshotAllOutputs(action);
     }

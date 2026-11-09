@@ -29,7 +29,6 @@ readonly BUILD_DIR="/tmp/quickshell-build"
 readonly M3SHAPES_REPO="https://github.com/soramanew/m3shapes.git"
 readonly M3SHAPES_REV="8a6fe8961749887d677700b6508e0c9249968b7e"
 readonly ANOTHER_RIPPLE_REV="d8b2a3b95d0515bc52e2143b786a87931841c840"
-readonly WL_SCREENREC_REV="23500cce9ed2aba6c9cbb40187bcda2f99d4f835"
 
 check_root() {
 	[[ $EUID -eq 0 ]] || die "System-wide installation requires root. Run with sudo."
@@ -44,7 +43,7 @@ install_system_packages() {
 	local -r pkg_list=(
 		base-devel git cmake ninja clang mold extra-cmake-modules patchelf pkgconf
 		qt6-base qt6-declarative qt6-wayland qt6-svg qt6-graphs qt6-multimedia qt6-5compat qt6-shadertools qt6-tools
-		rust pipewire ddcutil i2c-tools go wayland wayland-protocols
+		pipewire ddcutil i2c-tools go wayland wayland-protocols
 		findutils grep sed gawk util-linux libnotify scdoc
 		iw polkit wl-clipboard ffmpeg foot hyprland xdg-desktop-portal
 		spirv-tools vulkan-headers cli11 cpptrace jemalloc libdrm mesa libxcb glib2 libvdpau-va-gl
@@ -103,7 +102,7 @@ install_aur_packages() {
 	local -r aur_user="${SUDO_USER:-}"
 	local -a missing=()
 	local -r pkg_list=(
-		ttf-weather-icons app2unit
+		ttf-weather-icons app2unit gpu-screen-recorder
 	)
 
 	log "Checking AUR packages..."
@@ -521,30 +520,6 @@ EOF
 	chmod +x "$BIN_DIR/shell"
 }
 
-build_wl_screenrec() {
-	local -r binary="/usr/local/bin/wl-screenrec"
-	[[ -f $binary ]] && {
-		log "wl-screenrec already installed"
-		return 0
-	}
-
-	log "Building wl-screenrec from fork..."
-	local -r src="$BUILD_DIR/wl-screenrec"
-
-	[[ -d $src ]] || git clone https://github.com/myamusashi/wl-screenrec.git "$src"
-	git -C "$src" checkout "$WL_SCREENREC_REV" 2>/dev/null || {
-		git -C "$src" fetch
-		git -C "$src" checkout "$WL_SCREENREC_REV"
-	}
-
-	pushd "$src" >/dev/null
-	cargo build --release || warn "wl-screenrec build failed — screen recording unavailable"
-	[[ -f target/release/wl-screenrec ]] && install -Dm755 target/release/wl-screenrec "$binary"
-	popd >/dev/null
-
-	[[ -f $binary ]] || warn "wl-screenrec binary not found after build"
-}
-
 build_vastctl() {
 	local -r binary="$LIBEXEC_DIR/vastctl"
 	local -r wrapper="$BIN_DIR/vastctl"
@@ -594,7 +569,7 @@ EOF
 cleanup_build_deps() {
 	local -r build_deps=(
 		base-devel cmake ninja clang mold extra-cmake-modules patchelf pkgconf
-		qt6-shadertools qt6-tools rust git
+		qt6-shadertools qt6-tools git
 		spirv-tools vulkan-headers cli11
 	)
 
@@ -628,7 +603,6 @@ main() {
 	build_vast_plugin
 	build_m3shapes
 	build_another_ripple
-	build_wl_screenrec
 	build_vastctl
 	compile_shaders
 	compile_translations

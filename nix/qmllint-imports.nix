@@ -24,10 +24,11 @@ in {
     inherit roots;
     searchPath = builtins.concatStringsSep ":" roots;
 
-    derivation = pkgs.runCommand "vast-shell-qmllint-modules" {
-        nativeBuildInputs = packages;
-    } ''
-        mkdir -p "$out"
-        echo "fetched ${toString (builtins.length roots)} qmllint module roots"
-    '';
+    derivation =
+        pkgs.runCommand "vast-shell-qmllint-modules" {
+            nativeBuildInputs = packages;
+        } ''
+            mkdir -p "$out"
+            echo "fetched ${toString (builtins.length roots)} qmllint module roots"
+        '';
 }
