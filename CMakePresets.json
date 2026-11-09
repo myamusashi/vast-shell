@@ -95,7 +95,8 @@
         "tst_jobexecutor",
         "tst_bluetoothagent",
         "tst_kdeconnectshare",
-        "tst_kdeconnectreceive"
+        "tst_kdeconnectreceive",
+        "tst_filechooser"
       ]
     }
   ]

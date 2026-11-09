@@ -26,6 +26,9 @@ else
     fi
 
     ARGS=("-I" "${ROOT}/Qml" "-I" "${BUILDDIR}")
+    if [ -d "${ROOT}/build/default/qml" ]; then
+        ARGS+=("-I" "${ROOT}/build/default/qml")
+    fi
     while IFS= read -r path; do
         ARGS+=("-I" "${path}")
     done < <(grep importPaths "${INI}" | cut -d'"' -f2 | tr ':' '\n' | sed '/^$/d')

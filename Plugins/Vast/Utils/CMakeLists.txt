@@ -6,6 +6,8 @@ vast_module(vast-utils
         BluetoothAgentAdaptor.cpp
         BluetoothAgentManager.hpp
         BluetoothAgentManager.cpp
+        FileChooser.hpp
+        FileChooser.cpp
         ColorMaterial.hpp
         ColorMaterial.cpp
         ColorPreview.hpp
