@@ -17,6 +17,7 @@ Singleton {
             "arrow_forward": "arrow-right",
             "arrow_upward": "arrow-up",
             "assignment": "clipboard-text",
+            "audio_file": "file-audio",
             "autofps_select": "gauge",
             "battery_6_bar": "battery-high",
             "battery_alert": "battery-warning",
