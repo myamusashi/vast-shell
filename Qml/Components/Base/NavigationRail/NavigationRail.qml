@@ -17,12 +17,48 @@ Item {
     property string        actionButtonLabel: ""
     property color         backgroundColor: Colours.m3Colors.m3SurfaceContainerLow
     property int           currentIndex: 0
+    property Item          currentItem: null
     property bool          expanded: true
+    property bool          initialized: false
     property var           model: []
     property real          scrollPosition: 0
 
     signal                 actionButtonTriggered
     signal                 activated(int index)
+
+    function               ensureCurrentItemVisible(): void {
+        scrollItemIntoView(root.currentItem);
+    }
+
+    function               scrollItemIntoView(item: Item): void {
+        if (!item || destinationsFlick.height <= 0 || destinationsFlick.contentHeight <= destinationsFlick.height)
+            return;
+
+        const itemPos = item.mapToItem(destinationsColumn, 0, 0);
+        if (!isFinite(itemPos.y))
+            return;
+
+        const itemTop    = itemPos.y;
+        const itemBottom = itemTop + item.height;
+        const viewTop    = destinationsFlick.contentY;
+        const viewBottom = viewTop + destinationsFlick.height;
+        const maxY       = Math.max(0, destinationsFlick.contentHeight - destinationsFlick.height);
+
+        let targetY      = destinationsFlick.contentY;
+        if (itemTop < viewTop) {
+            const headerMargin = item.index === 0 ? (Appearance.spacing.large * 2 + Appearance.fonts.size.large) : Appearance.spacing.large;
+            targetY            = Math.max(0, itemTop - headerMargin);
+        } else if (itemBottom > viewBottom) {
+            targetY = Math.min(maxY, itemBottom - destinationsFlick.height + Appearance.spacing.large);
+        }
+
+        if (Math.abs(targetY - destinationsFlick.contentY) > 0.5) {
+            root.scrollPosition = targetY;
+            scrollAnimation.stop();
+            scrollAnimation.to = targetY;
+            scrollAnimation.restart();
+        }
+    }
 
     function               sectionBaseIndex(sectionIndex) {
         let sum = 0;
@@ -31,6 +67,7 @@ Item {
         return sum;
     }
 
+    Component.onCompleted: Qt.callLater(() => root.initialized = true)
     onScrollPositionChanged: destinationsFlick.restoreScroll()
     implicitHeight: parent ? parent.height : 480
     implicitWidth: expandedWidth
@@ -152,7 +189,7 @@ Item {
             id: destinationsFlick
 
             function restoreScroll(): void {
-                if (destinationsFlick.moving || destinationsFlick.contentHeight <= destinationsFlick.height || destinationsFlick.height <= 0)
+                if (destinationsFlick.moving || scrollAnimation.running || destinationsFlick.contentHeight <= destinationsFlick.height || destinationsFlick.height <= 0)
                     return;
                 const maxY    = Math.max(0, destinationsFlick.contentHeight - destinationsFlick.height);
                 const targetY = Math.min(maxY, Math.max(0, root.scrollPosition));
@@ -176,10 +213,24 @@ Item {
                     destinationsFlick.restoreScroll();
             }
             onHeightChanged: destinationsFlick.restoreScroll()
+            onMovingChanged: {
+                if (moving)
+                    scrollAnimation.stop();
+            }
+
+            NumberAnimation {
+                id: scrollAnimation
+
+                duration: 250
+                easing.type: Easing.OutCubic
+                property: "contentY"
+                target: destinationsFlick
+            }
 
             WheelHandler {
                 target: destinationsFlick
                 onWheel: event => {
+                    scrollAnimation.stop();
                     const maxY                 = Math.max(0, destinationsFlick.contentHeight - destinationsFlick.height);
                     const nextY                = Math.max(0, Math.min(maxY, destinationsFlick.contentY - event.angleDelta.y));
                     root.scrollPosition        = nextY;
@@ -232,6 +283,8 @@ Item {
                         Repeater {
                             model: sectionColumn.modelData.items ?? []
                             delegate: NavigationRailItem {
+                                id: railItem
+
                                 required property int index
                                 required property var modelData
 
@@ -244,6 +297,13 @@ Item {
                                 selected: sectionColumn.baseIndex + index === root.currentIndex
                                 width: destinationsColumn.width - Appearance.margin.normal * 2
                                 x: Appearance.margin.normal
+                                onSelectedChanged: {
+                                    if (selected) {
+                                        root.currentItem = railItem;
+                                        if (root.initialized)
+                                            root.scrollItemIntoView(railItem);
+                                    }
+                                }
                                 onTriggered: {
                                     root.currentIndex = sectionColumn.baseIndex + index;
                                     root.activated(sectionColumn.baseIndex + index);

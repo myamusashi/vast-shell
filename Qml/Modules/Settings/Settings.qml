@@ -288,7 +288,10 @@ LazyLoader {
                             z: 2
                             onActivated: (page, card) => {
                                 settingsLoader.currentPage = page;
-                                Qt.callLater(() => pagesColumn.revealCard(card));
+                                Qt.callLater(() => {
+                                    navRail.ensureCurrentItemVisible();
+                                    pagesColumn.revealCard(card);
+                                });
                             }
                         }
 
