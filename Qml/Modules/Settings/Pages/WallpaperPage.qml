@@ -167,6 +167,8 @@ SettingsPageBase {
         ExtendedFloatingButton {
             icon.name: "image"
             text: qsTr("Browse…")
+            textColor: Colours.m3Colors.m3OnSecondaryContainer
+            color: Colours.m3Colors.m3SecondaryContainer
             onClicked: pickWallpaperDialog.openFileDialog()
         }
     }
