@@ -16,9 +16,15 @@ Rectangle {
 
     readonly property var    availableEffectList: root.schema.effects.filter(effect => root.effects[effect.key] === undefined)
     readonly property var    availableMatchList: root.schema.matchProps.filter(prop => root.match[prop.key] === undefined)
+    readonly property var    effectLeftKeys: root.effectSplit ? root.effectKeys.slice(0, Math.ceil(root.effectKeys.length / 2)) : root.effectKeys
+    readonly property var    effectRightKeys: root.effectSplit ? root.effectKeys.slice(Math.ceil(root.effectKeys.length / 2)) : []
     readonly property var    effects: root.rule !== null && typeof root.rule.effects === "object" && root.rule.effects !== null ? root.rule.effects : {}
+    readonly property bool   effectSplit: root.effectKeys.length >= 3
     readonly property bool   invalid: root.ruleProblems.length > 0
     readonly property var    match: root.rule !== null && typeof root.rule.match === "object" && root.rule.match !== null ? root.rule.match : {}
+    readonly property var    matchLeftKeys: root.matchSplit ? root.matchKeys.slice(0, Math.ceil(root.matchKeys.length / 2)) : root.matchKeys
+    readonly property var    matchRightKeys: root.matchSplit ? root.matchKeys.slice(Math.ceil(root.matchKeys.length / 2)) : []
+    readonly property bool   matchSplit: root.matchKeys.length >= 3
     readonly property var    rule: root.services.ruleById(root.modelData)
     readonly property var    ruleProblems: root.services.problems[root.modelData] ?? []
 
@@ -214,23 +220,61 @@ Rectangle {
             wrapMode: Text.Wrap
         }
 
-        Repeater {
-            model: root.matchKeys
-            delegate: RuleValueRow {
-                id: matchRow
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: Appearance.spacing.normal
 
-                required property string modelData
-
-                readonly property var    propDescriptor: root.schema.matchPropByKey(matchRow.modelData)
-
+            ColumnLayout {
+                Layout.alignment: Qt.AlignTop
                 Layout.fillWidth: true
-                currentValue: root.match[matchRow.modelData]
-                descriptor: matchRow.propDescriptor
-                label: root.schema.labelFromKey(matchRow.modelData)
-                pickValues: root.services.matchPickValues(matchRow.propDescriptor)
-                onPickRequested: root.services.refreshMatchPicks()
-                onRemoved: root.services.removeMatchProp(root.modelData, matchRow.modelData)
-                onValueChanged: value => root.services.setMatchProp(root.modelData, matchRow.modelData, value)
+                spacing: Appearance.spacing.normal
+
+                Repeater {
+                    model: root.matchLeftKeys
+                    delegate: RuleValueRow {
+                        id: matchRow
+
+                        required property string modelData
+
+                        readonly property var    propDescriptor: root.schema.matchPropByKey(matchRow.modelData)
+
+                        Layout.fillWidth: true
+                        currentValue: root.match[matchRow.modelData]
+                        descriptor: matchRow.propDescriptor
+                        label: root.schema.labelFromKey(matchRow.modelData)
+                        pickValues: root.services.matchPickValues(matchRow.propDescriptor)
+                        onPickRequested: root.services.refreshMatchPicks()
+                        onRemoved: root.services.removeMatchProp(root.modelData, matchRow.modelData)
+                        onValueChanged: value => root.services.setMatchProp(root.modelData, matchRow.modelData, value)
+                    }
+                }
+            }
+
+            ColumnLayout {
+                Layout.alignment: Qt.AlignTop
+                Layout.fillWidth: true
+                spacing: Appearance.spacing.normal
+                visible: root.matchSplit
+
+                Repeater {
+                    model: root.matchRightKeys
+                    delegate: RuleValueRow {
+                        id: matchRowRight
+
+                        required property string modelData
+
+                        readonly property var    propDescriptor: root.schema.matchPropByKey(matchRowRight.modelData)
+
+                        Layout.fillWidth: true
+                        currentValue: root.match[matchRowRight.modelData]
+                        descriptor: matchRowRight.propDescriptor
+                        label: root.schema.labelFromKey(matchRowRight.modelData)
+                        pickValues: root.services.matchPickValues(matchRowRight.propDescriptor)
+                        onPickRequested: root.services.refreshMatchPicks()
+                        onRemoved: root.services.removeMatchProp(root.modelData, matchRowRight.modelData)
+                        onValueChanged: value => root.services.setMatchProp(root.modelData, matchRowRight.modelData, value)
+                    }
+                }
             }
         }
 
@@ -276,22 +320,59 @@ Rectangle {
             wrapMode: Text.Wrap
         }
 
-        Repeater {
-            model: root.effectKeys
-            delegate: RuleValueRow {
-                id: effectRow
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: Appearance.spacing.normal
 
-                required property string modelData
-
-                readonly property var    effectDescriptor: root.schema.effectByKey(effectRow.modelData)
-
+            ColumnLayout {
+                Layout.alignment: Qt.AlignTop
                 Layout.fillWidth: true
-                currentValue: root.effects[effectRow.modelData]
-                descriptor: effectRow.effectDescriptor
-                label: root.schema.labelFromKey(effectRow.modelData)
-                showBadge: true
-                onRemoved: root.services.removeEffect(root.modelData, effectRow.modelData)
-                onValueChanged: value => root.services.setEffect(root.modelData, effectRow.modelData, value)
+                spacing: Appearance.spacing.normal
+
+                Repeater {
+                    model: root.effectLeftKeys
+                    delegate: RuleValueRow {
+                        id: effectRow
+
+                        required property string modelData
+
+                        readonly property var    effectDescriptor: root.schema.effectByKey(effectRow.modelData)
+
+                        Layout.fillWidth: true
+                        currentValue: root.effects[effectRow.modelData]
+                        descriptor: effectRow.effectDescriptor
+                        label: root.schema.labelFromKey(effectRow.modelData)
+                        showBadge: true
+                        onRemoved: root.services.removeEffect(root.modelData, effectRow.modelData)
+                        onValueChanged: value => root.services.setEffect(root.modelData, effectRow.modelData, value)
+                    }
+                }
+            }
+
+            ColumnLayout {
+                Layout.alignment: Qt.AlignTop
+                Layout.fillWidth: true
+                spacing: Appearance.spacing.normal
+                visible: root.effectSplit
+
+                Repeater {
+                    model: root.effectRightKeys
+                    delegate: RuleValueRow {
+                        id: effectRowRight
+
+                        required property string modelData
+
+                        readonly property var    effectDescriptor: root.schema.effectByKey(effectRowRight.modelData)
+
+                        Layout.fillWidth: true
+                        currentValue: root.effects[effectRowRight.modelData]
+                        descriptor: effectRowRight.effectDescriptor
+                        label: root.schema.labelFromKey(effectRowRight.modelData)
+                        showBadge: true
+                        onRemoved: root.services.removeEffect(root.modelData, effectRowRight.modelData)
+                        onValueChanged: value => root.services.setEffect(root.modelData, effectRowRight.modelData, value)
+                    }
+                }
             }
         }
     }
