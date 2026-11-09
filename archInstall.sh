@@ -21,8 +21,6 @@ readonly VAST_SHELL_REVISION
 readonly INSTALL_DIR="/usr/local/share/quickshell"
 readonly BIN_DIR="/usr/local/bin"
 readonly LIBEXEC_DIR="/usr/local/libexec"
-# pacman and the AUR font packages install into the system font directory.
-readonly FONT_DIR="/usr/share/fonts"
 readonly VDPAU_DIR="/usr/lib/vdpau"
 readonly QML_DIR="/usr/lib/qt6/qml"
 readonly BUILD_DIR="/tmp/quickshell-build"
@@ -46,8 +44,8 @@ install_system_packages() {
 	local -r pkg_list=(
 		base-devel git cmake ninja clang mold extra-cmake-modules patchelf pkgconf
 		qt6-base qt6-declarative qt6-wayland qt6-svg qt6-graphs qt6-multimedia qt6-5compat qt6-shadertools qt6-tools
-		rust pipewire ddcutil i2c-tools go python wayland wayland-protocols
-		findutils grep sed gawk util-linux libnotify
+		rust pipewire ddcutil i2c-tools go wayland wayland-protocols
+		findutils grep sed gawk util-linux libnotify scdoc
 		iw polkit wl-clipboard ffmpeg foot hyprland xdg-desktop-portal
 		spirv-tools vulkan-headers cli11 cpptrace jemalloc libdrm mesa libxcb glib2 libvdpau-va-gl
 	)
@@ -105,7 +103,7 @@ install_aur_packages() {
 	local -r aur_user="${SUDO_USER:-}"
 	local -a missing=()
 	local -r pkg_list=(
-		ttf-weather-icons app2unit ttf-material-symbols-variable-git
+		ttf-weather-icons app2unit
 	)
 
 	log "Checking AUR packages..."
@@ -467,11 +465,6 @@ install_quickshell_config() {
 
 	find "$PROJECT_ROOT" -mindepth 1 -maxdepth 1 ! -name "build" -exec cp -r {} "$INSTALL_DIR/" \; 2>/dev/null || true
 
-	[[ -d $PROJECT_ROOT/Assets ]] && cp -r "$PROJECT_ROOT/Assets" "$INSTALL_DIR/"
-
-	log "Installing generate-colors-material to $BIN_DIR..."
-	install -Dm755 "$PROJECT_ROOT/Assets/shell/generate_colors_material.py" "$BIN_DIR/generate-colors-material"
-
 	chmod -R 755 "$INSTALL_DIR"
 	chown -R root:root "$INSTALL_DIR"
 
@@ -515,7 +508,6 @@ export VAST_SHELL_VERSION="$VAST_SHELL_VERSION"
 export VAST_SHELL_REVISION="$VAST_SHELL_REVISION"
 export VAST_SHELL_DIRECTORY="$INSTALL_DIR"
 export QUICKSHELL_CONFIG_DIR="\$VAST_SHELL_DIRECTORY"
-export QT_QPA_FONTDIR="$FONT_DIR"
 export QT_MEDIA_BACKEND="ffmpeg"
 export VDPAU_DRIVER="va_gl"
 export VDPAU_DRIVER_PATH="$VDPAU_DIR"
@@ -591,7 +583,6 @@ build_vastctl() {
 	cat >"$wrapper" <<EOF
 #!/bin/bash
 export VAST_SHELL_DIRECTORY="$INSTALL_DIR"
-export QT_QPA_FONTDIR="$FONT_DIR"
 export QML2_IMPORT_PATH="$QML_DIR\${QML2_IMPORT_PATH:+:\$QML2_IMPORT_PATH}"
 exec "$binary" "\$@"
 EOF
