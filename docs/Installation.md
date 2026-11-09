@@ -43,7 +43,7 @@ environment.systemPackages = [
 }
 ```
 
-The module registers a systemd user service (`quickshell-shell.service`) that auto-starts with your graphical session, sets the shell's config directory through its wrappers, and automatically installs the required fonts (`material-symbols`, `weather-icons`).
+The module registers a systemd user service (`quickshell-shell.service`) that auto-starts with your graphical session, sets the shell's config directory through its wrappers, and automatically installs the required font (`weather-icons`). Material Symbols and Phosphor are bundled in `Assets/fonts/`.
 
 **Options** (`programs.quickshell-shell`):
 
@@ -93,13 +93,13 @@ shell
 ```text
 base-devel git cmake ninja clang mold extra-cmake-modules patchelf pkgconf
 qt6-base qt6-declarative qt6-wayland qt6-svg qt6-graphs qt6-multimedia
-qt6-5compat qt6-shadertools qt6-tools rust pipewire ddcutil i2c-tools go python
-wayland wayland-protocols findutils grep sed gawk util-linux libnotify iw
+qt6-5compat qt6-shadertools qt6-tools rust pipewire ddcutil i2c-tools go
+wayland wayland-protocols findutils grep sed gawk util-linux libnotify scdoc iw
 polkit wl-clipboard ffmpeg foot hyprland xdg-desktop-portal spirv-tools
 vulkan-headers cli11 cpptrace jemalloc libdrm mesa libxcb glib2 libvdpau-va-gl
 ```
 
-**AUR** (installed with `yay`): `ttf-weather-icons`, `ttf-material-symbols-variable-git`, `app2unit`
+**AUR** (installed with `yay`): `ttf-weather-icons`, `app2unit`
 
 > [!NOTE]
 > The script also builds these from source rather than installing them:
@@ -144,7 +144,7 @@ The following packages must always be built from source, regardless of distro:
 | `wl-screenrec` | https://github.com/russelltg/wl-screenrec | |
 | `m3shapes` | https://github.com/soramanew/m3shapes | Material shape library, built into the Qt module path |
 | `AnotherRipple` | https://github.com/myamusashi/Another-Ripple | |
-| Material Symbols font | https://github.com/google/material-design-icons | Also bundled in `Assets/fonts/material/` (Apache-2.0); the system package stays as the fallback when the bundled file is removed |
+| Material Symbols font | https://github.com/google/material-design-icons | Bundled in `Assets/fonts/material/` (Apache-2.0); no system package needed |
 | Weather Icons font | https://github.com/erikflowers/weather-icons | |
 | Phosphor font | https://github.com/phosphor-icons/core | Bundled in `Assets/fonts/phosphor/` (MIT); no system package needed |
 

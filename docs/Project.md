@@ -204,7 +204,7 @@ wallpaper path
   → M3TemplateColors              →  Colours.m3Colors
 ```
 
-`Assets/shell/generate_colors_material.py` is a **legacy** Python implementation kept as the reference for the C++ port. It is not invoked by the shell; the only remaining reference is `archInstall.sh`, which copies it to `/usr/local/bin/generate-colors-material`.
+`Assets/shell/generate_colors_material.py` is a **legacy** Python implementation kept as the reference for the C++ port. It is not invoked by the shell or by any installer.
 
 > [!NOTE]
 > `Data/dark-colors.json` and `Data/light-colors.json` are legacy outputs of that script. Nothing reads them at runtime — see [Configuration → Colors](Configuration.md#colors).
