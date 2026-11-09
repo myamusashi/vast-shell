@@ -2,25 +2,15 @@
 
 [Back to README](../README.md)
 
-Vast-shell keeps all of its settings in a single JSON file: `configurations.json`.
-
 ## Where the file lives
 
-The path is resolved once at startup by `Qml/Core/Utils/Paths.qml`:
 
 | Path | Value |
 |---|---|
-| `HOME` | `$HOME` |
-| `configDir` | `$XDG_CONFIG_DIR` if set, otherwise `$HOME/.config` |
 | `shellDir` | `<configDir>/vast-shell` |
 | **config file** | **`<shellDir>/configurations.json`** |
 
 Normally that resolves to `~/.config/vast-shell/configurations.json`.
-
-> [!WARNING]
-> `Paths.qml` reads **`XDG_CONFIG_DIR`**, not the XDG-standard `XDG_CONFIG_HOME`. If you set `XDG_CONFIG_HOME` and not `XDG_CONFIG_DIR`, the shell still uses `~/.config`.
-
-If the file does not exist, the shell does not error — every key falls back to the default declared in its `*Config.qml`. So a fresh install needs no config file at all.
 
 The file is watched: edits made from the Settings UI are written back, and edits made on disk are picked up live.
 
@@ -33,10 +23,7 @@ mkdir -p ~/.config/vast-shell
 cp /path/to/vast-shell/Data/configurations.json ~/.config/vast-shell/
 ```
 
-You generally do **not** need to copy the color files — the Material palette is generated at runtime in C++ (see [Material Colors](#material-colors)). Copy `Data/colors.json` only if you want to pin a static palette.
-
-> [!NOTE]
-> `Data/configurations.json` is a *convenience snapshot*, not the source of truth. It is missing several sections (`clipboard`, `audio`, `idle`, `search`, `privacy`, `kdeConnect`, `captureScreenVideo`) and it contains two dead keys (`colors.toDarkColor`, `colors.toWhiteColor`) that nothing reads. The tables below document the **code defaults**, which are what actually apply for any key you leave out.
+You generally do **not** need to copy the color files, the Material palette is generated at runtime. Copy `Data/colors.json` only if you want to pin a static palette.
 
 ---
 
@@ -126,14 +113,6 @@ You generally do **not** need to copy the color files — the Material palette i
       "playback": "mpv",
       "terminal": "foot",
       "videoViewer": "mpv"
-    },
-    "battery": {
-      "criticalLevel": 3,
-      "warnLevels": [
-        { "level": 20, "title": "Low battery",         "message": "You might want to plug in a charger",            "icon": "battery-020" },
-        { "level": 10, "title": "Did you see the previous message?", "message": "You should probably plug in a charger <b>now</b>", "icon": "battery-010" },
-        { "level": 5,  "title": "Critical battery level", "message": "PLUG THE CHARGER RIGHT NOW!!",                  "icon": "battery-000" }
-      ]
     }
   },
   "idle": {
@@ -181,8 +160,8 @@ You generally do **not** need to copy the color files — the Material palette i
   },
   "weather": {
     "enableQuickSummary": false,
-    "latitude": "-6.4028",
-    "longitude": "106.7744",
+    "latitude": "-6.7676",
+    "longitude": "676.7677",
     "astronomyApiKey": "",
     "reloadTime": 180
   }
@@ -365,20 +344,15 @@ See [Usage](Usage.md#color-templates) for the placeholder syntax and the naming 
 | `livePreview` | `true` | Generate a palette from the wallpaper as soon as it loads. |
 
 
-> [!WARNING]
-> `WallpaperConfig.qml` currently hardcodes `wallpaperDir` to the maintainer's home directory (`/home/myamusashi/Pictures/wallpapers`). Set it explicitly if you use a config file of your own.
-
 ### Weather
 
 | Key | Default | Description |
 |---|---|---|
-| `latitude` / `longitude` | `"-6.4028"` / `"106.7744"` | Your location. |
+| `latitude` / `longitude` | `"-6.767676"` / `"6767.7676"` | Your location. |
 | `reloadTime` | `180` | Refresh interval, in **seconds** (`Weather.qml` multiplies by 1000). |
 | `enableQuickSummary` | `false` | Show a compact weather summary in the bar. |
 | `astronomyApiKey` | `""` | Key for the sunrise/sunset and moon-phase provider. |
 
-> [!WARNING]
-> `reloadTime` has a units bug: `Weather.qml` reads it as **seconds**, while `WeatherPage.qml` writes it as **milliseconds**. Setting it from the Settings page therefore inflates the interval by 1000×. Prefer editing the JSON directly with a value in seconds.
 
 ### KDE Connect
 
@@ -435,29 +409,10 @@ See [Usage](Usage.md#color-templates) for the placeholder syntax and the naming 
 
 ## Material Colors
 
-> [!IMPORTANT]
-> Material You colors are generated **in C++**, not by a Python script. There is nothing to install and nothing to invoke.
-
-The palette is derived from the current wallpaper in-process:
-
-```
-wallpaper image
-  → Vast.Utils ColorMaterial      debounced, off-thread via Vast.Jobs
-  → ImageQuantizer                Celebi/Score quantizer at 128px
-  → MaterialRoles                 ~60 roles, M3 2021 + 2025 spec delegates
-  → PaletteBuilder                role → #RRGGBB, plus PaletteValidation
-  → PaletteAnimator               OKLab blend over 300 ms (no flicker)
-  → M3TemplateColors              → Colours.m3Colors
-```
-
-- `Colors.staticColorsPath` is the **only** file the theme reads, and only when `useStaticColors` is `true`.
-- `Assets/shell/generate_colors_material.py` is a **legacy** Python implementation kept as the reference for the C++ port. It is not invoked by the shell, and nothing writes `dark-colors.json` / `light-colors.json` at runtime.
-
 Generate a palette for any image without touching the running theme:
 
 ```sh
 vastctl color generate ~/Pictures/wallpapers/foo.png --mode dark --scheme tonal-spot
-vastctl color from "#ce8fd6" --mode light --scheme vibrant
 ```
 
 <details>

@@ -63,9 +63,6 @@ The module registers a systemd user service (`quickshell-shell.service`) that au
 
 ## Arch Linux
 
-> [!IMPORTANT]
-> Requires Arch Linux or an Arch-based distro. Run with `sudo`.
-
 ```bash
 git clone https://github.com/myamusashi/vast-shell.git
 cd vast-shell
@@ -75,7 +72,7 @@ sudo ./archInstall.sh
 The script installs all dependencies, builds the plugins, compiles shaders, and sets up the shell. Once complete, start it with:
 
 ```bash
-shell
+vastctl daemon start
 ```
 
 ### Dependencies
@@ -101,14 +98,6 @@ vulkan-headers cli11 cpptrace jemalloc libdrm mesa libxcb glib2 libvdpau-va-gl
 
 **AUR** (installed with `yay`): `ttf-weather-icons`, `app2unit`
 
-> [!NOTE]
-> The script also builds these from source rather than installing them:
-> - `quickshell` 0.3.2 — via `packaging/arch/quickshell/PKGBUILD`
-> - `wl-screenrec` (pinned git rev)
-> - `m3shapes` and `AnotherRipple` (pinned git revs, installed into the Qt module path)
-> - `vastctl` (Go, → `/usr/local/bin`)
-> - the C++ plugins (CMake → `/usr/lib/qt6/qml`)
-> - shaders via `qsb`, translations via `lrelease`
 
 | Category | Packages |
 |---|---|
@@ -141,7 +130,6 @@ The following packages must always be built from source, regardless of distro:
 |---|---|---|
 | `quickshell` | https://github.com/quickshell/quickshell | 0.3.2; a PKGBUILD is provided in `packaging/arch/quickshell/` |
 | `app2unit` | https://github.com/valpackett/app2unit | |
-| `wl-screenrec` | https://github.com/russelltg/wl-screenrec | |
 | `m3shapes` | https://github.com/soramanew/m3shapes | Material shape library, built into the Qt module path |
 | `AnotherRipple` | https://github.com/myamusashi/Another-Ripple | |
 | Material Symbols font | https://github.com/google/material-design-icons | Bundled in `Assets/fonts/material/` (Apache-2.0); no system package needed |
@@ -241,35 +229,12 @@ sudo xbps-install -S pipewire iw libnotify polkit \
 
 ---
 
-## Bluetooth — Phone pairing troubleshooting
-
-The shell's Bluetooth UI (`BluetoothServices`) calls `BluetoothDevice.pair()` via [`Quickshell.Bluetooth`](https://quickshell.org/docs/v0.3.2/types/Quickshell.Bluetooth/BluetoothDevice/). BlueZ **requires a registered pairing agent** (`org.bluez.AgentManager1`) to answer SSP confirmations; without one you get:
-
-```text
-[SIGNAL] BREDR.Disconnected - org.bluez.Reason.Local  Connection terminated by local host
-WARN quickshell.bluetooth.device: Failed to pair ... "Authentication Failed"
-```
-
-...which surfaces as `No agent available for request type 2` inside `bluetoothd` ([bluez#63], [bleak#1434], [bdteo.com](https://bdteo.com/bluez-pairing-python-agent-workaround-authentication-failed/)). This affects phone ↔ laptop (Android 16 `DisplayYesNo`) in both directions — also when `NoInputNoOutput` downgrades Secure Connections to `0x05 Insufficient Authentication` ([bluez#650]).
-
-**The shell now provides its own agent.** `Vast.Utils.BluetoothAgentManager` registers `org.bluez.Agent1` over the system bus at `/io/quickshell/BluetoothAgent` with the `KeyboardDisplay` capability, and `Vast.Utils.BluetoothAgentManager.{providePinCode, providePasskey, confirmPairing, authorizeService}` answer the requests from `Qml/Modules/BluetoothAgent/PairingDialog.qml`. It activates as soon as the pairing dialog opens and unregisters when it closes.
-
-Only one agent can hold the slot at a time. If `blueman` or another agent is `default-agent`, BlueZ will not route requests to the shell. To fall back to the desktop's agent, unregister the shell's:
-
-```bash
-busctl call org.bluez /org/bluez org.bluez.AgentManager1 UnregisterAgent ao /io/quickshell/BluetoothAgent
-```
-
-> **Always:** after a failed attempt clean stale bonding before retry:
-> ```bash
-> bluetoothctl remove XX:XX:XX:XX:XX:XX   # your phone's MAC (e.g. from `bluetoothctl devices`)
-> # also "Forget" the laptop on the phone's Bluetooth settings
-> ```
+## Bluetooth
 
 <details>
 <summary>NixOS (recommended: <code>services.blueman</code>)</summary>
 
-Do **not** modify `github:myamusashi/vast-shell`'s flake — fix your system flake (`/etc/nixos/flake.nix` + `configuration.nix`):
+Do **not** modify `github:myamusashi/vast-shell`'s flake, fix your system flake (`/etc/nixos/flake.nix` + `configuration.nix`):
 
 ```nix
 { config, pkgs, ... }: {
@@ -277,7 +242,6 @@ Do **not** modify `github:myamusashi/vast-shell`'s flake — fix your system fla
   hardware.bluetooth.powerOnBoot = true;
   hardware.enableAllFirmware = true;
 
-  # Persistent DisplayYesNo agent (fixes Android 16 SSP). Don't use NoInputNoOutput for phones.
   services.blueman.enable = true;
   security.polkit.enable = true;
 
@@ -309,35 +273,16 @@ trust XX:XX:XX:XX:XX:XX
 connect XX:XX:XX:XX:XX:XX
 ```
 
-
 `journalctl -u bluetooth -f` should then show `Paired: yes` `Trusted: yes`, not `[DEL] Device`.
-
-**If still `AuthenticationFailed` on BlueZ 5.66+/5.70+** ([bluez#605] regression):
-
-```nix
-# flake.nix
-inputs.nixpkgs-bt.url = "github:NixOS/nixpkgs/<commit-with-bluez-5.64>";
-
-# configuration.nix
-hardware.bluetooth.package = inputs.nixpkgs-bt.legacyPackages.${pkgs.system}.bluez;
-# alternate: nixpkgs.overlays = [ (final: prev: { bluez = prev.bluez.overrideAttrs (o: { version = "5.64"; }); }) ];
-```
-
-Then `nix flake update && sudo nixos-rebuild switch`.
-
-**Note:** on NixOS the `blueman` applet is no longer required — the shell's built-in agent handles the pairing dialog itself. Keep `services.blueman.enable = true` only if you want the desktop's agent as a fallback for other clients.
-
 </details>
 
 <details>
-<summary>Arch Linux / Manjaro / EndeavourOS</summary>
+<summary>Arch Linux</summary>
 
 ```bash
 sudo pacman -S bluez bluez-utils blueman
 sudo systemctl enable --now bluetooth
 sudo systemctl enable --now blueman-mechanism
-# autostart blueman-applet in Hyprland exec-once or systemd user:
-# exec-once = blueman-applet
 sudo sed -i 's/#Experimental = false/Experimental = true/' /etc/bluetooth/main.conf
 sudo sed -i 's/#ClassicBondedOnly.*/ClassicBondedOnly = false/' /etc/bluetooth/main.conf
 # add under [General] if missing:
@@ -347,7 +292,7 @@ sudo systemctl restart bluetooth
 bluetoothctl # then agent DisplayYesNo / default-agent as above
 ```
 
-On Arch, `archInstall.sh` does **not** set up Bluetooth — apply the above manually.
+On Arch, `archInstall.sh` does **not** set up Bluetooth, apply the above manually.
 
 </details>
 
@@ -382,4 +327,3 @@ Then either let the shell's own agent handle pairing (it registers automatically
 - `bdteo.com`: [BlueZ Pairing Fix: External Python Agent & D-Bus Polling](https://bdteo.com/bluez-pairing-python-agent-workaround-authentication-failed/) — why internal `sd-bus` agent races `Pair()` on 5.66+ and requires polling fallback.
 
 </details>
-

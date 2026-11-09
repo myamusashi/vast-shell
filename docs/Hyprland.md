@@ -2,10 +2,10 @@
 
 [Back to README](../README.md)
 
-The Settings window has a **Hyprland Configurations** section that lets you edit Hyprland options from a UI: per-monitor settings (position, mode, scale, color, etc) on the *Monitors* page, the general config options (general, decoration, input, render, misc, etc) on one page per category, and window/layer rules on the *Window Rules* and *Layer Rules* pages.
-
 > [!WARNING]
 > This feature targets **Hyprland 0.57.0 and later** (Lua config). Behavior on other versions is untested and may not work.
+
+The Settings window has a **Hyprland Configurations** section that lets you edit Hyprland options from a UI: per-monitor settings (position, mode, scale, color, etc) on the *Monitors* page, the general config options (general, decoration, input, render, misc, etc) on one page per category, and window/layer rules on the *Window Rules* and *Layer Rules* pages.
 
 ## How it works
 
@@ -23,8 +23,6 @@ require("vast_shell")
 require("vast_shell_rules")
 ```
 
-The pages show these lines with copy buttons. They must be at the bottom because the last call wins: values and rules written by vast-shell shadow whatever your own config set earlier. If you prefer the opposite precedence, put the `require` lines above your own options instead.
-
 ## Files
 
 - `~/.config/vast-shell/monitor.json`
@@ -38,8 +36,8 @@ The pages show these lines with copy buttons. They must be at the bottom because
 
 ## Window & layer rules
 
-- **Window Rules** offers every match property and effect `hl.window_rule` supports on 0.57.0 (typed inputs, enums as dropdowns, `move`/`size`/`max_size`/`min_size` as two expression fields). Each effect is labeled **static** (evaluated once when the window opens) or **dynamic** (re-evaluated when a matched property changes).
-- **Layer Rules** matches only on `namespace` (the only property Hyprland consults for layer rules) and offers the ten layer effects.
+- **Window Rules** offers every match property and effect `hl.window_rule` supports on 0.57.0. Each effect is labeled **static** or **dynamic**.
+- **Layer Rules** matches only on `namespace` and offers the ten layer effects.
 - Regular expressions are **RE2 full matches**: the pattern must match the whole value, so wrap substrings in `.*` (`.*Hyprland.*`). Prefix a value with `negative:` to invert it (`class = "negative:^kitty$"`). Boolean properties negate by setting them to `false`.
 - Rules apply **top to bottom and the last matching rule wins**; the up/down arrows reorder them and the order is stored in the JSON.
 - Rule names are optional but must be **unique across your whole config**: Hyprland silently merges rules registered with the same name, so the UI blocks Apply while a name is duplicated.
@@ -48,8 +46,7 @@ The pages show these lines with copy buttons. They must be at the bottom because
 
 ## Monitors page
 
-- The layout canvas is draggable once more than one enabled monitor is connected: positions snap to edges and overlaps are prevented (Hyprland refuses to register overlapping monitors). With a single monitor the position stays managed by Hyprland.
-- Per-monitor options: mode (from the monitor's available modes), scale, transform, bit depth, color preset (`cm`), SDR brightness/saturation, ICC profile (absolute path), and a disabled switch.
+- Per-monitor options: mode, scale, transform, bit depth, color preset (`cm`), SDR brightness/saturation, ICC profile (absolute path), and a disabled switch.
 - Monitors that are stored but not currently connected (or disabled) are listed below the connected ones so they can be edited or re-enabled.
 
 ## Excluded from the UI
