@@ -10,15 +10,15 @@
 
 namespace vast {
 
-    WirelessBitrateReader::WirelessBitrateReader(QObject* parent, QDBusConnection bus, const QString& serviceName) :
-        QObject(parent), mBus(std::move(bus)), mServiceName(serviceName) {}
+    WirelessBitrateReader::WirelessBitrateReader(QObject* parent, QDBusConnection bus, QString serviceName) :
+        QObject(parent), mBus(std::move(bus)), mServiceName(std::move(serviceName)) {}
 
     bool WirelessBitrateReader::requestBitrateMbps(const QString& interfaceName) {
         if (interfaceName.isEmpty() || mRequestInFlight)
             return false;
 
         if (!mBus.isConnected()) {
-            emit bitrateResolved(interfaceName, 0);
+            Q_EMIT bitrateResolved(interfaceName, 0);
             return false;
         }
 
@@ -42,7 +42,7 @@ namespace vast {
         connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, watcher, interfaceName](const QDBusPendingCall* call) {
             watcher->deleteLater();
 
-            QDBusPendingReply<QDBusObjectPath> reply(*call);
+            const QDBusPendingReply<QDBusObjectPath> reply(*call);
             if (!reply.isValid()) {
                 finishRequest(interfaceName, 0, false);
                 return;
@@ -66,7 +66,7 @@ namespace vast {
         auto* watcher = new QDBusPendingCallWatcher(mBus.asyncCall(message), this);
         connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, watcher, interfaceName](const QDBusPendingCall* call) {
             watcher->deleteLater();
-            QDBusPendingReply<QDBusVariant> reply(*call);
+            const QDBusPendingReply<QDBusVariant> reply(*call);
             if (!reply.isValid()) {
                 finishRequest(interfaceName, 0, true);
                 return;
@@ -80,7 +80,7 @@ namespace vast {
         if (invalidateCachedPath)
             mDevicePaths.remove(interfaceName);
         mRequestInFlight = false;
-        emit bitrateResolved(interfaceName, bitrateMbps);
+        Q_EMIT bitrateResolved(interfaceName, bitrateMbps);
     }
 
 } // namespace vast

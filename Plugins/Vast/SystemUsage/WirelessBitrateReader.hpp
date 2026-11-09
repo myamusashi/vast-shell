@@ -13,11 +13,11 @@ namespace vast {
 
       public:
         explicit WirelessBitrateReader(QObject* parent = nullptr, QDBusConnection bus = QDBusConnection::systemBus(),
-                                       const QString& serviceName = QStringLiteral("org.freedesktop.NetworkManager"));
+                                       QString serviceName = QStringLiteral("org.freedesktop.NetworkManager"));
 
         bool requestBitrateMbps(const QString& interfaceName);
 
-      signals:
+      Q_SIGNALS:
         void bitrateResolved(const QString& interfaceName, int bitrateMbps);
 
       private:

@@ -55,13 +55,13 @@ namespace vast {
             beginResetModel();
             mCores.assign(cores.begin(), cores.end());
             endResetModel();
-            emit countChanged();
+            Q_EMIT countChanged();
             return;
         }
 
         updateChangedRows(mCores, cores, [this](int row) {
             const auto modelIndex = index(row);
-            emit       dataChanged(modelIndex, modelIndex, CHANGED_CPU_CORE_ROLES);
+            Q_EMIT dataChanged(modelIndex, modelIndex, CHANGED_CPU_CORE_ROLES);
         });
     }
 

@@ -133,7 +133,7 @@ namespace vast {
         auto summary = sysusage::parseGraphicsOutputs(mVulkanOutput, mOpenGlOutput, mVaApiOutput);
         mLoaded      = true;
         mRunning     = false;
-        QTimer::singleShot(0, this, [this, summary = std::move(summary)]() { emit finished(summary); });
+        QTimer::singleShot(0, this, [this, summary = std::move(summary)]() { Q_EMIT finished(summary); });
     }
 
 } // namespace vast

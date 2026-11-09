@@ -57,7 +57,7 @@ namespace vast {
 
         void                                  updateCores(std::span<const CpuCoreEntry> cores);
 
-      signals:
+      Q_SIGNALS:
         void countChanged();
 
       private:

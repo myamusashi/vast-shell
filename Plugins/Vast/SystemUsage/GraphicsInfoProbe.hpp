@@ -30,7 +30,7 @@ namespace vast {
             return mLoaded;
         }
 
-      signals:
+      Q_SIGNALS:
         void finished(const vast::sysusage::GraphicsSummary& summary);
 
       private:

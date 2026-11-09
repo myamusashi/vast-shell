@@ -254,7 +254,7 @@ namespace vast {
         Q_INVOKABLE void ensureGraphicsInfoLoaded();
         Q_INVOKABLE void sampleNow();
 
-      signals:
+      Q_SIGNALS:
         void runningChanged();
         void gpuNameChanged();
         void batteryTechnologiesChanged();

@@ -87,13 +87,13 @@ namespace vast {
             beginResetModel();
             mFilesystems.assign(filesystems.begin(), filesystems.end());
             endResetModel();
-            emit countChanged();
+            Q_EMIT countChanged();
             return;
         }
 
         updateChangedRows(mFilesystems, filesystems, [this](int row) {
             const auto modelIndex = index(row);
-            emit       dataChanged(modelIndex, modelIndex, CHANGED_FILESYSTEM_ROLES);
+            Q_EMIT dataChanged(modelIndex, modelIndex, CHANGED_FILESYSTEM_ROLES);
         });
     }
 

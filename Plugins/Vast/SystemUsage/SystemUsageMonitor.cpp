@@ -79,7 +79,7 @@ namespace vast {
                 return;
             if (bitrateMbps != mWirelessLinkSpeed) {
                 mWirelessLinkSpeed = bitrateMbps;
-                emit wirelessLinkSpeedChanged();
+                Q_EMIT wirelessLinkSpeedChanged();
             }
         });
 
@@ -111,7 +111,7 @@ namespace vast {
     void SystemUsageMonitor::applyGpuName(const QString& name) {
         if (!name.isEmpty() && name != mGpuName) {
             mGpuName = name;
-            emit gpuNameChanged();
+            Q_EMIT gpuNameChanged();
         }
     }
 
@@ -120,7 +120,7 @@ namespace vast {
             return;
 
         mRunning = running;
-        emit runningChanged();
+        Q_EMIT runningChanged();
 
         if (mRunning) {
             mLastSampleTime.start();
@@ -137,7 +137,7 @@ namespace vast {
         if (mWiredInterface == iface)
             return;
         mWiredInterface = iface;
-        emit wiredInterfaceChanged();
+        Q_EMIT wiredInterfaceChanged();
     }
 
     void SystemUsageMonitor::ensureGraphicsInfoLoaded() {
@@ -145,7 +145,7 @@ namespace vast {
             mGraphicsProbe = new GraphicsInfoProbe(this);
             connect(mGraphicsProbe, &GraphicsInfoProbe::finished, this, [this](const sysusage::GraphicsSummary& summary) {
                 mGraphicsSummary = summary;
-                emit graphicsInfoChanged();
+                Q_EMIT graphicsInfoChanged();
             });
         }
         mGraphicsProbe->startProbe();
@@ -219,7 +219,7 @@ namespace vast {
             const int percent = sysusage::computeCpuUsagePercent(mPreviousCpuStat.aggregate, currentStat.aggregate);
             if (percent != mCpuPerc) {
                 mCpuPerc = percent;
-                emit cpuPercChanged();
+                Q_EMIT cpuPercChanged();
             }
         }
 
@@ -268,16 +268,16 @@ namespace vast {
 
         if (mem.totalKiB != mMemTotal) {
             mMemTotal = mem.totalKiB;
-            emit memTotalChanged();
+            Q_EMIT memTotalChanged();
         }
         if (mem.usedKiB != mMemUsed) {
             mMemUsed = mem.usedKiB;
-            emit         memUsedChanged();
+            Q_EMIT memUsedChanged();
 
             const double usedGiB = static_cast<double>(mMemUsed) / 1048576.0;
             if (std::abs(usedGiB - mMemUsedGiB) >= 0.001) {
                 mMemUsedGiB = usedGiB;
-                emit memUsedGiBChanged();
+                Q_EMIT memUsedGiBChanged();
             }
         }
     }
@@ -291,7 +291,7 @@ namespace vast {
             const QString formatted = sysusage::formatUptime(*seconds);
             if (formatted != mUptimeFormatted) {
                 mUptimeFormatted = formatted;
-                emit uptimeFormattedChanged();
+                Q_EMIT uptimeFormattedChanged();
             }
         }
     }
@@ -300,11 +300,11 @@ namespace vast {
         if (reading) {
             if (std::abs(*reading - cachedValue) >= 0.1) {
                 cachedValue = *reading;
-                emit(this->*changedSignal)();
+                Q_EMIT(this->*changedSignal)();
             }
         } else if (cachedValue != 0.0) {
             cachedValue = 0.0;
-            emit(this->*changedSignal)();
+            Q_EMIT(this->*changedSignal)();
         }
     }
 
@@ -317,30 +317,30 @@ namespace vast {
     void SystemUsageMonitor::resetWiredState() {
         if (mWiredDownloadSpeed > 0.0) {
             mWiredDownloadSpeed = 0.0;
-            emit wiredDownloadSpeedChanged();
+            Q_EMIT wiredDownloadSpeedChanged();
         }
         if (mWiredUploadSpeed > 0.0) {
             mWiredUploadSpeed = 0.0;
-            emit wiredUploadSpeedChanged();
+            Q_EMIT wiredUploadSpeedChanged();
         }
     }
 
     void SystemUsageMonitor::resetWirelessState() {
         if (!mWirelessInterface.isEmpty()) {
             mWirelessInterface.clear();
-            emit wirelessInterfaceChanged();
+            Q_EMIT wirelessInterfaceChanged();
         }
         if (mWirelessLinkSpeed != 0) {
             mWirelessLinkSpeed = 0;
-            emit wirelessLinkSpeedChanged();
+            Q_EMIT wirelessLinkSpeedChanged();
         }
         if (mWirelessDownloadSpeed > 0.0) {
             mWirelessDownloadSpeed = 0.0;
-            emit wirelessDownloadSpeedChanged();
+            Q_EMIT wirelessDownloadSpeedChanged();
         }
         if (mWirelessUploadSpeed > 0.0) {
             mWirelessUploadSpeed = 0.0;
-            emit wirelessUploadSpeedChanged();
+            Q_EMIT wirelessUploadSpeedChanged();
         }
     }
 
@@ -352,7 +352,7 @@ namespace vast {
             resetWirelessState();
             if (mStatusVPNInterface != QStringLiteral("disconnected")) {
                 mStatusVPNInterface = QStringLiteral("disconnected");
-                emit statusVPNInterfaceChanged();
+                Q_EMIT statusVPNInterfaceChanged();
             }
             mPreviousNetCounters.clear();
             return;
@@ -369,7 +369,7 @@ namespace vast {
             const QString wireless = mSensorScanner.detectWirelessInterface();
             if (!wireless.isEmpty()) {
                 mWirelessInterface = wireless;
-                emit wirelessInterfaceChanged();
+                Q_EMIT wirelessInterfaceChanged();
             }
         }
 
@@ -381,11 +381,11 @@ namespace vast {
 
             if (std::abs(totalDown - mTotalWiredDownloadUsage) >= 0.01) {
                 mTotalWiredDownloadUsage = totalDown;
-                emit totalWiredDownloadUsageChanged();
+                Q_EMIT totalWiredDownloadUsageChanged();
             }
             if (std::abs(totalUp - mTotalWiredUploadUsage) >= 0.01) {
                 mTotalWiredUploadUsage = totalUp;
-                emit totalWiredUploadUsageChanged();
+                Q_EMIT totalWiredUploadUsageChanged();
             }
 
             if (mPreviousNetCounters.contains(mWiredInterface)) {
@@ -395,11 +395,11 @@ namespace vast {
 
                 if (std::abs(downSpeed - mWiredDownloadSpeed) >= 0.005) {
                     mWiredDownloadSpeed = downSpeed;
-                    emit wiredDownloadSpeedChanged();
+                    Q_EMIT wiredDownloadSpeedChanged();
                 }
                 if (std::abs(upSpeed - mWiredUploadSpeed) >= 0.005) {
                     mWiredUploadSpeed = upSpeed;
-                    emit wiredUploadSpeedChanged();
+                    Q_EMIT wiredUploadSpeedChanged();
                 }
             }
         } else {
@@ -414,11 +414,11 @@ namespace vast {
 
             if (std::abs(totalDown - mTotalWirelessDownloadUsage) >= 0.01) {
                 mTotalWirelessDownloadUsage = totalDown;
-                emit totalWirelessDownloadUsageChanged();
+                Q_EMIT totalWirelessDownloadUsageChanged();
             }
             if (std::abs(totalUp - mTotalWirelessUploadUsage) >= 0.01) {
                 mTotalWirelessUploadUsage = totalUp;
-                emit totalWirelessUploadUsageChanged();
+                Q_EMIT totalWirelessUploadUsageChanged();
             }
 
             if (mPreviousNetCounters.contains(mWirelessInterface)) {
@@ -428,11 +428,11 @@ namespace vast {
 
                 if (std::abs(downSpeed - mWirelessDownloadSpeed) >= 0.005) {
                     mWirelessDownloadSpeed = downSpeed;
-                    emit wirelessDownloadSpeedChanged();
+                    Q_EMIT wirelessDownloadSpeedChanged();
                 }
                 if (std::abs(upSpeed - mWirelessUploadSpeed) >= 0.005) {
                     mWirelessUploadSpeed = upSpeed;
-                    emit wirelessUploadSpeedChanged();
+                    Q_EMIT wirelessUploadSpeedChanged();
                 }
             }
         } else {
@@ -445,7 +445,7 @@ namespace vast {
         const QString vpn = mSensorScanner.detectVpnStatus();
         if (vpn != mStatusVPNInterface) {
             mStatusVPNInterface = vpn;
-            emit statusVPNInterfaceChanged();
+            Q_EMIT statusVPNInterfaceChanged();
         }
 
         // Request wireless bitrate every 8s by deadline, independent of sampleNow() call rate
@@ -485,34 +485,34 @@ namespace vast {
 
         if (summary.totalKiB != mDiskTotal) {
             mDiskTotal = summary.totalKiB;
-            emit diskTotalChanged();
+            Q_EMIT diskTotalChanged();
         }
         if (summary.totalUsedKiB != mDiskUsed) {
             mDiskUsed = summary.totalUsedKiB;
-            emit         diskUsedChanged();
+            Q_EMIT diskUsedChanged();
 
             const double usedGiB = static_cast<double>(mDiskUsed) / 1048576.0;
             if (std::abs(usedGiB - mDiskUsedGiB) >= 0.001) {
                 mDiskUsedGiB = usedGiB;
-                emit diskUsedGiBChanged();
+                Q_EMIT diskUsedGiBChanged();
             }
         }
         const double percent = mDiskTotal > 0 ? (static_cast<double>(mDiskUsed) * 100.0 / static_cast<double>(mDiskTotal)) : 0.0;
         if (std::abs(percent - mDiskPercent) >= 0.01) {
             mDiskPercent = percent;
-            emit diskPercentChanged();
+            Q_EMIT diskPercentChanged();
         }
         if (summary.appsUsedKiB != mStorageAppsData) {
             mStorageAppsData = summary.appsUsedKiB;
-            emit storageAppsDataChanged();
+            Q_EMIT storageAppsDataChanged();
         }
         if (summary.systemUsedKiB != mStorageSystem) {
             mStorageSystem = summary.systemUsedKiB;
-            emit storageSystemChanged();
+            Q_EMIT storageSystemChanged();
         }
         if (summary.totalFreeKiB != mStorageFree) {
             mStorageFree = summary.totalFreeKiB;
-            emit storageFreeChanged();
+            Q_EMIT storageFreeChanged();
         }
     }
 

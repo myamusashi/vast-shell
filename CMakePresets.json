@@ -93,6 +93,7 @@
         "tst_paletteanimator",
         "tst_translation",
         "tst_jobexecutor",
+        "tst_systemusage",
         "tst_bluetoothagent",
         "tst_kdeconnectshare",
         "tst_kdeconnectreceive",

@@ -59,7 +59,7 @@ namespace vast {
 
         void                                  updateFilesystems(std::span<const sysusage::FilesystemEntry> filesystems);
 
-      signals:
+      Q_SIGNALS:
         void countChanged();
 
       private:
