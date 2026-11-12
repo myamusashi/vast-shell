@@ -111,39 +111,13 @@
                        Assets/shaders/transitions/''${name}.frag
             done
 
-            ${qt6.qtshadertools}/bin/qsb \
-                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
-                -o Assets/shaders/borderProgress.vert.qsb \
-                   Assets/shaders/borderProgress.vert
-            ${qt6.qtshadertools}/bin/qsb \
-                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
-                -o Assets/shaders/borderProgress.frag.qsb \
-                   Assets/shaders/borderProgress.frag
-            ${qt6.qtshadertools}/bin/qsb \
-                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
-                -o Assets/shaders/wavy.vert.qsb \
-                   Assets/shaders/wavy.vert
-            ${qt6.qtshadertools}/bin/qsb \
-                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
-                -o Assets/shaders/wavy.frag.qsb \
-                   Assets/shaders/wavy.frag
-            ${qt6.qtshadertools}/bin/qsb \
-                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
-                -o Assets/shaders/circleWave.vert.qsb \
-                   Assets/shaders/circleWave.vert
-            ${qt6.qtshadertools}/bin/qsb \
-                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
-                -o Assets/shaders/circleWave.frag.qsb \
-                   Assets/shaders/circleWave.frag
-            ${qt6.qtshadertools}/bin/qsb \
-                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
-                -o Assets/shaders/waveForm.vert.qsb \
-                   Assets/shaders/waveForm.vert
-            ${qt6.qtshadertools}/bin/qsb \
-                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
-                -o Assets/shaders/waveForm.frag.qsb \
-                   Assets/shaders/waveForm.frag
-
+            for name in borderProgress wavy circleWave waveForm; do
+                echo "Compiling ''${name}.frag..."
+                ${qt6.qtshadertools}/bin/qsb \
+                    --glsl "150,330,300 es" --hlsl 50 --msl 12 \
+                    -o Assets/shaders/''${name}.frag.qsb \
+                       Assets/shaders/''${name}.frag
+            done
             runHook postBuild
         '';
 

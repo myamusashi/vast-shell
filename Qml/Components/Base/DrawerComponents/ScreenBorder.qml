@@ -54,6 +54,7 @@ Item {
         id: topBorderArea
 
         height: frame.topThickness
+        visible: height > 0 && width > 0
         width: root.width
     }
 
@@ -61,6 +62,7 @@ Item {
         id: bottomBorderArea
 
         height: frame.bottomThickness
+        visible: height > 0 && width > 0
         width: root.width
         y: root.height - height
     }
@@ -69,6 +71,7 @@ Item {
         id: leftBorderArea
 
         height: root.height - frame.topThickness - frame.bottomThickness
+        visible: height > 0 && width > 0
         width: frame.leftThickness
         y: frame.topThickness
     }
@@ -77,6 +80,7 @@ Item {
         id: rightBorderArea
 
         height: root.height - frame.topThickness - frame.bottomThickness
+        visible: height > 0 && width > 0
         width: frame.rightThickness
         x: root.width - width
         y: frame.topThickness
@@ -86,6 +90,7 @@ Item {
         id: topLeftCornerArea
 
         height: root.cornerAreaSize
+        visible: root.cornerAreaSize > 0
         width: root.cornerAreaSize
         x: frame.leftThickness
         y: frame.topThickness
@@ -95,6 +100,7 @@ Item {
         id: topRightCornerArea
 
         height: root.cornerAreaSize
+        visible: root.cornerAreaSize > 0
         width: root.cornerAreaSize
         x: root.width - frame.rightThickness - root.cornerAreaSize
         y: frame.topThickness
@@ -104,6 +110,7 @@ Item {
         id: bottomLeftCornerArea
 
         height: root.cornerAreaSize
+        visible: root.cornerAreaSize > 0
         width: root.cornerAreaSize
         x: frame.leftThickness
         y: root.height - frame.bottomThickness - root.cornerAreaSize
@@ -113,6 +120,7 @@ Item {
         id: bottomRightCornerArea
 
         height: root.cornerAreaSize
+        visible: root.cornerAreaSize > 0
         width: root.cornerAreaSize
         x: root.width - frame.rightThickness - root.cornerAreaSize
         y: root.height - frame.bottomThickness - root.cornerAreaSize

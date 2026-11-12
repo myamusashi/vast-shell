@@ -44,17 +44,18 @@
 
     shellHook = ''
         FLAGS='--glsl "450,330,300 es" --hlsl 50 --msl 12'
+        FRAG_ONLY_FLAGS='--glsl "150,330,300 es" --hlsl 50 --msl 12'
 
         compile_if_missing() {
             local output="$1"
             local input="$2"
+            local flags="''${3:-$FLAGS}"
 
             if [ ! -f "$output" ]; then
                 echo "Compiling: $output"
-                eval qsb $FLAGS -o "$output" "$input"
+                eval qsb $flags -o "$output" "$input"
             fi
         }
-
         compile_if_missing "Assets/shaders/ImageTransition.vert.qsb" "Assets/shaders/ImageTransition.vert"
 
         TRANSITIONS=(
@@ -67,10 +68,8 @@
 
         SHADERS=(borderProgress wavy waveForm circleWave)
         for shader in "''${SHADERS[@]}"; do
-            compile_if_missing "Assets/shaders/$shader.vert.qsb" "Assets/shaders/$shader.vert"
-            compile_if_missing "Assets/shaders/$shader.frag.qsb" "Assets/shaders/$shader.frag"
+            compile_if_missing "Assets/shaders/$shader.frag.qsb" "Assets/shaders/$shader.frag" "$FRAG_ONLY_FLAGS"
         done
-
         echo "vast-shell environment (clang toolchain)"
     '';
 }

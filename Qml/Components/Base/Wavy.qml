@@ -68,7 +68,6 @@ Slider {
 
                 blending: true
                 fragmentShader: Paths.projectRoot + "/Assets/shaders/wavy.frag.qsb"
-                vertexShader: Paths.projectRoot + "/Assets/shaders/wavy.vert.qsb"
             }
         }
 
@@ -166,7 +165,6 @@ Slider {
 
             blending: true
             fragmentShader: Paths.projectRoot + "/Assets/shaders/waveForm.frag.qsb"
-            vertexShader: Paths.projectRoot + "/Assets/shaders/waveForm.vert.qsb"
         }
     }
 }

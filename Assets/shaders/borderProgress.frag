@@ -1,9 +1,9 @@
 #version 450
 
-layout(location = 0) noperspective in vec2 texCoord;
+layout(location = 0) in vec2 qt_TexCoord0;
 layout(location = 0) out vec4 fragColor;
 
-layout(std140, binding = 0) uniform VertBuf {
+layout(std140, binding = 0) uniform buf {
     mat4  qt_Matrix;
     float qt_Opacity;
     float progress;
@@ -11,10 +11,7 @@ layout(std140, binding = 0) uniform VertBuf {
     float borderWidth;
     vec2  resolution;
     vec4  borderColor;
-} ubuf;
-
-layout(binding = 1) uniform sampler2D source;
-
+};
 // centered at origin
 float roundedRectSDF(vec2 p, vec2 halfSize, float r) {
     vec2 d = abs(p) - halfSize + r;
@@ -114,18 +111,17 @@ float perimeterPosition(vec2 p, vec2 halfSize, float r) {
 }
 
 void main() {
-    vec2 resolution = ubuf.resolution;
     vec2 halfSize = resolution * 0.5;
 
     // convert UV [0,1] to centered pixel coordinates
-    vec2 uv = texCoord;
+    vec2 uv = qt_TexCoord0;
     vec2 p = (uv - 0.5) * resolution;
 
     // flip Y so top is positive
     p.y = -p.y;
 
-    float r = ubuf.radius;
-    float bw = ubuf.borderWidth;
+    float r = radius;
+    float bw = borderWidth;
 
     float outer = roundedRectSDF(p, halfSize, r);
     float inner = roundedRectSDF(p, halfSize - bw, max(r - bw, 0.0));
@@ -142,7 +138,7 @@ void main() {
 
     // show border where t < progress
     float edge = 2.0 / max(halfSize.x + halfSize.y, 1.0);
-    float progressMask = smoothstep(ubuf.progress + edge, ubuf.progress - edge, t);
+    float progressMask = smoothstep(progress + edge, progress - edge, t);
 
-    fragColor = ubuf.borderColor * borderMask * progressMask * ubuf.qt_Opacity;
+    fragColor = borderColor * borderMask * progressMask * qt_Opacity;
 }

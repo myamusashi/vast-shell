@@ -347,7 +347,8 @@ find_qsb() {
 
 compile_shader_stage() {
 	local -r qsb=$1 src=$2 out=$3
-	local -ra qsb_flags=(--glsl "450,330,300 es" --hlsl 50 --msl 12)
+	local -r glsl_versions=${4:-450,330,300 es}
+	local -ra qsb_flags=(--glsl "$glsl_versions" --hlsl 50 --msl 12)
 
 	[[ -f $src ]] || {
 		warn "  Missing: $(basename "$src") — skipping"
@@ -398,10 +399,9 @@ compile_shaders() {
 	fi
 
 	log "Compiling border progress, wavy, wave form and circleWave shaders..."
-	local -ra shader_pairs=(borderProgress wavy waveForm circleWave)
-	for name in "${shader_pairs[@]}"; do
-		compile_shader_stage "$qsb" "$shader_dir/${name}.vert" "$shader_dir/${name}.vert.qsb" || true
-		compile_shader_stage "$qsb" "$shader_dir/${name}.frag" "$shader_dir/${name}.frag.qsb" || true
+	local -ra frag_only_shaders=(borderProgress wavy waveForm circleWave)
+	for name in "${frag_only_shaders[@]}"; do
+		compile_shader_stage "$qsb" "$shader_dir/${name}.frag" "$shader_dir/${name}.frag.qsb" "150,330,300 es" || true
 	done
 }
 

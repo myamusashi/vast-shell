@@ -137,6 +137,7 @@ Drawer {
         anchors.fill: parent
         enabled: isCurrentPage
         opacity: isCurrentPage ? 1 : 0
+        visible: opacity > 0
         x: isCurrentPage ? 0 : currentIndex > pageIndex ? -parent.width * 0.05 : parent.width * 0.05
         z: isCurrentPage ? 1 : 0
         Behavior on opacity {

@@ -51,6 +51,5 @@ Item {
 
         anchors.fill: parent
         fragmentShader: Paths.projectRoot + "/Assets/shaders/circleWave.frag.qsb"
-        vertexShader: Paths.projectRoot + "/Assets/shaders/circleWave.vert.qsb"
     }
 }

@@ -1,6 +1,6 @@
 #version 450
 
-layout(location = 0) noperspective in vec2 texCoord;
+layout(location = 0) in vec2 qt_TexCoord0;
 layout(location = 0) out vec4 fragColor;
 
 layout(std140, binding = 0) uniform buf {
@@ -32,8 +32,7 @@ vec2 circlePoint(float rad, float t) {
 }
 
 void main() {
-    vec2 p = (texCoord - 0.5) * resolution;
-    p.y = -p.y;
+    vec2 p = (qt_TexCoord0 - 0.5) * resolution;
 
     float r = length(p);
     float t = fract(atan(p.x, p.y) / PI2);

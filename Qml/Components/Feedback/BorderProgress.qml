@@ -30,7 +30,6 @@ Item {
 
         anchors.fill: parent
         fragmentShader: Paths.projectRoot + "/Assets/shaders/borderProgress.frag.qsb"
-        vertexShader: Paths.projectRoot + "/Assets/shaders/borderProgress.vert.qsb"
         z: 999
     }
 
