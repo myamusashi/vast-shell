@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Shapes
 import Quickshell.Widgets
 import M3Shapes
 
@@ -100,52 +99,17 @@ MaterialShape {
         }
     }
 
-    component Wave: Shape {
+    component Wave: ShaderEffect {
         id: waveShape
 
-        property alias fillPercentage: waveGeo.fillPercentage
-        property color waveColor: Qt.alpha(Colours.m3Colors.m3Primary, 0.4)
+        property real     amplitude: 3
+        property real     fillPercentage: 0
+        property vector2d resolution: Qt.vector2d(width, height)
+        property color    waveColor: Qt.alpha(Colours.m3Colors.m3Primary, 0.4)
+        property real     wavelength: width / 5
 
         anchors.fill: parent
-        preferredRendererType: Shape.CurveRenderer
-
-        ShapePath {
-            fillColor: waveShape.waveColor
-            strokeColor: "transparent"
-
-            PathSvg {
-                path: waveGeo.buildPath()
-            }
-        }
-
-        QtObject {
-            id: waveGeo
-
-            readonly property real heightPx: waveShape.parent.height
-            readonly property real widthPx: waveShape.parent.width
-
-            property real          amplitude: 3
-            property real          fillHeight: heightPx * (fillPercentage / 100)
-            property real          fillPercentage: 0
-            property real          wavelength: widthPx / 5
-            property real          waveY: heightPx - fillHeight
-
-            function               buildPath() {
-                if (fillHeight <= 0)
-                    return "M 0 0";
-
-                var points   = 40;
-                var pathData = "M 0 " + heightPx + " L 0 " + waveY;
-
-                for (var i = 0; i <= points; i++) {
-                    var x = (i / points) * widthPx;
-                    var y = waveY + Math.sin((x / wavelength) * Math.PI * 2) * amplitude;
-                    pathData += " L " + x + " " + y;
-                }
-
-                pathData += " L " + widthPx + " " + heightPx + " Z";
-                return pathData;
-            }
-        }
+        blending: true
+        fragmentShader: Paths.projectRoot + "/Assets/shaders/waveFill.frag.qsb"
     }
 }

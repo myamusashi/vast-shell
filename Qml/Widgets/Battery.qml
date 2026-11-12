@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Shapes
 import Quickshell.Services.UPower
 
 import qs.Components.Base
@@ -55,28 +54,23 @@ Item {
             x: root.fillInset
             y: root.fillInset
 
-            Shape {
+            Rectangle {
                 id: fillShape
 
+                antialiasing: true
+                color: root.fillColor
                 height: root.fillAreaHeight
-                preferredRendererType: Shape.CurveRenderer
+                radius: Math.max(0, root.bodyRadius - root.fillInset)
                 width: root.fillAreaWidth
-
-                RoundedRectanglePath {
-                    cornerRadius: root.bodyRadius - root.fillInset
-                    fillColor: root.fillColor
-                    rectHeight: root.fillAreaHeight
-                    rectWidth: root.fillAreaWidth
-                    strokeColor: "transparent"
-                    strokeWidth: -1
-                }
             }
 
-            Shape {
+            Rectangle {
                 id: chargeShimmer
 
+                antialiasing: true
+                color: "white"
                 height: root.fillAreaHeight
-                preferredRendererType: Shape.CurveRenderer
+                radius: Math.max(0, root.bodyRadius - root.fillInset)
                 visible: root.batCharging
                 width: root.fillAreaWidth
                 SequentialAnimation on opacity {
@@ -95,31 +89,18 @@ Item {
                         to: 0
                     }
                 }
-
-                RoundedRectanglePath {
-                    cornerRadius: root.bodyRadius - root.fillInset
-                    fillColor: "white"
-                    rectHeight: root.fillAreaHeight
-                    rectWidth: root.fillAreaWidth
-                    strokeColor: "transparent"
-                    strokeWidth: -1
-                }
             }
         }
 
-        Shape {
+        Rectangle {
             anchors.fill: parent
-            preferredRendererType: Shape.CurveRenderer
+            antialiasing: true
+            color: "transparent"
+            radius: root.bodyRadius
 
-            RoundedRectanglePath {
-                cornerRadius: root.bodyRadius - root.outlineWidth / 2
-                fillColor: "transparent"
-                rectHeight: batteryBody.height - root.outlineWidth
-                rectWidth: batteryBody.width - root.outlineWidth
-                rectX: root.outlineWidth / 2
-                rectY: root.outlineWidth / 2
-                strokeColor: root.outlineColor
-                strokeWidth: root.outlineWidth
+            border {
+                color: root.outlineColor
+                width: root.outlineWidth
             }
         }
 
@@ -149,69 +130,6 @@ Item {
             left: batteryBody.right
             leftMargin: 0.5
             verticalCenter: parent.verticalCenter
-        }
-    }
-
-    component RoundedRectanglePath: ShapePath {
-        id: roundedRectPath
-
-        readonly property real clampedRadius: Math.max(0, Math.min(cornerRadius, rectWidth / 2, rectHeight / 2))
-
-        property real          cornerRadius: 0
-        property real          rectHeight: 0
-        property real          rectWidth: 0
-        property real          rectX: 0
-        property real          rectY: 0
-
-        startX: rectX + clampedRadius
-        startY: rectY
-
-        PathLine {
-            x: roundedRectPath.rectX + roundedRectPath.rectWidth - roundedRectPath.clampedRadius
-            y: roundedRectPath.rectY
-        }
-
-        PathArc {
-            radiusX: roundedRectPath.clampedRadius
-            radiusY: roundedRectPath.clampedRadius
-            x: roundedRectPath.rectX + roundedRectPath.rectWidth
-            y: roundedRectPath.rectY + roundedRectPath.clampedRadius
-        }
-
-        PathLine {
-            x: roundedRectPath.rectX + roundedRectPath.rectWidth
-            y: roundedRectPath.rectY + roundedRectPath.rectHeight - roundedRectPath.clampedRadius
-        }
-
-        PathArc {
-            radiusX: roundedRectPath.clampedRadius
-            radiusY: roundedRectPath.clampedRadius
-            x: roundedRectPath.rectX + roundedRectPath.rectWidth - roundedRectPath.clampedRadius
-            y: roundedRectPath.rectY + roundedRectPath.rectHeight
-        }
-
-        PathLine {
-            x: roundedRectPath.rectX + roundedRectPath.clampedRadius
-            y: roundedRectPath.rectY + roundedRectPath.rectHeight
-        }
-
-        PathArc {
-            radiusX: roundedRectPath.clampedRadius
-            radiusY: roundedRectPath.clampedRadius
-            x: roundedRectPath.rectX
-            y: roundedRectPath.rectY + roundedRectPath.rectHeight - roundedRectPath.clampedRadius
-        }
-
-        PathLine {
-            x: roundedRectPath.rectX
-            y: roundedRectPath.rectY + roundedRectPath.clampedRadius
-        }
-
-        PathArc {
-            radiusX: roundedRectPath.clampedRadius
-            radiusY: roundedRectPath.clampedRadius
-            x: roundedRectPath.rectX + roundedRectPath.clampedRadius
-            y: roundedRectPath.rectY
         }
     }
 }

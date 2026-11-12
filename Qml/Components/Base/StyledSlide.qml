@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import QtQuick.Shapes
 import Vast.Utils
 
 import qs.Core.Configs
@@ -348,13 +347,18 @@ Slider {
                 }
             }
 
-            Shape {
+            ShaderEffect {
                 id: caret
 
                 readonly property int caretSize: 6
 
+                property color        fillColor: Colours.m3Colors.m3InverseSurface
+                property real         isHorizontal: root.isHorizontal ? 1.0 : 0.0
+                property vector2d     resolution: Qt.vector2d(width, height)
+
+                blending: true
+                fragmentShader: Paths.projectRoot + "/Assets/shaders/triangleCaret.frag.qsb"
                 height: root.isHorizontal ? caretSize : caretSize * 2
-                preferredRendererType: Shape.CurveRenderer
                 width: root.isHorizontal ? caretSize * 2 : caretSize
 
                 anchors {
@@ -362,32 +366,6 @@ Slider {
                     left: root.isVertical ? valuePopupBubble.right : undefined
                     top: root.isHorizontal ? valuePopupBubble.bottom : undefined
                     verticalCenter: root.isVertical ? valuePopupBubble.verticalCenter : undefined
-                }
-
-                ShapePath {
-                    fillColor: Colours.m3Colors.m3InverseSurface
-                    startX: 0
-                    startY: 0
-                    strokeColor: "transparent"
-                    strokeWidth: 0
-
-                    // Horizontal ▼: (0,0) → (12,0) → (6,6)
-                    // Vertical   ▶: (0,0) → (0,12) → (6,6)
-
-                    PathLine {
-                        x: root.isHorizontal ? caret.caretSize * 2 : 0
-                        y: root.isHorizontal ? 0 : caret.caretSize * 2
-                    }
-
-                    PathLine {
-                        x: caret.caretSize
-                        y: caret.caretSize
-                    }
-
-                    PathLine {
-                        x: 0
-                        y: 0
-                    }
                 }
             }
         }

@@ -1,8 +1,6 @@
 import QtQuick
 import Quickshell
 
-import "DrawerOutline.js" as OutlineBuilder
-
 Item {
     id: root
 
@@ -10,26 +8,12 @@ Item {
     required property int    edge
 
     readonly property real   bodyInsetX: contentItem.x
+    readonly property real   edgeMode: edge === Qt.BottomEdge ? 0 : edge === Qt.TopEdge ? 1 : edge === Qt.RightEdge ? 2 : 3
     readonly property string edgeName: edge === Qt.TopEdge ? "top" : edge === Qt.BottomEdge ? "bottom" : edge === Qt.LeftEdge ? "left" : "right"
     readonly property bool   isFlushToEnd: isHorizontalEdge ? !!(alignment & Qt.AlignRight) : !!(alignment & Qt.AlignBottom)
     readonly property bool   isFlushToStart: isHorizontalEdge ? !!(alignment & Qt.AlignLeft) : !!(alignment & Qt.AlignTop)
     readonly property bool   isHorizontalEdge: edge === Qt.TopEdge || edge === Qt.BottomEdge
     readonly property bool   isReflectedEdge: edge === Qt.TopEdge || edge === Qt.RightEdge
-    readonly property string outlinePath: OutlineBuilder.buildOutline({
-        edgeName: edgeName,
-        snappedDepth: metrics.snappedDepth,
-        snappedLength: metrics.snappedLength,
-        activeFilletRadius: metrics.activeFilletRadius,
-        activeAttachedFilletRadius: metrics.activeAttachedFilletRadius,
-        activeCornerRadius: metrics.activeCornerRadius,
-        borderOverlap: borderOverlap,
-        isFlushToStart: isFlushToStart,
-        isFlushToEnd: isFlushToEnd,
-        isReflectedEdge: isReflectedEdge,
-        startPadding: metrics.startPadding,
-        freeSidePadding: metrics.freeSidePadding,
-        acrossEdgeExtent: metrics.acrossEdgeExtent
-    })
 
     property int             alignment: 0  // 0 = centered; Qt.AlignLeft/Right (top/bottom edges), Qt.AlignTop/Bottom (left/right edges)
     property real            animatedDepth: open ? depth : 0
@@ -84,8 +68,18 @@ Item {
     }
 
     DrawerShape {
+        attachedFilletRadius: metrics.activeAttachedFilletRadius
+        borderOverlap: root.borderOverlap
         color: root.color
-        pathData: root.outlinePath
+        cornerRadius: metrics.activeCornerRadius
+        drawerDepth: metrics.snappedDepth
+        drawerLength: metrics.snappedLength
+        edgeMode: root.edgeMode
+        filletRadius: metrics.activeFilletRadius
+        freeSidePadding: metrics.freeSidePadding
+        isFlushToEnd: root.isFlushToEnd
+        isFlushToStart: root.isFlushToStart
+        startPadding: metrics.startPadding
     }
 
     Item {

@@ -1,13 +1,14 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Shapes
 import Quickshell.Widgets
+
+import qs.Core.Utils
 
 WrapperItem {
     id: root
 
-    property alias color: shapePath.fillColor
+    property alias color: cornerEffect.fillColor
     property int   corner
     property real  radius: 20
 
@@ -20,48 +21,29 @@ WrapperItem {
         case 1:
             anchors.top = parent.top;
             anchors.right = parent.right;
-            rotation = 90;
             break;
         case 2:
             anchors.right = parent.right;
             anchors.bottom = parent.bottom;
-            rotation = 180;
             break;
         case 3:
             anchors.left = parent.left;
             anchors.bottom = parent.bottom;
-            rotation = -90;
             break;
         }
     }
 
-    Shape {
-        preferredRendererType: Shape.CurveRenderer
+    ShaderEffect {
+        id: cornerEffect
 
-        ShapePath {
-            id: shapePath
+        property real     corner: root.corner
+        property color    fillColor: "transparent"
+        property real     radius: root.radius
+        property vector2d resolution: Qt.vector2d(width, height)
 
-            fillColor: "transparent"
-            startX: root.radius
-            strokeWidth: 0
-
-            PathArc {
-                direction: PathArc.Counterclockwise
-                radiusX: root.radius
-                radiusY: radiusX
-                relativeX: -root.radius
-                relativeY: root.radius
-            }
-
-            PathLine {
-                relativeX: 0
-                relativeY: -root.radius
-            }
-
-            PathLine {
-                relativeX: root.radius
-                relativeY: 0
-            }
-        }
+        blending: true
+        fragmentShader: Paths.projectRoot + "/Assets/shaders/cornerFillet.frag.qsb"
+        implicitHeight: root.radius
+        implicitWidth: root.radius
     }
 }

@@ -111,7 +111,7 @@
                        Assets/shaders/transitions/''${name}.frag
             done
 
-            for name in borderProgress wavy circleWave waveForm; do
+            for name in borderProgress wavy circleWave waveForm cornerFillet drawerShape arcGauge linearProgress triangleCaret waveFill celestialArc; do
                 echo "Compiling ''${name}.frag..."
                 ${qt6.qtshadertools}/bin/qsb \
                     --glsl "150,330,300 es" --hlsl 50 --msl 12 \

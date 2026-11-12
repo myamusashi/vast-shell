@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Hyprland
 import Quickshell.Wayland
 import Quickshell.Widgets
 
@@ -96,6 +97,7 @@ LazyLoader {
 
     loading: true
     component: PanelWindow {
+        HyprlandWindow.visibleMask: mask // qmllint disable
         WlrLayershell.layer: WlrLayer.Overlay
         aboveWindows: true
         color: "transparent"

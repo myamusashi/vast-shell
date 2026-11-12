@@ -1,11 +1,11 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Shapes
 import Quickshell
 import Quickshell.Wayland
 
 import qs.Core.Configs
+import qs.Core.Utils
 
 import "../"
 
@@ -104,98 +104,92 @@ Item {
         }
     }
 
-    Shape {
-        id: shape
+    Rectangle {
+        id: topBar
 
-        preferredRendererType: Shape.CurveRenderer
-
-        ShapePath {
-            fillColor: root.color
-            fillRule: ShapePath.OddEvenFill
-            startX: 0
-            startY: 0
-            strokeColor: "transparent"
-            strokeWidth: -1
-
-            PathLine {
-                x: root.width
-                y: 0
-            }
-
-            PathLine {
-                x: root.width
-                y: root.height
-            }
-
-            PathLine {
-                x: 0
-                y: root.height
-            }
-
-            PathLine {
-                x: 0
-                y: 0
-            }
-
-            PathMove {
-                x: root.holeLeft + root.effectiveInnerRadius
-                y: root.holeTop
-            }
-
-            PathLine {
-                x: root.holeRight - root.effectiveInnerRadius
-                y: root.holeTop
-            }
-
-            PathArc {
-                direction: PathArc.Clockwise
-                radiusX: root.effectiveInnerRadius
-                radiusY: root.effectiveInnerRadius
-                x: root.holeRight
-                y: root.holeTop + root.effectiveInnerRadius
-            }
-
-            PathLine {
-                x: root.holeRight
-                y: root.holeBottom - root.effectiveInnerRadius
-            }
-
-            PathArc {
-                direction: PathArc.Clockwise
-                radiusX: root.effectiveInnerRadius
-                radiusY: root.effectiveInnerRadius
-                x: root.holeRight - root.effectiveInnerRadius
-                y: root.holeBottom
-            }
-
-            PathLine {
-                x: root.holeLeft + root.effectiveInnerRadius
-                y: root.holeBottom
-            }
-
-            PathArc {
-                direction: PathArc.Clockwise
-                radiusX: root.effectiveInnerRadius
-                radiusY: root.effectiveInnerRadius
-                x: root.holeLeft
-                y: root.holeBottom - root.effectiveInnerRadius
-            }
-
-            PathLine {
-                x: root.holeLeft
-                y: root.holeTop + root.effectiveInnerRadius
-            }
-
-            PathArc {
-                direction: PathArc.Clockwise
-                radiusX: root.effectiveInnerRadius
-                radiusY: root.effectiveInnerRadius
-                x: root.holeLeft + root.effectiveInnerRadius
-                y: root.holeTop
-            }
-        }
+        antialiasing: false
+        color: root.color
+        height: root.topThickness
+        visible: height > 0 && width > 0
+        width: root.width
+        x: 0
+        y: 0
     }
 
+    Rectangle {
+        id: bottomBar
+
+        antialiasing: false
+        color: root.color
+        height: root.bottomThickness
+        visible: height > 0 && width > 0
+        width: root.width
+        x: 0
+        y: root.height - height
+    }
+
+    Rectangle {
+        id: leftBar
+
+        antialiasing: false
+        color: root.color
+        height: root.holeHeight
+        visible: height > 0 && width > 0
+        width: root.leftThickness
+        x: 0
+        y: root.topThickness
+    }
+
+    Rectangle {
+        id: rightBar
+
+        antialiasing: false
+        color: root.color
+        height: root.holeHeight
+        visible: height > 0 && width > 0
+        width: root.rightThickness
+        x: root.width - width
+        y: root.topThickness
+    }
+
+    CornerFillet {
+        cornerIndex: 0
+        x: root.holeLeft
+        y: root.holeTop
+    }
+
+    CornerFillet {
+        cornerIndex: 1
+        x: root.holeRight - width
+        y: root.holeTop
+    }
+
+    CornerFillet {
+        cornerIndex: 2
+        x: root.holeRight - width
+        y: root.holeBottom - height
+    }
+
+    CornerFillet {
+        cornerIndex: 3
+        x: root.holeLeft
+        y: root.holeBottom - height
+    }
+
+    component CornerFillet: ShaderEffect {
+        required property int cornerIndex
+
+        property real         corner: cornerIndex
+        property color        fillColor: root.color
+        property real         radius: root.effectiveInnerRadius
+        property vector2d     resolution: Qt.vector2d(width, height)
+
+        blending: true
+        fragmentShader: Paths.projectRoot + "/Assets/shaders/cornerFillet.frag.qsb"
+        height: root.effectiveInnerRadius
+        visible: root.effectiveInnerRadius > 0 && root.color.a > 0
+        width: root.effectiveInnerRadius
+    }
     component Exclusion: PanelWindow { // qmllint disable
         property string name
 

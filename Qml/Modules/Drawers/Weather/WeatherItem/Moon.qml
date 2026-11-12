@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Shapes
 import Quickshell.Widgets
 import M3Shapes
 
@@ -136,86 +135,19 @@ MaterialShape {
         }
     }
 
-    component MoonArcShape: Shape {
+    component MoonArcShape: ShaderEffect {
         id: moonShape
 
-        property color hillColor: Colours.m3Colors.m3Primary
-        property color moonColor: Colours.m3Colors.m3OnSurface
-        property real  moonSize: 20
+        property color    bodyColor: moonColor
+        property real     bodySize: moonSize
+        property color    hillColor: Colours.m3Colors.m3Primary
+        property color    moonColor: Colours.m3Colors.m3OnSurface
+        property real     moonSize: 20
+        property real     progress: canvas.moonriseProgress
+        property vector2d resolution: Qt.vector2d(width, height)
 
         anchors.fill: parent
-        preferredRendererType: Shape.CurveRenderer
-
-        // Hill
-
-        ShapePath {
-            fillColor: moonShape.hillColor
-            startX: 0
-            startY: moonShape.height
-            strokeColor: "transparent"
-
-            PathLine {
-                x: moonGeo.hillStartX
-                y: moonGeo.hillStartY
-            }
-
-            PathCubic {
-                control1X: moonGeo.hillControlPoint1X
-                control1Y: moonGeo.hillControlPoint1Y
-                control2X: moonGeo.hillControlPoint2X
-                control2Y: moonGeo.hillControlPoint2Y
-                x: moonGeo.hillEndX
-                y: moonGeo.hillEndY
-            }
-
-            PathLine {
-                x: moonShape.width
-                y: moonShape.height
-            }
-
-            PathLine {
-                x: 0
-                y: moonShape.height
-            }
-        }
-
-        // Moon
-
-        ShapePath {
-            fillColor: moonShape.moonColor
-            strokeColor: moonShape.moonColor
-            strokeWidth: 2
-
-            PathAngleArc {
-                centerX: moonGeo.moonX
-                centerY: moonGeo.moonY
-                radiusX: moonShape.moonSize / 2
-                radiusY: moonShape.moonSize / 2
-                startAngle: 0
-                sweepAngle: 360
-            }
-        }
-
-        QtObject {
-            id: moonGeo
-
-            readonly property real heightPx: moonShape.height
-            readonly property real widthPx: moonShape.width
-
-            property real          hillBaseY: heightPx - hillHeight
-            property real          hillControlPoint1X: widthPx * 0.3
-            property real          hillControlPoint1Y: hillBaseY - hillHeight * 0.1
-            property real          hillControlPoint2X: widthPx * 0.7
-            property real          hillControlPoint2Y: hillBaseY - hillHeight * 0.1
-            property real          hillEndX: widthPx
-            property real          hillEndY: hillBaseY + hillHeight * 0.3
-            property real          hillHeight: heightPx * 0.6
-            property real          hillStartX: 0
-            property real          hillStartY: hillBaseY + hillHeight * 0.3
-            property real          moonX: Math.pow(oneMinusProgress, 3) * hillStartX + 3 * Math.pow(oneMinusProgress, 2) * progress * hillControlPoint1X + 3 * oneMinusProgress * Math.pow(progress, 2) * hillControlPoint2X + Math.pow(progress, 3) * hillEndX
-            property real          moonY: Math.pow(oneMinusProgress, 3) * hillStartY + 3 * Math.pow(oneMinusProgress, 2) * progress * hillControlPoint1Y + 3 * oneMinusProgress * Math.pow(progress, 2) * hillControlPoint2Y + Math.pow(progress, 3) * hillEndY
-            property real          oneMinusProgress: 1 - progress
-            property real          progress: canvas.moonriseProgress
-        }
+        blending: true
+        fragmentShader: Paths.projectRoot + "/Assets/shaders/celestialArc.frag.qsb"
     }
 }

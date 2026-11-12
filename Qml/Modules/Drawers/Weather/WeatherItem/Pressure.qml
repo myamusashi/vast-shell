@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Shapes
 import M3Shapes
 
 import qs.Core.Configs
@@ -67,50 +66,22 @@ MaterialShape {
         }
     }
 
-    component PressureGaugeShape: Shape {
+    component PressureGaugeShape: ShaderEffect {
         id: gaugeShape
 
-        property real normalizedValue: (canvas.pressure - canvas.minPressure) / (canvas.maxPressure - canvas.minPressure)
-        property real radius: Math.min(width, height) / 2 - 10
+        property color    activeColor: Colours.m3Colors.m3Primary
+        property real     maxSweepDeg: 270
+        property real     normalizedValue: Math.max(0, Math.min(1, (canvas.pressure - canvas.minPressure) / (canvas.maxPressure - canvas.minPressure)))
+        property real     progress: normalizedValue
+        property real     radius: Math.max(0, Math.min(width, height) / 2 - 10)
+        property vector2d resolution: Qt.vector2d(width, height)
+        property real     startAngleDeg: 135
+        property real     strokeWidth: 9
+        property color    trackColor: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.2)
 
         anchors.fill: parent
         anchors.margins: 3
-        preferredRendererType: Shape.CurveRenderer
-
-        // Background track
-
-        ShapePath {
-            capStyle: ShapePath.RoundCap
-            fillColor: "transparent"
-            strokeColor: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.2)
-            strokeWidth: 9
-
-            PathAngleArc {
-                centerX: gaugeShape.width / 2
-                centerY: gaugeShape.height / 2
-                radiusX: gaugeShape.radius
-                radiusY: gaugeShape.radius
-                startAngle: 135
-                sweepAngle: 270
-            }
-        }
-
-        // Active progress
-
-        ShapePath {
-            capStyle: ShapePath.RoundCap
-            fillColor: "transparent"
-            strokeColor: Colours.m3Colors.m3Primary
-            strokeWidth: 9
-
-            PathAngleArc {
-                centerX: gaugeShape.width / 2
-                centerY: gaugeShape.height / 2
-                radiusX: gaugeShape.radius
-                radiusY: gaugeShape.radius
-                startAngle: 135
-                sweepAngle: 270 * gaugeShape.normalizedValue
-            }
-        }
+        blending: true
+        fragmentShader: Paths.projectRoot + "/Assets/shaders/arcGauge.frag.qsb"
     }
 }

@@ -1,7 +1,7 @@
 import QtQuick
-import QtQuick.Shapes
 
 import qs.Core.Configs
+import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
 
@@ -10,7 +10,7 @@ StyledRect {
 
     required property real value
 
-    property alias         circleColor: shapePath.strokeColor
+    property alias         circleColor: indicatorEffect.activeColor
     property alias         text: styledText.text
     property real          textPadding: 20
     property alias         textSize: styledText.font.pixelSize
@@ -18,48 +18,21 @@ StyledRect {
     implicitHeight: 100
     implicitWidth: 100
 
-    Shape {
-        id: indicatorShape
+    ShaderEffect {
+        id: indicatorEffect
+
+        property color    activeColor: Colours.m3Colors.m3Primary
+        property real     maxSweepDeg: 360
+        property real     progress: Math.max(0, Math.min(1, root.value / 100))
+        property real     radius: Math.max(0, Math.min(width, height) / 2 - 10)
+        property vector2d resolution: Qt.vector2d(width, height)
+        property real     startAngleDeg: -90
+        property real     strokeWidth: 8
+        property color    trackColor: Colours.m3Colors.m3OutlineVariant
 
         anchors.fill: parent
-        preferredRendererType: Shape.CurveRenderer
-
-        // Background circle
-
-        ShapePath {
-            capStyle: ShapePath.RoundCap
-            fillColor: "transparent"
-            strokeColor: Colours.m3Colors.m3OutlineVariant
-            strokeWidth: 8
-
-            PathAngleArc {
-                centerX: indicatorShape.width / 2
-                centerY: indicatorShape.height / 2
-                radiusX: Math.min(indicatorShape.width, indicatorShape.height) / 2 - 10
-                radiusY: radiusX
-                startAngle: 0
-                sweepAngle: 360
-            }
-        }
-
-        // Progress arc
-
-        ShapePath {
-            id: shapePath
-
-            capStyle: ShapePath.RoundCap
-            fillColor: "transparent"
-            strokeWidth: 8
-
-            PathAngleArc {
-                centerX: indicatorShape.width / 2
-                centerY: indicatorShape.height / 2
-                radiusX: Math.min(indicatorShape.width, indicatorShape.height) / 2 - 10
-                radiusY: radiusX
-                startAngle: -90
-                sweepAngle: (root.value / 100) * 360
-            }
-        }
+        blending: true
+        fragmentShader: Paths.projectRoot + "/Assets/shaders/arcGauge.frag.qsb"
     }
 
     StyledText {

@@ -66,7 +66,7 @@
             compile_if_missing "Assets/shaders/transitions/$name.frag.qsb" "Assets/shaders/transitions/$name.frag"
         done
 
-        SHADERS=(borderProgress wavy waveForm circleWave)
+        SHADERS=(borderProgress wavy waveForm circleWave cornerFillet drawerShape arcGauge linearProgress triangleCaret waveFill celestialArc)
         for shader in "''${SHADERS[@]}"; do
             compile_if_missing "Assets/shaders/$shader.frag.qsb" "Assets/shaders/$shader.frag" "$FRAG_ONLY_FLAGS"
         done

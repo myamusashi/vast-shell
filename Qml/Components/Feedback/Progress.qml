@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Shapes
 
+import qs.Core.Utils
 import qs.Services
 
 import "../Base"
@@ -11,7 +11,7 @@ StyledRect {
 
     property alias condition: root.visible
     property alias cornerRadius: background.radius
-    property alias indicatorColor: indicatorPath.fillColor
+    property alias indicatorColor: indicatorEffect.indicatorColor
     property alias trackColor: background.color
     property real  waveAmplitude: 0
     property real  waveAnimationPhase: 0
@@ -30,71 +30,29 @@ StyledRect {
         radius: 2
     }
 
-    Shape {
-        id: indicatorShape
+    ShaderEffect {
+        id: indicatorEffect
 
-        property real barPosition: 0
-        property real barWidth: parent.width * 0.35
+        readonly property real clampedAmp: Math.min(root.waveAmplitude, root.height * 0.5)
 
-        function      clampedRect() {
-            const startX = Math.max(0, barPosition);
-            const endX   = Math.min(width, barPosition + barWidth);
-            return {
-                startX,
-                drawWidth: endX - startX
-            };
-        }
+        property real          barEnd: barPosition + barWidth
+        property real          barPosition: 0
+        property real          barStart: barPosition
+        property real          barWidth: root.width * 0.35
+        property real          cornerRadius: root.cornerRadius
+        property color         indicatorColor: Colours.m3Colors.m3Primary
+        property vector2d      resolution: Qt.vector2d(width, height)
+        property real          trackHeight: root.height
+        property real          waveAmplitude: clampedAmp
+        property real          waveFrequency: root.waveFrequency
+        property real          wavePhase: root.waveAnimationPhase
 
-        function      roundedRectPath() {
-            var r = clampedRect();
-            if (r.drawWidth <= 0)
-                return "M 0 0";
-
-            var x = r.startX, w = r.drawWidth, h = height, cr = root.cornerRadius;
-            return "M " + (x + cr) + " 0" + " L " + (x + w - cr) + " 0" + " A " + cr + " " + cr + " 0 0 1 " + (x + w) + " " + cr + " L " + (x + w) + " " + (h - cr) + " A " + cr + " " + cr + " 0 0 1 " + (x + w - cr) + " " + h + " L " + (x + cr) + " " + h + " A " + cr + " " + cr + " 0 0 1 " + x + " " + (h - cr) + " L " + x + " " + cr + " A " + cr + " " + cr + " 0 0 1 " + (x + cr) + " 0 Z";
-        }
-
-        function      wavePath(r) {
-            if (r.drawWidth <= 0)
-                return "M 0 0";
-
-            const steps      = Math.min(Math.max(Math.floor(r.drawWidth / 8), 12), 60);
-            const halfH      = height / 2;
-            const phaseScale = Math.PI * 2 * root.waveFrequency / width;
-            const amp        = Math.min(root.waveAmplitude, halfH);
-            const parts      = [];
-
-            // Forward pass — top edge
-            for (let i = 0; i <= steps; i++) {
-                const x  = r.startX + r.drawWidth * (i / steps);
-                const wo = Math.sin(x * phaseScale + root.waveAnimationPhase) * amp;
-                parts.push(i === 0 ? `M ${x} ${halfH + wo - halfH}` : `L ${x} ${halfH + wo - halfH}`);
-            }
-
-            // Backward pass — bottom edge
-            for (let j = steps; j >= 0; j--) {
-                const x  = r.startX + r.drawWidth * (j / steps);
-                const wo = Math.sin(x * phaseScale + root.waveAnimationPhase) * amp;
-                parts.push(`L ${x} ${halfH + wo + halfH}`);
-            }
-
-            parts.push("Z");
-            return parts.join(" ");
-        }
-
-        anchors.fill: parent
-        preferredRendererType: Shape.CurveRenderer
-
-        ShapePath {
-            id: indicatorPath
-
-            fillColor: Colours.m3Colors.m3Primary
-            strokeColor: "transparent"
-
-            PathSvg {
-                path: root.waveAmplitude > 0 ? indicatorShape.wavePath() : indicatorShape.roundedRectPath()
-            }
-        }
+        blending: true
+        fragmentShader: Paths.projectRoot + "/Assets/shaders/linearProgress.frag.qsb"
+        height: root.height + clampedAmp * 2
+        width: root.width
+        x: 0
+        y: -clampedAmp
 
         SequentialAnimation {
             id: loadingAnimation
@@ -107,14 +65,14 @@ StyledRect {
                 NAnim {
                     from: root.width * 0.0
                     property: "barWidth"
-                    target: indicatorShape
+                    target: indicatorEffect
                     to: root.width * 0.75
                 }
 
                 NAnim {
                     from: 0
                     property: "barPosition"
-                    target: indicatorShape
+                    target: indicatorEffect
                     to: root.width * 0.25
                 }
             }
@@ -124,14 +82,14 @@ StyledRect {
                 NAnim {
                     from: root.width * 0.75
                     property: "barWidth"
-                    target: indicatorShape
+                    target: indicatorEffect
                     to: root.width * 0.0
                 }
 
                 NAnim {
                     from: root.width * 0.25
                     property: "barPosition"
-                    target: indicatorShape
+                    target: indicatorEffect
                     to: root.width
                 }
             }

@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Shapes
 import Quickshell.Widgets
 import M3Shapes
 
@@ -138,88 +137,19 @@ MaterialShape {
         }
     }
 
-    component SunArcShape: Shape {
+    component SunArcShape: ShaderEffect {
         id: sunShape
 
-        property color hillColor: Colours.m3Colors.m3Primary
-        property color sunColor: Colours.m3Colors.m3Yellow
-        property real  sunSize: 20
+        property color    bodyColor: sunColor
+        property real     bodySize: sunSize
+        property color    hillColor: Colours.m3Colors.m3Primary
+        property real     progress: canvas.sunriseProgress
+        property vector2d resolution: Qt.vector2d(width, height)
+        property color    sunColor: Colours.m3Colors.m3Yellow
+        property real     sunSize: 20
 
         anchors.fill: parent
-        preferredRendererType: Shape.CurveRenderer
-
-        // Hill
-
-        ShapePath {
-            fillColor: sunShape.hillColor
-            startX: 0
-            startY: sunShape.height
-            strokeColor: "transparent"
-
-            PathLine {
-                x: geometry.hillStartX
-                y: geometry.hillStartY
-            }
-
-            PathCubic {
-                control1X: geometry.hillControlPoint1X
-                control1Y: geometry.hillControlPoint1Y
-                control2X: geometry.hillControlPoint2X
-                control2Y: geometry.hillControlPoint2Y
-                x: geometry.hillEndX
-                y: geometry.hillEndY
-            }
-
-            PathLine {
-                x: sunShape.width
-                y: sunShape.height
-            }
-
-            PathLine {
-                x: 0
-                y: sunShape.height
-            }
-        }
-
-        // Sun
-
-        ShapePath {
-            fillColor: sunShape.sunColor
-            strokeColor: sunShape.sunColor
-            strokeWidth: 2
-
-            PathAngleArc {
-                centerX: geometry.sunX
-                centerY: geometry.sunY
-                radiusX: sunShape.sunSize / 2
-                radiusY: sunShape.sunSize / 2
-                startAngle: 0
-                sweepAngle: 360
-            }
-        }
-
-        QtObject {
-            id: geometry
-
-            readonly property real heightPx: sunShape.parent.height
-
-            property real          hillBaseY: heightPx - hillHeight
-            property real          hillControlPoint1X: widthPx * 0.3
-            property real          hillControlPoint1Y: hillBaseY - hillHeight * 0.1
-            property real          hillControlPoint2X: widthPx * 0.7
-            property real          hillControlPoint2Y: hillBaseY - hillHeight * 0.1
-            property real          hillEndX: widthPx
-            property real          hillEndY: hillBaseY + hillHeight * 0.3
-            property real          hillHeight: heightPx * 0.6
-            property real          hillStartX: 0
-            property real          hillStartY: hillBaseY + hillHeight * 0.3
-            property real          oneMinusProgress: 1 - progress
-            property real          progress: canvas.sunriseProgress
-            property real          sunX: Math.pow(oneMinusProgress, 3) * hillStartX + 3 * Math.pow(oneMinusProgress, 2) * progress * hillControlPoint1X + 3 * oneMinusProgress * Math.pow(progress, 2) * hillControlPoint2X + Math.pow(progress, 3) * hillEndX
-            property real          sunY: Math.pow(oneMinusProgress, 3) * hillStartY + 3 * Math.pow(oneMinusProgress, 2) * progress * hillControlPoint1Y + 3 * oneMinusProgress * Math.pow(progress, 2) * hillControlPoint2Y + Math.pow(progress, 3) * hillEndY
-
-            // foking binding loop
-            readonly property real widthPx: sunShape.parent.width
-        }
+        blending: true
+        fragmentShader: Paths.projectRoot + "/Assets/shaders/celestialArc.frag.qsb"
     }
 }

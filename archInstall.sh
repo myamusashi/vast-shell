@@ -399,7 +399,7 @@ compile_shaders() {
 	fi
 
 	log "Compiling border progress, wavy, wave form and circleWave shaders..."
-	local -ra frag_only_shaders=(borderProgress wavy waveForm circleWave)
+	local -ra frag_only_shaders=(borderProgress wavy waveForm circleWave cornerFillet drawerShape arcGauge linearProgress triangleCaret waveFill celestialArc)
 	for name in "${frag_only_shaders[@]}"; do
 		compile_shader_stage "$qsb" "$shader_dir/${name}.frag" "$shader_dir/${name}.frag.qsb" "150,330,300 es" || true
 	done
