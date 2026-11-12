@@ -1,3 +1,5 @@
+//@ pragma DiskCache
+//@ pragma RenderControl
 //@ pragma UseQApplication
 //@ pragma NativeTextRendering
 //@ pragma DropExpensiveFonts

@@ -120,25 +120,30 @@ install_aur_packages() {
 }
 
 build_quickshell() {
-	pacman -Qi quickshell &>/dev/null && {
-		log "quickshell already installed"
+	local -r pkgdir="$PROJECT_ROOT/packaging/arch/quickshell"
+	local -r patch_file="$PROJECT_ROOT/Assets/patches/0001-feat-add-qml-disk-cache-and-opt-in-render-control-with-partial-damage.patch"
+	[[ -f $pkgdir/PKGBUILD ]] || die "PKGBUILD not found: $pkgdir/PKGBUILD"
+	[[ -f $patch_file ]] || die "quickshell patch not found: $patch_file"
+
+	local target_ver installed_ver
+	target_ver=$(bash -c 'source "$1"; printf "%s-%s" "$pkgver" "$pkgrel"' _ "$pkgdir/PKGBUILD")
+	installed_ver=$(pacman -Q quickshell 2>/dev/null | awk '{print $2}' || true)
+	if [[ -n $installed_ver && $installed_ver == "$target_ver" ]]; then
+		log "quickshell $target_ver already installed"
 		return 0
-	}
+	fi
+
 	command -v makepkg &>/dev/null || die "makepkg not found — install pacman/base-devel"
 
 	local -r aur_user="${SUDO_USER:-}"
 	[[ -n $aur_user ]] || die "Building quickshell requires a non-root user. Run with sudo."
 
-	local -r pkgdir="$PROJECT_ROOT/packaging/arch/quickshell"
-	[[ -f $pkgdir/PKGBUILD ]] || die "PKGBUILD not found: $pkgdir/PKGBUILD"
-
 	log "Building quickshell from PKGBUILD..."
 	local -r build="$BUILD_DIR/quickshell"
 	rm -rf "$build"
 	mkdir -p "$build"
-	cp "$pkgdir"/PKGBUILD "$build/"
+	cp "$pkgdir/PKGBUILD" "$patch_file" "$build/"
 	chown -R "$aur_user:$aur_user" "$build"
-
 	pushd "$build" >/dev/null
 	sudo -u "$aur_user" makepkg -f --noconfirm || die "Failed to build quickshell"
 	popd >/dev/null

@@ -76,33 +76,12 @@
         "url": "https://git.myamusashi.cc/myamusashi/qmlformat-rs"
       }
     },
-    "quickshell": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1792651682,
-        "narHash": "sha256-TiCGqLMpNIy7FERewgfKVluPsLVF96uc6x6xwZnMjdQ=",
-        "owner": "quickshell-mirror",
-        "repo": "quickshell",
-        "rev": "9b0f339b19057f4731bf3b48293307d7ef241671",
-        "type": "github"
-      },
-      "original": {
-        "owner": "quickshell-mirror",
-        "repo": "quickshell",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "another-ripple": "another-ripple",
         "m3Shapes": "m3Shapes",
         "nixpkgs": "nixpkgs",
-        "qmlformat-rs": "qmlformat-rs",
-        "quickshell": "quickshell"
+        "qmlformat-rs": "qmlformat-rs"
       }
     }
   },

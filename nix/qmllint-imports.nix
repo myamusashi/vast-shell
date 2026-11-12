@@ -1,11 +1,11 @@
 {
     pkgs,
-    quickshell,
     vastPlugin,
     m3Shapes,
     anotherRipple,
 }: let
     prefix = pkgs.qt6.qtbase.qtQmlPrefix;
+    quickshell = pkgs.callPackage ./packages/quickshell.nix {};
 
     packages = [
         quickshell

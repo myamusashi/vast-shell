@@ -11,10 +11,6 @@
             url = "github:soramanew/m3shapes";
             inputs.nixpkgs.follows = "nixpkgs";
         };
-        quickshell = {
-            url = "github:quickshell-mirror/quickshell";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
         qmlformat-rs = {
             url = "git+https://git.myamusashi.cc/myamusashi/qmlformat-rs";
             inputs.nixpkgs.follows = "nixpkgs";
@@ -25,7 +21,6 @@
         self,
         nixpkgs,
         m3Shapes,
-        quickshell,
         another-ripple,
         qmlformat-rs,
     }: let
@@ -52,12 +47,9 @@
         packages = forAllSystems (
             system: let
                 pkgs = pkgsFor system;
-                quickshellDerivation = quickshell.packages.${system}.default;
             in
                 pkgs.callPackage ./nix/default.nix {
-                    quickshell = quickshellDerivation;
-                    inherit another-ripple m3Shapes;
-                    inherit version revision;
+                    inherit another-ripple m3Shapes version revision;
                 }
         );
 
@@ -70,7 +62,6 @@
                 pkgs = pkgsFor system;
                 vastShell = pkgs.callPackage ./nix/default.nix {
                     inherit
-                        quickshell
                         another-ripple
                         m3Shapes
                         ;
@@ -78,7 +69,6 @@
                 };
                 qmlImports = import ./nix/qmllint-imports.nix {
                     inherit pkgs;
-                    quickshell = quickshell.packages.${system}.default;
                     vastPlugin = vastShell.vastPlugin;
                     m3Shapes = m3Shapes.packages.${system}.default;
                     anotherRipple = another-ripple.packages.${system}.default;
@@ -92,7 +82,6 @@
                 pkgs = pkgsFor system;
                 vastShell = pkgs.callPackage ./nix/default.nix {
                     inherit
-                        quickshell
                         another-ripple
                         m3Shapes
                         ;
@@ -100,7 +89,6 @@
                 };
                 qmlImports = import ./nix/qmllint-imports.nix {
                     inherit pkgs;
-                    quickshell = quickshell.packages.${system}.default;
                     vastPlugin = vastShell.vastPlugin;
                     m3Shapes = m3Shapes.packages.${system}.default;
                     anotherRipple = another-ripple.packages.${system}.default;

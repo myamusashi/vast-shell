@@ -10,7 +10,6 @@
     weather-icons,
     libnotify,
     iw,
-    quickshell,
     gpu-screen-recorder,
     another-ripple,
     m3Shapes,
@@ -32,6 +31,7 @@
     app2unit = callPackage ./packages/app2unit.nix {};
     vastPlugin = callPackage ./plugins/vastPlugin.nix {};
     vastctl = callPackage ./packages/vastctl.nix {};
+    quickshell = callPackage ./packages/quickshell.nix {};
     m3Shapes-pkgs = m3Shapes.packages.${stdenv.hostPlatform.system}.default;
     another-ripple-pkg = another-ripple.packages.${stdenv.hostPlatform.system}.default;
 

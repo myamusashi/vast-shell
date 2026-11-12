@@ -128,7 +128,7 @@ The following packages must always be built from source, regardless of distro:
 
 | Package | Source | Note |
 |---|---|---|
-| `quickshell` | https://github.com/quickshell/quickshell | 0.3.2; a PKGBUILD is provided in `packaging/arch/quickshell/` |
+| `quickshell` | https://github.com/quickshell-mirror/quickshell | `unstable-10-22-2026-9b0f339b` (patched); a PKGBUILD is provided in `packaging/arch/quickshell/` |
 | `app2unit` | https://github.com/valpackett/app2unit | |
 | `m3shapes` | https://github.com/soramanew/m3shapes | Material shape library, built into the Qt module path |
 | `AnotherRipple` | https://github.com/myamusashi/Another-Ripple | |

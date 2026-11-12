@@ -1,6 +1,9 @@
 pkgname=quickshell
-pkgver=0.3.2
+_ver=unstable-10-22-2026-9b0f339b
+pkgver=${_ver//-/.}
 pkgrel=1
+_rev=9b0f339b19057f4731bf3b48293307d7ef241671
+_patch=0001-feat-add-qml-disk-cache-and-opt-in-render-control-with-partial-damage.patch
 pkgdesc='Flexible QtQuick based desktop shell toolkit'
 arch=(x86_64 aarch64)
 url='https://quickshell.org'
@@ -31,16 +34,26 @@ makedepends=(
   'spirv-tools'
   'vulkan-headers'
 )
-source=("$pkgname-$pkgver.tar.gz::https://git.outfoxxed.me/quickshell/quickshell/archive/v$pkgver.tar.gz")
-sha256sums=('f14115a73c9fff6aa6399f924b632e88c3ce2cead2657f814a7825341f35baad')
+source=(
+  "$pkgname-$_rev.tar.gz::https://github.com/quickshell-mirror/quickshell/archive/$_rev.tar.gz"
+  "$_patch"
+)
+sha256sums=(
+  '9107ae9179058ea26fafddfc294197fb0865714d227f4c27eaa650fc48537801'
+  '29bf1cc2462fb6972f06e10bfbe3c5224586ec9e84a075dcaf465c8ce4ce98b0'
+)
+
+prepare() {
+  patch -d "$pkgname-$_rev" -Np1 -i "$srcdir/$_patch"
+}
 
 build() {
-  cmake -B build -S "$pkgname" -G Ninja \
+  cmake -B build -S "$pkgname-$_rev" -G Ninja \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DDISTRIBUTOR="archInstall" \
     -DINSTALL_QML_PREFIX=lib/qt6/qml \
-    -DGIT_REVISION="tag-v$pkgver"
+    -DGIT_REVISION="tag-v$_ver"
 
   cmake --build build
 }
@@ -48,6 +61,6 @@ build() {
 package() {
   DESTDIR="$pkgdir" cmake --install build
 
-  install -Dm644 "$pkgname/LICENSE" \
+  install -Dm644 "$pkgname-$_rev/LICENSE" \
     "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

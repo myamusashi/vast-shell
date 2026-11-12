@@ -1,0 +1,3481 @@
+From 2174a6c92eb4022dfc0310545942ee6d085700fb Mon Sep 17 00:00:00 2001
+From: myamusashi <myamusashi@proton.me>
+Date: Thu, 12 Nov 2026 13:29:11 +0700
+Subject: [PATCH] feat: add DiskCache pragma to enable the qml disk cache and
+ opt-in render control with partial damage
+
+---
+ BUILD.md                                      |  11 +
+ CMakeLists.txt                                |   7 +
+ changelog/next.md                             |   2 +
+ default.nix                                   |   1 +
+ src/core/generation.cpp                       |  31 +-
+ src/core/generation.hpp                       |   9 +-
+ src/core/qsintercept.cpp                      |  43 +
+ src/core/qsintercept.hpp                      |  11 +-
+ src/core/rootwrapper.cpp                      |  36 +-
+ src/core/rootwrapper.hpp                      |   3 +-
+ src/core/toolsupport.cpp                      | 267 +++---
+ src/core/toolsupport.hpp                      |  18 +-
+ src/launch/launch.cpp                         |   9 +-
+ src/wayland/CMakeLists.txt                    |  11 +-
+ src/wayland/background_effect/qml.cpp         |   2 +
+ src/wayland/hyprland/surface/qml.cpp          |   3 +
+ src/wayland/init.cpp                          |  11 +-
+ src/wayland/rendercontrol.cpp                 | 560 +++++++++++++
+ src/wayland/rendercontrol.hpp                 | 125 +++
+ src/wayland/session_lock.cpp                  |   3 +-
+ src/wayland/wlr_layershell/surface.cpp        |   7 +-
+ src/window/CMakeLists.txt                     |   2 +
+ src/window/damage.cpp                         | 614 ++++++++++++++
+ src/window/damage.hpp                         |  49 ++
+ src/window/proxywindow.cpp                    |  34 +-
+ src/window/proxywindow.hpp                    |  20 +-
+ src/window/rendercontrol.cpp                  |  45 ++
+ src/window/rendercontrol.hpp                  |  25 +
+ src/window/test/manual/RenderControlScene.qml | 762 ++++++++++++++++++
+ .../test/manual/rendercontrol-enabled.qml     |   6 +
+ src/window/test/manual/rendercontrol-qt.qml   |   5 +
+ src/window/test/manual/rendercontrol.qml      |  70 ++
+ 32 files changed, 2675 insertions(+), 127 deletions(-)
+ create mode 100644 src/wayland/rendercontrol.cpp
+ create mode 100644 src/wayland/rendercontrol.hpp
+ create mode 100644 src/window/damage.cpp
+ create mode 100644 src/window/damage.hpp
+ create mode 100644 src/window/rendercontrol.cpp
+ create mode 100644 src/window/rendercontrol.hpp
+ create mode 100644 src/window/test/manual/RenderControlScene.qml
+ create mode 100644 src/window/test/manual/rendercontrol-enabled.qml
+ create mode 100644 src/window/test/manual/rendercontrol-qt.qml
+ create mode 100644 src/window/test/manual/rendercontrol.qml
+
+diff --git a/BUILD.md b/BUILD.md
+index 97ef93b..580a730 100644
+--- a/BUILD.md
++++ b/BUILD.md
+@@ -155,6 +155,17 @@ Specific protocols can also be disabled:
+ [zwlr-screencopy-v1]: https://wayland.app/protocols/wlr-screencopy-unstable-v1
+ [hyprland-toplevel-export-v1]: https://wayland.app/protocols/hyprland-toplevel-export-v1
+ 
++#### Render Control
++Use quickshell's render control for Wayland windows and report changed frame regions
++to the compositor. Enable it in a shell with `//@ pragma RenderControl`.
++Requires Qt 6.8 or newer and is skipped on older versions.
++
++To disable: `-DWAYLAND_RENDER_CONTROL=OFF`
++
++Dependencies:
++- `libgbm`
++- `vulkan-headers` (build-time)
++
+ ### X11
+ This feature enables x11 support. Currently this implements panel windows for X11 similarly
+ to the wlroots layershell above.
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ac82237..e77913a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -68,6 +68,7 @@ boption(SCREENCOPY "  Screencopy" ON REQUIRES WAYLAND)
+ boption(SCREENCOPY_ICC "    Image Copy Capture" ON REQUIRES WAYLAND)
+ boption(SCREENCOPY_WLR "    Wlroots Screencopy" ON REQUIRES WAYLAND)
+ boption(SCREENCOPY_HYPRLAND_TOPLEVEL "    Hyprland Toplevel Export" ON REQUIRES WAYLAND)
++boption(WAYLAND_RENDER_CONTROL "  Render Control" ON REQUIRES WAYLAND)
+ boption(X11 "X11" ON)
+ boption(I3 "I3/Sway" ON)
+ boption(I3_IPC "  I3/Sway IPC" ON REQUIRES I3)
+@@ -147,6 +148,12 @@ if (Qt6_VERSION VERSION_GREATER_EQUAL "6.9.0")
+ 	find_package(Qt6 REQUIRED COMPONENTS ${QT_PRIVDEPS})
+ endif()
+ 
++# Render control paces animations with QChronoTimer, which was added in Qt 6.8.
++if (WAYLAND_RENDER_CONTROL AND Qt6_VERSION VERSION_LESS "6.8.0")
++	message(STATUS "  Render Control: OFF (Requires Qt 6.8)")
++	set(WAYLAND_RENDER_CONTROL OFF)
++endif()
++
+ set(CMAKE_AUTOUIC OFF)
+ qt_standard_project_setup(REQUIRES 6.6)
+ set(QT_QML_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/qml_modules)
+diff --git a/changelog/next.md b/changelog/next.md
+index 83c1ae0..2a8e42b 100644
+--- a/changelog/next.md
++++ b/changelog/next.md
+@@ -1,6 +1,8 @@
+ ## Other Changes
+ 
++- Added experimental Wayland rendering with partial damage, enabled by the `RenderControl` pragma.
+ - `SystemTrayItem.activate()` now forwards Wayland activation tokens to applications.
++- Added `DiskCache` pragma which loads the config from a mirror in the runtime dir to enable the qml disk cache, visible in `Component.url` and `Qt.resolvedUrl` results.
+ 
+ ## Bug Fixes
+ 
+diff --git a/default.nix b/default.nix
+index b518456..7cda0bc 100644
+--- a/default.nix
++++ b/default.nix
+@@ -106,6 +106,7 @@
+       (lib.cmakeBool "USE_JEMALLOC" withJemalloc)
+       (lib.cmakeBool "WAYLAND" withWayland)
+       (lib.cmakeBool "SCREENCOPY" (libgbm != null))
++      (lib.cmakeBool "WAYLAND_RENDER_CONTROL" (libgbm != null && lib.versionAtLeast qt6.qtbase.version "6.8"))
+       (lib.cmakeBool "SERVICE_PIPEWIRE" withPipewire)
+       (lib.cmakeBool "SERVICE_PAM" withPam)
+       (lib.cmakeBool "SERVICE_NETWORKMANAGER" withNetworkManager)
+diff --git a/src/core/generation.cpp b/src/core/generation.cpp
+index ad5dca2..ca668eb 100644
+--- a/src/core/generation.cpp
++++ b/src/core/generation.cpp
+@@ -35,10 +35,11 @@ QS_LOGGING_CATEGORY(logScene, "scene");
+ 
+ static QHash<const QQmlEngine*, EngineGeneration*> g_generations; // NOLINT
+ 
+-EngineGeneration::EngineGeneration(const QDir& rootPath, QmlScanner scanner)
++EngineGeneration::EngineGeneration(const QDir& rootPath, QmlScanner scanner, QString vfsPath)
+     : rootPath(rootPath)
+     , scanner(std::move(scanner))
+-    , urlInterceptor(this->rootPath)
++    , vfsPath(std::move(vfsPath))
++    , urlInterceptor(this->rootPath, this->vfsPath)
+     , interceptNetFactory(this->rootPath, this->scanner.fileIntercepts)
+     , engine(new QQmlEngine()) {
+ 	g_generations.insert(this->engine, this);
+@@ -47,7 +48,12 @@ EngineGeneration::EngineGeneration(const QDir& rootPath, QmlScanner scanner)
+ 	QObject::connect(this->engine, &QQmlEngine::warnings, this, &EngineGeneration::onEngineWarnings);
+ 
+ 	this->engine->addUrlInterceptor(&this->urlInterceptor);
+-	this->engine->addImportPath("qs:@/");
++
++	if (this->vfsPath.isEmpty()) {
++		this->engine->addImportPath("qs:@/");
++	} else {
++		this->engine->addImportPath(this->vfsPath);
++	}
+ 
+ 	this->engine->setNetworkAccessManagerFactory(&this->interceptNetFactory);
+ 	this->incubationController.initLoop();
+@@ -60,7 +66,7 @@ EngineGeneration::EngineGeneration(const QDir& rootPath, QmlScanner scanner)
+ 	QsEnginePlugin::runConstructGeneration(*this);
+ }
+ 
+-EngineGeneration::EngineGeneration(): EngineGeneration(QDir(), QmlScanner()) {}
++EngineGeneration::EngineGeneration(): EngineGeneration(QDir(), QmlScanner(), QString()) {}
+ 
+ EngineGeneration::~EngineGeneration() {
+ 	for (auto* extension: this->extensions.values()) {
+@@ -268,11 +274,9 @@ void EngineGeneration::onDirectoryChanged() {
+ 	}
+ }
+ 
+-void EngineGeneration::onEngineWarnings(const QList<QQmlError>& warnings) {
++void EngineGeneration::onEngineWarnings(const QList<QQmlError>& warnings) const {
+ 	for (const auto& error: warnings) {
+-		const auto& url = error.url();
+-		auto rel = url.scheme() == "qs" && url.path().startsWith("@/qs/") ? "@" % url.path().sliced(5)
+-		                                                                  : url.toString();
++		auto rel = this->relativeUrl(error.url());
+ 
+ 		QString objectName;
+ 		auto desc = error.description();
+@@ -286,6 +290,17 @@ void EngineGeneration::onEngineWarnings(const QList<QQmlError>& warnings) {
+ 	}
+ }
+ 
++QString EngineGeneration::relativeUrl(const QUrl& url) const {
++	if (url.scheme() == "qs" && url.path().startsWith("@/qs/")) return '@' % url.path().sliced(5);
++
++	if (!this->vfsPath.isEmpty() && url.isLocalFile()) {
++		const QString prefix = this->vfsPath % "/qs/";
++		if (url.path().startsWith(prefix)) return '@' % url.path().sliced(prefix.length());
++	}
++
++	return url.toString();
++}
++
+ void EngineGeneration::registerExtension(const void* key, EngineGenerationExt* extension) {
+ 	if (this->extensions.contains(key)) {
+ 		delete this->extensions.value(key);
+diff --git a/src/core/generation.hpp b/src/core/generation.hpp
+index 4543408..3ccdb69 100644
+--- a/src/core/generation.hpp
++++ b/src/core/generation.hpp
+@@ -10,7 +10,9 @@
+ #include <qqmlerror.h>
+ #include <qqmlincubator.h>
+ #include <qquickwindow.h>
++#include <qstring.h>
+ #include <qtclasshelpermacros.h>
++#include <qurl.h>
+ 
+ #include "incubator.hpp"
+ #include "qsintercept.hpp"
+@@ -32,7 +34,7 @@ class EngineGeneration: public QObject {
+ 
+ public:
+ 	explicit EngineGeneration();
+-	explicit EngineGeneration(const QDir& rootPath, QmlScanner scanner);
++	explicit EngineGeneration(const QDir& rootPath, QmlScanner scanner, QString vfsPath);
+ 	~EngineGeneration() override;
+ 	Q_DISABLE_COPY_MOVE(EngineGeneration);
+ 
+@@ -47,6 +49,8 @@ public:
+ 	void registerExtension(const void* key, EngineGenerationExt* extension);
+ 	EngineGenerationExt* findExtension(const void* key);
+ 
++	[[nodiscard]] QString relativeUrl(const QUrl& url) const;
++
+ 	static EngineGeneration* findEngineGeneration(const QQmlEngine* engine);
+ 	static EngineGeneration* findObjectGeneration(const QObject* object);
+ 
+@@ -57,6 +61,7 @@ public:
+ 	RootWrapper* wrapper = nullptr;
+ 	QDir rootPath;
+ 	QmlScanner scanner;
++	QString vfsPath;
+ 	QsUrlInterceptor urlInterceptor;
+ 	QsInterceptNetworkAccessManagerFactory interceptNetFactory;
+ 	QQmlEngine* engine = nullptr;
+@@ -85,7 +90,7 @@ private slots:
+ 	void onFileChanged(const QString& name);
+ 	void onDirectoryChanged();
+ 	void onTrackedWindowDestroyed(QObject* object);
+-	static void onEngineWarnings(const QList<QQmlError>& warnings);
++	void onEngineWarnings(const QList<QQmlError>& warnings) const;
+ 
+ private:
+ 	void postReload();
+diff --git a/src/core/qsintercept.cpp b/src/core/qsintercept.cpp
+index 6687681..484c163 100644
+--- a/src/core/qsintercept.cpp
++++ b/src/core/qsintercept.cpp
+@@ -48,6 +48,17 @@ QUrl QsUrlInterceptor::intercept(
+ 			return QUrl("qrc:/qs-blackhole");
+ 		}
+ 
++		// types are keyed by intercepted url, a second url for a document doubles its singletons
++		if (!this->vfsPath.isEmpty()
++		    && (type != QQmlAbstractUrlInterceptor::DataType::UrlString || path.endsWith(".qml")))
++		{
++			auto newUrl = url;
++			newUrl.setScheme("file");
++			newUrl.setPath(this->toVfsPath(path));
++			qCDebug(logQsIntercept) << "Rewrote intercept" << url << "to" << newUrl;
++			return newUrl;
++		}
++
+ 		// Some types such as Image take into account where they are loading from, and force
+ 		// asynchronous loading over a network. qs: is considered to be over a network.
+ 		// In those cases we want to return a file:// url so asynchronous loading is not forced.
+@@ -66,9 +77,41 @@ QUrl QsUrlInterceptor::intercept(
+ 		}
+ 	}
+ 
++	// documents from real paths (Quickshell.shellDir) go to the mirror for the same reason,
++	// everything else resolved against a mirror document goes back to the real path
++	if (!this->vfsPath.isEmpty() && url.scheme() == "file") {
++		auto isDocument =
++		    type == QQmlAbstractUrlInterceptor::DataType::QmlFile
++		    || type == QQmlAbstractUrlInterceptor::DataType::JavaScriptFile
++		    || type == QQmlAbstractUrlInterceptor::DataType::QmldirFile
++		    || (type == QQmlAbstractUrlInterceptor::DataType::UrlString && url.path().endsWith(".qml"));
++
++		auto path = url.path();
++		auto newPath = isDocument ? this->toVfsPath(path) : this->toConfigPath(path);
++
++		if (newPath != path) {
++			auto newUrl = url;
++			newUrl.setPath(newPath);
++			qCDebug(logQsIntercept) << "Canonicalized intercept" << url << "to" << newUrl;
++			return newUrl;
++		}
++	}
++
+ 	return url;
+ }
+ 
++QString QsUrlInterceptor::toVfsPath(const QString& path) const {
++	const auto& rootPath = this->configRoot.path();
++	if (!path.startsWith(rootPath % '/')) return path;
++	return this->vfsPath % "/qs" % path.sliced(rootPath.length());
++}
++
++QString QsUrlInterceptor::toConfigPath(const QString& path) const {
++	const QString mirrorPath = this->vfsPath % "/qs";
++	if (!path.startsWith(mirrorPath % '/')) return path;
++	return this->configRoot.path() % path.sliced(mirrorPath.length());
++}
++
+ QsInterceptDataReply::QsInterceptDataReply(const QString& data, QObject* parent)
+     : QNetworkReply(parent)
+     , content(data.toUtf8()) {
+diff --git a/src/core/qsintercept.hpp b/src/core/qsintercept.hpp
+index c3d8b55..c91f96e 100644
+--- a/src/core/qsintercept.hpp
++++ b/src/core/qsintercept.hpp
+@@ -1,5 +1,7 @@
+ #pragma once
+ 
++#include <utility>
++
+ #include <qdir.h>
+ #include <qhash.h>
+ #include <qloggingcategory.h>
+@@ -8,6 +10,7 @@
+ #include <qnetworkrequest.h>
+ #include <qqmlabstracturlinterceptor.h>
+ #include <qqmlnetworkaccessmanagerfactory.h>
++#include <qstring.h>
+ #include <qurl.h>
+ 
+ #include "logcat.hpp"
+@@ -16,12 +19,18 @@ QS_DECLARE_LOGGING_CATEGORY(logQsIntercept);
+ 
+ class QsUrlInterceptor: public QQmlAbstractUrlInterceptor {
+ public:
+-	explicit QsUrlInterceptor(const QDir& configRoot): configRoot(configRoot) {}
++	explicit QsUrlInterceptor(const QDir& configRoot, QString vfsPath)
++	    : configRoot(configRoot)
++	    , vfsPath(std::move(vfsPath)) {}
+ 
+ 	QUrl intercept(const QUrl& originalUrl, QQmlAbstractUrlInterceptor::DataType type) override;
+ 
+ private:
++	[[nodiscard]] QString toVfsPath(const QString& path) const;
++	[[nodiscard]] QString toConfigPath(const QString& path) const;
++
+ 	QDir configRoot;
++	QString vfsPath;
+ };
+ 
+ class QsInterceptDataReply: public QNetworkReply {
+diff --git a/src/core/rootwrapper.cpp b/src/core/rootwrapper.cpp
+index 1e75819..05873e0 100644
+--- a/src/core/rootwrapper.cpp
++++ b/src/core/rootwrapper.cpp
+@@ -21,10 +21,11 @@
+ #include "scan.hpp"
+ #include "toolsupport.hpp"
+ 
+-RootWrapper::RootWrapper(QString rootPath, QString shellId)
++RootWrapper::RootWrapper(QString rootPath, QString shellId, bool diskCache)
+     : QObject(nullptr)
+     , rootPath(std::move(rootPath))
+     , shellId(std::move(shellId))
++    , diskCache(diskCache)
+     , originalWorkingDirectory(QDir::current().absolutePath()) {
+ 	QObject::connect(
+ 	    QuickshellSettings::instance(),
+@@ -60,9 +61,14 @@ void RootWrapper::reloadGraph(bool hard) {
+ 	auto scanner = QmlScanner(rootPath);
+ 	scanner.scanQmlRoot(this->rootPath);
+ 
+-	qs::core::QmlToolingSupport::updateTooling(rootPath, scanner);
++	auto tooling = qs::core::QmlToolingSupport::updateTooling(rootPath, this->diskCache);
+ 	this->configDirWatcher.addPath(rootPath.path());
+ 
++	QString mirrorPath;
++	if (tooling || this->diskCache) {
++		mirrorPath = qs::core::QmlToolingSupport::updateMirror(rootPath, scanner, this->diskCache);
++	}
++
+ 	// todo: move into EngineGeneration
+ 	if (this->generation != nullptr) {
+ 		qInfo() << "Reloading configuration...";
+@@ -95,12 +101,23 @@ void RootWrapper::reloadGraph(bool hard) {
+ 		return;
+ 	}
+ 
+-	auto* generation = new EngineGeneration(rootPath, std::move(scanner));
++	// the qml disk cache only accepts file urls, so DiskCache loads from the vfs mirror
++	auto vfsPath = this->diskCache ? mirrorPath : QString();
++	if (this->diskCache && vfsPath.isEmpty()) {
++		qWarning() << "Config mirror unavailable, QML disk cache disabled";
++	}
++
++	auto* generation = new EngineGeneration(rootPath, std::move(scanner), vfsPath);
+ 	generation->wrapper = this;
+ 
+ 	QUrl url;
+-	url.setScheme("qs");
+-	url.setPath("@/qs/" % rootFile.fileName());
++	if (vfsPath.isEmpty()) {
++		url.setScheme("qs");
++		url.setPath("@/qs/" % rootFile.fileName());
++	} else {
++		url = QUrl::fromLocalFile(vfsPath % "/qs/" % rootFile.fileName());
++	}
++
+ 	auto component = QQmlComponent(generation->engine, url);
+ 
+ 	if (!component.isReady()) {
+@@ -109,9 +126,7 @@ void RootWrapper::reloadGraph(bool hard) {
+ 
+ 		auto errors = component.errors();
+ 		for (auto& error: errors) {
+-			const auto& url = error.url();
+-			auto rel = url.scheme() == "qs" && url.path().startsWith("@/qs/") ? "@" % url.path().sliced(5)
+-			                                                                  : url.toString();
++			auto rel = generation->relativeUrl(error.url());
+ 			auto msg = "  caused by " % rel % '[' % QString::number(error.line()) % ':'
+ 			         % QString::number(error.column()) % "]: " % error.description();
+ 			errorString += '\n' % msg;
+@@ -211,5 +226,8 @@ void RootWrapper::onWatchedFilesChanged() { this->reloadGraph(false); }
+ void RootWrapper::updateTooling() {
+ 	if (!this->generation) return;
+ 	auto configDir = QFileInfo(this->rootPath).dir();
+-	qs::core::QmlToolingSupport::updateTooling(configDir, this->generation->scanner);
++	auto tooling = qs::core::QmlToolingSupport::updateTooling(configDir, this->diskCache);
++	if (!tooling && !this->diskCache) return;
++
++	qs::core::QmlToolingSupport::updateMirror(configDir, this->generation->scanner, this->diskCache);
+ }
+diff --git a/src/core/rootwrapper.hpp b/src/core/rootwrapper.hpp
+index 1425d17..2588fcf 100644
+--- a/src/core/rootwrapper.hpp
++++ b/src/core/rootwrapper.hpp
+@@ -13,7 +13,7 @@ class RootWrapper: public QObject {
+ 	Q_OBJECT;
+ 
+ public:
+-	explicit RootWrapper(QString rootPath, QString shellId);
++	explicit RootWrapper(QString rootPath, QString shellId, bool diskCache);
+ 	~RootWrapper() override;
+ 	Q_DISABLE_COPY_MOVE(RootWrapper);
+ 
+@@ -28,6 +28,7 @@ private slots:
+ private:
+ 	QString rootPath;
+ 	QString shellId;
++	bool diskCache;
+ 	EngineGeneration* generation = nullptr;
+ 	QString originalWorkingDirectory;
+ 	QFileSystemWatcher configDirWatcher;
+diff --git a/src/core/toolsupport.cpp b/src/core/toolsupport.cpp
+index 585656e..cfac6a5 100644
+--- a/src/core/toolsupport.cpp
++++ b/src/core/toolsupport.cpp
+@@ -1,16 +1,26 @@
+ #include "toolsupport.hpp"
++#include <algorithm>
+ #include <cerrno>
+ 
+ #include <fcntl.h>
++#include <qbytearray.h>
+ #include <qcontainerfwd.h>
++#include <qcryptographichash.h>
++#include <qdatetime.h>
+ #include <qdebug.h>
+ #include <qdir.h>
++#include <qendian.h>
++#include <qfile.h>
++#include <qfiledevice.h>
+ #include <qfileinfo.h>
+ #include <qlist.h>
+ #include <qlogging.h>
+ #include <qloggingcategory.h>
+ #include <qqmlengine.h>
++#include <qsavefile.h>
++#include <qset.h>
+ #include <qtenvironmentvariables.h>
++#include <qtypes.h>
+ 
+ #include "logcat.hpp"
+ #include "paths.hpp"
+@@ -20,9 +30,15 @@ namespace qs::core {
+ 
+ namespace {
+ QS_LOGGING_CATEGORY(logTooling, "quickshell.tooling", QtWarningMsg);
++
++bool scannerVisited(const QmlScanner& scanner, const QString& prefix) {
++	auto under = [&](const QString& path) { return path.startsWith(prefix); };
++	return std::ranges::any_of(scanner.scannedFiles, under)
++	    || std::any_of(scanner.fileIntercepts.keyBegin(), scanner.fileIntercepts.keyEnd(), under);
+ }
++} // namespace
+ 
+-bool QmlToolingSupport::updateTooling(const QDir& configRoot, QmlScanner& scanner) {
++bool QmlToolingSupport::updateTooling(const QDir& configRoot, bool keepMirror) {
+ 	auto* vfs = QsPaths::instance()->shellVfsDir();
+ 
+ 	if (!vfs) {
+@@ -34,15 +50,168 @@ bool QmlToolingSupport::updateTooling(const QDir& configRoot, QmlScanner& scanne
+ 		return false;
+ 	}
+ 
+-	if (!QmlToolingSupport::updateQmllsConfig(configRoot, false)) {
+-		QDir(vfs->filePath("qs")).removeRecursively();
++	if (QmlToolingSupport::updateQmllsConfig(configRoot, false)) return true;
++	if (!keepMirror) QmlToolingSupport::removeMirrorEntry(vfs->filePath("qs"));
++	return false;
++}
++
++QString QmlToolingSupport::updateMirror(
++    const QDir& configRoot,
++    const QmlScanner& scanner,
++    bool copyDocuments
++) {
++	auto* vfs = QsPaths::instance()->shellVfsDir();
++	if (!vfs) return QString();
++	if (!QmlToolingSupport::lockTooling()) return QString();
++
++	// QQmlTypeLoader::addImportPath canonicalizes, so urls built from this must match
++	auto vfsPath = vfs->canonicalPath();
++	if (vfsPath.isEmpty()) return QString();
++
++	auto target = QDir(vfsPath % "/qs");
++	if (!QmlToolingSupport::mirrorDir(scanner, configRoot, target, copyDocuments)) return QString();
++
++	return vfsPath;
++}
++
++bool QmlToolingSupport::mirrorDir(
++    const QmlScanner& scanner,
++    const QDir& source,
++    const QDir& target,
++    bool copyDocuments
++) {
++	auto targetInfo = QFileInfo(target.path());
++	if (targetInfo.isSymLink() || (targetInfo.exists() && !targetInfo.isDir())) {
++		QmlToolingSupport::removeMirrorEntry(target.path());
++	}
++
++	if (!target.mkpath(".")) {
++		qCCritical(logTooling) << "Could not create mirror dir at" << target.path();
+ 		return false;
+ 	}
+ 
+-	QmlToolingSupport::updateToolingFs(scanner, configRoot, vfs->filePath("qs"));
++	const QString prefix = source.path() % '/';
++	QSet<QString> names;
++
++	for (auto [path, text]: scanner.fileIntercepts.asKeyValueRange()) {
++		if (!path.startsWith(prefix)) continue;
++
++		auto name = path.sliced(prefix.length());
++		if (name.contains('/')) continue;
++
++		names.insert(name);
++		if (!QmlToolingSupport::writeMirrorFile(target.filePath(name), text.toUtf8())) return false;
++	}
++
++	for (const auto& name: source.entryList(QDir::AllEntries | QDir::NoDotAndDotDot)) {
++		if (names.contains(name)) continue;
++		names.insert(name);
++
++		auto path = source.filePath(name);
++		auto entryTarget = target.filePath(name);
++
++		if (!QmlToolingSupport::mirrorEntry(scanner, path, entryTarget, copyDocuments)) return false;
++	}
++
++	auto stale = QDir::AllEntries | QDir::Hidden | QDir::System | QDir::NoDotAndDotDot;
++
++	for (const auto& name: target.entryList(stale)) {
++		if (!names.contains(name)) QmlToolingSupport::removeMirrorEntry(target.filePath(name));
++	}
++
+ 	return true;
+ }
+ 
++bool QmlToolingSupport::mirrorEntry(
++    const QmlScanner& scanner,
++    const QString& path,
++    const QString& target,
++    bool copyDocuments
++) {
++	auto info = QFileInfo(path);
++
++	if (info.isDir()) {
++		// symlinked dirs can loop, so only the ones the scanner went through are entered
++		if (info.isSymLink() && !scannerVisited(scanner, path % '/')) {
++			return QmlToolingSupport::linkMirrorEntry(path, target);
++		}
++
++		return QmlToolingSupport::mirrorDir(scanner, QDir(path), QDir(target), copyDocuments);
++	}
++
++	auto name = info.fileName();
++	auto isDocument = name.endsWith(".qml") || name.endsWith(".js") || name.endsWith(".mjs");
++	if (!copyDocuments || !isDocument) return QmlToolingSupport::linkMirrorEntry(path, target);
++
++	auto file = QFile(path);
++
++	if (!file.open(QFile::ReadOnly)) {
++		qCCritical(logTooling) << "Could not read" << path;
++		return false;
++	}
++
++	return QmlToolingSupport::writeMirrorFile(target, file.readAll());
++}
++
++bool QmlToolingSupport::writeMirrorFile(const QString& path, const QByteArray& data) {
++	auto info = QFileInfo(path);
++	if (info.isSymLink() || (info.exists() && !info.isFile())) {
++		QmlToolingSupport::removeMirrorEntry(path);
++	}
++
++	auto current = QFile(path);
++	if (current.open(QFile::ReadOnly) && current.readAll() == data) return true;
++	current.close();
++
++	auto save = QSaveFile(path);
++
++	if (!save.open(QFile::WriteOnly) || save.write(data) != data.length() || !save.commit()) {
++		qCCritical(logTooling) << "Failed to write mirror file" << path;
++		return false;
++	}
++
++	// The disk cache compares source mtimes (QV4::CompiledData::Unit::verifyHeader), which
++	// are all 1 in the nix store, so the mtime comes from the content. 2000..2030, never 0.
++	auto hash = QCryptographicHash::hash(data, QCryptographicHash::Md5);
++	auto secs = 946684800 + qFromBigEndian<quint32>(hash.constData()) % 946684800;
++	auto file = QFile(path);
++
++	if (!file.open(QFile::ReadWrite)
++	    || !file.setFileTime(QDateTime::fromSecsSinceEpoch(secs), QFile::FileModificationTime))
++	{
++		qCCritical(logTooling) << "Failed to set mirror file time on" << path;
++		return false;
++	}
++
++	qCDebug(logTooling) << "Wrote mirror file" << path;
++	return true;
++}
++
++bool QmlToolingSupport::linkMirrorEntry(const QString& path, const QString& target) {
++	auto info = QFileInfo(target);
++	if (info.isSymLink() && info.symLinkTarget() == path) return true;
++
++	QmlToolingSupport::removeMirrorEntry(target);
++
++	if (!QFile::link(path, target)) {
++		qCCritical(logTooling) << "Could not create symlink to" << path << "at" << target;
++		return false;
++	}
++
++	qCDebug(logTooling) << "Created symlink to" << path << "at" << target;
++	return true;
++}
++
++void QmlToolingSupport::removeMirrorEntry(const QString& path) {
++	auto info = QFileInfo(path);
++	if (!info.exists() && !info.isSymLink()) return;
++
++	// isDir follows symlinks, and everything behind one is the real config
++	auto ok =
++	    info.isDir() && !info.isSymLink() ? QDir(path).removeRecursively() : QFile::remove(path);
++	if (!ok) qCWarning(logTooling) << "Failed to remove old file at" << path;
++}
++
+ bool QmlToolingSupport::lockTooling() {
+ 	if (QmlToolingSupport::toolingLock) return true;
+ 
+@@ -152,94 +321,4 @@ bool QmlToolingSupport::updateQmllsConfig(const QDir& configRoot, bool create) {
+ 	return true;
+ }
+ 
+-void QmlToolingSupport::updateToolingFs(
+-    QmlScanner& scanner,
+-    const QDir& scanDir,
+-    const QDir& linkDir
+-) {
+-	QList<QString> files;
+-	QSet<QString> subdirs;
+-
+-	auto scanPath = scanDir.path();
+-
+-	linkDir.mkpath(".");
+-
+-	for (auto& path: scanner.scannedFiles) {
+-		if (path.length() < scanPath.length() + 1 || !path.startsWith(scanPath)) continue;
+-		auto name = path.sliced(scanPath.length() + 1);
+-
+-		if (name.contains('/')) {
+-			auto dirname = name.first(name.indexOf('/'));
+-			subdirs.insert(dirname);
+-			continue;
+-		}
+-
+-		auto fileInfo = QFileInfo(path);
+-		if (!fileInfo.isFile()) continue;
+-
+-		if (scanner.fileIntercepts.contains(path)) continue;
+-
+-		auto spath = linkDir.filePath(name);
+-		auto sFileInfo = QFileInfo(spath);
+-
+-		if (!sFileInfo.isSymLink() || sFileInfo.symLinkTarget() != path) {
+-			QFile::remove(spath);
+-
+-			if (QFile::link(path, spath)) {
+-				qCDebug(logTooling) << "Created symlink to" << path << "at" << spath;
+-				files.append(spath);
+-			} else {
+-				qCCritical(logTooling) << "Could not create symlink to" << path << "at" << spath;
+-			}
+-		} else {
+-			files.append(spath);
+-		}
+-	}
+-
+-	for (auto [path, text]: scanner.fileIntercepts.asKeyValueRange()) {
+-		if (path.length() < scanPath.length() + 1 || !path.startsWith(scanPath)) continue;
+-		auto name = path.sliced(scanPath.length() + 1);
+-
+-		if (name.contains('/')) {
+-			auto dirname = name.first(name.indexOf('/'));
+-			subdirs.insert(dirname);
+-			continue;
+-		}
+-
+-		auto spath = linkDir.filePath(name);
+-		QFile::remove(spath);
+-
+-		auto file = QFile(spath);
+-		if (!file.open(QFile::ReadWrite | QFile::Text | QFile::NewOnly)) {
+-			qCCritical(logTooling) << "Failed to open injected file" << spath;
+-			continue;
+-		}
+-
+-		if (file.readAll() == text) {
+-			files.append(spath);
+-			continue;
+-		}
+-
+-		if (file.resize(0) && file.write(text.toUtf8())) {
+-			files.append(spath);
+-			qCDebug(logTooling) << "Wrote injected file" << spath;
+-		} else {
+-			qCCritical(logTooling) << "Failed to write injected file" << spath;
+-		}
+-	}
+-
+-	for (auto& name: linkDir.entryList(QDir::Files | QDir::System)) { // System = broken symlinks
+-		auto path = linkDir.filePath(name);
+-
+-		if (!files.contains(path)) {
+-			if (QFile::remove(path)) qCDebug(logTooling) << "Removed old file at" << path;
+-			else qCWarning(logTooling) << "Failed to remove old file at" << path;
+-		}
+-	}
+-
+-	for (const auto& subdir: subdirs) {
+-		QmlToolingSupport::updateToolingFs(scanner, scanDir.filePath(subdir), linkDir.filePath(subdir));
+-	}
+-}
+-
+ } // namespace qs::core
+diff --git a/src/core/toolsupport.hpp b/src/core/toolsupport.hpp
+index 9fb7921..5749a13 100644
+--- a/src/core/toolsupport.hpp
++++ b/src/core/toolsupport.hpp
+@@ -1,6 +1,8 @@
+ #pragma once
+ 
++#include <qbytearray.h>
+ #include <qdir.h>
++#include <qstring.h>
+ 
+ #include "scan.hpp"
+ 
+@@ -8,13 +10,25 @@ namespace qs::core {
+ 
+ class QmlToolingSupport {
+ public:
+-	static bool updateTooling(const QDir& configRoot, QmlScanner& scanner);
++	static bool updateTooling(const QDir& configRoot, bool keepMirror);
++	static QString
++	updateMirror(const QDir& configRoot, const QmlScanner& scanner, bool copyDocuments);
+ 
+ private:
+ 	static QString getQmllsConfig();
+ 	static bool lockTooling();
+ 	static bool updateQmllsConfig(const QDir& configRoot, bool create);
+-	static void updateToolingFs(QmlScanner& scanner, const QDir& scanDir, const QDir& linkDir);
++	static bool
++	mirrorDir(const QmlScanner& scanner, const QDir& source, const QDir& target, bool copyDocuments);
++	static bool mirrorEntry(
++	    const QmlScanner& scanner,
++	    const QString& path,
++	    const QString& target,
++	    bool copyDocuments
++	);
++	static bool writeMirrorFile(const QString& path, const QByteArray& data);
++	static bool linkMirrorEntry(const QString& path, const QString& target);
++	static void removeMirrorEntry(const QString& path);
+ 	static inline bool toolingEnabled = false;
+ 	static inline QFile* toolingLock = nullptr;
+ };
+diff --git a/src/launch/launch.cpp b/src/launch/launch.cpp
+index 3044d46..060af8d 100644
+--- a/src/launch/launch.cpp
++++ b/src/launch/launch.cpp
+@@ -25,6 +25,7 @@
+ #include "../core/qmlglobal.hpp"
+ #include "../core/rootwrapper.hpp"
+ #include "../ipc/ipc.hpp"
++#include "../window/rendercontrol.hpp"
+ #include "build.hpp"
+ #include "launch_p.hpp"
+ 
+@@ -73,6 +74,7 @@ int launch(const LaunchArgs& args, char** argv) {
+ 	struct {
+ 		bool useQApplication = false;
+ 		bool nativeTextRendering = false;
++		bool renderControl = false;
+ 		bool desktopSettingsAware = true;
+ 		bool useSystemStyle = false;
+ 		QString iconTheme = qEnvironmentVariable("QS_ICON_THEME");
+@@ -80,6 +82,7 @@ int launch(const LaunchArgs& args, char** argv) {
+ 		QHash<QString, QString> defaultEnv;
+ 		QString appId = qEnvironmentVariable("QS_APP_ID");
+ 		bool dropExpensiveFonts = false;
++		bool diskCache = false;
+ 		QString dataDir;
+ 		QString stateDir;
+ 		QString cacheDir;
+@@ -110,9 +113,11 @@ int launch(const LaunchArgs& args, char** argv) {
+ 				else pragmas.envOverrides.insert(var, val);
+ 			} else if (pragma == "UseQApplication") pragmas.useQApplication = true;
+ 			else if (pragma == "NativeTextRendering") pragmas.nativeTextRendering = true;
++			else if (pragma == "RenderControl") pragmas.renderControl = true;
+ 			else if (pragma == "IgnoreSystemSettings") pragmas.desktopSettingsAware = false;
+ 			else if (pragma == "RespectSystemStyle") pragmas.useSystemStyle = true;
+ 			else if (pragma == "DropExpensiveFonts") pragmas.dropExpensiveFonts = true;
++			else if (pragma == "DiskCache") pragmas.diskCache = true;
+ 			else if (pragma.startsWith("IconTheme ")) pragmas.iconTheme = pragma.sliced(10);
+ 			else if (pragma.startsWith("AppId ")) {
+ 				pragmas.appId = pragma.sliced(6).trimmed();
+@@ -313,10 +318,12 @@ int launch(const LaunchArgs& args, char** argv) {
+ 		QQuickWindow::setTextRenderType(QQuickWindow::NativeTextRendering);
+ 	}
+ 
++	if (pragmas.renderControl) qs::window::WindowRenderControl::setEnabled(true);
++
+ 	qs::ipc::IpcServer::start();
+ 	QsPaths::instance()->createLock();
+ 
+-	auto root = RootWrapper(args.configPath, shellId);
++	auto root = RootWrapper(args.configPath, shellId, pragmas.diskCache);
+ 	QGuiApplication::setQuitOnLastWindowClosed(false);
+ 
+ 	exitDaemon(0);
+diff --git a/src/wayland/CMakeLists.txt b/src/wayland/CMakeLists.txt
+index cc19b14..6bb606f 100644
+--- a/src/wayland/CMakeLists.txt
++++ b/src/wayland/CMakeLists.txt
+@@ -119,12 +119,21 @@ if (WAYLAND_TOPLEVEL_MANAGEMENT)
+ 	list(APPEND WAYLAND_MODULES Quickshell.Wayland._ToplevelManagement)
+ endif()
+ 
+-if (SCREENCOPY)
++if (SCREENCOPY OR WAYLAND_RENDER_CONTROL)
+ 	add_subdirectory(buffer)
++endif()
++
++if (SCREENCOPY)
+ 	add_subdirectory(screencopy)
+ 	list(APPEND WAYLAND_MODULES Quickshell.Wayland._Screencopy)
+ endif()
+ 
++if (WAYLAND_RENDER_CONTROL)
++	target_sources(quickshell-wayland PRIVATE rendercontrol.cpp)
++	target_link_libraries(quickshell-wayland PRIVATE quickshell-wayland-buffer Qt::QuickPrivate)
++	target_compile_definitions(quickshell-wayland-init PRIVATE QS_WAYLAND_RENDER_CONTROL)
++endif()
++
+ 
+ if (HYPRLAND)
+ 	add_subdirectory(hyprland)
+diff --git a/src/wayland/background_effect/qml.cpp b/src/wayland/background_effect/qml.cpp
+index b54a847..1376567 100644
+--- a/src/wayland/background_effect/qml.cpp
++++ b/src/wayland/background_effect/qml.cpp
+@@ -116,6 +116,8 @@ void BackgroundEffect::onWindowPolished() {
+ 
+ 	this->surface->setBlurRegion(region);
+ 	this->pendingBlurRegion = false;
++
++	if (auto* window = qobject_cast<QsQuickWindowBase*>(this->mWindow)) window->requestCommit();
+ }
+ 
+ bool BackgroundEffect::eventFilter(QObject* object, QEvent* event) {
+diff --git a/src/wayland/hyprland/surface/qml.cpp b/src/wayland/hyprland/surface/qml.cpp
+index 4575842..83ec810 100644
+--- a/src/wayland/hyprland/surface/qml.cpp
++++ b/src/wayland/hyprland/surface/qml.cpp
+@@ -109,6 +109,7 @@ void HyprlandWindow::updateVisibleMask() {
+ 
+ void HyprlandWindow::onWindowPolished() {
+ 	if (!this->surface) return;
++	if (!this->pendingPolish.opacity && !this->pendingPolish.visibleMask) return;
+ 
+ 	if (this->pendingPolish.opacity) {
+ 		this->surface->setOpacity(this->mOpacity);
+@@ -134,6 +135,8 @@ void HyprlandWindow::onWindowPolished() {
+ 		this->surface->setVisibleRegion(mask);
+ 		this->pendingPolish.visibleMask = false;
+ 	}
++
++	if (auto* window = qobject_cast<QsQuickWindowBase*>(this->mWindow)) window->requestCommit();
+ }
+ 
+ void HyprlandWindow::onWindowConnected() {
+diff --git a/src/wayland/init.cpp b/src/wayland/init.cpp
+index 579e42a..2cef308 100644
+--- a/src/wayland/init.cpp
++++ b/src/wayland/init.cpp
+@@ -14,6 +14,10 @@ void installWlProxySafeDeref(); // NOLINT(misc-use-internal-linkage)
+ void installPlatformMenuHook(); // NOLINT(misc-use-internal-linkage)
+ void installPopupPositioner();  // NOLINT(misc-use-internal-linkage)
+ 
++#ifdef QS_WAYLAND_RENDER_CONTROL
++void installRenderControl(); // NOLINT(misc-use-internal-linkage)
++#endif
++
+ namespace {
+ 
+ class WaylandPlugin: public QsEnginePlugin {
+@@ -33,7 +37,12 @@ class WaylandPlugin: public QsEnginePlugin {
+ 		return isWayland;
+ 	}
+ 
+-	void preinit() override { installWlProxySafeDeref(); }
++	void preinit() override {
++		installWlProxySafeDeref();
++#ifdef QS_WAYLAND_RENDER_CONTROL
++		installRenderControl();
++#endif
++	}
+ 
+ 	void init() override {
+ 		installPlatformMenuHook();
+diff --git a/src/wayland/rendercontrol.cpp b/src/wayland/rendercontrol.cpp
+new file mode 100644
+index 0000000..db42692
+--- /dev/null
++++ b/src/wayland/rendercontrol.cpp
+@@ -0,0 +1,560 @@
++#include "rendercontrol.hpp"
++#include <algorithm>
++#include <chrono>
++#include <memory>
++#include <optional>
++#include <utility>
++
++#include <libdrm/drm_fourcc.h>
++#include <private/qquickwindow_p.h>
++#include <private/qsgcontext_p.h>
++#include <private/qsgrenderloop_p.h>
++#include <private/qwaylandabstractdecoration_p.h>
++#include <private/qwaylandbuffer_p.h>
++#include <private/qwaylandwindow_p.h>
++#include <qabstractanimation.h>
++#include <qchronotimer.h>
++#include <qcoreevent.h>
++#include <qguiapplication.h>
++#include <qimage.h>
++#include <qlogging.h>
++#include <qloggingcategory.h>
++#include <qmargins.h>
++#include <qnamespace.h>
++#include <qobject.h>
++#include <qoffscreensurface.h> // NOLINT(misc-include-cleaner)
++#include <qpa/qplatformwindow.h>
++#include <qpoint.h>
++#include <qquickgraphicsdevice.h>
++#include <qquickrendertarget.h>
++#include <qquickwindow.h>
++#include <qrect.h>
++#include <qregion.h>
++#include <qscreen.h>
++#include <qsize.h>
++#include <qstring.h>
++#include <qsurfaceformat.h>
++#include <qtclasshelpermacros.h>
++#include <qtenvironmentvariables.h>
++#include <qtmetamacros.h>
++#include <qtypes.h>
++#include <rhi/qrhi.h>
++#include <rhi/qrhi_platform.h>
++#include <wayland-client-protocol.h>
++
++#include "../core/logcat.hpp"
++#include "../window/damage.hpp"
++#include "../window/proxywindow.hpp"
++#include "../window/rendercontrol.hpp"
++#include "buffer/manager.hpp"
++
++namespace qs::wayland::render {
++
++namespace {
++
++QS_LOGGING_CATEGORY(logRenderControl, "quickshell.wayland.rendercontrol", QtWarningMsg);
++
++constexpr qsizetype MAX_BUFFERS = 3;
++
++// Keep the context offscreen; leave the window out of the init params.
++std::shared_ptr<QRhi> sharedRhi(const QSurfaceFormat& format) {
++	static std::weak_ptr<QRhi> shared;
++	if (auto rhi = shared.lock()) return rhi;
++
++	auto* surface = QRhiGles2InitParams::newFallbackSurface(format);
++	QRhiGles2InitParams params;
++	params.format = format;
++	params.fallbackSurface = surface;
++
++	auto* rhi = QRhi::create(QRhi::OpenGLES2, &params);
++	if (!rhi) {
++		delete surface;
++		return nullptr;
++	}
++
++	auto result = std::shared_ptr<QRhi>(rhi, [surface](QRhi* rhi) {
++		delete rhi;
++		delete surface;
++	});
++
++	shared = result;
++	return result;
++}
++
++class AnimationTimer: public QChronoTimer {
++public:
++	explicit AnimationTimer(QAnimationDriver* driver): QChronoTimer(driver) {
++		this->setTimerType(Qt::PreciseTimer);
++		QObject::connect(this, &QChronoTimer::timeout, driver, &QAnimationDriver::advance);
++
++		auto* app = static_cast<QGuiApplication*>(QGuiApplication::instance()); // NOLINT
++		QObject::connect(app, &QGuiApplication::screenAdded, this, &AnimationTimer::onScreenAdded);
++		QObject::connect(app, &QGuiApplication::screenRemoved, this, &AnimationTimer::updateInterval);
++		for (auto* screen: QGuiApplication::screens()) this->onScreenAdded(screen);
++	}
++
++private:
++	void onScreenAdded(QScreen* screen) {
++		QObject::connect(screen, &QScreen::refreshRateChanged, this, &AnimationTimer::updateInterval);
++		this->updateInterval();
++	}
++
++	// The driver advances by wall time, so slower screens skip ticks instead of lagging.
++	void updateInterval() {
++		auto refreshRate = 60.0;
++		for (auto* screen: QGuiApplication::screens()) {
++			refreshRate = std::max(refreshRate, screen->refreshRate());
++		}
++
++		auto interval = std::chrono::duration<double>(1 / refreshRate);
++		this->setInterval(std::chrono::round<std::chrono::nanoseconds>(interval));
++	}
++};
++
++// Drive animations without Qt-owned windows; see QSGThreadedRenderLoop::polishAndSync().
++void driveAnimations() {
++	static auto installed = false;
++	if (installed) return;
++	installed = true;
++
++	auto* loop = QSGRenderLoop::instance();
++	auto* driver = loop->animationDriver();
++	if (!driver || loop->sceneGraphContext()->isVSyncDependent(driver)) return;
++
++	auto* timer = new AnimationTimer(driver);
++	QObject::connect(driver, &QAnimationDriver::started, timer, &QChronoTimer::start);
++	QObject::connect(driver, &QAnimationDriver::stopped, timer, &QChronoTimer::stop);
++	if (driver->isRunning()) timer->start();
++}
++
++// Borrow the wl_buffer for one commit; SurfaceBufferPool owns it and handles releases.
++class WlBufferRef: public QtWaylandClient::QWaylandBuffer {
++public:
++	WlBufferRef(wl_buffer* buffer, QSize size): mSize(size) { this->mBuffer = buffer; }
++	~WlBufferRef() override { this->mBuffer = nullptr; }
++	Q_DISABLE_COPY_MOVE(WlBufferRef);
++
++	[[nodiscard]] QSize size() const override { return this->mSize; }
++
++private:
++	QSize mSize;
++};
++
++qs::window::WindowRenderControl* createRenderControl() {
++	if (qEnvironmentVariableIsSet("QS_DISABLE_DMABUF")) {
++		qCInfo(logRenderControl) << "Render control is unavailable with QS_DISABLE_DMABUF.";
++		return nullptr;
++	}
++
++	return new WaylandRenderControl();
++}
++
++} // namespace
++
++SurfaceBuffer::~SurfaceBuffer() = default;
++
++const wl_buffer_listener SurfaceBufferPool::LISTENER = {.release = &SurfaceBufferPool::onRelease};
++
++void SurfaceBufferPool::onRelease(void* data, wl_buffer* /*buffer*/) {
++	auto* buffer = static_cast<SurfaceBuffer*>(data);
++	buffer->busy = false;
++	buffer->pool->control->onBufferReleased();
++}
++
++SurfaceBuffer* SurfaceBufferPool::acquire(QQuickWindow* window, QRhi* rhi, QSize size, bool alpha) {
++	auto matches = [&](const std::unique_ptr<SurfaceBuffer>& buffer) {
++		return buffer->size == size && buffer->alpha == alpha;
++	};
++
++	// Keep old buffers until onRelease() clears busy.
++	std::erase_if(this->buffers, [&](const auto& buffer) {
++		return !matches(buffer) && !buffer->busy;
++	});
++
++	for (const auto& buffer: this->buffers) {
++		if (!matches(buffer) || buffer->busy) continue;
++		this->current = buffer.get();
++		return this->current;
++	}
++
++	this->current = this->create(window, rhi, size, alpha);
++	return this->current;
++}
++
++void SurfaceBufferPool::clear() {
++	this->current = nullptr;
++	this->buffers.clear();
++	this->depthStencil.reset();
++}
++
++bool SurfaceBufferPool::trim() {
++	auto idle = [this](const auto& buffer) { return buffer.get() != this->current && !buffer->busy; };
++	auto dropped = std::erase_if(this->buffers, idle) != 0;
++	if (this->buffers.empty()) this->depthStencil.reset();
++	return dropped;
++}
++
++bool SurfaceBufferPool::available(QSize size, bool alpha) const {
++	auto used = 0;
++	for (const auto& buffer: this->buffers) {
++		if (buffer->size != size || buffer->alpha != alpha) continue;
++		if (!buffer->busy) return true;
++		used++;
++	}
++
++	return used < MAX_BUFFERS;
++}
++
++SurfaceBuffer* SurfaceBufferPool::create(QQuickWindow* window, QRhi* rhi, QSize size, bool alpha) {
++	buffer::WlBufferRequest request;
++	request.width = size.width();
++	request.height = size.height();
++	request.dmabuf.formats.push(
++	    buffer::WlBufferRequest::DmaFormat(alpha ? DRM_FORMAT_ARGB8888 : DRM_FORMAT_XRGB8888)
++	);
++
++	auto result = std::make_unique<SurfaceBuffer>();
++	result->pool = this;
++	result->size = size;
++	result->alpha = alpha;
++	result->buffer.reset(buffer::WlBufferManager::instance()->createBuffer(request));
++	if (!result->buffer) return nullptr;
++	wl_buffer_add_listener(result->buffer->buffer(), &LISTENER, result.get());
++
++	result->import.reset(result->buffer->createQsgTexture(window));
++	if (!result->import) return nullptr;
++
++	auto native = result->import->texture()->rhiTexture()->nativeTexture();
++	result->texture.reset(rhi->newTexture(QRhiTexture::RGBA8, size, 1, QRhiTexture::RenderTarget));
++	if (!result->texture->createFrom({.object = native.object, .layout = 0})) return nullptr;
++
++	if (!this->depthStencil || this->depthStencil->pixelSize() != size) {
++		this->depthStencil.reset(rhi->newRenderBuffer(QRhiRenderBuffer::DepthStencil, size));
++		if (!this->depthStencil->create()) {
++			this->depthStencil.reset();
++			return nullptr;
++		}
++	}
++
++	result->depthStencil = this->depthStencil;
++
++	auto description = QRhiTextureRenderTargetDescription(QRhiColorAttachment(result->texture.get()));
++	description.setDepthStencilBuffer(result->depthStencil.get());
++	result->renderTarget.reset(rhi->newTextureRenderTarget(description));
++	result->renderPass.reset(result->renderTarget->newCompatibleRenderPassDescriptor());
++	result->renderTarget->setRenderPassDescriptor(result->renderPass.get());
++	if (!result->renderTarget->create()) return nullptr;
++
++	return this->buffers.emplace_back(std::move(result)).get();
++}
++
++WaylandRenderControl::WaylandRenderControl(): pool(this) {
++	this->trimTimer.setSingleShot(true);
++	this->trimTimer.setInterval(std::chrono::seconds(1));
++
++	// clang-format off
++	QObject::connect(this, &QQuickRenderControl::renderRequested, this, &WaylandRenderControl::onRenderRequested);
++	QObject::connect(this, &QQuickRenderControl::sceneChanged, this, &WaylandRenderControl::scheduleFrame);
++	QObject::connect(&this->trimTimer, &QTimer::timeout, this, &WaylandRenderControl::trimBuffers);
++	// clang-format on
++}
++
++WaylandRenderControl::~WaylandRenderControl() {
++	if (!this->rhi) return;
++
++	// Keep the context current through texture and scene graph cleanup.
++	this->rhi->makeThreadLocalNativeContextCurrent();
++	this->pool.clear();
++	this->decoration.reset();
++	// Invalidate before releasing rhi; QQuickRenderControl::~QQuickRenderControl() is too late.
++	this->invalidate();
++}
++
++void WaylandRenderControl::requestCommit() {
++	this->commitRequested = true;
++	this->scheduleFrame();
++}
++
++// renderFrame() syncs polish changes in the current frame.
++void WaylandRenderControl::scheduleFrame() {
++	if (!this->polishing) this->window()->requestUpdate();
++}
++
++// Explicit repaint requests bypass the damage check in renderFrame().
++void WaylandRenderControl::onRenderRequested() {
++	this->repaintRequested = true;
++	this->scheduleFrame();
++}
++
++void WaylandRenderControl::onBufferReleased() {
++	this->trimTimer.start();
++	if (std::exchange(this->bufferAwaited, false)) this->scheduleFrame();
++}
++
++void WaylandRenderControl::trimBuffers() {
++	// Hidden before the first frame.
++	if (!this->rhi) return;
++	// WlDmaBufferQSGTexture's destructor needs the current context.
++	if (!this->rhi->makeThreadLocalNativeContextCurrent()) return;
++	if (!this->pool.trim()) return;
++
++	// QRhiGles2 frees released GL objects in beginOffscreenFrame(), see executeDeferredReleases().
++	QRhiCommandBuffer* commands = nullptr;
++	if (this->rhi->beginOffscreenFrame(&commands) != QRhi::FrameOpSuccess) return;
++	this->rhi->endOffscreenFrame();
++}
++
++bool WaylandRenderControl::eventFilter(QObject* watched, QEvent* event) {
++	if (watched != this->window()) return false;
++
++	switch (event->type()) {
++	case QEvent::UpdateRequest: this->renderFrame(); break;
++	case QEvent::Expose:
++		if (!this->window()->isExposed()) {
++			this->presented = false;
++			// The compositor releases the attached buffer after the unmap; trim it with the rest.
++			this->pool.forget();
++			this->trimTimer.start();
++			break;
++		}
++		// Commit surface state even if renderFrame() finds no damage.
++		this->commitRequested = true;
++		// Deliver any update left pending while the window was unexposed.
++		if (this->window()->handle()->hasPendingUpdateRequest()) {
++			this->window()->handle()->deliverUpdateRequest();
++			break;
++		}
++		this->renderFrame();
++		break;
++	default: break;
++	}
++
++	return false;
++}
++
++bool WaylandRenderControl::initializeScene() {
++	auto* window = this->window();
++	driveAnimations();
++
++	// Connect the tracker before QQuickRenderControl::initialize() emits sceneGraphInitialized.
++	auto* base = qobject_cast<QsQuickWindowBase*>(window);
++	if (!this->tracker && base) {
++		this->tracker = new qs::window::WindowDamageTracker(base);
++	}
++
++	this->rhi = sharedRhi(window->requestedFormat());
++	if (this->rhi) window->setGraphicsDevice(QQuickGraphicsDevice::fromRhi(this->rhi.get()));
++
++	if (!this->rhi || !this->initialize()) {
++		this->rhi.reset();
++		emit window->sceneGraphError(
++		    QQuickWindow::ContextNotAvailable,
++		    QStringLiteral("Failed to initialize the render control.")
++		);
++		return false;
++	}
++
++	auto* manager = buffer::WlBufferManager::instance();
++	if (!manager->isReady()) {
++		// clang-format off
++		QObject::connect(manager, &buffer::WlBufferManager::ready, this, &WaylandRenderControl::scheduleFrame, Qt::SingleShotConnection);
++		// clang-format on
++		manager->initWindow(window);
++	}
++
++	return true;
++}
++
++void WaylandRenderControl::renderFrame() {
++	auto* window = this->window();
++	if (!window->isExposed()) return;
++	// Allow the first frame with updates disabled; see QSGThreadedRenderLoop::handleExposure().
++	if (this->presented && !QQuickWindowPrivate::get(window)->updatesEnabled) return;
++	if (!this->rhi && !this->initializeScene()) return;
++	if (!buffer::WlBufferManager::instance()->isReady()) return;
++
++	this->polishing = true;
++	this->polishItems();
++	this->polishing = false;
++
++	auto* waylandWindow = dynamic_cast<QtWaylandClient::QWaylandWindow*>(window->handle());
++	if (!waylandWindow || !window->isExposed()) return;
++
++	auto* decoration = waylandWindow->decoration();
++	auto scale = waylandWindow->scale();
++	auto surfaceSize = waylandWindow->surfaceSize();
++	auto pixelSize = surfaceSize * scale;
++	auto alpha = decoration || window->requestedFormat().hasAlpha();
++
++	if (pixelSize.isEmpty()) {
++		this->commitWithoutFrame();
++		return;
++	}
++
++	// onBufferReleased() schedules another frame.
++	if (!this->pool.available(pixelSize, alpha)) {
++		this->bufferAwaited = true;
++		return;
++	}
++
++	this->beginFrame();
++	if (!this->rhi->isRecordingFrame()) {
++		qCWarning(logRenderControl) << "Failed to begin a frame for" << window;
++		this->commitWithoutFrame();
++		return;
++	}
++
++	this->sync();
++
++	// Emit frameSwapped even when damage tracking skips the render.
++	auto* tracker = this->tracker;
++	auto repaint = std::exchange(this->repaintRequested, false);
++	if (tracker && !repaint && tracker->damage() == QRegion() && !tracker->pendingPreprocess()) {
++		this->endFrame();
++		this->commitWithoutFrame();
++		QQuickWindowPrivate::get(window)->fireFrameSwapped();
++		return;
++	}
++
++	if (!decoration) this->decoration.reset();
++
++	// Acquire a buffer only after the damage check.
++	QRhiRenderTarget* target = nullptr;
++	auto* buffer = this->pool.acquire(window, this->rhi.get(), pixelSize, alpha);
++	if (buffer) {
++		target =
++		    decoration ? this->decorationTarget(window->size() * scale) : buffer->renderTarget.get();
++	}
++
++	if (!target) {
++		this->abortFrame();
++		return;
++	}
++
++	auto renderTarget = QQuickRenderTarget::fromRhiRenderTarget(target);
++	// Match the surface orientation when the framebuffer's Y axis points up.
++	renderTarget.setMirrorVertically(this->rhi->isYUpInFramebuffer());
++	window->setRenderTarget(renderTarget);
++
++	if (tracker) tracker->beginRender();
++	this->render();
++
++	if (decoration) {
++		auto margins = waylandWindow->clientSideMargins();
++		auto offset = (QPointF(margins.left(), margins.top()) * scale).toPoint();
++		if (!this->drawDecoration(decoration->contentImage(), buffer, offset)) {
++			this->abortFrame();
++			return;
++		}
++	}
++
++	this->endFrame();
++
++	// Collect changes made during render; WindowDamageTracker::sync() forces full damage with margins.
++	auto damage = tracker ? tracker->damage() : std::nullopt;
++	auto ref = WlBufferRef(buffer->buffer->buffer(), surfaceSize);
++	waylandWindow->safeCommit(&ref, damage.value_or(QRect(QPoint(), surfaceSize)));
++	QQuickWindowPrivate::get(window)->fireFrameSwapped();
++	// Keep the damage until safeCommit() accepts a buffer.
++	if (!ref.busy()) return;
++
++	buffer->busy = true;
++	this->commitRequested = false;
++	this->presented = true;
++	if (!tracker) return;
++	tracker->presented();
++	// Redraw stale layer textures carried over by SceneDamageTracker::presented().
++	if (tracker->pendingDamage()) this->scheduleFrame();
++}
++
++void WaylandRenderControl::abortFrame() {
++	this->endFrame();
++	this->commitWithoutFrame();
++	emit this->window()->sceneGraphError(
++	    QQuickWindow::ContextNotAvailable,
++	    QStringLiteral("Failed to create a buffer for the window.")
++	);
++}
++
++void WaylandRenderControl::commitWithoutFrame() {
++	if (!this->commitRequested) return;
++	this->commitRequested = false;
++
++	if (auto* window = dynamic_cast<QtWaylandClient::QWaylandWindow*>(this->window()->handle())) {
++		window->commit();
++	}
++}
++
++QRhiRenderTarget* WaylandRenderControl::decorationTarget(QSize size) {
++	if (this->decoration && this->decoration->size == size) {
++		return this->decoration->renderTarget.get();
++	}
++
++	auto target = std::make_unique<DecorationTarget>();
++	target->size = size;
++	target->content.reset(
++	    this->rhi->newTexture(QRhiTexture::RGBA8, size, 1, QRhiTexture::RenderTarget)
++	);
++	target->depthStencil.reset(this->rhi->newRenderBuffer(QRhiRenderBuffer::DepthStencil, size));
++
++	auto description = QRhiTextureRenderTargetDescription(QRhiColorAttachment(target->content.get()));
++	description.setDepthStencilBuffer(target->depthStencil.get());
++	target->renderTarget.reset(this->rhi->newTextureRenderTarget(description));
++	target->renderPass.reset(target->renderTarget->newCompatibleRenderPassDescriptor());
++	target->renderTarget->setRenderPassDescriptor(target->renderPass.get());
++
++	if (!target->content->create() || !target->depthStencil->create()
++	    || !target->renderTarget->create())
++	{
++		return nullptr;
++	}
++
++	this->decoration = std::move(target);
++	return this->decoration->renderTarget.get();
++}
++
++// Replace the decoration's content area, including transparent pixels.
++bool WaylandRenderControl::drawDecoration(
++    const QImage& image,
++    SurfaceBuffer* buffer,
++    QPoint offset
++) {
++	auto* target = this->decoration.get();
++
++	if (!target->decoration || target->decoration->pixelSize() != image.size()) {
++		target->decoration.reset(this->rhi->newTexture(QRhiTexture::RGBA8, image.size()));
++		target->decorationKey = 0;
++		if (!target->decoration->create()) {
++			target->decoration.reset();
++			return false;
++		}
++	}
++
++	auto* updates = this->rhi->nextResourceUpdateBatch();
++	if (image.cacheKey() != target->decorationKey) {
++		target->decorationKey = image.cacheKey();
++		auto converted = image.convertToFormat(QImage::Format_RGBA8888_Premultiplied);
++		updates->uploadTexture(target->decoration.get(), converted);
++	}
++
++	auto bufferRect = QRect(QPoint(), buffer->size);
++
++	QRhiTextureCopyDescription frame;
++	frame.setPixelSize(QRect(QPoint(), image.size()).intersected(bufferRect).size());
++	updates->copyTexture(buffer->texture.get(), target->decoration.get(), frame);
++
++	QRhiTextureCopyDescription content;
++	content.setDestinationTopLeft(offset);
++	content.setPixelSize(QRect(offset, target->size).intersected(bufferRect).size());
++	updates->copyTexture(buffer->texture.get(), target->content.get(), content);
++
++	this->commandBuffer()->resourceUpdate(updates);
++	return true;
++}
++
++} // namespace qs::wayland::render
++
++// NOLINTNEXTLINE(misc-use-internal-linkage)
++void installRenderControl() {
++	qs::window::WindowRenderControl::setFactory(&qs::wayland::render::createRenderControl);
++}
+diff --git a/src/wayland/rendercontrol.hpp b/src/wayland/rendercontrol.hpp
+new file mode 100644
+index 0000000..72073e1
+--- /dev/null
++++ b/src/wayland/rendercontrol.hpp
+@@ -0,0 +1,125 @@
++#pragma once
++
++#include <memory>
++#include <vector>
++
++#include <qcoreevent.h>
++#include <qimage.h>
++#include <qobject.h>
++#include <qpoint.h>
++#include <qquickwindow.h>
++#include <qsize.h>
++#include <qtclasshelpermacros.h>
++#include <qtimer.h>
++#include <qtmetamacros.h>
++#include <qtypes.h>
++#include <rhi/qrhi.h>
++#include <wayland-client-protocol.h>
++
++#include "../window/rendercontrol.hpp"
++#include "buffer/manager.hpp"
++#include "buffer/qsg.hpp"
++
++namespace qs::window {
++class WindowDamageTracker;
++}
++
++namespace qs::wayland::render {
++
++class SurfaceBufferPool;
++class WaylandRenderControl;
++
++class SurfaceBuffer {
++public:
++	SurfaceBuffer() = default;
++	~SurfaceBuffer();
++	Q_DISABLE_COPY_MOVE(SurfaceBuffer);
++
++	SurfaceBufferPool* pool = nullptr;
++	QSize size;
++	bool alpha = false;
++	// Set by renderFrame(), cleared by SurfaceBufferPool::onRelease().
++	bool busy = false;
++	// Keep the dmabuf alive until the GL objects are destroyed.
++	std::unique_ptr<buffer::WlBuffer> buffer;
++	std::unique_ptr<buffer::WlBufferQSGTexture> import;
++	std::unique_ptr<QRhiTexture> texture;
++	std::shared_ptr<QRhiRenderBuffer> depthStencil;
++	std::unique_ptr<QRhiRenderPassDescriptor> renderPass;
++	std::unique_ptr<QRhiTextureRenderTarget> renderTarget;
++};
++
++class SurfaceBufferPool {
++public:
++	explicit SurfaceBufferPool(WaylandRenderControl* control): control(control) {}
++
++	[[nodiscard]] bool available(QSize size, bool alpha) const;
++	// Requires available(size, alpha).
++	SurfaceBuffer* acquire(QQuickWindow* window, QRhi* rhi, QSize size, bool alpha);
++	void clear();
++	// Drops idle buffers other than the last acquired one.
++	bool trim();
++	// Lets trim() drop the last acquired buffer too.
++	void forget() { this->current = nullptr; }
++
++private:
++	static void onRelease(void* data, wl_buffer* buffer);
++	static const wl_buffer_listener LISTENER;
++
++	SurfaceBuffer* create(QQuickWindow* window, QRhi* rhi, QSize size, bool alpha);
++
++	std::vector<std::unique_ptr<SurfaceBuffer>> buffers;
++	std::shared_ptr<QRhiRenderBuffer> depthStencil;
++	SurfaceBuffer* current = nullptr;
++	WaylandRenderControl* control;
++};
++
++// Separate content target for drawDecoration().
++struct DecorationTarget {
++	QSize size;
++	std::unique_ptr<QRhiTexture> content;
++	std::unique_ptr<QRhiRenderBuffer> depthStencil;
++	std::unique_ptr<QRhiRenderPassDescriptor> renderPass;
++	std::unique_ptr<QRhiTextureRenderTarget> renderTarget;
++	std::unique_ptr<QRhiTexture> decoration;
++	qint64 decorationKey = 0;
++};
++
++class WaylandRenderControl: public qs::window::WindowRenderControl {
++	Q_OBJECT;
++
++public:
++	WaylandRenderControl();
++	~WaylandRenderControl() override;
++	Q_DISABLE_COPY_MOVE(WaylandRenderControl);
++
++	void requestCommit() override;
++	bool eventFilter(QObject* watched, QEvent* event) override;
++	void onBufferReleased();
++
++private slots:
++	void scheduleFrame();
++	void onRenderRequested();
++	void trimBuffers();
++
++private:
++	bool initializeScene();
++	void renderFrame();
++	void abortFrame();
++	void commitWithoutFrame();
++	QRhiRenderTarget* decorationTarget(QSize size);
++	bool drawDecoration(const QImage& image, SurfaceBuffer* buffer, QPoint offset);
++
++	std::shared_ptr<QRhi> rhi;
++	SurfaceBufferPool pool;
++	std::unique_ptr<DecorationTarget> decoration;
++	qs::window::WindowDamageTracker* tracker = nullptr;
++	QTimer trimTimer;
++	bool bufferAwaited = false;
++	bool commitRequested = false;
++	bool presented = false;
++	bool repaintRequested = false;
++	bool polishing = false;
++};
++
++} // namespace qs::wayland::render
+diff --git a/src/wayland/session_lock.cpp b/src/wayland/session_lock.cpp
+index 4ced844..a4a92b1 100644
+--- a/src/wayland/session_lock.cpp
++++ b/src/wayland/session_lock.cpp
+@@ -20,6 +20,7 @@
+ #include "../core/qmlscreen.hpp"
+ #include "../core/reload.hpp"
+ #include "../window/proxywindow.hpp"
++#include "../window/rendercontrol.hpp"
+ #include "session_lock/session_lock.hpp"
+ 
+ WlSessionLock::~WlSessionLock() {
+@@ -245,7 +246,7 @@ void WlSessionLockSurface::onReload(QObject* oldInstance) {
+ 	}
+ 
+ 	if (this->window == nullptr) {
+-		this->window = new QsQuickWindowBase();
++		this->window = new QsQuickWindowBase(qs::window::WindowRenderControl::create());
+ 
+ 		// needed for vulkan dmabuf import, qt ignores these if not applicable
+ 		auto graphicsConfig = this->window->graphicsConfiguration();
+diff --git a/src/wayland/wlr_layershell/surface.cpp b/src/wayland/wlr_layershell/surface.cpp
+index e260f6f..4b4f022 100644
+--- a/src/wayland/wlr_layershell/surface.cpp
++++ b/src/wayland/wlr_layershell/surface.cpp
+@@ -10,6 +10,7 @@
+ #include <private/qwaylandsurface_p.h>
+ #include <private/qwaylandwindow_p.h>
+ #include <qlogging.h>
++#include <qobject.h>
+ #include <qrect.h>
+ #include <qsize.h>
+ #include <qtversionchecks.h>
+@@ -20,6 +21,7 @@
+ #include <wayland-xdg-shell-client-protocol.h>
+ 
+ #include "../../window/panelinterface.hpp"
++#include "../../window/proxywindow.hpp"
+ #include "../activation.hpp"
+ #include "shell_integration.hpp"
+ #include "wlr_layershell.hpp"
+@@ -77,7 +79,10 @@ toWaylandKeyboardFocus(const WlrKeyboardFocus::Enum& focus) noexcept {
+ } // namespace
+ 
+ void LayerSurfaceBridge::commitState() {
+-	if (this->surface) this->surface->commit();
++	if (!this->surface) return;
++	this->surface->commit();
++
++	if (auto* window = qobject_cast<QsQuickWindowBase*>(this->parent())) window->requestCommit();
+ }
+ 
+ LayerSurfaceBridge* LayerSurfaceBridge::get(QWindow* window) {
+diff --git a/src/window/CMakeLists.txt b/src/window/CMakeLists.txt
+index eded4cd..ed95f0c 100644
+--- a/src/window/CMakeLists.txt
++++ b/src/window/CMakeLists.txt
+@@ -4,6 +4,8 @@ qt_add_library(quickshell-window STATIC
+ 	panelinterface.cpp
+ 	floatingwindow.cpp
+ 	popupwindow.cpp
++	damage.cpp
++	rendercontrol.cpp
+ )
+ 
+ qt_add_qml_module(quickshell-window
+diff --git a/src/window/damage.cpp b/src/window/damage.cpp
+new file mode 100644
+index 0000000..8baaf2f
+--- /dev/null
++++ b/src/window/damage.cpp
+@@ -0,0 +1,614 @@
++#include "damage.hpp"
++#include <algorithm>
++#include <array>
++#include <cmath>
++#include <cstring>
++#include <limits>
++#include <memory>
++#include <optional>
++#include <typeinfo>
++#include <utility>
++
++#include <private/qquickwindow_p.h>
++#include <private/qsgabstractrenderer_p.h>
++#include <private/qsgadaptationlayer_p.h>
++#include <private/qsgdefaultinternalimagenode_p.h>
++#include <private/qsgdefaultinternalrectanglenode_p.h>
++#include <private/qsgdistancefieldglyphnode_p_p.h>
++#include <private/qsgmaterialshader_p.h>
++#include <private/qsgrenderer_p.h>
++#include <qcolor.h>
++#include <qfile.h>
++#include <qhash.h>
++#include <qiodevice.h>
++#include <qlist.h>
++#include <qlogging.h>
++#include <qloggingcategory.h>
++#include <qmap.h>
++#include <qmatrix4x4.h>
++#include <qobject.h>
++#include <qpoint.h>
++#include <qquickwindow.h>
++#include <qrect.h>
++#include <qregion.h>
++#include <qset.h>
++#include <qsgflatcolormaterial.h>
++#include <qsggeometry.h>
++#include <qsgmaterial.h>
++#include <qsgmaterialshader.h>
++#include <qsgmaterialtype.h>
++#include <qsgnode.h>
++#include <qsgrendererinterface.h>
++#include <qsgtexturematerial.h>
++#include <qsgvertexcolormaterial.h>
++#include <qsize.h>
++#include <qstring.h>
++#include <qtclasshelpermacros.h>
++#include <qtypes.h>
++#include <qwindow.h>
++#include <rhi/qshader.h>
++#include <span>
++
++#include "../core/logcat.hpp"
++#include "proxywindow.hpp"
++
++namespace qs::window {
++
++namespace {
++
++QS_LOGGING_CATEGORY(logDamage, "quickshell.window.damage", QtWarningMsg);
++constexpr qsizetype MAX_DAMAGE_RECTS = 32;
++
++// Glyph shader allowlist for boundedGlyphShader(); windowRect() adds the pixel margin.
++constexpr auto GLYPH_SHADERS = std::array {
++    ":/qt-project.org/scenegraph/shaders_ng/textmask.vert.qsb",
++    ":/qt-project.org/scenegraph/shaders_ng/styledtext.vert.qsb",
++    ":/qt-project.org/scenegraph/shaders_ng/outlinedtext.vert.qsb",
++    ":/qt-project.org/scenegraph/shaders_ng/distancefieldtext.vert.qsb",
++    ":/qt-project.org/scenegraph/shaders_ng/distancefieldoutlinetext.vert.qsb",
++    ":/qt-project.org/scenegraph/shaders_ng/distancefieldshiftedtext.vert.qsb",
++    ":/qt-project.org/scenegraph/shaders_ng/hiqsubpixeldistancefieldtext.vert.qsb",
++    ":/qt-project.org/scenegraph/shaders_ng/loqsubpixeldistancefieldtext.vert.qsb",
++};
++
++// Effect shader allowlist for boundedEffectShader().
++constexpr auto EFFECT_SHADERS = std::array {
++    ":/data/shaders/multieffect_c.vert.qsb",
++    ":/data/shaders/multieffect_cs.vert.qsb",
++    ":/data/shaders/bluritems.vert.qsb",
++    ":/data/shaders/rectangularshadow.vert.qsb",
++};
++
++bool isFinite(const QRectF& rect) {
++	return std::isfinite(rect.left()) && std::isfinite(rect.top()) && std::isfinite(rect.right())
++	    && std::isfinite(rect.bottom());
++}
++
++QRegion uniteRects(const QList<QRect>& rects) {
++	QRect bounds;
++	for (const auto& rect: rects) bounds |= rect;
++	if (rects.size() > MAX_DAMAGE_RECTS) return bounds;
++
++	QRegion region;
++	for (const auto& rect: rects) {
++		auto covers = [&rect](const QRect& other) {
++			return other.left() <= rect.left() && other.top() <= rect.top()
++			    && other.right() >= rect.right() && other.bottom() >= rect.bottom();
++		};
++
++		if (covers(region.boundingRect()) && std::ranges::any_of(region, covers)) continue;
++		region += rect;
++	}
++
++	return region.rectCount() > MAX_DAMAGE_RECTS ? QRegion(bounds) : region;
++}
++
++} // namespace
++
++// Collects damage through nodeChanged(); unrecognized geometry falls back to full damage.
++class SceneDamageTracker: public QSGAbstractRenderer {
++public:
++	SceneDamageTracker() = default;
++	~SceneDamageTracker() override { this->setRootNode(nullptr); }
++	Q_DISABLE_COPY_MOVE(SceneDamageTracker);
++
++	void setFrame(const QSize& size, qreal scale, const QColor& color, bool full);
++	void markFull() { this->full = true; }
++	void beginRender() { this->rendering = true; }
++	void renderScene() override;
++	[[nodiscard]] std::optional<QRegion> damage() const;
++	[[nodiscard]] bool pendingPreprocess() const { return this->unmeasured; }
++	[[nodiscard]] bool pendingDamage() const { return !this->frameDamage.isEmpty(); }
++	void presented();
++
++protected:
++	void nodeChanged(QSGNode* node, QSGNode::DirtyState state) override;
++
++private:
++	// Cached bounds in parent coordinates; see refresh().
++	struct Subtree {
++		QRectF rect;
++		bool unbounded = false;
++		bool antialiased = false;
++
++		Subtree& operator|=(const Subtree& other) {
++			if (!other.rect.isEmpty()) this->rect |= other.rect;
++			this->unbounded |= other.unbounded;
++			this->antialiased |= other.antialiased;
++			return *this;
++		}
++	};
++
++	static constexpr Subtree UNBOUNDED {.rect = {}, .unbounded = true, .antialiased = false};
++
++	struct GlyphAtlas {
++		const QSGDistanceFieldTextMaterial* material = nullptr;
++		QSize size;
++	};
++
++	bool boundedShader(QSGGeometryNode* node, bool glyph, QSGMaterial* material);
++	bool boundedGlyphShader(QSGMaterial* material);
++	bool boundedEffectShader(QSGMaterial* material);
++	void forget(QSGNode* node);
++	void forgetChildren(QSGNode* node);
++	void addDamage(const QRectF& rect);
++	[[nodiscard]] QRectF windowRect(QSGNode* node) const;
++	Subtree refresh(QSGNode* node);
++	void propagate(QSGNode* node, Subtree subtree);
++	Subtree measureGeometry(QSGGeometryNode* node);
++	void recordGlyphAtlas(QSGGeometryNode* node);
++
++	std::array<QShader, EFFECT_SHADERS.size()> effectShaders {};
++	QHash<QSGMaterialType*, bool> glyphShaders;
++	QHash<QSGNode*, Subtree> subtrees;
++	QHash<QSGNode*, Subtree> localBounds;
++	QSet<QSGNode*> dirty;
++	QList<QSGNode*> dirtyNodes;
++	QSet<QSGNode*> forgottenDirty;
++	QList<QSGNode*> topmost;
++	QSet<QSGNode*> stale;
++	QSet<QSGNode*> renderNodes;
++	QSet<QSGNode*> staleTextures;
++	QMap<QSGNode*, GlyphAtlas> glyphAtlases;
++	QList<QRect> pending;
++	QRegion frameDamage;
++	QRegion nextDamage;
++	QSize size;
++	qreal scale = 1;
++	QColor color;
++	bool full = true;
++	bool unboundedFrame = false;
++	bool unmeasured = false;
++	bool rendering = false;
++	bool loggedEffectShader = false;
++};
++
++bool SceneDamageTracker::boundedShader(QSGGeometryNode* node, bool glyph, QSGMaterial* material) {
++	if (!material) return false;
++
++	const auto& type = typeid(*material);
++	if (type == typeid(QSGFlatColorMaterial) || type == typeid(QSGVertexColorMaterial)
++	    || type == typeid(QSGOpaqueTextureMaterial) || type == typeid(QSGTextureMaterial)
++	    || type == typeid(QSGSmoothColorMaterial) || type == typeid(QSGSmoothTextureMaterial))
++	{
++		return true;
++	}
++
++	if (glyph) return this->boundedGlyphShader(material);
++	if (!dynamic_cast<QSGShaderEffectNode*>(node)) return false;
++	// RequiresFullMatrix marks custom vertex shaders; see QSGRhiShaderEffectNode::syncMaterial().
++	if (!material->flags().testFlag(QSGMaterial::RequiresFullMatrix)) return true;
++	return this->boundedEffectShader(material);
++}
++
++bool SceneDamageTracker::boundedGlyphShader(QSGMaterial* material) {
++	auto cached = this->glyphShaders.constFind(material->type());
++	if (cached != this->glyphShaders.cend()) return *cached;
++
++	auto shader = std::unique_ptr<QSGMaterialShader>(
++	    material->createShader(QSGRendererInterface::RenderMode2D)
++	);
++	auto file =
++	    QSGMaterialShaderPrivate::get(shader.get())->shaderFileNames.value(QShader::VertexStage);
++	auto bounded =
++	    std::ranges::any_of(GLYPH_SHADERS, [&file](const char* path) { return file == path; });
++	if (!bounded) qCDebug(logDamage) << "Unrecognized glyph vertex shader:" << file;
++
++	this->glyphShaders.insert(material->type(), bounded);
++	return bounded;
++}
++
++bool SceneDamageTracker::boundedEffectShader(QSGMaterial* material) {
++	auto shader = std::unique_ptr<QSGMaterialShader>(
++	    material->createShader(QSGRendererInterface::RenderMode2D)
++	);
++	auto vertex = QSGMaterialShaderPrivate::get(shader.get())->shader(QShader::VertexStage);
++	if (!vertex.isValid()) return false;
++	if (std::ranges::find(this->effectShaders, vertex) != this->effectShaders.end()) return true;
++
++	for (size_t i = 0; i < EFFECT_SHADERS.size(); i++) {
++		auto& cached = this->effectShaders.at(i);
++		if (cached.isValid()) continue;
++
++		auto file = QFile(QString(EFFECT_SHADERS.at(i)));
++		if (!file.open(QIODevice::ReadOnly)) continue;
++		cached = QShader::fromSerialized(file.readAll());
++		if (cached == vertex) return true;
++	}
++
++	if (!this->loggedEffectShader) {
++		this->loggedEffectShader = true;
++		qCDebug(logDamage) << "Unrecognized effect vertex shader; using full damage.";
++	}
++
++	return false;
++}
++
++void SceneDamageTracker::setFrame(const QSize& size, qreal scale, const QColor& color, bool full) {
++	this->full |= full || this->size != size || this->scale != scale || this->color != color;
++	this->rendering = false;
++	this->size = size;
++	this->scale = scale;
++	this->color = color;
++}
++
++void SceneDamageTracker::nodeChanged(QSGNode* node, QSGNode::DirtyState state) {
++	// Capture old bounds now, before an ancestor's transform can change later in the sync.
++	if (this->subtrees.contains(node)) this->addDamage(this->windowRect(node));
++	if (state.testFlag(QSGNode::DirtyNodeRemoved)) {
++		this->forget(node);
++		return;
++	}
++
++	// Carry layer updates during rendering into the next frame; see QSGRhiLayer::grab().
++	if (this->rendering && state.testFlag(QSGNode::DirtyMaterial)
++	    && node->flags().testFlag(QSGNode::UsePreprocess))
++	{
++		this->staleTextures.insert(node);
++	}
++
++	// refresh() skips blocked subtrees; discard bounds that may go stale while blocked.
++	if (node->isSubtreeBlocked()) this->forgetChildren(node);
++	if (this->dirty.contains(node)) return;
++
++	this->dirty.insert(node);
++	// forget() leaves the node in dirtyNodes, so don't append it twice.
++	if (!this->forgottenDirty.contains(node)) this->dirtyNodes.append(node);
++}
++
++void SceneDamageTracker::forget(QSGNode* node) {
++	// renderScene() checks dirty before dereferencing entries left in dirtyNodes.
++	if (this->dirty.remove(node)) this->forgottenDirty.insert(node);
++	this->subtrees.remove(node);
++	this->localBounds.remove(node);
++	this->renderNodes.remove(node);
++	this->staleTextures.remove(node);
++	this->glyphAtlases.remove(node);
++	this->forgetChildren(node);
++}
++
++void SceneDamageTracker::forgetChildren(QSGNode* node) {
++	for (auto* child = node->firstChild(); child; child = child->nextSibling()) {
++		this->forget(child);
++	}
++}
++
++void SceneDamageTracker::addDamage(const QRectF& rect) {
++	auto aligned = rect.toAlignedRect();
++	if (aligned.isEmpty()) return;
++	this->pending.append(aligned);
++}
++
++QRectF SceneDamageTracker::windowRect(QSGNode* node) const {
++	auto subtree = this->subtrees.value(node);
++	auto window = QRectF(QPointF(), this->size);
++	if (subtree.unbounded) return window;
++	if (subtree.rect.isEmpty()) return QRectF();
++
++	QMatrix4x4 matrix;
++	for (auto* parent = node->parent(); parent; parent = parent->parent()) {
++		if (parent->type() != QSGNode::TransformNodeType) continue;
++		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-static-cast-downcast)
++		matrix = static_cast<QSGTransformNode*>(parent)->matrix() * matrix;
++	}
++
++	if (!matrix.isAffine()) return window;
++	auto rect = matrix.mapRect(subtree.rect);
++	if (!isFinite(rect)) return window;
++	if (!subtree.antialiased) return rect;
++
++	// Include a pixel margin for the antialiased materials selected in measureGeometry().
++	auto pixel = 1 / this->scale;
++	return rect.adjusted(-pixel, -pixel, pixel, pixel);
++}
++
++SceneDamageTracker::Subtree SceneDamageTracker::refresh(QSGNode* node) {
++	Subtree subtree;
++	if (node->isSubtreeBlocked()) {
++		this->subtrees.insert(node, subtree);
++		return subtree;
++	}
++
++	QMatrix4x4 matrix;
++	switch (node->type()) {
++	case QSGNode::GeometryNodeType: {
++		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-static-cast-downcast)
++		auto* geometry = static_cast<QSGGeometryNode*>(node);
++		auto local = this->localBounds.constFind(node);
++		if (local == this->localBounds.cend() || this->dirty.contains(node)) {
++			local = this->localBounds.insert(node, this->measureGeometry(geometry));
++			this->recordGlyphAtlas(geometry);
++		}
++
++		subtree = *local;
++		break;
++	}
++	case QSGNode::TransformNodeType:
++		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-static-cast-downcast)
++		matrix = static_cast<QSGTransformNode*>(node)->matrix();
++		subtree.unbounded = !matrix.isAffine();
++		break;
++	case QSGNode::RenderNodeType:
++		this->renderNodes.insert(node);
++		subtree.unbounded = true;
++		break;
++	default: break;
++	}
++
++	for (auto* child = node->firstChild(); child; child = child->nextSibling()) {
++		auto cached = this->subtrees.constFind(child);
++		auto entry = cached == this->subtrees.cend() || this->stale.contains(child)
++		               ? this->refresh(child)
++		               : *cached;
++		entry.rect = matrix.mapRect(entry.rect);
++		entry.unbounded |= !isFinite(entry.rect);
++		subtree |= entry;
++	}
++
++	this->subtrees.insert(node, subtree);
++	return subtree;
++}
++
++// Cached bounds only grow here; refresh() can shrink them later.
++void SceneDamageTracker::propagate(QSGNode* node, Subtree subtree) {
++	for (auto* parent = node->parent(); parent; parent = parent->parent()) {
++		auto cached = this->subtrees.find(parent);
++		if (cached == this->subtrees.end()) return;
++
++		if (parent->type() == QSGNode::TransformNodeType) {
++			// NOLINTNEXTLINE(cppcoreguidelines-pro-type-static-cast-downcast)
++			const auto& matrix = static_cast<QSGTransformNode*>(parent)->matrix();
++			subtree.rect = matrix.mapRect(subtree.rect);
++			subtree.unbounded |= !matrix.isAffine() || !isFinite(subtree.rect);
++		}
++
++		*cached |= subtree;
++	}
++}
++
++SceneDamageTracker::Subtree SceneDamageTracker::measureGeometry(QSGGeometryNode* node) {
++	auto glyph = dynamic_cast<QSGGlyphNode*>(node) != nullptr;
++	if (!this->boundedShader(node, glyph, node->material())) return UNBOUNDED;
++	if (node->opaqueMaterial() && !this->boundedShader(node, glyph, node->opaqueMaterial())) {
++		return UNBOUNDED;
++	}
++
++	auto* geometry = node->geometry();
++	// Don't skip frames with unfinished glyph geometry; see QSGDefaultGlyphNode::preprocess().
++	if (!geometry || geometry->vertexCount() == 0) {
++		this->unmeasured |= node->flags().testFlag(QSGNode::UsePreprocess);
++		return {};
++	}
++
++	if (geometry->attributeCount() == 0) return UNBOUNDED;
++
++	const auto& position = *geometry->attributes();
++	if (position.type != QSGGeometry::FloatType || position.tupleSize != 2
++	    || !position.isVertexCoordinate)
++	{
++		return UNBOUNDED;
++	}
++
++	auto mode = geometry->drawingMode();
++	if (mode != QSGGeometry::DrawTriangles && mode != QSGGeometry::DrawTriangleStrip
++	    && mode != QSGGeometry::DrawTriangleFan)
++	{
++		return UNBOUNDED;
++	}
++
++	auto left = std::numeric_limits<float>::max();
++	auto top = left;
++	auto right = std::numeric_limits<float>::lowest();
++	auto bottom = right;
++	auto stride = static_cast<size_t>(geometry->sizeOfVertex());
++	auto vertices = std::span(
++	    static_cast<const char*>(geometry->vertexData()),
++	    stride * static_cast<size_t>(geometry->vertexCount())
++	);
++
++	for (auto i = 0; i < geometry->vertexCount(); i++) {
++		QSGGeometry::Point2D point = {};
++		std::memcpy(&point, vertices.data(), sizeof(point));
++		if (!std::isfinite(point.x) || !std::isfinite(point.y)) return UNBOUNDED;
++		left = std::min(left, point.x);
++		top = std::min(top, point.y);
++		right = std::max(right, point.x);
++		bottom = std::max(bottom, point.y);
++		vertices = vertices.subspan(stride);
++	}
++
++	auto* material = node->material();
++	const auto& type = typeid(*material);
++	auto antialiased =
++	    glyph || type == typeid(QSGSmoothColorMaterial) || type == typeid(QSGSmoothTextureMaterial);
++
++	auto rect = QRectF(QPointF(left, top), QPointF(right, bottom));
++	return {.rect = rect, .unbounded = false, .antialiased = antialiased};
++}
++
++void SceneDamageTracker::recordGlyphAtlas(QSGGeometryNode* node) {
++	auto* material = dynamic_cast<QSGDistanceFieldTextMaterial*>(node->material());
++	if (!material || !material->texture()) {
++		this->glyphAtlases.remove(node);
++		return;
++	}
++
++	this->glyphAtlases.insert(node, {.material = material, .size = material->texture()->size});
++}
++
++void SceneDamageTracker::renderScene() {
++	// Mark paths below dirty ancestors so refresh() reaches their dirty descendants.
++	for (auto* node: std::as_const(this->dirtyNodes)) {
++		if (!this->dirty.contains(node)) continue;
++
++		auto* ancestor = node->parent();
++		while (ancestor && !this->dirty.contains(ancestor) && !this->stale.contains(ancestor)
++		       && !ancestor->isSubtreeBlocked())
++		{
++			ancestor = ancestor->parent();
++		}
++
++		if (!ancestor) {
++			this->topmost.append(node);
++			continue;
++		}
++
++		if (ancestor->isSubtreeBlocked()) continue;
++		for (auto* path = node; path != ancestor; path = path->parent()) this->stale.insert(path);
++	}
++
++	for (auto* node: std::as_const(this->topmost)) {
++		this->propagate(node, this->refresh(node));
++		this->addDamage(this->windowRect(node));
++	}
++
++	this->dirty.clear();
++	this->dirtyNodes.clear();
++	this->forgottenDirty.clear();
++	this->topmost.clear();
++	this->stale.clear();
++
++	// Track atlas resizing separately from node dirtiness; see QSGRhiDistanceFieldGlyphCache::resizeTexture().
++	for (auto [node, atlas]: this->glyphAtlases.asKeyValueRange()) {
++		const auto& size = atlas.material->texture()->size;
++		if (size == atlas.size) continue;
++		atlas.size = size;
++		this->addDamage(this->windowRect(node));
++	}
++
++	this->frameDamage += uniteRects(this->pending);
++	this->pending.clear();
++
++	if (this->rendering) {
++		for (auto* node: std::as_const(this->staleTextures)) {
++			auto rect = this->windowRect(node).toAlignedRect();
++			if (!rect.isEmpty()) this->nextDamage += rect;
++		}
++
++		this->staleTextures.clear();
++		this->rendering = false;
++	}
++	// Keep full damage for render nodes even without a nodeChanged() notification.
++	this->unboundedFrame = !this->renderNodes.isEmpty();
++}
++
++std::optional<QRegion> SceneDamageTracker::damage() const {
++	if (this->full || this->unboundedFrame) return std::nullopt;
++	if (this->frameDamage.rectCount() > MAX_DAMAGE_RECTS) {
++		return QRegion(this->frameDamage.boundingRect());
++	}
++
++	return this->frameDamage;
++}
++
++void SceneDamageTracker::presented() {
++	this->frameDamage = std::exchange(this->nextDamage, QRegion());
++	this->full = false;
++	this->unmeasured = false;
++}
++
++WindowDamageTracker::WindowDamageTracker(QsQuickWindowBase* window)
++    : QObject(window)
++    , window(window) {
++	// clang-format off
++	QObject::connect(window, &QQuickWindow::sceneGraphInitialized, this, &WindowDamageTracker::initialize);
++	QObject::connect(window, &QQuickWindow::sceneGraphInvalidated, this, &WindowDamageTracker::invalidate);
++	// Force a full frame when shown again; see sync().
++	QObject::connect(window, &QWindow::visibleChanged, this, &WindowDamageTracker::invalidateFrame);
++	// clang-format on
++}
++
++WindowDamageTracker::~WindowDamageTracker() { this->invalidate(); }
++
++void WindowDamageTracker::initialize() {
++	this->tracker = std::make_unique<SceneDamageTracker>();
++
++	// clang-format off
++	QObject::connect(this->window, &QQuickWindow::beforeSynchronizing, this, &WindowDamageTracker::sync);
++	QObject::connect(this->window, &QQuickWindow::afterSynchronizing, this, &WindowDamageTracker::afterSync);
++	// clang-format on
++}
++
++void WindowDamageTracker::invalidate() {
++	// clang-format off
++	QObject::disconnect(this->window, &QQuickWindow::beforeSynchronizing, this, &WindowDamageTracker::sync);
++	QObject::disconnect(this->window, &QQuickWindow::afterSynchronizing, this, &WindowDamageTracker::afterSync);
++	// clang-format on
++
++	this->tracker.reset();
++}
++
++void WindowDamageTracker::invalidateFrame() { this->invalidated = true; }
++
++void WindowDamageTracker::sync() {
++	// Read pendingFontUpdate before QQuickWindowPrivate::syncSceneGraph() clears it.
++	auto* priv = QQuickWindowPrivate::get(this->window);
++	this->tracker->setFrame(
++	    this->window->size(),
++	    this->window->effectiveDevicePixelRatio(),
++	    this->window->color(),
++	    std::exchange(this->invalidated, false) || priv->pendingFontUpdate
++	        || !this->window->frameMargins().isNull() || !priv->visualizationMode.isEmpty()
++	);
++}
++
++void WindowDamageTracker::afterSync() {
++	// QQuickWindowPrivate::syncSceneGraph() creates the root before afterSynchronizing.
++	this->tracker->setRootNode(QQuickWindowPrivate::get(this->window)->renderer->rootNode());
++}
++
++bool WindowDamageTracker::pendingPreprocess() const {
++	return this->tracker && this->tracker->pendingPreprocess();
++}
++
++bool WindowDamageTracker::pendingDamage() const {
++	return this->tracker && this->tracker->pendingDamage();
++}
++
++void WindowDamageTracker::beginRender() {
++	if (this->tracker) this->tracker->beginRender();
++}
++
++std::optional<QRegion> WindowDamageTracker::damage() {
++	if (!this->tracker) return std::nullopt;
++	this->tracker->renderScene();
++
++	// Keep full damage for one frame after external rendering stops.
++	auto external = this->window->hasRenderReceivers();
++	if (this->externalRendering && !external) this->tracker->markFull();
++	this->externalRendering = external;
++
++	if (external && !this->loggedExternalRendering) {
++		this->loggedExternalRendering = true;
++		qCDebug(logDamage) << "Window has render signal receivers; using full damage.";
++	}
++
++	if (external) return std::nullopt;
++	return this->tracker->damage();
++}
++
++void WindowDamageTracker::presented() {
++	if (this->tracker) this->tracker->presented();
++}
++
++} // namespace qs::window
+diff --git a/src/window/damage.hpp b/src/window/damage.hpp
+new file mode 100644
+index 0000000..aba0382
+--- /dev/null
++++ b/src/window/damage.hpp
+@@ -0,0 +1,49 @@
++#pragma once
++
++#include <memory>
++#include <optional>
++
++#include <qobject.h>
++#include <qregion.h>
++#include <qtclasshelpermacros.h>
++#include <qtmetamacros.h>
++
++class QsQuickWindowBase;
++
++namespace qs::window {
++
++class SceneDamageTracker;
++
++class WindowDamageTracker: public QObject {
++	Q_OBJECT;
++
++public:
++	explicit WindowDamageTracker(QsQuickWindowBase* window);
++	~WindowDamageTracker() override;
++	Q_DISABLE_COPY_MOVE(WindowDamageTracker);
++
++	// Logical window coordinates; see SceneDamageTracker::windowRect().
++	[[nodiscard]] std::optional<QRegion> damage();
++	// Geometry still needs preprocess; see SceneDamageTracker::measureGeometry().
++	[[nodiscard]] bool pendingPreprocess() const;
++	// Damage carried into the next frame by SceneDamageTracker::presented().
++	[[nodiscard]] bool pendingDamage() const;
++	void beginRender();
++	void presented();
++
++private slots:
++	void initialize();
++	void invalidate();
++	void invalidateFrame();
++	void sync();
++	void afterSync();
++
++private:
++	QsQuickWindowBase* window;
++	std::unique_ptr<SceneDamageTracker> tracker;
++	bool invalidated = false;
++	bool externalRendering = false;
++	bool loggedExternalRendering = false;
++};
++
++} // namespace qs::window
+diff --git a/src/window/proxywindow.cpp b/src/window/proxywindow.cpp
+index bc0181c..9505e65 100644
+--- a/src/window/proxywindow.cpp
++++ b/src/window/proxywindow.cpp
+@@ -1,4 +1,6 @@
+ #include "proxywindow.hpp"
++#include <algorithm>
++#include <array>
+ #include <functional>
+ 
+ #include <private/qquickwindow_p.h>
+@@ -7,6 +9,7 @@
+ #include <qevent.h>
+ #include <qguiapplication.h>
+ #include <qlogging.h>
++#include <qmetaobject.h>
+ #include <qnamespace.h>
+ #include <qobject.h>
+ #include <qpoint.h>
+@@ -31,6 +34,7 @@
+ #include "../core/region.hpp"
+ #include "../core/reload.hpp"
+ #include "../debug/lint.hpp"
++#include "rendercontrol.hpp"
+ #include "windowinterface.hpp"
+ 
+ ProxyWindowBase::ProxyWindowBase(QObject* parent)
+@@ -620,13 +624,24 @@ namespace {
+ QList<std::function<void(QQuickWindow*)>> SCENEGRAPH_INIT_CALLBACKS; // NOLINT
+ }
+ 
+-QsQuickWindowBase::QsQuickWindowBase(QWindow* parent): QQuickWindow(parent) {
++QsQuickWindowBase::QsQuickWindowBase(qs::window::WindowRenderControl* renderControl)
++    : QQuickWindow(renderControl)
++    , renderControl(renderControl) {
+ 	QObject::connect(
+ 	    this,
+ 	    &QQuickWindow::sceneGraphInitialized,
+ 	    this,
+ 	    &ProxiedWindow::onSceneGraphInitialized
+ 	);
++
++	if (renderControl) this->installEventFilter(renderControl);
++}
++
++// Destroy the control first; QQuickRenderControl::~QQuickRenderControl() accesses the window.
++QsQuickWindowBase::~QsQuickWindowBase() { delete this->renderControl; }
++
++void QsQuickWindowBase::requestCommit() {
++	if (this->renderControl) this->renderControl->requestCommit();
+ }
+ 
+ void QsQuickWindowBase::onSceneGraphInitialized() {
+@@ -641,6 +656,22 @@ void QsQuickWindowBase::callOnScenegraphInit(std::function<void(QQuickWindow*)>
+ 	SCENEGRAPH_INIT_CALLBACKS.emplaceBack(cb);
+ }
+ 
++bool QsQuickWindowBase::hasRenderReceivers() const {
++	static const auto renderSignals = std::array {
++	    QMetaMethod::fromSignal(&QQuickWindow::beforeRenderPassRecording),
++	    QMetaMethod::fromSignal(&QQuickWindow::afterRenderPassRecording),
++	    QMetaMethod::fromSignal(&QQuickWindow::afterRendering),
++	};
++
++	return std::ranges::any_of(renderSignals, [this](const QMetaMethod& signal) {
++		return this->isSignalConnected(signal);
++	});
++}
++
++ProxiedWindow::ProxiedWindow(ProxyWindowBase* proxy)
++    : QsQuickWindowBase(qs::window::WindowRenderControl::create())
++    , mProxy(proxy) {}
++
+ bool ProxiedWindow::event(QEvent* event) {
+ 	if (event->type() == QEvent::DevicePixelRatioChange) {
+ 		emit this->devicePixelRatioChanged();
+@@ -665,6 +696,7 @@ void ProxyWindowBase::onPolished() {
+ 
+ 		this->window->setFlag(Qt::WindowTransparentForInput, this->mMask != nullptr && mask.isEmpty());
+ 		this->window->setMask(mask);
++		this->window->requestCommit();
+ 
+ 		this->pendingPolish.inputMask = false;
+ 	}
+diff --git a/src/window/proxywindow.hpp b/src/window/proxywindow.hpp
+index f03416c..7f9d0c4 100644
+--- a/src/window/proxywindow.hpp
++++ b/src/window/proxywindow.hpp
+@@ -14,6 +14,7 @@
+ #include <qquickitem.h>
+ #include <qquickwindow.h>
+ #include <qsurfaceformat.h>
++#include <qtclasshelpermacros.h>
+ #include <qtmetamacros.h>
+ #include <qtypes.h>
+ #include <qvariant.h>
+@@ -28,6 +29,10 @@
+ class ProxiedWindow;
+ class ProxyWindowContentItem;
+ 
++namespace qs::window {
++class WindowRenderControl;
++}
++
+ // Proxy to an actual window exposing a limited property set with the ability to
+ // transfer it to a new window.
+ 
+@@ -256,21 +261,28 @@ class QsQuickWindowBase: public QQuickWindow {
+ 	Q_OBJECT;
+ 
+ public:
+-	explicit QsQuickWindowBase(QWindow* parent = nullptr);
++	explicit QsQuickWindowBase(qs::window::WindowRenderControl* renderControl = nullptr);
++	~QsQuickWindowBase() override;
++	Q_DISABLE_COPY_MOVE(QsQuickWindowBase);
+ 
+ 	static void callOnScenegraphInit(std::function<void(QQuickWindow*)> cb);
+ 
++	[[nodiscard]] bool hasRenderReceivers() const;
++
++	void requestCommit();
++
+ private slots:
+ 	void onSceneGraphInitialized();
++
++private:
++	qs::window::WindowRenderControl* renderControl = nullptr;
+ };
+ 
+ class ProxiedWindow: public QsQuickWindowBase {
+ 	Q_OBJECT;
+ 
+ public:
+-	explicit ProxiedWindow(ProxyWindowBase* proxy, QWindow* parent = nullptr)
+-	    : QsQuickWindowBase(parent)
+-	    , mProxy(proxy) {}
++	explicit ProxiedWindow(ProxyWindowBase* proxy);
+ 
+ 	[[nodiscard]] ProxyWindowBase* proxy() const { return this->mProxy; }
+ 	void setProxy(ProxyWindowBase* proxy) { this->mProxy = proxy; }
+diff --git a/src/window/rendercontrol.cpp b/src/window/rendercontrol.cpp
+new file mode 100644
+index 0000000..3393fc6
+--- /dev/null
++++ b/src/window/rendercontrol.cpp
+@@ -0,0 +1,45 @@
++#include "rendercontrol.hpp"
++
++#include <qlogging.h>
++#include <qloggingcategory.h>
++#include <qpoint.h>
++#include <qquickwindow.h>
++#include <qsgrendererinterface.h>
++#include <qwindow.h>
++
++#include "../core/logcat.hpp"
++
++namespace qs::window {
++
++namespace {
++QS_LOGGING_CATEGORY(logRenderControl, "quickshell.window.rendercontrol", QtWarningMsg);
++WindowRenderControl* (*FACTORY)() = nullptr; // NOLINT
++bool ENABLED = false;                        // NOLINT
++} // namespace
++
++void WindowRenderControl::setEnabled(bool enabled) { ENABLED = enabled; }
++void WindowRenderControl::setFactory(WindowRenderControl* (*factory)()) { FACTORY = factory; }
++
++WindowRenderControl* WindowRenderControl::create() {
++	if (!ENABLED) return nullptr;
++
++	if (!FACTORY) {
++		qCInfo(logRenderControl) << "Render control is unavailable on this platform.";
++		return nullptr;
++	}
++
++	if (QQuickWindow::graphicsApi() != QSGRendererInterface::OpenGL) {
++		qCInfo(logRenderControl) << "Render control requires OpenGL.";
++		return nullptr;
++	}
++
++	return FACTORY();
++}
++
++// Use the window's scale; see QQuickWindow::effectiveDevicePixelRatio().
++QWindow* WindowRenderControl::renderWindow(QPoint* offset) {
++	if (offset) *offset = QPoint();
++	return this->window();
++}
++
++} // namespace qs::window
+diff --git a/src/window/rendercontrol.hpp b/src/window/rendercontrol.hpp
+new file mode 100644
+index 0000000..be0aec7
+--- /dev/null
++++ b/src/window/rendercontrol.hpp
+@@ -0,0 +1,25 @@
++#pragma once
++
++#include <qpoint.h>
++#include <qquickrendercontrol.h>
++#include <qtmetamacros.h>
++#include <qwindow.h>
++
++namespace qs::window {
++
++// Platform render loop, created by the registered factory.
++class WindowRenderControl: public QQuickRenderControl {
++	Q_OBJECT;
++
++public:
++	static void setEnabled(bool enabled);
++	static void setFactory(WindowRenderControl* (*factory)());
++	static WindowRenderControl* create();
++
++	QWindow* renderWindow(QPoint* offset) override;
++
++	// Commit surface state even without a repaint; see WaylandRenderControl::commitWithoutFrame().
++	virtual void requestCommit() = 0;
++};
++
++} // namespace qs::window
+diff --git a/src/window/test/manual/RenderControlScene.qml b/src/window/test/manual/RenderControlScene.qml
+new file mode 100644
+index 0000000..cfd771b
+--- /dev/null
++++ b/src/window/test/manual/RenderControlScene.qml
+@@ -0,0 +1,762 @@
++import QtQuick
++import QtQuick.Controls
++import QtQuick.Layouts
++import Quickshell
++
++Scope {
++    id: root
++    required property bool renderControl
++    readonly property string rendererName: renderControl ? "RenderControl" : "Qt render loop"
++    readonly property real startTime: Number(Quickshell.env("QS_RENDERCONTROL_START")) || Date.now()
++    readonly property int testDuration: 4000
++    property real elapsed: -1
++    readonly property int testIndex: elapsed < 0 ? -1 : Math.floor(elapsed / testDuration) % tests.length
++    readonly property string test: testIndex < 0 ? "Waiting" : tests[testIndex]
++    readonly property bool decorated: test === "Decorated window"
++    property bool effectsLoaded: false
++    property string effectsStatus: ""
++    property bool viewUnavailable: false
++    property string status: ""
++    readonly property var tests: ["Idle", "Move", "Create and destroy", "Move child, then parent", "Move row, change text", "Resize clip", "Resize under scale", "XAnimator", "OpacityAnimator", "NumberAnimation and RotationAnimator", "Recolor antialiased", "Transform antialiased", "Hide antialiased", "Hidden changes", "Move text", "New glyphs", "Recolor 40 rects", "Perspective", "Custom vertex shader", "Recolor effect sources", "Hide effect chain middle", "Window color", "Swap pages", "Load effects", "Animate effects", "View3D Offscreen", "View3D Underlay", "View3D Overlay", "View3D Inline", "Popup", "Resize panel", "Click-through panel", "Hide and show", "Disable updates", "Decorated window"]
++
++    onTestChanged: {
++        if (testIndex < 0)
++            return;
++        status = "";
++        if (test === "Load effects" && !effectsLoaded) {
++            effectsLoaded = true;
++            try {
++                effectsStatus = scene.loadEffects();
++            } catch (error) {
++                effectsStatus = "QtQuick.Effects is not available";
++            }
++        }
++        if (test === "Load effects" || test === "Animate effects")
++            status = effectsStatus;
++        if (test.startsWith("View3D ")) {
++            status = scene.setView(test.slice(7));
++        } else if (scene.view) {
++            scene.view.mode = "None";
++        }
++        if (test !== "Swap pages")
++            stack.replace(tallPage, StackView.Immediate);
++    }
++
++    Timer {
++        interval: 50
++        running: true
++        repeat: true
++        onTriggered: root.elapsed = Date.now() - root.startTime
++    }
++
++    QtObject {
++        id: tick
++        readonly property int count: Math.max(0, Math.floor(root.elapsed / 500))
++        readonly property bool on: count % 2 !== 0
++        onCountChanged: {
++            if (root.test === "Swap pages")
++                stack.replace(on ? shortPage : tallPage, StackView.Immediate);
++        }
++    }
++
++    PanelWindow {
++        id: window
++        anchors.top: true
++        anchors.bottom: true
++        anchors.left: root.renderControl
++        anchors.right: !root.renderControl
++        margins.bottom: 90
++        implicitWidth: screen ? Math.floor(screen.width / 2) : 800
++        exclusionMode: ExclusionMode.Normal
++        visible: !root.decorated && (root.test !== "Hide and show" || Math.floor(root.elapsed / 1000) % 2 === 0)
++        updatesEnabled: root.test !== "Disable updates" || tick.on
++        color: root.test === "Window color" && tick.on ? "#606060" : "#202020"
++    }
++
++    FloatingWindow {
++        id: decoratedWindow
++        title: root.rendererName
++        visible: root.decorated
++        implicitWidth: 800
++        implicitHeight: 660
++        color: "#202020"
++    }
++
++    Item {
++        parent: root.decorated ? decoratedWindow.contentItem : window.contentItem
++        anchors.fill: parent
++
++        ColumnLayout {
++            anchors.fill: parent
++            spacing: 4
++
++            Label {
++                text: root.rendererName + " | " + (root.testIndex + 1) + "/" + root.tests.length + " | " + root.test
++                color: "white"
++            }
++
++            Label {
++                visible: root.status !== ""
++                text: root.status
++                color: "white"
++            }
++
++            Label {
++                visible: root.test === "Hidden changes"
++                text: "Hidden swaps: " + hiddenChange.swaps + "/" + hiddenChange.changes
++                color: "white"
++            }
++
++            Item {
++                Layout.fillWidth: true
++                Layout.fillHeight: true
++                implicitWidth: 800
++                implicitHeight: 600
++                Rectangle {
++                    id: scene
++                    width: 800
++                    height: 600
++                    scale: Math.min(parent.width / width, parent.height / height)
++                    transformOrigin: Item.TopLeft
++                    color: "black"
++
++                    property Item view: null
++
++                    // Test shader detection when QtQuick.Effects loads after the tracker.
++                    function loadEffects(): string {
++                        const late = Qt.createQmlObject(`import QtQuick; import QtQuick.Effects; MultiEffect { anchors.fill: parent; brightness: root.test === "Animate effects" && tick.on ? 0.5 : 0 }`, lateCell);
++                        late.source = lateSource;
++
++                        Qt.createQmlObject(`import QtQuick; import QtQuick.Effects; Rectangle {
++    						anchors.fill: parent
++    						color: (root.test === "Animate effects") && tick.on ? "gray" : "white"
++    						layer.enabled: true
++    						layer.effect: MultiEffect { shadowEnabled: true; shadowColor: "orange"; shadowHorizontalOffset: 20; shadowBlur: 0.5 }
++    					}`, shadowCell);
++
++                        // Test damage carried into the next frame when the mask layer updates.
++                        Qt.createQmlObject(`import QtQuick; import QtQuick.Effects; Item {
++    						anchors.fill: parent
++    						layer.enabled: true
++    						layer.effect: MultiEffect { maskEnabled: true; maskSource: maskSource }
++
++    						Rectangle { anchors.fill: parent; color: (root.test === "Animate effects") && tick.on ? "yellow" : "white" }
++
++    						Rectangle {
++    							id: maskSource
++    							anchors.fill: parent
++    							visible: false
++    							layer.enabled: true
++    							gradient: Gradient {
++    								orientation: Gradient.Horizontal
++    								GradientStop { position: 0; color: "transparent" }
++    								GradientStop { position: 1; color: "white" }
++    							}
++    						}
++    					}`, maskCell);
++
++                        try {
++                            Qt.createQmlObject(`import QtQuick; import QtQuick.Effects; RectangularShadow {
++    							anchors.fill: parent
++    							blur: 10
++    							offset.x: 6
++    							offset.y: 6
++    							color: (root.test === "Animate effects") && tick.on ? "orange" : "white"
++    						}`, rectShadowCell);
++                        } catch (error) {
++                            return "Loaded, no RectangularShadow (Qt 6.9)";
++                        }
++
++                        return "Loaded";
++                    }
++
++                    function setView(mode: string): string {
++                        if (root.viewUnavailable)
++                            return "QtQuick3D is not available";
++                        if (!scene.view) {
++                            try {
++                                scene.view = Qt.createQmlObject(`import QtQuick; import QtQuick3D; View3D {
++    								property string mode
++    								anchors.fill: parent
++    								visible: mode != "None"
++    								renderMode: mode == "Underlay" ? View3D.Underlay : mode == "Overlay" ? View3D.Overlay : mode == "Inline" ? View3D.Inline : View3D.Offscreen
++    								environment: SceneEnvironment { backgroundMode: SceneEnvironment.Color; clearColor: "#303030" }
++    								PerspectiveCamera { z: 300 }
++    								DirectionalLight {}
++    								Model {
++    									source: "#Cube"
++    									materials: DefaultMaterial { diffuseColor: "red" }
++    									NumberAnimation on eulerRotation.y { from: 0; to: 360; duration: 2000; loops: Animation.Infinite; running: root.test.startsWith("View3D ") }
++    								}
++    							}`, viewCell);
++                            } catch (error) {
++                                root.viewUnavailable = true;
++                                return "QtQuick3D is not available";
++                            }
++                        }
++
++                        scene.view.mode = mode;
++                        return "";
++                    }
++
++                    Rectangle {
++                        x: (root.test === "Move" || root.decorated) && tick.on ? 760 : 430
++                        y: 10
++                        width: 20
++                        height: 20
++                        color: "red"
++                    }
++
++                    Loader {
++                        x: 460
++                        y: 10
++                        active: !((root.test === "Create and destroy") && tick.on)
++                        sourceComponent: Rectangle {
++                            width: 20
++                            height: 20
++                            color: "orange"
++                        }
++                    }
++
++                    Item {
++                        x: 430
++                        y: 50
++                        width: (root.test === "Resize clip") && tick.on ? 150 : 50
++                        height: 30
++                        clip: true
++
++                        Rectangle {
++                            width: 300
++                            height: 30
++                            color: "green"
++                        }
++                    }
++
++                    Item {
++                        x: (root.test === "Move child, then parent") && tick.count % 4 >= 2 ? 630 : 600
++                        y: 100
++                        width: 40
++                        height: 40
++
++                        Rectangle {
++                            x: (root.test === "Move child, then parent") && tick.count % 2 ? 150 : 0
++                            y: (root.test === "Move child, then parent") && tick.count % 2 ? 40 : 0
++                            width: 20
++                            height: 20
++                            color: "yellow"
++                        }
++                    }
++
++                    Item {
++                        x: 480
++                        y: 150
++                        width: (root.test === "Resize under scale") && tick.on ? 80 : 40
++                        height: 40
++                        scale: 2
++
++                        Rectangle {
++                            width: 20
++                            height: 20
++                            color: "cyan"
++                        }
++                    }
++
++                    Rectangle {
++                        id: xMoved
++                        x: 430
++                        y: 200
++                        width: 20
++                        height: 20
++                        color: "blue"
++                    }
++
++                    XAnimator {
++                        target: xMoved
++                        running: (root.test === "XAnimator")
++                        alwaysRunToEnd: true
++                        from: 760
++                        to: 430
++                        duration: 1000
++                        loops: Animation.Infinite
++                    }
++
++                    Rectangle {
++                        id: faded
++                        x: 430
++                        y: 240
++                        width: 20
++                        height: 20
++                        color: "magenta"
++                    }
++
++                    OpacityAnimator {
++                        target: faded
++                        running: (root.test === "OpacityAnimator")
++                        alwaysRunToEnd: true
++                        from: 0.2
++                        to: 1
++                        duration: 1000
++                        loops: Animation.Infinite
++                    }
++
++                    Item {
++                        x: (root.test === "Move row, change text") && tick.on ? 440 : 430
++                        y: 270
++
++                        Rectangle {
++                            width: (root.test === "Move row, change text") && tick.on ? 160 : 60
++                            height: 20
++                            color: "teal"
++                        }
++
++                        Text {
++                            x: 4
++                            y: 2
++                            text: (root.test === "Move row, change text") && tick.on ? "moved and longer" : "row"
++                            font.pixelSize: 14
++                            color: "white"
++                        }
++                    }
++
++                    Item {
++                        x: 10
++                        y: 10
++                        width: 350
++                        height: 150
++                        visible: !((root.test === "Hide antialiased") && tick.on)
++                        rotation: (root.test === "Transform antialiased") && tick.on ? 17 : 0
++                        scale: (root.test === "Transform antialiased") && tick.count % 4 >= 2 ? 0.6 : 1
++
++                        Repeater {
++                            model: 8
++
++                            Item {
++                                required property int index
++                                x: 10.5 + index % 4 * 85
++                                y: 10.5 + Math.floor(index / 4) * 75
++                                transform: Matrix4x4 {
++                                    matrix: Qt.matrix4x4(1, index == 6 ? 0.8 : 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
++                                }
++
++                                Rectangle {
++                                    width: index == 0 ? 21 : 60
++                                    height: index == 0 ? 21 : index == 7 ? 0.3 : 36
++                                    radius: index % 2 ? 12 : 0
++                                    rotation: index == 2 ? 33 : index == 4 ? 75 : 0
++                                    scale: index == 5 ? -0.7 : 1
++                                    border.width: index == 3 ? 6 : 0
++                                    border.color: "orange"
++                                    antialiasing: true
++                                    color: (root.test === "Recolor antialiased") && tick.on ? "green" : "red"
++                                }
++                            }
++                        }
++                    }
++
++                    Item {
++                        x: (root.test === "Transform antialiased") && tick.on ? 21 : 10.5
++                        y: 240.5
++
++                        Repeater {
++                            model: 3
++
++                            Image {
++                                required property int index
++                                x: index * 80
++                                width: 50
++                                height: 34
++                                rotation: index * 27
++                                antialiasing: true
++                                source: "data:image/svg+xml," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><rect width='32' height='32' fill='white'/><circle cx='16' cy='16' r='10' fill='orange'/></svg>")
++                            }
++                        }
++                    }
++
++                    Rectangle {
++                        id: lateSource
++                        width: 100
++                        height: 100
++                        color: (root.test === "Animate effects") && tick.on ? "blue" : "green"
++                        visible: false
++                    }
++
++                    Item {
++                        id: lateCell
++                        x: 10
++                        y: 310
++                        width: 100
++                        height: 100
++                    }
++
++                    Rectangle {
++                        id: customVertexSource
++                        width: 40
++                        height: 40
++                        color: "red"
++                        visible: false
++                    }
++
++                    // Test Qt's default shader supplied explicitly as a custom vertexShader.
++                    ShaderEffect {
++                        x: 120
++                        y: 310
++                        width: 40
++                        height: 40
++                        visible: root.test === "Custom vertex shader" && tick.on
++                        property variant source: ShaderEffectSource {
++                            sourceItem: customVertexSource
++                            hideSource: true
++                        }
++                        vertexShader: "qrc:/qt-project.org/scenegraph/shaders_ng/shadereffect.vert.qsb"
++                    }
++
++                    Rectangle {
++                        id: sharedSource
++                        x: 180
++                        y: 310
++                        width: 30
++                        height: 30
++                        color: (root.test === "Recolor effect sources") && tick.on ? "white" : "blue"
++                    }
++
++                    ShaderEffectSource {
++                        x: 180
++                        y: 360
++                        width: 30
++                        height: 30
++                        sourceItem: sharedSource
++                    }
++
++                    ShaderEffectSource {
++                        x: 220
++                        y: 360
++                        width: 30
++                        height: 30
++                        sourceItem: sharedSource
++                    }
++
++                    Item {
++                        id: hiddenSource
++                        x: 270
++                        y: 310
++                        width: 30
++                        height: 30
++
++                        Rectangle {
++                            anchors.fill: parent
++                            color: (root.test === "Recolor effect sources") && tick.on ? "purple" : "green"
++                        }
++                    }
++
++                    ShaderEffect {
++                        x: 270
++                        y: 360
++                        width: 30
++                        height: 30
++                        property variant source: ShaderEffectSource {
++                            sourceItem: hiddenSource
++                            hideSource: true
++                        }
++                    }
++
++                    Item {
++                        id: shadowCell
++                        x: 360
++                        y: 330
++                        width: 40
++                        height: 40
++                    }
++
++                    Item {
++                        id: rectShadowCell
++                        x: 500
++                        y: 330
++                        width: 60
++                        height: 40
++                    }
++
++                    Component {
++                        id: tallPage
++                        Item {
++                            Rectangle {
++                                width: 70
++                                height: 100
++                                color: "yellow"
++                            }
++                        }
++                    }
++
++                    Component {
++                        id: shortPage
++                        Item {
++                            Rectangle {
++                                width: 70
++                                height: 30
++                                color: "blue"
++                            }
++                        }
++                    }
++
++                    Loader {
++                        x: 620
++                        y: 300
++                        width: 70
++                        height: 110
++                        sourceComponent: (root.test === "Swap pages") && tick.on ? shortPage : tallPage
++                    }
++
++                    StackView {
++                        id: stack
++                        x: 710
++                        y: 300
++                        width: 70
++                        height: 110
++                        initialItem: tallPage
++                    }
++
++                    Item {
++                        x: (root.test === "Move text") && tick.on ? 10.75 : 10.25
++                        y: (root.test === "Move text") && tick.count % 4 >= 2 ? 441 : 440.5
++
++                        Repeater {
++                            model: 8
++
++                            Text {
++                                required property int index
++                                x: index < 4 ? 0 : 150
++                                y: index % 4 * 22
++                                text: "gjpq Áç 0123"
++                                font.pixelSize: 14
++                                color: "white"
++                                style: [Text.Normal, Text.Outline, Text.Raised, Text.Sunken][index % 4]
++                                styleColor: "orange"
++                                renderType: index < 4 ? Text.QtRendering : Text.NativeRendering
++                            }
++                        }
++                    }
++
++                    Text {
++                        x: 10
++                        y: 540
++                        text: (root.test === "New glyphs") ? String.fromCodePoint(0x41 + tick.count % 58, 0x100 + tick.count % 200) : ""
++                        font.pixelSize: 14
++                        color: "white"
++                    }
++
++                    Grid {
++                        x: 440
++                        y: 440
++                        columns: 10
++                        spacing: 8
++
++                        Repeater {
++                            model: 40
++                            Rectangle {
++                                width: 8
++                                height: 8
++                                color: (root.test === "Recolor 40 rects") && tick.on ? "green" : "red"
++                            }
++                        }
++                    }
++
++                    Rectangle {
++                        x: 620
++                        y: 440
++                        width: 60
++                        height: 40
++                        visible: root.test === "Perspective"
++                        color: (root.test === "Perspective") && tick.on ? "yellow" : "blue"
++                        transform: Rotation {
++                            origin.x: 30
++                            origin.y: 20
++                            axis {
++                                x: 1
++                                y: 0
++                                z: 0
++                            }
++                            angle: 40
++                        }
++                    }
++
++                    Rectangle {
++                        id: chainSource
++                        width: 30
++                        height: 30
++                        color: (root.test === "Recolor effect sources") && tick.on ? "green" : "red"
++                        visible: false
++                    }
++
++                    ShaderEffectSource {
++                        id: chainStart
++                        sourceItem: chainSource
++                        hideSource: true
++                        visible: false
++                        width: 30
++                        height: 30
++                    }
++
++                    Item {
++                        id: chainItem
++                        x: 440
++                        y: 520
++                        width: 30
++                        height: 30
++
++                        ShaderEffect {
++                            width: 30
++                            height: 30
++                            property variant source: chainStart
++                        }
++                    }
++
++                    ShaderEffectSource {
++                        id: chainMiddle
++                        x: 480
++                        y: 520
++                        width: 30
++                        height: 30
++                        visible: !((root.test === "Hide effect chain middle") && tick.on)
++                        sourceItem: chainItem
++                        hideSource: true
++                    }
++
++                    ShaderEffect {
++                        x: 520
++                        y: 520
++                        width: 30
++                        height: 30
++                        property variant source: chainMiddle
++                    }
++
++                    ShaderEffect {
++                        x: 560
++                        y: 520
++                        width: 30
++                        height: 30
++                        property variant source: chainMiddle
++                    }
++
++                    Item {
++                        id: maskCell
++                        x: 60
++                        y: 560
++                        width: 40
++                        height: 30
++                    }
++
++                    Rectangle {
++                        x: 490
++                        y: 232
++                        width: 30
++                        height: 30
++                        color: "orange"
++
++                        NumberAnimation on rotation {
++                            from: 0
++                            to: 360
++                            duration: 1500
++                            loops: Animation.Infinite
++                            running: (root.test === "NumberAnimation and RotationAnimator")
++                        }
++                    }
++
++                    Rectangle {
++                        x: 540
++                        y: 232
++                        width: 30
++                        height: 30
++                        color: "steelblue"
++
++                        RotationAnimator on rotation {
++                            from: 0
++                            to: 360
++                            duration: 1500
++                            loops: Animation.Infinite
++                            running: (root.test === "NumberAnimation and RotationAnimator")
++                        }
++                    }
++
++                    Item {
++                        id: viewCell
++                        x: 620
++                        y: 500
++                        width: 150
++                        height: 90
++                    }
++                }
++            }
++        }
++    }
++
++    PopupWindow {
++        anchor.window: window
++        anchor.rect.x: Math.max(0, window.width - width)
++        anchor.rect.y: 80
++        implicitWidth: 180
++        implicitHeight: 80
++        visible: root.test === "Popup" && tick.on
++        color: "#804020"
++
++        Label {
++            anchors.centerIn: parent
++            text: root.rendererName + " popup"
++            color: "white"
++        }
++    }
++
++    PanelWindow {
++        id: panel
++        screen: window.screen
++        anchors.bottom: true
++        anchors.left: root.renderControl
++        anchors.right: !root.renderControl
++        implicitWidth: screen ? Math.floor(screen.width / 2) : 800
++        implicitHeight: root.test === "Resize panel" && tick.on ? 80 : 40
++        exclusionMode: ExclusionMode.Normal
++        color: "#304030"
++        mask: root.test === "Click-through panel" && tick.on ? emptyRegion : null
++
++        Region {
++            id: emptyRegion
++        }
++
++        Label {
++            anchors.verticalCenter: parent.verticalCenter
++            x: 10
++            color: "white"
++            text: root.rendererName + " panel, " + panel.height + " px"
++        }
++
++        Item {
++            id: hiddenChange
++            anchors.right: parent.right
++            width: 20
++            height: 20
++            opacity: 0
++            visible: root.test === "Hidden changes" && tick.on
++            property int changes: 0
++            property int swaps: 0
++            property bool pending: false
++
++            onVisibleChanged: {
++                changes++;
++                pending = true;
++            }
++
++            Rectangle {
++                anchors.fill: parent
++                color: "white"
++            }
++
++            Connections {
++                target: hiddenChange.Window.window
++                function onFrameSwapped() {
++                    if (!hiddenChange.pending)
++                        return;
++                    hiddenChange.pending = false;
++                    hiddenChange.swaps++;
++                }
++            }
++        }
++    }
++}
+diff --git a/src/window/test/manual/rendercontrol-enabled.qml b/src/window/test/manual/rendercontrol-enabled.qml
+new file mode 100644
+index 0000000..088218b
+--- /dev/null
++++ b/src/window/test/manual/rendercontrol-enabled.qml
+@@ -0,0 +1,6 @@
++//@ pragma RenderControl
++import QtQuick
++
++RenderControlScene {
++    renderControl: true
++}
+diff --git a/src/window/test/manual/rendercontrol-qt.qml b/src/window/test/manual/rendercontrol-qt.qml
+new file mode 100644
+index 0000000..e7c3bfd
+--- /dev/null
++++ b/src/window/test/manual/rendercontrol-qt.qml
+@@ -0,0 +1,5 @@
++import QtQuick
++
++RenderControlScene {
++    renderControl: false
++}
+diff --git a/src/window/test/manual/rendercontrol.qml b/src/window/test/manual/rendercontrol.qml
+new file mode 100644
+index 0000000..e1bd0cb
+--- /dev/null
++++ b/src/window/test/manual/rendercontrol.qml
+@@ -0,0 +1,70 @@
++import QtQuick
++import QtQuick.Controls
++import QtQuick.Layouts
++import Quickshell
++import Quickshell.Io
++
++Scope {
++    id: root
++    property real startTime: 0
++    readonly property bool running: withControl.running || withoutControl.running
++
++    function start() {
++        startTime = Date.now() + 1500;
++        withControl.running = true;
++        withoutControl.running = true;
++    }
++
++    function stop() {
++        withControl.running = false;
++        withoutControl.running = false;
++    }
++
++    component TestProcess: Process {
++        required property string config
++        command: ["/proc/" + Quickshell.processId + "/exe", "--path", Quickshell.shellPath(config)]
++        environment: ({
++                QS_RENDERCONTROL_START: String(root.startTime)
++            })
++        onExited: root.stop()
++        stdout: SplitParser {
++            onRead: data => console.log(data)
++        }
++        stderr: SplitParser {
++            onRead: data => console.warn(data)
++        }
++    }
++
++    TestProcess {
++        id: withControl
++        config: "rendercontrol-enabled.qml"
++    }
++
++    TestProcess {
++        id: withoutControl
++        config: "rendercontrol-qt.qml"
++    }
++
++    PanelWindow {
++        anchors.top: true
++        anchors.left: true
++        anchors.right: true
++        implicitHeight: 48
++        exclusiveZone: 48
++        color: "#202020"
++
++        RowLayout {
++            anchors.centerIn: parent
++
++            Button {
++                text: root.running ? "Stop comparison" : "Start comparison"
++                onClicked: root.running ? root.stop() : root.start()
++            }
++
++            Label {
++                text: "RenderControl left | Qt render loop right | 4 seconds per test, repeating"
++                color: "white"
++            }
++        }
++    }
++}
+-- 
+2.56.0
+
