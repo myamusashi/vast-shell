@@ -29,6 +29,8 @@ Scope {
     LazyLoader {
         activeAsync: ToastService.model.count > 0
         component: PanelWindow {
+            id: panelWindow
+
             WlrLayershell.layer: Hypr.focusedWsHasFullscreen ? WlrLayer.Background : WlrLayer.Overlay
             anchors.bottom: true
             color: "transparent"
@@ -36,10 +38,22 @@ Scope {
             implicitHeight: 720
             implicitWidth: 320
             margins.bottom: Appearance.margin.large // qmllint disable
-            mask: Region {} // ignore mouse input
+            mask: Region {}
+            HyprlandWindow.visibleMask: Region {
+                item: toastListView
+            }
+            BackgroundEffect.blurRegion: Region {
+                item: toastListView
+            }
 
             ListView {
                 id: toastListView
+
+                anchors {
+                    bottom: parent.bottom
+                    fill: parent
+                    horizontalCenter: parent.horizontalCenter
+                }
 
                 cacheBuffer: implicitHeight
                 model: ToastService.model
@@ -80,12 +94,6 @@ Scope {
                         property: "opacity"
                         to: 0
                     }
-                }
-
-                anchors {
-                    bottom: parent.bottom
-                    fill: parent
-                    horizontalCenter: parent.horizontalCenter
                 }
             }
         }

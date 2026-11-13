@@ -12,7 +12,6 @@ import qs.Components.Dialog
 
 WrapperRectangle {
     id: root
-
     readonly property bool shouldBeActive: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) && GlobalStates.isClipboardOpen // qmllint disable
 
     property bool          keepAlive: false

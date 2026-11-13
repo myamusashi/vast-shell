@@ -59,6 +59,12 @@ LazyLoader {
         WlrLayershell.namespace: LayerNamespaces.dynamicIsland
         color: "transparent"
         exclusionMode: ExclusionMode.Ignore
+        HyprlandWindow.visibleMask: Region {
+            item: islandBox
+        }
+        BackgroundEffect.blurRegion: Region {
+            item: islandBox
+        }
         mask: Region {
             item: targetWindow.islandVisible ? islandBox : null
         }

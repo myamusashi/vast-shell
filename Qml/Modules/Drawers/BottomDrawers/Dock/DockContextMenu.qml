@@ -58,6 +58,12 @@ LazyLoader {
         aboveWindows: true
         exclusionMode: ExclusionMode.Ignore
         WlrLayershell.layer: WlrLayer.Overlay
+        BackgroundEffect.blurRegion: Region {
+            item: menuCard
+        }
+        HyprlandWindow.visibleMask: Region {
+            item: menuCard
+        }
         mask: Region {
             item: inputLayer
         }

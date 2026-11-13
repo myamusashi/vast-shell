@@ -59,14 +59,21 @@ Variants {
             });
         }
 
+        color: "transparent"
         WlrLayershell.keyboardFocus: needFocusKeyboard && !yieldKeyboardFocus ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
         WlrLayershell.namespace: LayerNamespaces.drawers
-        color: "transparent"
         exclusionMode: ExclusionMode.Ignore
         screen: modelData
         mask: Region {
-            id: maskInstances
             regions: maskRegions.instances
+        }
+        BackgroundEffect.blurRegion: Region {
+            item: panelWindow.contentItem
+            intersection: Intersection.Combine
+        }
+        HyprlandWindow.visibleMask: Region {
+            item: panelWindow.contentItem
+            intersection: Intersection.Combine
         }
 
         anchors {
@@ -102,29 +109,46 @@ Variants {
             window: panelWindow.modelData
             visible: !GlobalStates.isLockscreenOpen
 
-            Clipboard {}
+            Clipboard {
+                id: clipboardDrawer
+            }
 
-            Dashboard {}
+            Dashboard {
+                id: dashboardDrawer
+            }
 
-            QuickSettings {}
+            QuickSettings {
+                id: quickSettingsDrawer
+            }
 
             Session {
                 id: sessionDrawer
             }
 
-            BrightnessOsd {}
+            BrightnessOsd {
+                id: brightnessOsdDrawer
+            }
 
-            OSD {}
+            OSD {
+                id: osdDrawer
+            }
 
             Volume {
+                id: volumeDrawer
                 session: sessionDrawer
             }
 
-            CaptureScreen {}
+            CaptureScreen {
+                id: captureScreenDrawer
+            }
 
-            Notifications {}
+            Notifications {
+                id: notificationsDrawer
+            }
 
-            Weathers {}
+            Weathers {
+                id: weathersDrawer
+            }
 
             PanelDrawer {
                 id: panelDrawer

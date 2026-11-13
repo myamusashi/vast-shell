@@ -20,6 +20,12 @@ LazyLoader {
     component: PanelWindow {
         id: panelWindow
 
+        BackgroundEffect.blurRegion: Region {
+            item: menuSurface
+        }
+        HyprlandWindow.visibleMask: Region {
+            item: menuSurface
+        }
         WlrLayershell.layer: WlrLayer.Top
         WlrLayershell.namespace: LayerNamespaces.drawers
         aboveWindows: false

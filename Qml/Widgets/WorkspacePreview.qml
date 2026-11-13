@@ -101,6 +101,12 @@ LazyLoader {
         aboveWindows: true
         color: "transparent"
         exclusionMode: ExclusionMode.Ignore
+        HyprlandWindow.visibleMask: Region {
+            item: board
+        }
+        BackgroundEffect.blurRegion: Region {
+            item: board
+        }
         mask: Region {
             item: boardHost
         }

@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
+import Quickshell.Hyprland
 import Quickshell.Wayland
 
 import qs.Core.Configs
@@ -32,6 +33,12 @@ LazyLoader {
     component: PanelWindow {
         WlrLayershell.keyboardFocus: root.needKeyboardFocus ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
         WlrLayershell.layer: WlrLayer.Overlay
+        BackgroundEffect.blurRegion: Region {
+            item: panel.contentItem
+        }
+        HyprlandWindow.visibleMask: Region {
+            item: panel.contentItem
+        }
         color: Qt.alpha(Colours.m3Colors.m3Background, 0.3)
 
         anchors {
