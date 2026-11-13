@@ -1,8 +1,8 @@
 From 2174a6c92eb4022dfc0310545942ee6d085700fb Mon Sep 17 00:00:00 2001
-From: myamusashi <myamusashi@proton.me>
+From: bbedward <bbedward@gmail.com>
 Date: Thu, 12 Nov 2026 13:29:11 +0700
-Subject: [PATCH] feat: add DiskCache pragma to enable the qml disk cache and
- opt-in render control with partial damage
+Subject: [PATCH 01/10] feat: add DiskCache pragma to enable the qml disk cache
+ and opt-in render control with partial damage
 
 ---
  BUILD.md                                      |  11 +

@@ -20,7 +20,6 @@ LazyLoader {
     component: PanelWindow {
         id: panelWindow
 
-        HyprlandWindow.visibleMask: mask // qmllint disable
         WlrLayershell.layer: WlrLayer.Top
         WlrLayershell.namespace: LayerNamespaces.drawers
         aboveWindows: false

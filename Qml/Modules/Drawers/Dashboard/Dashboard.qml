@@ -31,7 +31,7 @@ Drawer {
     edge: Qt.TopEdge
     filletRadius: 40
     length: parent.width * 0.4
-    open: GlobalStates.isDashboardOpen
+    open: onFocusedMonitor && GlobalStates.isDashboardOpen
     onOpenChanged: {
         if (!open) {
             GlobalStates.isEditTodoListOpen = false;

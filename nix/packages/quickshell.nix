@@ -33,9 +33,9 @@ stdenv.mkDerivation (finalAttrs: {
         hash = "sha256-St1/kUOOnKojdkKGSo8VhBVdbZ67u9Db+iSlYw9fF/Q=";
     };
 
-    # patches = [
-    #     ../../Assets/patches/0001-feat-add-qml-disk-cache-and-opt-in-render-control-with-partial-damage.patch
-    # ];
+    patches = [
+        ../../Assets/patches/0001-feat-add-DiskCache-pragma-to-enable-the-qml-disk-cache-and-opt-in-render-control-with-partial-damage.patch
+    ];
 
     nativeBuildInputs = [
         cmake

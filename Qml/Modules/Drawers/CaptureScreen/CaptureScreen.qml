@@ -47,7 +47,7 @@ Drawer {
     edge: Qt.RightEdge
     filletRadius: 40
     length: 380
-    open: GlobalStates.isRecordingPanelOpen
+    open: shown && GlobalStates.isRecordingPanelOpen
     onOpenChanged: {
         if (open)
             ScreenCaptureHistory.reloadFiles();

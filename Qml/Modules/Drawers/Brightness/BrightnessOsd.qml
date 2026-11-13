@@ -20,6 +20,7 @@ Item {
 
     implicitHeight: pillHeight
     implicitWidth: shouldShow && onFocusedMonitor ? pillWidth : 0
+    visible: shouldShow
     Behavior on implicitWidth {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial

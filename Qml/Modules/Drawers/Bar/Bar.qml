@@ -4,7 +4,6 @@ import QtQuick
 import Quickshell.Widgets
 
 import qs.Core.Configs
-import qs.Core.States
 import qs.Components.Base.DrawerComponents
 
 WrapperItem {

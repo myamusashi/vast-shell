@@ -97,7 +97,6 @@ LazyLoader {
 
     loading: true
     component: PanelWindow {
-        HyprlandWindow.visibleMask: mask // qmllint disable
         WlrLayershell.layer: WlrLayer.Overlay
         aboveWindows: true
         color: "transparent"

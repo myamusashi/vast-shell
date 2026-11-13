@@ -58,12 +58,6 @@ LazyLoader {
         aboveWindows: true
         exclusionMode: ExclusionMode.Ignore
         WlrLayershell.layer: WlrLayer.Overlay
-
-        // qmllint disable
-        HyprlandWindow.visibleMask: Region {
-            item: menuCard
-        }
-        // qmllint enable
         mask: Region {
             item: inputLayer
         }

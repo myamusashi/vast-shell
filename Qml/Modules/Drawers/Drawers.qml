@@ -59,13 +59,13 @@ Variants {
             });
         }
 
-        HyprlandWindow.visibleMask: mask // qmllint disable
         WlrLayershell.keyboardFocus: needFocusKeyboard && !yieldKeyboardFocus ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
         WlrLayershell.namespace: LayerNamespaces.drawers
         color: "transparent"
         exclusionMode: ExclusionMode.Ignore
         screen: modelData
         mask: Region {
+            id: maskInstances
             regions: maskRegions.instances
         }
 

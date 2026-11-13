@@ -37,11 +37,6 @@ Scope {
             implicitWidth: 320
             margins.bottom: Appearance.margin.large // qmllint disable
             mask: Region {} // ignore mouse input
-            // qmllint disable
-            HyprlandWindow.visibleMask: Region {
-                item: toastListView
-            }
-            // qmllint enable
 
             ListView {
                 id: toastListView

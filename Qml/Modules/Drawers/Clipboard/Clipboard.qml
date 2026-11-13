@@ -36,7 +36,7 @@ WrapperRectangle {
     implicitHeight: GlobalStates.isClipboardOpen ? Configs.clipboard.height : 0
     implicitWidth: ClipboardServices.uiState.listWidth + (Configs.clipboard.enablePreview ? (ClipboardServices.uiState.previewWidth + Appearance.spacing.small * 2) : 0)
     radius: Appearance.rounding.normal
-    visible: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) // qmllint disable
+    visible: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) && implicitHeight > 0 // qmllint disable
     Behavior on implicitHeight {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial

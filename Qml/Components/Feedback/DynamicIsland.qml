@@ -59,12 +59,6 @@ LazyLoader {
         WlrLayershell.namespace: LayerNamespaces.dynamicIsland
         color: "transparent"
         exclusionMode: ExclusionMode.Ignore
-
-        // qmllint disable
-        HyprlandWindow.visibleMask: Region {
-            item: targetWindow.islandVisible ? islandBox : null
-        }
-        // qmllint enable
         mask: Region {
             item: targetWindow.islandVisible ? islandBox : null
         }
