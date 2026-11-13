@@ -130,7 +130,7 @@
 
             mkdir -p $out/share/quickshell
             shopt -s extglob
-            cp -r !(build) $out/share/quickshell/ 2>/dev/null || true
+            cp -r !(build|packaging) $out/share/quickshell/ 2>/dev/null || true
 
             install -Dm755 ${app2unit}/bin/app2unit $out/bin/app2unit
 
