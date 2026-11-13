@@ -24,18 +24,18 @@
 }:
 stdenv.mkDerivation (finalAttrs: {
     pname = "quickshell";
-    version = "unstable-10-22-2026-9b0f339b";
+    version = "unstable-13-11-2026-53c28300";
 
     src = fetchFromGitHub {
-        owner = "quickshell-mirror";
-        repo = "quickshell";
-        rev = "9b0f339b19057f4731bf3b48293307d7ef241671";
-        hash = "sha256-TiCGqLMpNIy7FERewgfKVluPsLVF96uc6x6xwZnMjdQ=";
+        owner = "duxlabs-dev";
+        repo = "dux-qt-base";
+        rev = "53c28300add0c28df0d4c765a6c70263d8c02b63";
+        hash = "sha256-St1/kUOOnKojdkKGSo8VhBVdbZ67u9Db+iSlYw9fF/Q=";
     };
 
-    patches = [
-        ../../Assets/patches/0001-feat-add-qml-disk-cache-and-opt-in-render-control-with-partial-damage.patch
-    ];
+    # patches = [
+    #     ../../Assets/patches/0001-feat-add-qml-disk-cache-and-opt-in-render-control-with-partial-damage.patch
+    # ];
 
     nativeBuildInputs = [
         cmake

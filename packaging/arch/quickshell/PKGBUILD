@@ -1,9 +1,8 @@
 pkgname=quickshell
-_ver=unstable-10-22-2026-9b0f339b
+_ver=unstable-13-11-2026-53c28300
 pkgver=${_ver//-/.}
 pkgrel=1
-_rev=9b0f339b19057f4731bf3b48293307d7ef241671
-_patch=0001-feat-add-qml-disk-cache-and-opt-in-render-control-with-partial-damage.patch
+_rev=53c28300add0c28df0d4c765a6c70263d8c02b63
 pkgdesc='Flexible QtQuick based desktop shell toolkit'
 arch=(x86_64 aarch64)
 url='https://quickshell.org'
@@ -35,11 +34,11 @@ makedepends=(
   'vulkan-headers'
 )
 source=(
-  "$pkgname-$_rev.tar.gz::https://github.com/quickshell-mirror/quickshell/archive/$_rev.tar.gz"
+  "$pkgname-$_rev.tar.gz::https://github.com/duxlabs-dev/dux-qt-base/archive/$_rev.tar.gz"
   "$_patch"
 )
 sha256sums=(
-  '9107ae9179058ea26fafddfc294197fb0865714d227f4c27eaa650fc48537801'
+  'f82d81a71886afaeeff984045fc9dd414f563167b2a11312fefdeb88ea03bf61'
   '29bf1cc2462fb6972f06e10bfbe3c5224586ec9e84a075dcaf465c8ce4ce98b0'
 )
 
