@@ -119,7 +119,6 @@ Scope {
 
             IconImage {
                 Layout.alignment: Qt.AlignVCenter
-                asynchronous: true
                 backer.cache: true
                 implicitSize: 32
                 source: Quickshell.iconPath(root.icon, "image-missing")

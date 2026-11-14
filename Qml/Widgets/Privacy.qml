@@ -147,7 +147,6 @@ RowLayout {
                 Layout.alignment: Qt.AlignVCenter
                 Layout.preferredHeight: 20
                 Layout.preferredWidth: 20
-                asynchronous: true
                 source: IconUtils.iconForId(entry.modelData)
                 visible: Configs.privacy.enablePrivacyIcon
             }

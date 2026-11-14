@@ -37,7 +37,6 @@ Item {
 
             IconImage {
                 anchors.centerIn: parent
-                asynchronous: true
                 backer.cache: true
                 implicitSize: parent.height
                 source: Quickshell.iconPath(root.modelData.entry.icon, "image-missing")

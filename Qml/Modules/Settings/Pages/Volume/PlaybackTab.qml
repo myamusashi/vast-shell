@@ -54,7 +54,6 @@ SettingsCard {
                     Layout.alignment: Qt.AlignVCenter
                     Layout.preferredHeight: 48
                     Layout.preferredWidth: 48
-                    asynchronous: true
                     source: IconUtils.guessIconPath(streamDelegate.modelData)
                 }
 

@@ -43,7 +43,6 @@ Item {
         id: imageComponent
 
         IconImage {
-            asynchronous: true
             backer.cache: true
             implicitSize: 36
             source: root.modelData.image ? Qt.resolvedUrl(root.modelData.image) : IconUtils.fallbackSource
@@ -54,7 +53,6 @@ Item {
         id: iconComponent
 
         IconImage {
-            asynchronous: true
             backer.cache: true
             implicitSize: 24
             source: root.modelData.appIcon ? Quickshell.iconPath(root.modelData.appIcon) : IconUtils.fallbackSource
@@ -65,7 +63,6 @@ Item {
         id: fallbackIconComponent
 
         IconImage {
-            asynchronous: true
             backer.cache: true
             implicitSize: 30
             source: root.hasAppIcon ? Quickshell.iconPath(root.modelData.appIcon) : (root.modelData.image ? Qt.resolvedUrl(root.modelData.image) : IconUtils.fallbackSource)
@@ -97,7 +94,6 @@ Item {
                 radius: 8
 
                 IconImage {
-                    asynchronous: true
                     backer.cache: true
                     implicitSize: 16
                     source: root.modelData.appIcon ? Quickshell.iconPath(root.modelData.appIcon) : IconUtils.fallbackSource

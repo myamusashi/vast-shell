@@ -66,7 +66,6 @@ ColumnLayout {
 
         IconImage {
             anchors.centerIn: parent
-            asynchronous: true
             implicitHeight: 30
             implicitWidth: 30
             opacity: root.showVolumeInternal ? 0 : 1

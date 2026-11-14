@@ -873,7 +873,6 @@ Scope {
 
                         IconImage {
                             anchors.horizontalCenter: parent.horizontalCenter
-                            asynchronous: true
                             backer.cache: true
                             height: 32
                             source: Quickshell.iconPath(DesktopEntries.heuristicLookup(modelData.lastIpcObject?.class)?.icon, "image-missing")

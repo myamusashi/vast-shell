@@ -466,7 +466,6 @@ RowLayout {
 
                         IconImage {
                             anchors.verticalCenter: parent.verticalCenter
-                            asynchronous: true
                             implicitHeight: 20
                             implicitWidth: 20
                             source: Players.active?.desktopEntry === "" ? Quickshell.iconPath("helium", "image-missing") : IconUtils.iconForId(Players.active.desktopEntry)
@@ -556,7 +555,6 @@ RowLayout {
 
                             IconImage {
                                 anchors.verticalCenter: parent.verticalCenter
-                                asynchronous: true
                                 implicitHeight: 20
                                 implicitWidth: 20
                                 source: IconUtils.iconForId(playerDelegate.modelData.desktopEntry)

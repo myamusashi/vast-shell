@@ -28,7 +28,6 @@ StyledRect {
         id: kdeIcon
 
         anchors.centerIn: parent
-        asynchronous: true
         backer.cache: true
         implicitSize: Appearance.fonts.size.large * 1.5
         opacity: KDEConnect.hasAvailableDevices ? 1.0 : 0.4

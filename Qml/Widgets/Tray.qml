@@ -134,7 +134,6 @@ StyledRect {
 
                     IconImage {
                         anchors.centerIn: parent
-                        asynchronous: true
                         backer.cache: true
                         height: Appearance.fonts.size.large * 1.2
                         layer.enabled: true

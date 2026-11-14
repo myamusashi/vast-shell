@@ -19,7 +19,6 @@ RowLayout {
 
         IconImage {
             anchors.centerIn: parent
-            asynchronous: true
             height: 28
             source: PolAgent.agent?.flow?.iconName ? Quickshell.iconPath(PolAgent.agent.flow.iconName) : "" // qmllint disable
             width: 28

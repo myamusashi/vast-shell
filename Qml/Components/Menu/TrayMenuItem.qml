@@ -89,7 +89,6 @@ Item {
                     active: root.hasLeadingIcon
                     visible: active
                     sourceComponent: IconImage {
-                        asynchronous: true
                         backer.cache: true
                         height: 20
                         source: root.modelData ? root.modelData.icon : ""

@@ -109,7 +109,6 @@ ScrollView {
                         Layout.alignment: Qt.AlignVCenter
                         Layout.preferredHeight: 60
                         Layout.preferredWidth: 60
-                        asynchronous: true
                         source: IconUtils.guessIconPath(groups.modelData.source)
                     }
 

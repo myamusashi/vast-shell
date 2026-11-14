@@ -41,7 +41,6 @@ Item {
 
         IconImage {
             anchors.centerIn: parent
-            asynchronous: true
             backer.cache: true
             implicitSize: root.iconSlot
             source: Quickshell.iconPath(root.entry?.icon ?? "", "image-missing")
