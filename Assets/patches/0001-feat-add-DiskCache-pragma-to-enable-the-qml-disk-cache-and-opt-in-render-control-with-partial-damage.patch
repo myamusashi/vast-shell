@@ -1717,7 +1717,7 @@ new file mode 100644
 index 0000000..8baaf2f
 --- /dev/null
 +++ b/src/window/damage.cpp
-@@ -0,0 +1,614 @@
+@@ -0,0 +1,712 @@
 +#include "damage.hpp"
 +#include <algorithm>
 +#include <array>
@@ -1799,6 +1799,15 @@ index 0000000..8baaf2f
 +    ":/data/shaders/rectangularshadow.vert.qsb",
 +};
 +
++// Custom QSGMaterial vertex shaders whose geometry stays within vertex bounds (+1px AA margin for smooth shaders).
++constexpr auto CUSTOM_SHADERS = std::array {
++    ":/AnotherRipple/shaders/ripple.vert.qsb",
++};
++
++constexpr auto SMOOTH_CUSTOM_SHADERS = std::array {
++    ":/m3shapes/shaders/smoothshape.vert.qsb",
++};
++
 +bool isFinite(const QRectF& rect) {
 +	return std::isfinite(rect.left()) && std::isfinite(rect.top()) && std::isfinite(rect.right())
 +	    && std::isfinite(rect.bottom());
@@ -1866,20 +1875,28 @@ index 0000000..8baaf2f
 +		QSize size;
 +	};
 +
++	struct CustomShader {
++		bool bounded = false;
++		bool antialiased = false;
++	};
++
 +	bool boundedShader(QSGGeometryNode* node, bool glyph, QSGMaterial* material);
 +	bool boundedGlyphShader(QSGMaterial* material);
 +	bool boundedEffectShader(QSGMaterial* material);
++	CustomShader boundedCustomShader(QSGMaterial* material);
 +	void forget(QSGNode* node);
 +	void forgetChildren(QSGNode* node);
 +	void addDamage(const QRectF& rect);
 +	[[nodiscard]] QRectF windowRect(QSGNode* node) const;
 +	Subtree refresh(QSGNode* node);
-+	void propagate(QSGNode* node, Subtree subtree);
++	[[nodiscard]] Subtree recomputeNode(QSGNode* node) const;
++	void propagate(QSGNode* node);
 +	Subtree measureGeometry(QSGGeometryNode* node);
 +	void recordGlyphAtlas(QSGGeometryNode* node);
 +
 +	std::array<QShader, EFFECT_SHADERS.size()> effectShaders {};
 +	QHash<QSGMaterialType*, bool> glyphShaders;
++	QHash<QSGMaterialType*, CustomShader> customShaders;
 +	QHash<QSGNode*, Subtree> subtrees;
 +	QHash<QSGNode*, Subtree> localBounds;
 +	QSet<QSGNode*> dirty;
@@ -1889,6 +1906,7 @@ index 0000000..8baaf2f
 +	QSet<QSGNode*> stale;
 +	QSet<QSGNode*> renderNodes;
 +	QSet<QSGNode*> staleTextures;
++	QSet<QSGNode*> removedParents;
 +	QMap<QSGNode*, GlyphAtlas> glyphAtlases;
 +	QList<QRect> pending;
 +	QRegion frameDamage;
@@ -1915,7 +1933,9 @@ index 0000000..8baaf2f
 +	}
 +
 +	if (glyph) return this->boundedGlyphShader(material);
-+	if (!dynamic_cast<QSGShaderEffectNode*>(node)) return false;
++	if (!dynamic_cast<QSGShaderEffectNode*>(node)) {
++		return this->boundedCustomShader(material).bounded;
++	}
 +	// RequiresFullMatrix marks custom vertex shaders; see QSGRhiShaderEffectNode::syncMaterial().
 +	if (!material->flags().testFlag(QSGMaterial::RequiresFullMatrix)) return true;
 +	return this->boundedEffectShader(material);
@@ -1964,6 +1984,31 @@ index 0000000..8baaf2f
 +	return false;
 +}
 +
++SceneDamageTracker::CustomShader SceneDamageTracker::boundedCustomShader(QSGMaterial* material) {
++	auto cached = this->customShaders.constFind(material->type());
++	if (cached != this->customShaders.cend()) return *cached;
++
++	auto shader = std::unique_ptr<QSGMaterialShader>(
++	    material->createShader(QSGRendererInterface::RenderMode2D)
++	);
++	if (!shader) {
++		this->customShaders.insert(material->type(), {});
++		return {};
++	}
++
++	auto file =
++	    QSGMaterialShaderPrivate::get(shader.get())->shaderFileNames.value(QShader::VertexStage);
++	auto smooth =
++	    std::ranges::any_of(SMOOTH_CUSTOM_SHADERS, [&file](const char* path) { return file == path; });
++	auto bounded = smooth
++	            || std::ranges::any_of(CUSTOM_SHADERS, [&file](const char* path) { return file == path; });
++	if (!bounded) qCDebug(logDamage) << "Unrecognized custom material vertex shader:" << file;
++
++	CustomShader result {.bounded = bounded, .antialiased = smooth};
++	this->customShaders.insert(material->type(), result);
++	return result;
++}
++
 +void SceneDamageTracker::setFrame(const QSize& size, qreal scale, const QColor& color, bool full) {
 +	this->full |= full || this->size != size || this->scale != scale || this->color != color;
 +	this->rendering = false;
@@ -1976,7 +2021,9 @@ index 0000000..8baaf2f
 +	// Capture old bounds now, before an ancestor's transform can change later in the sync.
 +	if (this->subtrees.contains(node)) this->addDamage(this->windowRect(node));
 +	if (state.testFlag(QSGNode::DirtyNodeRemoved)) {
++		auto* parent = node->parent();
 +		this->forget(node);
++		if (parent && !this->forgottenDirty.contains(parent)) this->removedParents.insert(parent);
 +		return;
 +	}
 +
@@ -2002,6 +2049,7 @@ index 0000000..8baaf2f
 +	this->subtrees.remove(node);
 +	this->localBounds.remove(node);
 +	this->renderNodes.remove(node);
++	this->removedParents.remove(node);
 +	this->staleTextures.remove(node);
 +	this->glyphAtlases.remove(node);
 +	this->forgetChildren(node);
@@ -2025,16 +2073,25 @@ index 0000000..8baaf2f
 +	if (subtree.unbounded) return window;
 +	if (subtree.rect.isEmpty()) return QRectF();
 +
-+	QMatrix4x4 matrix;
++	auto rect = subtree.rect;
 +	for (auto* parent = node->parent(); parent; parent = parent->parent()) {
++		if (parent->type() == QSGNode::ClipNodeType) {
++			// NOLINTNEXTLINE(cppcoreguidelines-pro-type-static-cast-downcast)
++			auto* clip = static_cast<QSGClipNode*>(parent);
++			if (clip->isRectangular()) {
++				rect = rect.intersected(clip->clipRect());
++				if (rect.isEmpty()) return QRectF();
++			}
++			continue;
++		}
 +		if (parent->type() != QSGNode::TransformNodeType) continue;
 +		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-static-cast-downcast)
-+		matrix = static_cast<QSGTransformNode*>(parent)->matrix() * matrix;
++		const auto& matrix = static_cast<QSGTransformNode*>(parent)->matrix();
++		if (!matrix.isAffine()) return window;
++		rect = matrix.mapRect(rect);
++		if (!isFinite(rect)) return window;
 +	}
 +
-+	if (!matrix.isAffine()) return window;
-+	auto rect = matrix.mapRect(subtree.rect);
-+	if (!isFinite(rect)) return window;
 +	if (!subtree.antialiased) return rect;
 +
 +	// Include a pixel margin for the antialiased materials selected in measureGeometry().
@@ -2085,24 +2142,56 @@ index 0000000..8baaf2f
 +		subtree |= entry;
 +	}
 +
++	if (node->type() == QSGNode::ClipNodeType) {
++		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-static-cast-downcast)
++		auto* clip = static_cast<QSGClipNode*>(node);
++		if (clip->isRectangular() && !subtree.unbounded) {
++			subtree.rect = subtree.rect.intersected(clip->clipRect());
++		}
++	}
++
 +	this->subtrees.insert(node, subtree);
 +	return subtree;
 +}
 +
-+// Cached bounds only grow here; refresh() can shrink them later.
-+void SceneDamageTracker::propagate(QSGNode* node, Subtree subtree) {
-+	for (auto* parent = node->parent(); parent; parent = parent->parent()) {
-+		auto cached = this->subtrees.find(parent);
-+		if (cached == this->subtrees.end()) return;
++SceneDamageTracker::Subtree SceneDamageTracker::recomputeNode(QSGNode* node) const {
++	Subtree subtree;
++	if (node->isSubtreeBlocked()) return subtree;
 +
-+		if (parent->type() == QSGNode::TransformNodeType) {
-+			// NOLINTNEXTLINE(cppcoreguidelines-pro-type-static-cast-downcast)
-+			const auto& matrix = static_cast<QSGTransformNode*>(parent)->matrix();
-+			subtree.rect = matrix.mapRect(subtree.rect);
-+			subtree.unbounded |= !matrix.isAffine() || !isFinite(subtree.rect);
++	QMatrix4x4 matrix;
++	switch (node->type()) {
++	case QSGNode::GeometryNodeType: subtree = this->localBounds.value(node); break;
++	case QSGNode::TransformNodeType:
++		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-static-cast-downcast)
++		matrix = static_cast<QSGTransformNode*>(node)->matrix();
++		subtree.unbounded = !matrix.isAffine();
++		break;
++	case QSGNode::RenderNodeType: subtree.unbounded = true; break;
++	default: break;
++	}
++
++	for (auto* child = node->firstChild(); child; child = child->nextSibling()) {
++		auto entry = this->subtrees.value(child);
++		entry.rect = matrix.mapRect(entry.rect);
++		entry.unbounded |= !isFinite(entry.rect);
++		subtree |= entry;
++	}
++
++	if (node->type() == QSGNode::ClipNodeType) {
++		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-static-cast-downcast)
++		auto* clip = static_cast<QSGClipNode*>(node);
++		if (clip->isRectangular() && !subtree.unbounded) {
++			subtree.rect = subtree.rect.intersected(clip->clipRect());
 +		}
++	}
 +
-+		*cached |= subtree;
++	return subtree;
++}
++
++void SceneDamageTracker::propagate(QSGNode* node) {
++	for (auto* parent = node->parent(); parent; parent = parent->parent()) {
++		if (!this->subtrees.contains(parent)) return;
++		this->subtrees.insert(parent, this->recomputeNode(parent));
 +	}
 +}
 +
@@ -2159,8 +2248,9 @@ index 0000000..8baaf2f
 +
 +	auto* material = node->material();
 +	const auto& type = typeid(*material);
-+	auto antialiased =
-+	    glyph || type == typeid(QSGSmoothColorMaterial) || type == typeid(QSGSmoothTextureMaterial);
++	auto antialiased = glyph || type == typeid(QSGSmoothColorMaterial)
++	                || type == typeid(QSGSmoothTextureMaterial)
++	                || this->customShaders.value(material->type()).antialiased;
 +
 +	auto rect = QRectF(QPointF(left, top), QPointF(right, bottom));
 +	return {.rect = rect, .unbounded = false, .antialiased = antialiased};
@@ -2198,9 +2288,17 @@ index 0000000..8baaf2f
 +	}
 +
 +	for (auto* node: std::as_const(this->topmost)) {
-+		this->propagate(node, this->refresh(node));
++		this->refresh(node);
++		this->propagate(node);
 +		this->addDamage(this->windowRect(node));
 +	}
++
++	for (auto* parent: std::as_const(this->removedParents)) {
++		if (!this->subtrees.contains(parent)) continue;
++		this->subtrees.insert(parent, this->recomputeNode(parent));
++		this->propagate(parent);
++	}
++	this->removedParents.clear();
 +
 +	this->dirty.clear();
 +	this->dirtyNodes.clear();
