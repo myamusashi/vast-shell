@@ -121,9 +121,9 @@ install_aur_packages() {
 
 build_quickshell() {
 	local -r pkgdir="$PROJECT_ROOT/packaging/arch/quickshell"
-	# local -r patch_file="$PROJECT_ROOT/Assets/patches/0001-feat-add-qml-disk-cache-and-opt-in-render-control-with-partial-damage.patch"
+	local -r patch_file="$PROJECT_ROOT/Assets/patches/0001-feat-add-DiskCache-pragma-to-enable-the-qml-disk-cache-and-opt-in-render-control-with-partial-damage.patch"
 	[[ -f $pkgdir/PKGBUILD ]] || die "PKGBUILD not found: $pkgdir/PKGBUILD"
-	# [[ -f $patch_file ]] || die "quickshell patch not found: $patch_file"
+	[[ -f $patch_file ]] || die "quickshell patch not found: $patch_file"
 
 	local target_ver installed_ver
 	target_ver=$(bash -c 'source "$1"; printf "%s-%s" "$pkgver" "$pkgrel"' _ "$pkgdir/PKGBUILD")
