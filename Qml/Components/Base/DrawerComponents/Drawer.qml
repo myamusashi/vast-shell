@@ -14,6 +14,12 @@ Item {
     readonly property bool   isFlushToStart: isHorizontalEdge ? !!(alignment & Qt.AlignLeft) : !!(alignment & Qt.AlignTop)
     readonly property bool   isHorizontalEdge: edge === Qt.TopEdge || edge === Qt.BottomEdge
     readonly property bool   isReflectedEdge: edge === Qt.TopEdge || edge === Qt.RightEdge
+    readonly property real   parentBottomInset: parent?.bottomInset ?? 0 // qmllint disable missing-property
+    readonly property real   parentHoleHeight: parent?.holeHeight ?? (parent ? parent.height : 0) // qmllint disable missing-property
+    readonly property real   parentHoleWidth: parent?.holeWidth ?? (parent ? parent.width : 0) // qmllint disable missing-property
+    readonly property real   parentLeftInset: parent?.leftInset ?? 0 // qmllint disable missing-property
+    readonly property real   parentRightInset: parent?.rightInset ?? 0 // qmllint disable missing-property
+    readonly property real   parentTopInset: parent?.topInset ?? 0 // qmllint disable missing-property
 
     property int             alignment: 0  // 0 = centered; Qt.AlignLeft/Right (top/bottom edges), Qt.AlignTop/Bottom (left/right edges)
     property real            animatedDepth: open ? depth : 0
@@ -38,8 +44,8 @@ Item {
     height: isHorizontalEdge ? metrics.acrossEdgeExtent : metrics.alongEdgeExtent
     visible: metrics.snappedDepth > 0
     width: isHorizontalEdge ? metrics.alongEdgeExtent : metrics.acrossEdgeExtent
-    x: Math.round(isHorizontalEdge ? (isFlushToStart ? 0 : isFlushToEnd ? parent.width - width : (parent.width - width) / 2) : (edge === Qt.LeftEdge ? edgeOffset : parent.width - width - edgeOffset)) + xOffset
-    y: Math.round(isHorizontalEdge ? (edge === Qt.TopEdge ? edgeOffset : parent.height - height - edgeOffset) : (isFlushToStart ? 0 : isFlushToEnd ? parent.height - height - bottomMargin : (parent.height - height) / 2)) + yOffset
+    x: Math.round(isHorizontalEdge ? parentLeftInset + (isFlushToStart ? 0 : isFlushToEnd ? parentHoleWidth - width : (parentHoleWidth - width) / 2) : (edge === Qt.LeftEdge ? parentLeftInset + edgeOffset : parent.width - parentRightInset - width - edgeOffset)) + xOffset
+    y: Math.round(isHorizontalEdge ? (edge === Qt.TopEdge ? parentTopInset + edgeOffset : parent.height - parentBottomInset - height - edgeOffset) : parentTopInset + (isFlushToStart ? 0 : isFlushToEnd ? parentHoleHeight - height - bottomMargin : (parentHoleHeight - height) / 2)) + yOffset
     Behavior on animatedDepth {
         enabled: root.animateDepth
 

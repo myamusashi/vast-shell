@@ -49,10 +49,12 @@ Scope {
             ListView {
                 id: toastListView
 
+                height: Math.min(parent.height, contentHeight)
+
                 anchors {
                     bottom: parent.bottom
-                    fill: parent
-                    horizontalCenter: parent.horizontalCenter
+                    left: parent.left
+                    right: parent.right
                 }
 
                 cacheBuffer: implicitHeight

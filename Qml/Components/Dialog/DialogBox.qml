@@ -31,10 +31,13 @@ LazyLoader {
 
     activeAsync: false
     component: PanelWindow {
+        id: panel
+
         WlrLayershell.keyboardFocus: root.needKeyboardFocus ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
         WlrLayershell.layer: WlrLayer.Overlay
         BackgroundEffect.blurRegion: Region {
-            item: panel.contentItem
+            item: dialogCard
+            radius: dialogCard.radius
         }
         HyprlandWindow.visibleMask: Region {
             item: panel.contentItem
@@ -65,6 +68,8 @@ LazyLoader {
         }
 
         StyledRect {
+            id: dialogCard
+
             anchors.centerIn: parent
             border.color: Colours.m3Colors.m3Outline
             border.width: 2

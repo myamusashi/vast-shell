@@ -54,7 +54,7 @@ Drawer {
     }
 
     Loader {
-        active: root.shown
+        active: root.visible
         anchors.fill: parent
         asynchronous: true
         sourceComponent: ColumnLayout {

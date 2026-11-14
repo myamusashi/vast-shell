@@ -40,7 +40,7 @@ Item {
 
     implicitHeight: calculateHeight()
     implicitWidth: parent.width * 0.15
-    visible: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) // qmllint disable
+    visible: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) && implicitHeight > 0 // qmllint disable
     Behavior on implicitHeight {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial

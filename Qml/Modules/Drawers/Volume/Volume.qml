@@ -29,7 +29,7 @@ Drawer {
     Loader {
         id: loader
 
-        active: root.shown
+        active: root.visible
         anchors.fill: parent
         asynchronous: true
         sourceComponent: Content {

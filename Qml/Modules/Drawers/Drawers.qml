@@ -64,16 +64,14 @@ Variants {
         WlrLayershell.namespace: LayerNamespaces.drawers
         exclusionMode: ExclusionMode.Ignore
         screen: modelData
-        mask: Region {
+        mask: maskInstances
+        BackgroundEffect.blurRegion: maskInstances
+        HyprlandWindow.visibleMask: maskInstances
+
+        Region {
+            id: maskInstances
+
             regions: maskRegions.instances
-        }
-        BackgroundEffect.blurRegion: Region {
-            item: panelWindow.contentItem
-            intersection: Intersection.Combine
-        }
-        HyprlandWindow.visibleMask: Region {
-            item: panelWindow.contentItem
-            intersection: Intersection.Combine
         }
 
         anchors {

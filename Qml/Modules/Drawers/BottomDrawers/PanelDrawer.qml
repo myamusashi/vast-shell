@@ -40,7 +40,6 @@ Drawer {
     attachedFilletRadius: isPanelMerged ? 0 : Appearance.rounding.normal
     length: isPanelActive ? parent.width * lengthRatio : dockWidth
     open: isFocusedMonitor && isPanelActive
-    visible: isFocusedMonitor
     Behavior on attachedFilletRadius {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial

@@ -31,7 +31,7 @@ Drawer {
     depth: parent.width * 0.25
     edge: Qt.RightEdge
     filletRadius: 0
-    length: parent.height - anchors.topMargin - anchors.bottomMargin
+    length: root.parentHoleHeight
     open: GlobalStates.isWeatherPanelOpen
     onOpenChanged: {
         if (!open && drawerLoader.item)

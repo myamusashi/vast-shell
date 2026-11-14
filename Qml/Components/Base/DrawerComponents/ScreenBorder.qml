@@ -55,7 +55,8 @@ Item {
 
         height: frame.topThickness
         visible: height > 0 && width > 0
-        width: root.width
+        width: frame.holeWidth
+        x: frame.leftThickness
     }
 
     Item {
@@ -63,27 +64,26 @@ Item {
 
         height: frame.bottomThickness
         visible: height > 0 && width > 0
-        width: root.width
+        width: frame.holeWidth
+        x: frame.leftThickness
         y: root.height - height
     }
 
     Item {
         id: leftBorderArea
 
-        height: root.height - frame.topThickness - frame.bottomThickness
+        height: root.height
         visible: height > 0 && width > 0
         width: frame.leftThickness
-        y: frame.topThickness
     }
 
     Item {
         id: rightBorderArea
 
-        height: root.height - frame.topThickness - frame.bottomThickness
+        height: root.height
         visible: height > 0 && width > 0
         width: frame.rightThickness
         x: root.width - width
-        y: frame.topThickness
     }
 
     Item {
@@ -131,9 +131,13 @@ Item {
     Item {
         id: holeItem
 
-        height: frame.holeHeight
-        width: frame.holeWidth
-        x: frame.leftThickness
-        y: frame.topThickness
+        readonly property real bottomInset: frame.bottomThickness
+        readonly property real holeHeight: frame.holeHeight
+        readonly property real holeWidth: frame.holeWidth
+        readonly property real leftInset: frame.leftThickness
+        readonly property real rightInset: frame.rightThickness
+        readonly property real topInset: frame.topThickness
+
+        anchors.fill: parent
     }
 }

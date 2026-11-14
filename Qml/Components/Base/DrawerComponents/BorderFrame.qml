@@ -111,8 +111,8 @@ Item {
         color: root.color
         height: root.topThickness
         visible: height > 0 && width > 0
-        width: root.width
-        x: 0
+        width: root.holeWidth
+        x: root.leftThickness
         y: 0
     }
 
@@ -123,8 +123,8 @@ Item {
         color: root.color
         height: root.bottomThickness
         visible: height > 0 && width > 0
-        width: root.width
-        x: 0
+        width: root.holeWidth
+        x: root.leftThickness
         y: root.height - height
     }
 
@@ -133,11 +133,11 @@ Item {
 
         antialiasing: false
         color: root.color
-        height: root.holeHeight
+        height: root.height
         visible: height > 0 && width > 0
         width: root.leftThickness
         x: 0
-        y: root.topThickness
+        y: 0
     }
 
     Rectangle {
@@ -145,11 +145,11 @@ Item {
 
         antialiasing: false
         color: root.color
-        height: root.holeHeight
+        height: root.height
         visible: height > 0 && width > 0
         width: root.rightThickness
         x: root.width - width
-        y: root.topThickness
+        y: 0
     }
 
     CornerFillet {
