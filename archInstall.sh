@@ -120,8 +120,8 @@ install_aur_packages() {
 }
 
 build_quickshell() {
-	local -r pkgdir="$PROJECT_ROOT/packaging/arch/quickshell"
-	local -r patch_file="$PROJECT_ROOT/Assets/patches/0001-feat-add-DiskCache-pragma-to-enable-the-qml-disk-cache-and-opt-in-render-control-with-partial-damage.patch"
+	local -r pkgdir="packaging/arch/quickshell"
+	local -r patch_file="Assets/patches/0001-feat-add-DiskCache-pragma-to-enable-the-qml-disk-cache-and-opt-in-render-control-with-partial-damage.patch"
 	[[ -f $pkgdir/PKGBUILD ]] || die "PKGBUILD not found: $pkgdir/PKGBUILD"
 	[[ -f $patch_file ]] || die "quickshell patch not found: $patch_file"
 
@@ -142,7 +142,7 @@ build_quickshell() {
 	local -r build="$BUILD_DIR/quickshell"
 	rm -rf "$build"
 	mkdir -p "$build"
-	# cp "$pkgdir/PKGBUILD" "$patch_file" "$build/"
+	cp "$pkgdir/PKGBUILD" "$patch_file" "$build/"
 	chown -R "$aur_user:$aur_user" "$build"
 	pushd "$build" >/dev/null
 	sudo -u "$aur_user" makepkg -f --noconfirm || die "Failed to build quickshell"
