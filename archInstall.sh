@@ -379,9 +379,6 @@ compile_shaders() {
 		return 0
 	}
 
-	log "Compiling vertex shader..."
-	compile_shader_stage "$qsb" "$shader_dir/ImageTransition.vert" "$shader_dir/ImageTransition.vert.qsb" || true
-
 	if [[ -d $transition_dir ]]; then
 		log "Compiling transition shaders..."
 		local -ra transitions=(
@@ -390,7 +387,7 @@ compile_shaders() {
 		)
 		local failed=0
 		for name in "${transitions[@]}"; do
-			compile_shader_stage "$qsb" "$transition_dir/${name}.frag" "$transition_dir/${name}.frag.qsb" ||
+			compile_shader_stage "$qsb" "$transition_dir/${name}.frag" "$transition_dir/${name}.frag.qsb" "150,330,300 es" ||
 				failed=$((failed + 1))
 		done
 		((failed == 0)) || warn "$failed transition shader(s) failed to compile"

@@ -2,7 +2,7 @@
 
 # Gunakan array agar spasi dalam "300 es" tidak di-split bash
 FLAGS=(
-    --glsl "450,330,300 es"
+    --glsl "150,330,300 es"
     --hlsl 50
     --msl 12
 )

@@ -222,8 +222,8 @@ Item {
     }
 
     function                 releaseTransitionSources() {
-        transitionEffect.source1 = null;
-        transitionEffect.source2 = null;
+        transitionEffect.source1 = imageA;
+        transitionEffect.source2 = imageB;
     }
 
     // Returns -1 when lowPerfMode is on; startImageTransition intercepts it.
@@ -445,7 +445,7 @@ Item {
         cache: true
         fillMode: Image.PreserveAspectCrop
         layer.enabled: false
-        visible: (!root.transitionBusy && root.activeImageSlot === 0) || transitionEffect.source1 === imageA || transitionEffect.source2 === imageA
+        visible: (!root.transitionBusy && root.activeImageSlot === 0) || (root.transitionBusy && (transitionEffect.source1 === imageA || transitionEffect.source2 === imageA))
         onStatusChanged: root.handleImageStatus(imageA)
     }
 
@@ -457,7 +457,7 @@ Item {
         cache: true
         fillMode: Image.PreserveAspectCrop
         layer.enabled: false
-        visible: (!root.transitionBusy && root.activeImageSlot === 1) || transitionEffect.source1 === imageB || transitionEffect.source2 === imageB
+        visible: (!root.transitionBusy && root.activeImageSlot === 1) || (root.transitionBusy && (transitionEffect.source1 === imageB || transitionEffect.source2 === imageB))
         onStatusChanged: root.handleImageStatus(imageB)
     }
 
@@ -476,7 +476,6 @@ Item {
         blending: false
         fragmentShader: Paths.projectRoot + "/Assets/shaders/transitions/fade.frag.qsb"
         layer.enabled: false
-        vertexShader: Paths.projectRoot + "/Assets/shaders/ImageTransition.vert.qsb"
         visible: root.transitionBusy
         z: 2
     }

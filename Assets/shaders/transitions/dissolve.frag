@@ -1,6 +1,6 @@
 #version 450
 
-layout(location = 0) noperspective in vec2 texCoord;
+layout(location = 0) in vec2 qt_TexCoord0;
 layout(location = 0) out vec4 fragColor;
 
 layout(std140, binding = 0) uniform VertBuf {
@@ -21,7 +21,7 @@ float hash21(vec2 p) {
 }
 
 void main() {
-    vec2  uv   = texCoord;
+    vec2  uv   = qt_TexCoord0;
     float mask = step(hash21(uv), ubuf.progress);
 
     // Issue both fetches in parallel — GPU texture units handle simultaneously.

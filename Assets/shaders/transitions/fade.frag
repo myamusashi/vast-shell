@@ -1,6 +1,6 @@
 #version 450
 
-layout(location = 0) noperspective in vec2 texCoord;
+layout(location = 0) in vec2 qt_TexCoord0;
 layout(location = 0) out vec4 fragColor;
 
 layout(std140, binding = 0) uniform VertBuf {
@@ -18,8 +18,8 @@ layout(binding = 2) uniform sampler2D source2;
 
 void main() {
     vec3 col = mix(
-        texture(source1, texCoord).rgb,
-        texture(source2, texCoord).rgb,
+        texture(source1, qt_TexCoord0).rgb,
+        texture(source2, qt_TexCoord0).rgb,
         ubuf.progress
     );
     fragColor = vec4(col, 1.0) * ubuf.qt_Opacity;

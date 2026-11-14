@@ -1,6 +1,6 @@
 #version 450
 
-layout(location = 0) noperspective in vec2 texCoord;
+layout(location = 0) in vec2 qt_TexCoord0;
 layout(location = 0) out vec4 fragColor;
 
 layout(std140, binding = 0) uniform VertBuf {
@@ -17,7 +17,7 @@ layout(binding = 1) uniform sampler2D source1;
 layout(binding = 2) uniform sampler2D source2;
 
 void main() {
-    vec2  uv    = texCoord;
+    vec2  uv    = qt_TexCoord0;
     float p     = ubuf.progress;
 
     // Roll edge sweeps left-to-right: right side reveals source2 first

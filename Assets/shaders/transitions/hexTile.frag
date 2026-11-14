@@ -1,6 +1,6 @@
 #version 450
 
-layout(location = 0) noperspective in vec2 texCoord;
+layout(location = 0) in vec2 qt_TexCoord0;
 layout(location = 0) out vec4 fragColor;
 
 layout(std140, binding = 0) uniform VertBuf {
@@ -21,13 +21,13 @@ void main() {
     float edge     = 1.0 - progress;
 
     // Boundary between old and new content, in normalized UV space.
-    float inNew = step(edge, texCoord.y);
+    float inNew = step(edge, qt_TexCoord0.y);
 
     // Clamp shifted sample so we never read past the top edge of source1.
-    vec2 shiftedUV = vec2(texCoord.x, min(texCoord.y + progress, 1.0));
+    vec2 shiftedUV = vec2(qt_TexCoord0.x, min(qt_TexCoord0.y + progress, 1.0));
 
     vec3 fromColor = texture(source1, shiftedUV).rgb;
-    vec3 toColor   = texture(source2, texCoord).rgb;
+    vec3 toColor   = texture(source2, qt_TexCoord0).rgb;
     vec3 color     = mix(fromColor, toColor, inNew);
 
     fragColor = vec4(color, 1.0) * ubuf.qt_Opacity;

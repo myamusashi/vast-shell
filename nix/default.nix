@@ -98,15 +98,10 @@
             find Assets/shaders -name "*.qsb" -delete
 
             echo "Compile shaders..."
-            ${qt6.qtshadertools}/bin/qsb \
-                --glsl "450,330,300 es" --hlsl 50 --msl 12 \
-                -o Assets/shaders/ImageTransition.vert.qsb \
-                   Assets/shaders/ImageTransition.vert
-
             for name in fade wipeDown hexTile circleExpand dissolve splitHorizontal slideUp pixelate diagonalWipe boxExpand roll; do
                 echo "Compiling ''${name}.frag..."
                 ${qt6.qtshadertools}/bin/qsb \
-                    --glsl "450,330,300 es" --hlsl 50 --msl 12 \
+                    --glsl "150,330,300 es" --hlsl 50 --msl 12 \
                     -o Assets/shaders/transitions/''${name}.frag.qsb \
                        Assets/shaders/transitions/''${name}.frag
             done

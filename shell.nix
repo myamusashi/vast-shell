@@ -56,14 +56,12 @@
                 eval qsb $flags -o "$output" "$input"
             fi
         }
-        compile_if_missing "Assets/shaders/ImageTransition.vert.qsb" "Assets/shaders/ImageTransition.vert"
-
         TRANSITIONS=(
             fade wipeDown circleExpand dissolve splitHorizontal
             hexTile slideUp pixelate diagonalWipe boxExpand roll
         )
         for name in "''${TRANSITIONS[@]}"; do
-            compile_if_missing "Assets/shaders/transitions/$name.frag.qsb" "Assets/shaders/transitions/$name.frag"
+            compile_if_missing "Assets/shaders/transitions/$name.frag.qsb" "Assets/shaders/transitions/$name.frag" "$FRAG_ONLY_FLAGS"
         done
 
         SHADERS=(borderProgress wavy waveForm circleWave cornerFillet drawerShape arcGauge linearProgress triangleCaret waveFill celestialArc)
