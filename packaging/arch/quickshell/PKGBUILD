@@ -35,7 +35,7 @@ makedepends=(
   'vulkan-headers'
 )
 source=(
-  "$pkgname-$_rev.tar.gz::https://github.com/duxlabs-dev/dux-qt-base/archive/$_rev.tar.gz"
+  "$pkgname-$_rev.tar.gz::https://github.com/quickshell-mirror/quickshell/archive/$_rev.tar.gz"
   "$_patch"
 )
 sha256sums=(

@@ -27,10 +27,10 @@ stdenv.mkDerivation (finalAttrs: {
     version = "unstable-13-11-2026-53c28300";
 
     src = fetchFromGitHub {
-        owner = "duxlabs-dev";
-        repo = "dux-qt-base";
-        rev = "53c28300add0c28df0d4c765a6c70263d8c02b63";
-        hash = "sha256-St1/kUOOnKojdkKGSo8VhBVdbZ67u9Db+iSlYw9fF/Q=";
+        owner = "quickshell-mirror";
+        repo = "quickshell";
+        rev = "9b0f339b19057f4731bf3b48293307d7ef241671";
+        hash = "sha256-TiCGqLMpNIy7FERewgfKVluPsLVF96uc6x6xwZnMjdQ=";
     };
 
     patches = [
