@@ -11,6 +11,7 @@ import qs.Components.Base.DrawerComponents
 import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.States
+import qs.Core.Utils
 import qs.Services
 
 LazyLoader {
@@ -303,9 +304,15 @@ LazyLoader {
         ColumnLayout {
 
             function iconForToplevel(toplevel: var): string {
-                const windowClass = toplevel?.class;
-                const entry       = windowClass ? DesktopEntries.heuristicLookup(windowClass) : null;
-                return entry?.icon ? Quickshell.iconPath(entry.icon, "image-missing") : "";
+                const windowClass = toplevel?.lastIpcObject?.class;
+                if (!windowClass)
+                    return "";
+
+                const entry = DesktopEntries.heuristicLookup(windowClass);
+                if (!entry?.icon)
+                    return "";
+
+                return Quickshell.iconPath(entry.icon, true);
             }
 
             anchors.centerIn: parent

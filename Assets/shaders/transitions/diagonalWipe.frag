@@ -19,7 +19,7 @@ layout(binding = 2) uniform sampler2D source2;
 void main() {
     vec2  uv   = texCoord;
     float diag = 2.0 - (uv.x + uv.y);
-    float edge = ubuf.progress * 2.0;
+    float edge = ubuf.progress * (2.0 + ubuf.smoothAmount);
     float t    = smoothstep(edge - ubuf.smoothAmount, edge, diag);
     vec3  col  = mix(
         texture(source2, uv).rgb,

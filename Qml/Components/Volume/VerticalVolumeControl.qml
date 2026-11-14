@@ -71,7 +71,7 @@ ColumnLayout {
             implicitWidth: 30
             opacity: root.showVolumeInternal ? 0 : 1
             scale: root.showVolumeInternal ? 0.5 : 1
-            source: root.showAppIcon ? IconUtils.guessIconPath(root.audioNode) : ""
+            source: root.showAppIcon ? IconUtils.guessIconPath(root.audioNode) : IconUtils.fallbackSource
             visible: root.showAppIcon
             Behavior on opacity {
                 NAnim {

@@ -7,6 +7,7 @@ import Quickshell.Widgets
 
 import qs.Components.Base
 import qs.Core.Configs
+import qs.Core.Utils
 import qs.Services
 
 Item {
@@ -45,7 +46,7 @@ Item {
             asynchronous: true
             backer.cache: true
             implicitSize: 36
-            source: Qt.resolvedUrl(root.modelData.image)
+            source: root.modelData.image ? Qt.resolvedUrl(root.modelData.image) : IconUtils.fallbackSource
         }
     }
 
@@ -56,7 +57,7 @@ Item {
             asynchronous: true
             backer.cache: true
             implicitSize: 24
-            source: Quickshell.iconPath(root.modelData.appIcon)
+            source: root.modelData.appIcon ? Quickshell.iconPath(root.modelData.appIcon) : IconUtils.fallbackSource
         }
     }
 
@@ -67,7 +68,7 @@ Item {
             asynchronous: true
             backer.cache: true
             implicitSize: 30
-            source: root.hasAppIcon ? Quickshell.iconPath(root.modelData.appIcon) : root.modelData.image
+            source: root.hasAppIcon ? Quickshell.iconPath(root.modelData.appIcon) : (root.modelData.image ? Qt.resolvedUrl(root.modelData.image) : IconUtils.fallbackSource)
         }
     }
 
@@ -99,7 +100,7 @@ Item {
                     asynchronous: true
                     backer.cache: true
                     implicitSize: 16
-                    source: Quickshell.iconPath(root.modelData.appIcon)
+                    source: root.modelData.appIcon ? Quickshell.iconPath(root.modelData.appIcon) : IconUtils.fallbackSource
                 }
             }
         }

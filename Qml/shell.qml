@@ -4,6 +4,7 @@
 //@ pragma NativeTextRendering
 //@ pragma DropExpensiveFonts
 //@ pragma IconTheme MoreWaita
+//@ pragma Env QT_FFMPEG_DECODING_HW_DEVICE_TYPES=vaapi
 
 import QtQuick
 import Quickshell

@@ -10,9 +10,10 @@ Item {
 
     readonly property bool  batCharging: UPower.displayDevice.state == UPowerDeviceState.Charging
     readonly property real  batFill: batteryBody.width * batPercentage
-    readonly property real  batPercentage: UPower.displayDevice.percentage
+    readonly property real  batPercentage: chargePercent / 100
     readonly property bool  batteryLow: batPercentage <= 0.2 && !batCharging
     readonly property real  bodyRadius: Appearance.rounding.small * 0.5
+    readonly property int   chargePercent: Math.round(UPower.displayDevice.percentage * 100)
     readonly property real  fillAreaHeight: batteryBody.height - fillInset * 2
     readonly property real  fillAreaWidth: batteryBody.width - fillInset * 2
     readonly property color fillColor: {
@@ -29,10 +30,17 @@ Item {
     readonly property real  outlineWidth: 1
 
     property alias          heightBattery: batteryBody.implicitHeight
+    property int            previousChargePercent: 0
     property alias          widthBattery: batteryBody.implicitWidth
 
     implicitHeight: heightBattery
     implicitWidth: widthBattery
+    Component.onCompleted: previousChargePercent = chargePercent
+    onChargePercentChanged: {
+        if (batCharging && chargePercent > previousChargePercent)
+            chargePulse.restart();
+        previousChargePercent = chargePercent;
+    }
 
     Item {
         id: batteryBody
@@ -53,6 +61,9 @@ Item {
             width: Math.max(0, root.fillAreaWidth * root.batPercentage)
             x: root.fillInset
             y: root.fillInset
+            Behavior on width {
+                NAnim {}
+            }
 
             Rectangle {
                 id: fillShape
@@ -70,25 +81,27 @@ Item {
                 antialiasing: true
                 color: "white"
                 height: root.fillAreaHeight
+                opacity: 0
                 radius: Math.max(0, root.bodyRadius - root.fillInset)
-                visible: root.batCharging
                 width: root.fillAreaWidth
-                SequentialAnimation on opacity {
-                    loops: Animation.Infinite
-                    running: root.batCharging
+            }
+        }
 
-                    NumberAnimation {
-                        duration: 700
-                        from: 0
-                        to: 0.35
-                    }
+        SequentialAnimation {
+            id: chargePulse
 
-                    NumberAnimation {
-                        duration: 700
-                        from: 0.35
-                        to: 0
-                    }
-                }
+            NumberAnimation {
+                duration: 350
+                property: "opacity"
+                target: chargeShimmer
+                to: 0.35
+            }
+
+            NumberAnimation {
+                duration: 350
+                property: "opacity"
+                target: chargeShimmer
+                to: 0
             }
         }
 
@@ -107,7 +120,7 @@ Item {
         StyledText {
             anchors.centerIn: parent
             color: Colours.m3Colors.m3Surface
-            text: Math.round(root.batPercentage * 100)
+            text: root.chargePercent
             z: 1
 
             font {

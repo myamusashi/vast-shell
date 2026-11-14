@@ -68,6 +68,10 @@ Item {
         return activeVideoSlot === 0 ? videoOutputA : videoOutputB;
     }
 
+    function                 activeVideoPlayer() {
+        return activeVideoSlot === 0 ? videoPlayerA : videoPlayerB;
+    }
+
     function                 beginTransition() {
         if (transitionStarted)
             return;
@@ -75,6 +79,7 @@ Item {
         transitionEffect.progress = 0.0;
         if (Window.window)
             Window.window.requestActivate();
+        pauseOutgoingVideo();
         progressAnimation.restart();
     }
 
@@ -202,6 +207,11 @@ Item {
             else
                 startImageTransition(url);
         }
+    }
+
+    function                 pauseOutgoingVideo() {
+        if (isVideoWallpaper)
+            activeVideoPlayer().pause();
     }
 
     function                 playVideo(player) {
@@ -339,9 +349,10 @@ Item {
             videoPlayerA.pause();
             videoPlayerB.pause();
         } else {
-            if (videoPlayerA.source !== "")
+            const frozenPlayer = transitionBusy && isVideoWallpaper ? activeVideoPlayer() : null;
+            if (videoPlayerA.source !== "" && videoPlayerA !== frozenPlayer)
                 videoPlayerA.play();
-            if (videoPlayerB.source !== "")
+            if (videoPlayerB.source !== "" && videoPlayerB !== frozenPlayer)
                 videoPlayerB.play();
         }
     }
@@ -470,15 +481,15 @@ Item {
         z: 2
     }
 
-    NumberAnimation {
+    UniformAnimator {
         id: progressAnimation
 
         duration: Configs.wallpaper.transitionDuration
         easing.type: Easing.Linear
         from: 0.0
-        property: "progress"
         target: transitionEffect
         to: 1.0
+        uniform: "progress"
         onStopped: root.commitTransition()
     }
 }

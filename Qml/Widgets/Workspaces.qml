@@ -70,17 +70,23 @@ StyledRect {
 
             function                     iconForToplevel(toplevel: var): string {
                 const windowClass = toplevel?.lastIpcObject?.class;
-                const entry       = windowClass ? DesktopEntries.heuristicLookup(windowClass) : null;
-                return entry?.icon ? Quickshell.iconPath(entry.icon, "image-missing") : "";
-            }
+                if (!windowClass)
+                    return "";
 
-            clip: true
-            spacing: 0
+                const entry = DesktopEntries.heuristicLookup(windowClass);
+                if (!entry?.icon)
+                    return "";
+
+                return Quickshell.iconPath(entry.icon, true);
+            }
 
             anchors {
                 left: parent.left
                 verticalCenter: parent.verticalCenter
             }
+
+            clip: true
+            spacing: 0
 
             Repeater {
                 model: {
