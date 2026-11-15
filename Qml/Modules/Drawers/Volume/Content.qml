@@ -6,6 +6,7 @@ import Quickshell.Services.Pipewire
 import qs.Components.Base
 import qs.Components.Volume
 import qs.Core.Configs
+import qs.Core.States
 
 Item {
     id: root
@@ -16,6 +17,15 @@ Item {
     readonly property real              perAppWidth: repeater.count * controller.itemSize + Math.max(0, repeater.count - 1) * controller.itemSpacing
 
     anchors.fill: parent
+
+    HoverHandler {
+        onHoveredChanged: {
+            if (hovered)
+                GlobalStates.pauseOSD("volume");
+            else
+                GlobalStates.resumeOSD("volume");
+        }
+    }
 
     Row {
         id: perAppContainer

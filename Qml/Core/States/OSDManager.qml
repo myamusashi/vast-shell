@@ -19,6 +19,7 @@ Scope {
 
     property var           activeOSDs: ({})
     property var           pausedOSDs: ({})
+    property var           pauseCounts: ({})
 
     function               allHidden(): bool {
         return !anyVisible;
@@ -29,6 +30,7 @@ Scope {
             return;
         activeOSDs[name] = false;
         pausedOSDs[name] = false;
+        pauseCounts[name] = 0;
         activeOSDsChanged();
         timers[name]?.stop();
     }
@@ -40,12 +42,16 @@ Scope {
     function               pause(name): void {
         if (!name || !activeOSDs[name])
             return;
+        pauseCounts[name] = (pauseCounts[name] ?? 0) + 1;
         pausedOSDs[name] = true;
         timers[name]?.stop();
     }
 
     function               resume(name): void {
         if (!name || !activeOSDs[name])
+            return;
+        pauseCounts[name] = Math.max(0, (pauseCounts[name] ?? 0) - 1);
+        if (pauseCounts[name] > 0)
             return;
         pausedOSDs[name] = false;
         timers[name]?.restart();
