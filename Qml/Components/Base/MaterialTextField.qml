@@ -75,6 +75,7 @@ TextField {
     font.pixelSize: 16
     font.letterSpacing: 0.5
     cursorDelegate: Rectangle {
+        visible: root.activeFocus
         width: 2
         color: root.hasError ? root.errorColor : root.primaryColor
     }
