@@ -19,7 +19,9 @@ Singleton {
 
     function                         focusToplevel(w: int, address: string): void {
         if (address !== undefined && address !== null && address !== "")
-            Hyprland.dispatch(`hl.dsp.focus({window = ${address}})`);
+            // Hyprland lua dispatch expects a quoted window address selector;
+            // a bare hex token is parsed as a number and fails with "malformed number".
+            Hyprland.dispatch(`hl.dsp.focus({window = "address:0x${String(address).replace(/^0x/i, "")}"})`);
         else
             switchWorkspace(w);
     }
