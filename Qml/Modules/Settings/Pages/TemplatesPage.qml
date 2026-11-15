@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
 
 import qs.Components.Base
@@ -155,25 +154,11 @@ SettingsPageBase {
                             Layout.fillWidth: true
                             spacing: Appearance.spacing.normal
 
-                            StyledText {
-                                color: Colours.m3Colors.m3OnSurfaceVariant
-                                font.pixelSize: Appearance.fonts.size.normal
-                                text: qsTr("Name:")
-                            }
-
-                            TextField {
+                            MaterialTextField {
                                 Layout.fillWidth: true
-                                clip: true
-                                color: Colours.m3Colors.m3OnSurface
-                                font.pixelSize: Appearance.fonts.size.normal
-                                padding: Appearance.margin.normal
-                                placeholderText: qsTr("Name of the template")
+                                Layout.preferredWidth: 0
+                                label: qsTr("Name")
                                 text: templateDelegate.name
-                                background: Rectangle {
-                                    color: Colours.m3Colors.m3SurfaceVariant
-                                    opacity: 0.4
-                                    radius: Appearance.rounding.small
-                                }
                                 onEditingFinished: root.saveField(templateDelegate.index, "name", text)
                             }
 
@@ -194,25 +179,12 @@ SettingsPageBase {
                             Layout.fillWidth: true
                             spacing: Appearance.spacing.normal
 
-                            StyledText {
-                                color: Colours.m3Colors.m3OnSurfaceVariant
-                                font.pixelSize: Appearance.fonts.size.normal
-                                text: qsTr("Template:")
-                            }
-
-                            TextField {
+                            MaterialTextField {
                                 Layout.fillWidth: true
-                                clip: true
-                                color: Colours.m3Colors.m3OnSurface
-                                font.pixelSize: Appearance.fonts.size.normal
-                                padding: Appearance.margin.normal
+                                Layout.preferredWidth: 0
+                                label: qsTr("Template")
                                 placeholderText: qsTr("Path of the template file")
                                 text: templateDelegate.input
-                                background: Rectangle {
-                                    color: Colours.m3Colors.m3SurfaceVariant
-                                    opacity: 0.4
-                                    radius: Appearance.rounding.small
-                                }
                                 onEditingFinished: root.saveField(templateDelegate.index, "input", text)
                             }
 
@@ -227,85 +199,46 @@ SettingsPageBase {
                             }
                         }
 
-                        RowLayout {
+                        MaterialTextField {
                             Layout.fillWidth: true
-                            spacing: Appearance.spacing.normal
-
-                            StyledText {
-                                color: Colours.m3Colors.m3OnSurfaceVariant
-                                font.pixelSize: Appearance.fonts.size.normal
-                                text: qsTr("Output:")
-                            }
-
-                            TextField {
-                                Layout.fillWidth: true
-                                clip: true
-                                color: Colours.m3Colors.m3OnSurface
-                                font.pixelSize: Appearance.fonts.size.normal
-                                padding: Appearance.margin.normal
-                                placeholderText: qsTr("Rendered into: %1").arg(TemplateServices.resolvedOutputPath({
-                                    input: templateDelegate.input,
-                                    output_path: templateDelegate.outputPath
-                                }))
-                                text: templateDelegate.outputPath
-                                background: Rectangle {
-                                    color: Colours.m3Colors.m3SurfaceVariant
-                                    opacity: 0.4
-                                    radius: Appearance.rounding.small
-                                }
-                                onEditingFinished: root.saveField(templateDelegate.index, "outputPath", text)
-                            }
+                            label: qsTr("Output")
+                            placeholderText: qsTr("Rendered into: %1").arg(TemplateServices.resolvedOutputPath({
+                                input: templateDelegate.input,
+                                output_path: templateDelegate.outputPath
+                            }))
+                            text: templateDelegate.outputPath
+                            onEditingFinished: root.saveField(templateDelegate.index, "outputPath", text)
                         }
 
-                        RowLayout {
+                        MaterialTextField {
                             Layout.fillWidth: true
-                            spacing: Appearance.spacing.normal
-
-                            StyledText {
-                                color: Colours.m3Colors.m3OnSurfaceVariant
-                                font.pixelSize: Appearance.fonts.size.normal
-                                text: qsTr("Post hook:")
-                            }
-
-                            TextField {
-                                Layout.fillWidth: true
-                                clip: true
-                                color: Colours.m3Colors.m3OnSurface
-                                font.pixelSize: Appearance.fonts.size.normal
-                                padding: Appearance.margin.normal
-                                placeholderText: qsTr("Command that runs after the file is written")
-                                text: templateDelegate.postHook
-                                background: Rectangle {
-                                    color: Colours.m3Colors.m3SurfaceVariant
-                                    opacity: 0.4
-                                    radius: Appearance.rounding.small
-                                }
-                                onEditingFinished: root.saveField(templateDelegate.index, "postHook", text)
-                            }
+                            label: qsTr("Post hook")
+                            placeholderText: qsTr("Command that runs after the file is written")
+                            text: templateDelegate.postHook
+                            onEditingFinished: root.saveField(templateDelegate.index, "postHook", text)
                         }
                     }
                 }
             }
-
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: Appearance.spacing.normal
-
-                ExtendedFloatingButton {
-                    icon.name: "add"
-                    onClicked: root.addTemplate()
-                    text: qsTr("Add Template")
-                }
-
-                ExtendedFloatingButton {
-                    enabled: !TemplateServices.renderRunning
-                    icon.name: "refresh"
-                    onClicked: TemplateServices.render()
-                    text: qsTr("Render Now")
-                }
-            }
         }
     }
+
+    footer: [
+        Item {
+            Layout.fillWidth: true
+        },
+        ExtendedFloatingButton {
+            icon.name: "add"
+            text: qsTr("Add Template")
+            onClicked: root.addTemplate()
+        },
+        ExtendedFloatingButton {
+            enabled: !TemplateServices.renderRunning
+            icon.name: "refresh"
+            text: qsTr("Render Now")
+            onClicked: TemplateServices.render()
+        }
+    ]
 
     FileDialog {
         id: templateFileDialog

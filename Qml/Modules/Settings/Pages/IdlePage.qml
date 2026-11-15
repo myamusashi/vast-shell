@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
 
 import qs.Components.Button
@@ -114,22 +113,13 @@ SettingsPageBase {
                                 text: qsTr("Timeout (seconds):")
                             }
 
-                            TextField {
+                            MaterialTextField {
                                 id: timeoutField
 
                                 Layout.preferredWidth: 80
-                                clip: true
-                                color: Colours.m3Colors.m3OnSurface
                                 font.bold: true
-                                font.pixelSize: Appearance.fonts.size.normal
                                 inputMethodHints: Qt.ImhDigitsOnly
-                                padding: Appearance.margin.normal
                                 text: rootDelegate.modelData.timeoutSeconds
-                                background: Rectangle {
-                                    color: Colours.m3Colors.m3SurfaceVariant
-                                    opacity: 0.4
-                                    radius: Appearance.rounding.small
-                                }
                                 onEditingFinished: {
                                     let val = parseInt(text, 10);
                                     if (isNaN(val) || val < 1)
@@ -150,20 +140,12 @@ SettingsPageBase {
                                 text: qsTr("Command on Timeout:")
                             }
 
-                            TextField {
+                            MaterialTextField {
                                 id: onTimeoutField
 
                                 Layout.fillWidth: true
-                                clip: true
-                                color: Colours.m3Colors.m3OnSurface
-                                font.pixelSize: Appearance.fonts.size.normal
-                                padding: Appearance.margin.normal
+                                placeholderText: qsTr("Command that runs when the timeout is reached")
                                 text: rootDelegate.modelData.timeoutCommand
-                                background: Rectangle {
-                                    color: Colours.m3Colors.m3SurfaceVariant
-                                    opacity: 0.4
-                                    radius: Appearance.rounding.small
-                                }
                                 onEditingFinished: root.timeoutsModel.setProperty(rootDelegate.index, "timeoutCommand", text)
                             }
                         }
@@ -178,20 +160,12 @@ SettingsPageBase {
                                 text: qsTr("Command on Resume:")
                             }
 
-                            TextField {
+                            MaterialTextField {
                                 id: onResumeField
 
                                 Layout.fillWidth: true
-                                clip: true
-                                color: Colours.m3Colors.m3OnSurface
-                                font.pixelSize: Appearance.fonts.size.normal
-                                padding: Appearance.margin.normal
+                                placeholderText: qsTr("Command that runs when the session resumes")
                                 text: rootDelegate.modelData.resumeCommand
-                                background: Rectangle {
-                                    color: Colours.m3Colors.m3SurfaceVariant
-                                    opacity: 0.4
-                                    radius: Appearance.rounding.small
-                                }
                                 onEditingFinished: root.timeoutsModel.setProperty(rootDelegate.index, "resumeCommand", text)
                             }
                         }
@@ -218,12 +192,15 @@ SettingsPageBase {
         }
     }
 
-    ExtendedFloatingButton {
-        Layout.fillWidth: true
-        Layout.preferredHeight: 40
-        outlined: true
-        text: qsTr("Add Timeout")
-        textColor: Colours.m3Colors.m3OnSurface
-        onClicked: root.addTimeout()
-    }
+    footer: [
+        Item {
+            Layout.fillWidth: true
+        },
+        ExtendedFloatingButton {
+            outlined: true
+            text: qsTr("Add Timeout")
+            textColor: Colours.m3Colors.m3OnSurface
+            onClicked: root.addTimeout()
+        }
+    ]
 }

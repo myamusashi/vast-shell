@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
 
 import qs.Components.Button
@@ -117,20 +116,24 @@ SettingsPageBase {
                 RowLayout {
                     spacing: Appearance.margin.normal
 
-                    LabeledTextField {
-                        label: qsTr("Name:")
+                    MaterialTextField {
+                        Layout.fillWidth: true
+                        Layout.preferredWidth: 0
+                        label: qsTr("Name")
                         text: rootDelegate.key
-                        onEdited: newText => {
-                            root.privacyBlockListModel.setProperty(rootDelegate.index, "key", newText);
+                        onEditingFinished: {
+                            root.privacyBlockListModel.setProperty(rootDelegate.index, "key", text);
                             root.flushToConfig();
                         }
                     }
 
-                    LabeledTextField {
-                        label: qsTr("Value:")
+                    MaterialTextField {
+                        Layout.fillWidth: true
+                        Layout.preferredWidth: 0
+                        label: qsTr("Value")
                         text: rootDelegate.value
-                        onEdited: newText => {
-                            root.privacyBlockListModel.setProperty(rootDelegate.index, "value", newText);
+                        onEditingFinished: {
+                            root.privacyBlockListModel.setProperty(rootDelegate.index, "value", text);
                             root.flushToConfig();
                         }
                     }
@@ -150,46 +153,15 @@ SettingsPageBase {
         }
     }
 
-    ExtendedFloatingButton {
-        Layout.fillWidth: true
-        Layout.preferredHeight: 40
-        outlined: true
-        text: qsTr("Add title blocked")
-        textColor: Colours.m3Colors.m3OnSurface
-        onClicked: root.addEntry()
-    }
-
-    component LabeledTextField: ColumnLayout {
-        id: field
-
-        required property string label
-        required property string text
-
-        signal                   edited(string text)
-
-        Layout.fillWidth: true
-        Layout.preferredWidth: 0
-
-        StyledText {
-            color: Colours.m3Colors.m3OnSurfaceVariant
-            font.pixelSize: Appearance.fonts.size.normal
-            text: field.label
-        }
-
-        TextField {
+    footer: [
+        Item {
             Layout.fillWidth: true
-            Layout.preferredWidth: 0
-            clip: true
-            color: Colours.m3Colors.m3OnSurface
-            font.pixelSize: Appearance.fonts.size.normal
-            padding: Appearance.margin.normal
-            text: field.text
-            background: Rectangle {
-                color: Colours.m3Colors.m3SurfaceVariant
-                opacity: 0.4
-                radius: Appearance.rounding.small
-            }
-            onEditingFinished: field.edited(text)
+        },
+        ExtendedFloatingButton {
+            outlined: true
+            text: qsTr("Add title blocked")
+            textColor: Colours.m3Colors.m3OnSurface
+            onClicked: root.addEntry()
         }
-    }
+    ]
 }
