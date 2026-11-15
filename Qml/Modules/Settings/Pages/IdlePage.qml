@@ -200,7 +200,10 @@ SettingsPageBase {
             outlined: true
             text: qsTr("Add Timeout")
             textColor: Colours.m3Colors.m3OnSurface
-            onClicked: root.addTimeout()
+            onClicked: {
+                root.addTimeout();
+                root.revealItem(timeoutRepeater, timeoutRepeater.count - 1);
+            }
         }
     ]
 }

@@ -161,7 +161,10 @@ SettingsPageBase {
             outlined: true
             text: qsTr("Add title blocked")
             textColor: Colours.m3Colors.m3OnSurface
-            onClicked: root.addEntry()
+            onClicked: {
+                root.addEntry();
+                root.revealItem(listView, listView.count - 1);
+            }
         }
     ]
 }

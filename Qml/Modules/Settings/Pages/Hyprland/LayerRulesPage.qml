@@ -60,6 +60,8 @@ SettingsPageBase {
         }
 
         Repeater {
+            id: ruleRepeater
+
             model: root.ruleIds
             delegate: RuleCard {
                 Layout.fillWidth: true
@@ -97,7 +99,10 @@ SettingsPageBase {
             text: qsTr("Add rule")
             textColor: Colours.m3Colors.m3OnSecondaryContainer
             color: Colours.m3Colors.m3SecondaryContainer
-            onClicked: LayerRuleServices.addRule()
+            onClicked: {
+                LayerRuleServices.addRule();
+                root.revealItem(ruleRepeater, ruleRepeater.count - 1);
+            }
         }
     ]
 }

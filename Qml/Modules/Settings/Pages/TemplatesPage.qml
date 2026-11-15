@@ -230,7 +230,10 @@ SettingsPageBase {
         ExtendedFloatingButton {
             icon.name: "add"
             text: qsTr("Add Template")
-            onClicked: root.addTemplate()
+            onClicked: {
+                root.addTemplate();
+                root.revealItem(templateRepeater, templateRepeater.count - 1);
+            }
         },
         ExtendedFloatingButton {
             enabled: !TemplateServices.renderRunning

@@ -21,6 +21,10 @@ Item {
         return cardRevealer.reveal(cardTitle);
     }
 
+    function               revealItem(view, index): void {
+        cardRevealer.revealItem(view, index);
+    }
+
     Layout.fillHeight: true
     Layout.fillWidth: true
 
