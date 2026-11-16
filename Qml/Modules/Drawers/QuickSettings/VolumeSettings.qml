@@ -115,6 +115,7 @@ ScrollView {
                     MixerEntry {
                         id: mixerGroup
 
+                        Layout.fillWidth: true
                         audioNode: groups.modelData.source
                     }
                 }

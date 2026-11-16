@@ -30,6 +30,18 @@ ColumnLayout {
         Layout.fillWidth: true
         active: root.useCustomProperties
         sourceComponent: root.customProperty
+        visible: active
+    }
+
+    StyledText {
+        Layout.alignment: Qt.AlignLeft
+        Layout.fillWidth: true
+        color: Colours.m3Colors.m3OnSurface
+        elide: Text.ElideRight
+        font.pixelSize: Appearance.fonts.size.normal
+        font.weight: Font.Medium
+        text: Audio.nodeDisplayName(root.audioNode)
+        visible: text !== ""
     }
 
     RowLayout {
