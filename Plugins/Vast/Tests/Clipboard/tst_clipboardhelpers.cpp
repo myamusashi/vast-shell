@@ -49,6 +49,10 @@ class TestClipboardHelpers : public QObject {
     void buildPreviewPassesTextThrough();
     void buildPreviewStripsHtmlMarkup();
     void buildPreviewHandlesLargeHtmlAndText();
+    void buildSearchTextStripsHtmlAndStyle();
+    void buildSearchTextDecodesUriListAndPercentEncoding();
+    void normalizeSearchTextPreservesDigitsAndDistinctIAndL();
+    void scoreSearchWordRanksTiersCorrectly();
 
     // vast::WaylandDataControl::htmlToPlainText
     void htmlToPlainTextStripsScriptAndStyle();
@@ -202,6 +206,64 @@ void TestClipboardHelpers::buildPreviewHandlesLargeHtmlAndText() {
     QVERIFY(htmlPreview.startsWith(QStringLiteral("First Paragraph & content")));
     QVERIFY(!htmlPreview.contains(QStringLiteral("<div>")));
     QVERIFY(!htmlPreview.contains(QStringLiteral("<p>")));
+}
+
+void TestClipboardHelpers::buildSearchTextStripsHtmlAndStyle() {
+    using vast::ClipboardContentClassifier;
+    using vast::ClipboardType;
+
+    const QString html = QStringLiteral("<html><head><style>") + QStringLiteral("span { color: rgb(1, 2, 3); } ").repeated(100) +
+        QStringLiteral("</style></head><body><p><a href=\"https://hidden.example/href-ignored\">Visible &amp; Searchable</a></p></body></html>");
+    const QString search = ClipboardContentClassifier::buildSearchText(ClipboardType::Html, html);
+
+    QVERIFY(search.contains(QStringLiteral("Visible & Searchable")));
+    QVERIFY(!search.contains(QStringLiteral("span")));
+    QVERIFY(!search.contains(QStringLiteral("rgb")));
+    QVERIFY(!search.contains(QStringLiteral("href-ignored")));
+}
+
+void TestClipboardHelpers::buildSearchTextDecodesUriListAndPercentEncoding() {
+    using vast::ClipboardContentClassifier;
+    using vast::ClipboardType;
+
+    const QString uriList     = QStringLiteral("file:///home/user/My%20Report%202026.pdf\n# comment\nhttps://example.com/a%20b?q=hello%20world");
+    const QString filesSearch = ClipboardContentClassifier::buildSearchText(ClipboardType::Files, uriList);
+    QVERIFY(filesSearch.contains(QStringLiteral("/home/user/My Report 2026.pdf")));
+    QVERIFY(filesSearch.contains(QStringLiteral("https://example.com/a b?q=hello world")));
+    QVERIFY(!filesSearch.contains(QStringLiteral("# comment")));
+
+    const QString textUrl    = QStringLiteral("https://example.com/docs/Getting%20Started.md");
+    const QString textSearch = ClipboardContentClassifier::buildSearchText(ClipboardType::Text, textUrl);
+    QVERIFY(textSearch.contains(QStringLiteral("Getting Started.md")));
+}
+
+void TestClipboardHelpers::normalizeSearchTextPreservesDigitsAndDistinctIAndL() {
+    using vast::ClipboardContentClassifier;
+
+    QCOMPARE(ClipboardContentClassifier::normalizeSearchText(QStringLiteral("Café naïve")), QStringLiteral("cafe naive"));
+    QCOMPARE(ClipboardContentClassifier::normalizeSearchText(QStringLiteral("404 100 8080")), QStringLiteral("404 100 8080"));
+    QCOMPARE(ClipboardContentClassifier::normalizeSearchText(QStringLiteral("clip link file")), QStringLiteral("clip link file"));
+    QVERIFY(ClipboardContentClassifier::normalizeSearchText(QStringLiteral("clip")) != ClipboardContentClassifier::normalizeSearchText(QStringLiteral("cllp")));
+}
+
+void TestClipboardHelpers::scoreSearchWordRanksTiersCorrectly() {
+    using vast::ClipboardContentClassifier;
+
+    const QString    word = QStringLiteral("git");
+    const QByteArray utf8 = word.toUtf8();
+
+    const double     exactField = ClipboardContentClassifier::scoreSearchWord(word, utf8, QStringLiteral("git"));
+    const double     exactToken = ClipboardContentClassifier::scoreSearchWord(word, utf8, QStringLiteral("https://github.com/git/repo"));
+    const double     prefix     = ClipboardContentClassifier::scoreSearchWord(word, utf8, QStringLiteral("github.com/user/repo"));
+    const double     substring  = ClipboardContentClassifier::scoreSearchWord(word, utf8, QStringLiteral("legit"));
+    const double     fuzzy      = ClipboardContentClassifier::scoreSearchWord(QStringLiteral("githb"), QByteArrayLiteral("githb"), QStringLiteral("github"));
+
+    QVERIFY(exactField > exactToken);
+    QVERIFY(exactToken > prefix);
+    QVERIFY(prefix > substring);
+    QVERIFY(substring > 0.0);
+    QVERIFY(fuzzy > 0.0);
+    QVERIFY(fuzzy < ClipboardContentClassifier::scoreSearchWord(QStringLiteral("github"), QByteArrayLiteral("github"), QStringLiteral("mygithub")));
 }
 
 void TestClipboardHelpers::htmlToPlainTextStripsScriptAndStyle() {

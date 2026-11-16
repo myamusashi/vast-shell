@@ -1,8 +1,6 @@
 #include "ClipboardEntry.hpp"
 #include "ClipboardModel.hpp"
 #include "ClipboardContentClassifier.hpp"
-#include "../FuzzyCore.hpp"
-#include "../FuzzyMatcher.hpp"
 
 #include <qabstractitemmodel.h>
 #include <iterator>
@@ -20,6 +18,7 @@
 #include <qhash.h>
 #include <qlist.h>
 #include <utility>
+#include <vector>
 #include <qtmetamacros.h>
 #include <qtypes.h>
 
@@ -27,6 +26,8 @@ namespace vast {
 
     namespace {
         constexpr double K_CLIPBOARD_THRESHOLD_PER_CHAR = 0.35;
+        constexpr double K_FILENAME_WEIGHT              = 0.75;
+        constexpr double K_SOURCE_APP_WEIGHT            = 0.55;
     }
 
     ClipboardModel::ClipboardModel(QObject* parent) : QAbstractListModel{parent} {}
@@ -283,6 +284,18 @@ namespace vast {
         return indexById(id) >= 0;
     }
 
+    void ClipboardModel::ensureSearchIndex(ClipboardEntry& e) {
+        if (e.searchIndexed)
+            return;
+        if (!e.isImage())
+            e.searchContent = ClipboardContentClassifier::normalizeSearchText(ClipboardContentClassifier::buildSearchText(e.type, e.content));
+        if (!e.fileName.isEmpty())
+            e.searchFileName = ClipboardContentClassifier::normalizeSearchText(QFileInfo(e.fileName).fileName());
+        if (!e.sourceApp.isEmpty())
+            e.searchSourceApp = ClipboardContentClassifier::normalizeSearchText(e.sourceApp);
+        e.searchIndexed = true;
+    }
+
     void ClipboardModel::rebuildFilter() {
         mFiltered.clear();
 
@@ -291,23 +304,25 @@ namespace vast {
 
         static const QRegularExpression kWhiteSpace(QStringLiteral(R"(\s+)"));
 
-        const QString                   normQuery  = FuzzyMatcher::normalizeText(mFilterQuery).trimmed();
+        const QString                   normQuery  = ClipboardContentClassifier::normalizeSearchText(mFilterQuery).trimmed();
         const QStringList               queryWords = normQuery.split(kWhiteSpace, Qt::SkipEmptyParts);
 
-        qsizetype                       queryChars = 0;
-        for (const QString& word : queryWords)
-            queryChars += word.length();
-
-        if (queryChars == 0) {
+        if (queryWords.isEmpty()) {
             mFiltered.reserve(static_cast<size_t>(mEntries.size()));
             for (int i = 0; i < mEntries.size(); ++i)
                 mFiltered.push_back(i);
             return;
         }
 
-        const double threshold = K_CLIPBOARD_THRESHOLD_PER_CHAR * static_cast<double>(queryChars);
-
-        auto         scoreField = [&](const QString& raw) { return FuzzyMatcher::multiWordScore(queryWords, FuzzyMatcher::normalizeText(raw)); };
+        struct QueryWord {
+            QString    text;
+            QByteArray utf8;
+            double     minThreshold;
+        };
+        std::vector<QueryWord> encodedWords;
+        encodedWords.reserve(static_cast<size_t>(queryWords.size()));
+        for (const QString& word : queryWords)
+            encodedWords.push_back({.text = word, .utf8 = word.toUtf8(), .minThreshold = K_CLIPBOARD_THRESHOLD_PER_CHAR * static_cast<double>(word.length())});
 
         struct Hit {
             int    index;
@@ -317,18 +332,31 @@ namespace vast {
         QList<Hit> hits;
         hits.reserve(mEntries.size());
 
-        for (int i = 0; i < mEntries.size(); ++i) {
-            const auto& e = mEntries.at(i);
+        int i = 0;
+        for (ClipboardEntry& e : mEntries) {
+            ensureSearchIndex(e);
 
-            // Long pastes: only the leading KMatchMaxLen chars are searchable
-            // (fzy cannot align beyond that anyway).
-            double best = scoreField(e.content.left(fzy::K_MATCH_MAX_LEN));
-            best        = std::max(best, scoreField(e.sourceApp));
-            best        = std::max(best, scoreField(e.fileName));
-            best        = std::max(best, scoreField(e.mimeType));
+            double totalScore = 0.0;
+            bool   allMatched = true;
+            for (const QueryWord& word : encodedWords) {
+                double wordBest = 0.0;
+                if (!e.isImage() && !e.searchContent.isEmpty())
+                    wordBest = std::max(wordBest, ClipboardContentClassifier::scoreSearchWord(word.text, word.utf8, e.searchContent));
+                if (!e.searchFileName.isEmpty())
+                    wordBest = std::max(wordBest, ClipboardContentClassifier::scoreSearchWord(word.text, word.utf8, e.searchFileName) * K_FILENAME_WEIGHT);
+                if (!e.searchSourceApp.isEmpty())
+                    wordBest = std::max(wordBest, ClipboardContentClassifier::scoreSearchWord(word.text, word.utf8, e.searchSourceApp) * K_SOURCE_APP_WEIGHT);
 
-            if (best >= threshold)
-                hits.append({.index = i, .score = best, .pinned = e.pinned});
+                if (wordBest < word.minThreshold) {
+                    allMatched = false;
+                    break;
+                }
+                totalScore += wordBest;
+            }
+
+            if (allMatched)
+                hits.append({.index = i, .score = totalScore, .pinned = e.pinned});
+            ++i;
         }
 
         std::ranges::stable_sort(hits, [](const Hit& a, const Hit& b) {

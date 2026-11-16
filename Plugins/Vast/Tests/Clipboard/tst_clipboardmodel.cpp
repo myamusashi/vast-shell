@@ -56,6 +56,12 @@ class TestClipboardModel : public QObject {
     void setFilterPutsPinnedFirstAmongMatches();
     void setFilterEmptyQueryRestoresEverything();
     void setFilterExcludesNonMatches();
+    void setFilterHtmlIgnoresMarkupAndFindsBodyText();
+    void setFilterFindsTextDeepInLongPasteAndWithUtf8();
+    void setFilterMatchesUrlTokensAndDecodedUris();
+    void setFilterDoesNotMatchMimeTypeAndDownweightsSourceApp();
+    void setFilterRequiresAllQueryWords();
+    void setFilterDistinguishesDigitsAndIvsL();
     void bumpToTopMovesToFront();
     void bumpToTopUnknownIdIsNoop();
     void idAtRowAndTypeAtRowRejectOutOfRange();
@@ -134,7 +140,7 @@ void TestClipboardModel::previewRoleHandlesLargeHtmlAndTextFast() {
 void TestClipboardModel::resetReplacesEntriesAndClearsFilter() {
     vast::ClipboardModel model;
     model.reset({entry(1, QStringLiteral("alpha"), 1000), entry(2, QStringLiteral("beta"), 2000), entry(3, QStringLiteral("gamma"), 3000)});
-    model.setFilter(QStringLiteral("a"));
+    model.setFilter(QStringLiteral("al"));
     QVERIFY(model.rowCount() < 3);
 
     // reset() stores the list verbatim; it does not re-sort.
@@ -266,6 +272,91 @@ void TestClipboardModel::setFilterExcludesNonMatches() {
     model.setFilter(QStringLiteral("zzzznomatch"));
     QCOMPARE(model.rowCount(), 0);
     QCOMPARE(model.idAtRow(0), -1);
+}
+
+void TestClipboardModel::setFilterHtmlIgnoresMarkupAndFindsBodyText() {
+    vast::ClipboardModel model;
+    const QString        headStyle = QStringLiteral("<head><style>") + QStringLiteral("span { color: rgb(10, 20, 30); } ").repeated(100) + QStringLiteral("</style></head>");
+    const QString        html      = QStringLiteral("<html>") + headStyle + QStringLiteral("<body><span style=\"color: red;\">TargetBodyPhrase</span></body></html>");
+    vast::ClipboardEntry htmlEntry = entry(1, html, 1000, false, vast::ClipboardType::Html);
+    htmlEntry.mimeType             = QStringLiteral("text/html");
+
+    model.reset({htmlEntry});
+
+    model.setFilter(QStringLiteral("span"));
+    QCOMPARE(model.rowCount(), 0);
+
+    model.setFilter(QStringLiteral("rgb"));
+    QCOMPARE(model.rowCount(), 0);
+
+    model.setFilter(QStringLiteral("targetbodyphrase"));
+    QCOMPARE(visibleIds(model), (QList<qint64>{1}));
+}
+
+void TestClipboardModel::setFilterFindsTextDeepInLongPasteAndWithUtf8() {
+    vast::ClipboardModel model;
+    // >1024 UTF-8 bytes with multi-byte characters and match beyond char 2000.
+    const QString longText = QStringLiteral("Café résumé — ").repeated(200) + QStringLiteral("\nsecret_api_token_42");
+    model.reset({entry(1, longText, 1000), entry(2, QStringLiteral("unrelated short note"), 2000)});
+
+    model.setFilter(QStringLiteral("secret_api_token_42"));
+    QCOMPARE(visibleIds(model), (QList<qint64>{1}));
+}
+
+void TestClipboardModel::setFilterMatchesUrlTokensAndDecodedUris() {
+    vast::ClipboardModel model;
+    const QString        urlText = QStringLiteral("https://github.com/myamusashi/shell/issues/42?tab=comments#issue-100");
+    vast::ClipboardEntry files   = entry(2, QStringLiteral("file:///home/user/My%20Quarterly%20Report.pdf"), 2000, false, vast::ClipboardType::Files);
+    files.mimeType               = QStringLiteral("text/uri-list");
+
+    model.reset({entry(1, urlText, 1000), files});
+
+    model.setFilter(QStringLiteral("comments"));
+    QCOMPARE(visibleIds(model), (QList<qint64>{1}));
+
+    model.setFilter(QStringLiteral("quarterly report"));
+    QCOMPARE(visibleIds(model), (QList<qint64>{2}));
+}
+
+void TestClipboardModel::setFilterDoesNotMatchMimeTypeAndDownweightsSourceApp() {
+    vast::ClipboardModel model;
+    vast::ClipboardEntry fromCode = entry(1, QStringLiteral("hello world"), 2000);
+    fromCode.sourceApp            = QStringLiteral("vscode");
+    fromCode.mimeType             = QStringLiteral("text/plain;charset=utf-8");
+
+    vast::ClipboardEntry withCode = entry(2, QStringLiteral("vscode extension config"), 1000);
+    withCode.sourceApp            = QStringLiteral("kitty");
+    withCode.mimeType             = QStringLiteral("text/plain;charset=utf-8");
+
+    model.reset({fromCode, withCode});
+
+    // Must not match mimeType ("charset" / "utf").
+    model.setFilter(QStringLiteral("charset"));
+    QCOMPARE(model.rowCount(), 0);
+
+    // Content match must outrank sourceApp-only match.
+    model.setFilter(QStringLiteral("vscode"));
+    QCOMPARE(visibleIds(model), (QList<qint64>{2, 1}));
+}
+
+void TestClipboardModel::setFilterRequiresAllQueryWords() {
+    vast::ClipboardModel model;
+    model.reset({entry(1, QStringLiteral("github repository"), 1000), entry(2, QStringLiteral("github vast shell"), 2000)});
+
+    model.setFilter(QStringLiteral("github vast"));
+    QCOMPARE(visibleIds(model), (QList<qint64>{2}));
+}
+
+void TestClipboardModel::setFilterDistinguishesDigitsAndIvsL() {
+    vast::ClipboardModel model;
+    model.reset({entry(1, QStringLiteral("http 404 not found"), 1000), entry(2, QStringLiteral("cocoa board"), 2000), entry(3, QStringLiteral("cllp"), 3000),
+                 entry(4, QStringLiteral("clipboard"), 4000)});
+
+    model.setFilter(QStringLiteral("404"));
+    QCOMPARE(visibleIds(model), (QList<qint64>{1}));
+
+    model.setFilter(QStringLiteral("clip"));
+    QCOMPARE(visibleIds(model), (QList<qint64>{4}));
 }
 
 void TestClipboardModel::bumpToTopMovesToFront() {

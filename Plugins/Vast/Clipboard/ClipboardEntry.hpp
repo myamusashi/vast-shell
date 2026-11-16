@@ -28,6 +28,10 @@ namespace vast {
         qint64                       timestamp{0};
         QString                      fileName;
         QString                      preview;
+        QString                      searchContent;
+        QString                      searchFileName;
+        QString                      searchSourceApp;
+        bool                         searchIndexed{false};
 
         [[nodiscard]] constexpr bool isImage() const noexcept {
             return type == ClipboardType::Image;

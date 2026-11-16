@@ -67,6 +67,7 @@ namespace vast {
 
       private:
         [[nodiscard]] static QString        makePreview(const ClipboardEntry& e);
+        static void                         ensureSearchIndex(ClipboardEntry& e);
         [[nodiscard]] int                   indexById(qint64 id) const;
 
         void                                rebuildFilter();

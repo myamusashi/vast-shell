@@ -14,5 +14,9 @@ namespace vast {
 
         [[nodiscard]] static QString        buildPreview(ClipboardType type, const QString& content);
         [[nodiscard]] static QString        extractHtmlSlice(const QString& content, qsizetype maxChars);
+        [[nodiscard]] static QString        buildSearchText(ClipboardType type, const QString& content);
+        [[nodiscard]] static QChar          normalizeSearchChar(QChar c);
+        [[nodiscard]] static QString        normalizeSearchText(const QString& text);
+        [[nodiscard]] static double         scoreSearchWord(const QString& normWord, const QByteArray& normWordUtf8, const QString& normField);
     };
 }
