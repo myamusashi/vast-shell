@@ -461,6 +461,12 @@ RowLayout {
                 ComboBox {
                     id: playerComboBox
 
+                    anchors {
+                        right: parent.right
+                        verticalCenter: parent.verticalCenter
+                    }
+
+                    currentIndex: Players.index
                     model: Players.players
                     textRole: "desktopMenu"
                     background: StyledRect {
@@ -504,7 +510,20 @@ RowLayout {
                             property real  colorBlendProgress: 1.0
                             property color colorFrom
                             property color colorTo
-                            property color target: (playerComboBox.currentIndex === playerDelegate.index || playerDelegate.highlighted) ? Qt.alpha(Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary, 0.18) : "transparent"
+                            property color target: {
+                                const accent = Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary;
+                                if (Players.index === playerDelegate.index)
+                                    return Qt.alpha(accent, 0.18);
+                                if (playerDelegate.highlighted)
+                                    return Qt.alpha(accent, 0.08);
+                                return "transparent";
+                            }
+
+                            anchors {
+                                left: parent.left
+                                margins: Appearance.margin.small
+                                right: parent.right
+                            }
 
                             height: parent.height
                             radius: Appearance.rounding.normal
@@ -527,12 +546,6 @@ RowLayout {
                                 colorBlendAnim.start();
                             }
 
-                            anchors {
-                                left: parent.left
-                                margins: Appearance.margin.small
-                                right: parent.right
-                            }
-
                             NAnim {
                                 id: colorBlendAnim
 
@@ -551,7 +564,6 @@ RowLayout {
                             }
                         }
                         contentItem: Row {
-                            spacing: Appearance.spacing.normal
 
                             anchors {
                                 left: parent.left
@@ -560,6 +572,8 @@ RowLayout {
                                 rightMargin: Appearance.margin.large
                                 verticalCenter: parent.verticalCenter
                             }
+
+                            spacing: Appearance.spacing.normal
 
                             IconImage {
                                 anchors.verticalCenter: parent.verticalCenter
@@ -577,8 +591,7 @@ RowLayout {
                             }
                         }
                         onClicked: {
-                            playerComboBox.currentIndex = index;
-                            Players.manualIndex         = index;
+                            Players.manualIndex = index;
                             playerComboBox.popup.close();
                         }
                     }
@@ -644,15 +657,10 @@ RowLayout {
                         }
                     }
                     onActivated: index => {
-                        currentIndex        = index;
                         Players.manualIndex = index;
                         const player        = Players.players[index];
-                        LyricsProvider.fetch(player.trackTitle, player.trackArtist, player.length);
-                    }
-
-                    anchors {
-                        right: parent.right
-                        verticalCenter: parent.verticalCenter
+                        if (player)
+                            LyricsProvider.fetch(player.trackTitle, player.trackArtist, player.length);
                     }
                 }
             }

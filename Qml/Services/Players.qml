@@ -11,10 +11,7 @@ Singleton {
     id: root
 
     readonly property MprisPlayer       active: players[index] ?? null
-    readonly property int               index: {
-        const followed = Configs.mediaPlayer.autoSwitchActivePlayer && root.playingIndex >= 0 ? root.playingIndex : root.manualIndex;
-        return followed >= 0 && followed < root.players.length ? followed : 0;
-    }
+    readonly property int               index: root.manualIndex >= 0 && root.manualIndex < root.players.length ? root.manualIndex : 0
     readonly property list<MprisPlayer> players: Mpris.players.values
     readonly property int               playingIndex: {
         const list = root.players;
@@ -22,14 +19,52 @@ Singleton {
             if (list[i].playbackState === MprisPlaybackState.Playing)
                 return i;
 
-        for (let i = 0; i < list.length; i++)
-            if (list[i].playbackState === MprisPlaybackState.Paused)
-                return i;
-
         return -1;
     }
 
     property int                        manualIndex: 0
+
+    function syncActivePlayer(): void {
+        if (Configs.mediaPlayer.autoSwitchActivePlayer && root.playingIndex >= 0)
+            root.manualIndex = root.playingIndex;
+    }
+
+    Component.onCompleted: root.syncActivePlayer()
+
+    Instantiator {
+        model: Mpris.players
+
+        delegate: Connections {
+            required property int         index
+            required property MprisPlayer modelData
+
+            function onPlaybackStateChanged() {
+                if (!Configs.mediaPlayer.autoSwitchActivePlayer)
+                    return;
+
+                if (modelData.playbackState === MprisPlaybackState.Playing)
+                    root.manualIndex = index;
+                else if (index === root.manualIndex && root.playingIndex >= 0)
+                    root.manualIndex = root.playingIndex;
+            }
+
+            Component.onCompleted: {
+                if (Configs.mediaPlayer.autoSwitchActivePlayer && modelData.playbackState === MprisPlaybackState.Playing)
+                    root.manualIndex = index;
+            }
+
+            target: modelData
+        }
+    }
+
+    Connections {
+
+        function onAutoSwitchActivePlayerChanged() {
+            root.syncActivePlayer();
+        }
+
+        target: Configs.mediaPlayer
+    }
 
     IpcHandler {
 
