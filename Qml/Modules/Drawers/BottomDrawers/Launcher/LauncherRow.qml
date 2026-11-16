@@ -13,13 +13,16 @@ import qs.Services
 Item {
     id: root
 
-    required property int  index
-    required property var  modelData
+    required property string comment
+    required property string icon
+    required property int    index
+    required property string itemId
+    required property string name
 
-    readonly property bool isPinned: DockServices.pinnedIds.includes(root.modelData.entry.id)
+    readonly property bool   isPinned: DockServices.pinnedIds.includes(root.itemId)
 
-    signal                 rowClicked(var row)
-    signal                 rowHovered(int rowIndex)
+    signal                   rowClicked(int rowIndex)
+    signal                   rowHovered(int rowIndex)
 
     implicitHeight: 50
     implicitWidth: 300
@@ -37,9 +40,10 @@ Item {
 
             IconImage {
                 anchors.centerIn: parent
+                backer.asynchronous: true
                 backer.cache: true
                 implicitSize: parent.height
-                source: Quickshell.iconPath(root.modelData.entry.icon, "image-missing")
+                source: Quickshell.iconPath(root.icon, "image-missing")
             }
         }
 
@@ -54,7 +58,7 @@ Item {
                 elide: Text.ElideRight
                 font.pixelSize: Appearance.fonts.size.large
                 font.weight: Font.DemiBold
-                fullText: root.modelData.name || ""
+                fullText: root.name
                 searchText: LauncherServices.rowSearchText
                 width: parent.width
             }
@@ -63,7 +67,7 @@ Item {
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 elide: Text.ElideRight
                 font.pixelSize: Appearance.fonts.size.small
-                text: root.modelData.comment ?? ""
+                text: root.comment
                 visible: text !== ""
                 width: parent.width
             }
@@ -87,7 +91,7 @@ Item {
                 cursorShape: Qt.PointingHandCursor
                 layerRadius: Appearance.rounding.normal
                 z: 1
-                onClicked: DockServices.togglePin(root.modelData.entry.id)
+                onClicked: DockServices.togglePin(root.itemId)
             }
         }
     }
@@ -95,7 +99,7 @@ Item {
     MArea {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
-        onClicked: root.rowClicked(root.modelData)
+        onClicked: root.rowClicked(root.index)
         onEntered: root.rowHovered(root.index)
     }
 }

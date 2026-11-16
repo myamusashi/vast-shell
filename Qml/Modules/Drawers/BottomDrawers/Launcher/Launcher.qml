@@ -148,7 +148,12 @@ Item {
                         }
                         delegate: LauncherRow {
                             implicitWidth: listView.width
-                            onRowClicked: row => LauncherServices.activateRow(row)
+                            onRowClicked: rowIndex => {
+                                const row = LauncherServices.filteredItems[rowIndex];
+
+                                if (row)
+                                    LauncherServices.activateRow(row);
+                            }
                             onRowHovered: rowIndex => listView.currentIndex = rowIndex
                         }
                         displaced: Transition {
@@ -166,10 +171,35 @@ Item {
                             color: Colours.m3Colors.m3SurfaceContainerHigh
                             width: listView.width
                         }
-                        model: ScriptModel {
-                            objectProp: "id"
-                            values: LauncherServices.filteredItems
+                        model: LauncherServices.resultsModel
+                        section.criteria: ViewSection.FullString
+                        section.delegate: Item {
+                            id: sectionHeader
+
+                            required property string section
+
+                            implicitHeight: sectionText.implicitHeight + Appearance.margin.small * 2
+                            implicitWidth: listView.width
+
+                            StyledText {
+                                id: sectionText
+
+                                anchors {
+                                    left: parent.left
+                                    leftMargin: Appearance.margin.normal
+                                    right: parent.right
+                                    rightMargin: Appearance.margin.normal
+                                    verticalCenter: parent.verticalCenter
+                                }
+
+                                color: Colours.m3Colors.m3Primary
+                                elide: Text.ElideRight
+                                font.pixelSize: Appearance.fonts.size.normal
+                                font.weight: Font.DemiBold
+                                text: sectionHeader.section
+                            }
                         }
+                        section.property: "categoryLabel"
                         move: Transition {
 
                             NAnim {

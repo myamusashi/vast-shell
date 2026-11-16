@@ -62,6 +62,15 @@ Drawer {
     }
 
     Timer {
+        id: launcherPrewarmTimer
+
+        interval: 1500
+        repeat: false
+        running: root.isFocusedMonitor && !root.launcherKeepAlive
+        onTriggered: root.launcherKeepAlive = true
+    }
+
+    Timer {
         id: launcherUnloadTimer
 
         interval: 120000

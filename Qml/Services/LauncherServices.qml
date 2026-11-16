@@ -78,13 +78,47 @@ Singleton {
             "tokens": []
         }
     ]
+    readonly property var    categoryLabelById: {
+        const labels = Object.create(null);
+
+        for (const definition of categoryDefinitions)
+            labels[definition.id] = definition.label;
+
+        return labels;
+    }
     readonly property string emptyText: qsTr("No applications found")
-    readonly property var    filteredItems: appResults.filter(entry => matchesCategory(entry, activeCategory)).map(entry => ({
+    readonly property var    filteredItems: {
+        const categories = activeCategory === "" ? rankedCategories.slice(1) : rankedCategories.filter(category => category.id === activeCategory);
+        const buckets    = Object.create(null);
+
+        for (const category of categories)
+            buckets[category.id] = [];
+
+        for (const entry of appResults) {
+            const categoryId = activeCategory === "" ? primaryCategory(entry).id : (matchesCategory(entry, activeCategory) ? activeCategory : "");
+            const bucket     = buckets[categoryId];
+
+            if (!bucket)
+                continue;
+
+            bucket.push({
+                "categoryId": categoryId,
+                "categoryLabel": categoryLabelById[categoryId] ?? "",
+                "comment": entry.comment || "",
+                "entry": entry,
+                "icon": entry.icon || "",
                 "id": entry.id,
-                "name": entry.name || "",
-                "comment": entry.comment,
-                "entry": entry
-            }))
+                "name": entry.name || ""
+            });
+        }
+
+        const items = [];
+
+        for (const category of categories)
+            items.push(...buckets[category.id]);
+
+        return items;
+    }
     readonly property string placeholderText: qsTr("Search")
     readonly property var    rankedCategories: {
         const [allCategory, ...otherCategories] = categoryDefinitions.map((definition, index) => ({
@@ -112,6 +146,7 @@ Singleton {
     property string          activeCategory: ""
     property ListModel       categoriesModel: ListModel {}
     property string          query: ""
+    property ListModel       resultsModel: ListModel {}
 
     function                 activateRow(row: var): void {
         launch(row.entry);
@@ -168,9 +203,40 @@ Singleton {
         return tokens.some(token => tokenOwners[token] === categoryId);
     }
 
+    function                 primaryCategory(entry: DesktopEntry): var {
+        for (let index = 1; index < categoryDefinitions.length - 1; index++) {
+            const category = categoryDefinitions[index];
+
+            if (matchesCategory(entry, category.id))
+                return category;
+        }
+
+        return categoryDefinitions[categoryDefinitions.length - 1];
+    }
+
     function                 reset(): void {
         query          = "";
         activeCategory = "";
+    }
+
+    function                 resultIndex(itemId: string): int {
+        for (let index = 0; index < resultsModel.count; index++) {
+            if (resultsModel.get(index).itemId === itemId)
+                return index;
+        }
+
+        return -1;
+    }
+
+    function                 resultRow(item: var): var {
+        return {
+            "categoryId": item.categoryId,
+            "categoryLabel": item.categoryLabel,
+            "comment": item.comment,
+            "icon": item.icon,
+            "itemId": item.id,
+            "name": item.name
+        };
     }
 
     function                 syncCategories(): void {
@@ -200,6 +266,46 @@ Singleton {
             activeCategory = "";
     }
 
+    function                 syncResults(): void {
+        if (resultsModel.count === 0) {
+            for (const item of filteredItems)
+                resultsModel.append(resultRow(item));
+
+            return;
+        }
+
+        const targetIds = new Set(filteredItems.map(item => item.id));
+
+        for (let index = resultsModel.count - 1; index >= 0; index--) {
+            if (!targetIds.has(resultsModel.get(index).itemId))
+                resultsModel.remove(index);
+        }
+
+        for (let target = 0; target < filteredItems.length; target++) {
+            const item = filteredItems[target];
+
+            if (target >= resultsModel.count || resultsModel.get(target).itemId !== item.id) {
+                const current = resultIndex(item.id);
+
+                if (current === -1) {
+                    resultsModel.insert(target, resultRow(item));
+                    continue;
+                }
+
+                resultsModel.move(current, target, 1);
+            }
+
+            const existing = resultsModel.get(target);
+
+            if (existing.categoryId !== item.categoryId || existing.categoryLabel !== item.categoryLabel || existing.name !== item.name || existing.comment !== item.comment || existing.icon !== item.icon)
+                resultsModel.set(target, resultRow(item));
+        }
+    }
+
+    onFilteredItemsChanged: syncResults()
     onRankedCategoriesChanged: syncCategories()
-    Component.onCompleted: syncCategories()
+    Component.onCompleted: {
+        syncCategories();
+        syncResults();
+    }
 }
