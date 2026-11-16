@@ -619,7 +619,7 @@ Singleton {
     function                 reloadWeather() {
         console.log("[WEATHER] Fetching weather data from Open-Meteo...");
         fetchData({
-            url: "https://api.open-meteo.com/v1/forecast" + "?current=precipitation,rain,wind_speed_10m,wind_direction_10m,cloud_cover,surface_pressure,weather_code,relative_humidity_2m,temperature_2m,apparent_temperature,is_day" + "&daily=sunrise,sunset,uv_index_max,weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,precipitation_hours,rain_sum,showers_sum,surface_pressure_mean,visibility_mean,wind_speed_10m_mean,wind_direction_10m_dominant,relative_humidity_2m_max,relative_humidity_2m_min,relative_humidity_2m_mean,dew_point_2m_mean,cloud_cover_mean" + "&hourly=temperature_2m,weather_code,wind_speed_10m,precipitation,precipitation_probability,rain,visibility,cloud_cover,surface_pressure,wind_direction_10m,relative_humidity_2m,uv_index,is_day,showers,dew_point_2m" + "&timezone=auto&forecast_days=7",
+            url: "https://api.open-meteo.com/v1/forecast" + "?current=precipitation,rain,wind_speed_10m,wind_direction_10m,cloud_cover,surface_pressure,weather_code,relative_humidity_2m,temperature_2m,apparent_temperature,is_day,uv_index" + "&daily=sunrise,sunset,uv_index_max,weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,precipitation_hours,rain_sum,showers_sum,surface_pressure_mean,visibility_mean,wind_speed_10m_mean,wind_direction_10m_dominant,relative_humidity_2m_max,relative_humidity_2m_min,relative_humidity_2m_mean,dew_point_2m_mean,cloud_cover_mean" + "&hourly=temperature_2m,weather_code,wind_speed_10m,precipitation,precipitation_probability,rain,visibility,cloud_cover,surface_pressure,wind_direction_10m,relative_humidity_2m,uv_index,is_day,showers,dew_point_2m" + "&timezone=auto&forecast_days=7",
             loadingProp: "weatherLoading",
             requestProp: "activeWeatherRequest",
             onSuccess: updateWeatherData,
@@ -752,7 +752,7 @@ Singleton {
             windSpeed            = Math.round(cur.wind_speed_10m || 0);
             windDirection        = getWindDirectionText(cur.wind_direction_10m || 0);
             windDirectionDegrees = cur.wind_direction_10m || 0;
-            uvIndex              = Math.round(daily.uv_index_max?.[0] || 0);
+            uvIndex              = Math.round(cur.uv_index ?? 0);
             pressure             = Math.round(cur.surface_pressure || 0);
             visibility           = (daily.visibility_mean?.[0] || 0) / 1000;
             cloudCover           = cur.cloud_cover || 0;
