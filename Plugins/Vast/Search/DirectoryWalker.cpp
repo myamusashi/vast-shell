@@ -20,8 +20,9 @@ namespace vast {
         constexpr int K_MAX_ENTRIES = 5000;
 
         struct WalkConfig {
-            bool        showHidden;
-            QStringList nameFilters;
+            bool          showHidden;
+            QStringList   nameFilters;
+            QSet<QString> excludedDirs;
         };
 
         bool fileAccepted(const QString& fileName, const WalkConfig& cfg) {
@@ -48,6 +49,9 @@ namespace vast {
 
                 const bool     isDir    = info.isDir();
                 const QString& fileName = info.fileName();
+
+                if (isDir && cfg.excludedDirs.contains(fileName))
+                    continue;
 
                 // FolderListModel parity: name filters gate files only.
                 if (!isDir && !fileAccepted(fileName, cfg))
@@ -99,7 +103,7 @@ namespace vast {
         const int generation = mGeneration.fetchAndAddRelaxed(1) + 1;
         setWalking(true);
 
-        const WalkConfig  cfg{.showHidden = mShowHidden, .nameFilters = mNameFilters};
+        const WalkConfig  cfg{.showHidden = mShowHidden, .nameFilters = mNameFilters, .excludedDirs = QSet<QString>(mExcludedDirs.cbegin(), mExcludedDirs.cend())};
         const int         maxDepth = mMaxDepth;
         const QStringList roots    = mRoots;
         vast::JobExecutor::instance().post([this, generation, cfg, maxDepth, roots]() {

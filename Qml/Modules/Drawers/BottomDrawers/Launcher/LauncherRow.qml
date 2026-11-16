@@ -14,12 +14,15 @@ Item {
     id: root
 
     required property string comment
+    required property string filePath
     required property string icon
     required property int    index
+    required property bool   isDir
     required property string itemId
+    required property string kind
     required property string name
 
-    readonly property bool   isPinned: DockServices.pinnedIds.includes(root.itemId)
+    readonly property bool   isPinned: root.kind === "app" && DockServices.pinnedIds.includes(root.itemId)
 
     signal                   rowClicked(int rowIndex)
     signal                   rowHovered(int rowIndex)
@@ -43,7 +46,16 @@ Item {
                 backer.asynchronous: true
                 backer.cache: true
                 implicitSize: parent.height
-                source: Quickshell.iconPath(root.icon, "image-missing")
+                source: root.kind === "app" ? Quickshell.iconPath(root.icon, "image-missing") : ""
+                visible: root.kind === "app"
+            }
+
+            Icon {
+                anchors.centerIn: parent
+                color: Colours.m3Colors.m3OnSurfaceVariant
+                font.pixelSize: Appearance.fonts.size.larger
+                icon: root.icon
+                visible: root.kind === "file"
             }
         }
 
@@ -78,6 +90,7 @@ Item {
             Layout.rightMargin: Appearance.margin.normal
             implicitHeight: 32
             implicitWidth: 32
+            visible: root.kind === "app"
 
             Icon {
                 anchors.centerIn: parent

@@ -18,6 +18,7 @@ namespace vast {
         Q_PROPERTY(int maxDepth READ maxDepth WRITE setMaxDepth NOTIFY maxDepthChanged)
         Q_PROPERTY(bool showHidden READ showHidden WRITE setShowHidden NOTIFY showHiddenChanged)
         Q_PROPERTY(QStringList nameFilters READ nameFilters WRITE setNameFilters NOTIFY nameFiltersChanged)
+        Q_PROPERTY(QStringList excludedDirs READ excludedDirs WRITE setExcludedDirs NOTIFY excludedDirsChanged)
         Q_PROPERTY(bool walking READ walking NOTIFY walkingChanged)
 
       public:
@@ -34,6 +35,9 @@ namespace vast {
         }
         [[nodiscard]] const QStringList& nameFilters() const {
             return mNameFilters;
+        }
+        [[nodiscard]] const QStringList& excludedDirs() const {
+            return mExcludedDirs;
         }
         [[nodiscard]] bool walking() const {
             return mWalking;
@@ -63,6 +67,12 @@ namespace vast {
             mNameFilters = std::move(v);
             Q_EMIT nameFiltersChanged();
         }
+        void setExcludedDirs(QStringList v) {
+            if (mExcludedDirs == v)
+                return;
+            mExcludedDirs = std::move(v);
+            Q_EMIT excludedDirsChanged();
+        }
 
         // Walks all roots asynchronously; delivers exactly one walkFinished
         // per request unless superseded by a newer one.
@@ -75,6 +85,7 @@ namespace vast {
         void maxDepthChanged();
         void showHiddenChanged();
         void nameFiltersChanged();
+        void excludedDirsChanged();
         void walkingChanged();
 
       private:
@@ -82,6 +93,7 @@ namespace vast {
 
         QStringList mRoots;
         QStringList mNameFilters;
+        QStringList mExcludedDirs;
         int         mMaxDepth   = 3;
         bool        mShowHidden = false;
         bool        mWalking    = false;

@@ -181,6 +181,7 @@ class TestSearch : public QObject {
     void walkerSkipsHiddenByDefault();
     void walkerIncludesHiddenWhenAsked();
     void walkerAppliesNameFilters();
+    void walkerSkipsExcludedDirs();
     void walkerIgnoresEmptyRoots();
     void walkingFlagTracksTheWalk();
 };
@@ -712,6 +713,47 @@ void TestSearch::walkingFlagTracksTheWalk() {
     QVERIFY(spinUntil([&finished] { return finished.count() == 1; }));
     QVERIFY(!walker->walking());
     QVERIFY2(walkingSpy.count() >= 2, "the QML drawer binds to walkingChanged; it must fire on both edges");
+}
+
+void TestSearch::walkerSkipsExcludedDirs() {
+    QTemporaryDir root;
+    QVERIFY(root.isValid());
+
+    const QDir rootDir(root.path());
+    QVERIFY(rootDir.mkpath(QStringLiteral("src")));
+    QVERIFY(rootDir.mkpath(QStringLiteral("node_modules/pkg")));
+    QVERIFY(rootDir.mkpath(QStringLiteral(".git/objects")));
+
+    auto writeFile = [](const QString& path) {
+        QFile file(path);
+        QVERIFY(file.open(QIODevice::WriteOnly));
+        file.write("x");
+    };
+    writeFile(rootDir.filePath(QStringLiteral("src/main.cpp")));
+    writeFile(rootDir.filePath(QStringLiteral("node_modules/pkg/index.js")));
+    writeFile(rootDir.filePath(QStringLiteral(".git/objects/pack")));
+
+    QScopedPointer<vast::DirectoryWalker> walker(new vast::DirectoryWalker);
+    QSignalSpy                            finished(walker.data(), &vast::DirectoryWalker::walkFinished);
+
+    walker->setRoots({root.path()});
+    walker->setShowHidden(true);
+    walker->setExcludedDirs({QStringLiteral("node_modules"), QStringLiteral(".git")});
+    walker->requestWalk();
+
+    QVERIFY(spinUntil([&finished] { return finished.count() == 1; }));
+    const QVariantList entries = finished.takeFirst().takeFirst().toList();
+
+    QStringList        relPaths;
+    for (const QVariant& v : entries)
+        relPaths.append(v.toMap().value(QStringLiteral("relativePath")).toString());
+
+    QVERIFY(relPaths.contains(QStringLiteral("src")));
+    QVERIFY(relPaths.contains(QStringLiteral("src/main.cpp")));
+    QVERIFY(!relPaths.contains(QStringLiteral("node_modules")));
+    QVERIFY(!relPaths.contains(QStringLiteral("node_modules/pkg/index.js")));
+    QVERIFY(!relPaths.contains(QStringLiteral(".git")));
+    QVERIFY(!relPaths.contains(QStringLiteral(".git/objects/pack")));
 }
 
 QTEST_MAIN(TestSearch)

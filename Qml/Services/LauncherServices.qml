@@ -2,12 +2,15 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
+import QtCore
 import Vast.Search
 
 import qs.Core.Configs
 import qs.Core.States
 
 Singleton {
+    id: root
+
     readonly property var    appResults: SearchEngine.searchApps(DesktopEntries.applications.values, query)
     readonly property var    categoryCounts: categoryDefinitions.map(definition => appResults.filter(entry => matchesCategory(entry, definition.id)).length)
     readonly property var    categoryDefinitions: [
@@ -86,8 +89,11 @@ Singleton {
 
         return labels;
     }
-    readonly property string emptyText: qsTr("No applications found")
+    readonly property string emptyText: isFileSearching ? qsTr("Searching files...") : qsTr("No applications found")
     readonly property var    filteredItems: {
+        if (isFileFallbackActive)
+            return fileItems;
+
         const categories = activeCategory === "" ? rankedCategories.slice(1) : rankedCategories.filter(category => category.id === activeCategory);
         const buckets    = Object.create(null);
 
@@ -106,8 +112,11 @@ Singleton {
                 "categoryLabel": categoryLabelById[categoryId] ?? "",
                 "comment": entry.comment || "",
                 "entry": entry,
+                "filePath": "",
                 "icon": entry.icon || "",
                 "id": entry.id,
+                "isDir": false,
+                "kind": "app",
                 "name": entry.name || ""
             });
         }
@@ -119,8 +128,22 @@ Singleton {
 
         return items;
     }
+    readonly property bool   isFileFallbackActive: query.trim() !== "" && appResults.length === 0
+    readonly property bool   isFileSearching: walker.walking || fileSearchPending
     readonly property string placeholderText: qsTr("Search")
     readonly property var    rankedCategories: {
+        if (isFileFallbackActive) {
+            const filesCategory = {
+                "count": fileItems.length,
+                "icon": "folder_open",
+                "id": "files",
+                "label": qsTr("Files"),
+                "order": 0
+            };
+
+            return [filesCategory];
+        }
+
         const [allCategory, ...otherCategories] = categoryDefinitions.map((definition, index) => ({
                     "count": categoryCounts[index],
                     "icon": definition.icon,
@@ -145,11 +168,19 @@ Singleton {
 
     property string          activeCategory: ""
     property ListModel       categoriesModel: ListModel {}
+    property var             fileItems: []
+    property bool            fileSearchPending: false
+    property bool            hasWalkedFiles: false
     property string          query: ""
     property ListModel       resultsModel: ListModel {}
+    property var             walkedFiles: []
 
     function                 activateRow(row: var): void {
-        launch(row.entry);
+        if (row.kind === "file")
+            openFile(row.filePath, row.isDir);
+        else
+            launch(row.entry);
+
         GlobalStates.closePanel("launcher");
     }
 
@@ -182,6 +213,42 @@ Singleton {
         activeCategory = categoriesModel.get(((current + step) % count + count) % count).categoryId;
     }
 
+    function                 fileExtension(filePath: string): string {
+        const dotIndex   = filePath.lastIndexOf(".");
+        const slashIndex = filePath.lastIndexOf("/");
+
+        if (dotIndex <= slashIndex + 1)
+            return "";
+
+        return filePath.slice(dotIndex + 1).toLowerCase();
+    }
+
+    function                 fileIcon(filePath: string, isDir: bool): string {
+        if (isDir)
+            return "folder";
+
+        const mediaType = fileMediaType(filePath);
+
+        if (mediaType === "video")
+            return "movie";
+        if (mediaType === "image")
+            return "image";
+
+        return "description";
+    }
+
+    function                 fileMediaType(filePath: string): string {
+        const ext = fileExtension(filePath);
+
+        if (["mp4", "mkv", "webm", "avi", "mov", "flv", "wmv", "m4v", "mpeg", "mpg", "ts", "3gp"].includes(ext))
+            return "video";
+
+        if (["png", "jpg", "jpeg", "webp", "gif", "bmp", "svg", "avif", "jxl", "tiff", "tif", "ico", "heic"].includes(ext))
+            return "image";
+
+        return "other";
+    }
+
     function                 launch(entry: DesktopEntry): void {
         const terminalPrefix = entry.runInTerminal ? [Configs.generals.apps.terminal] : [];
 
@@ -203,6 +270,33 @@ Singleton {
         return tokens.some(token => tokenOwners[token] === categoryId);
     }
 
+    function                 openFile(filePath: string, isDir: bool): void {
+        if (!isDir) {
+            const mediaType = fileMediaType(filePath);
+
+            if (mediaType === "video") {
+                Quickshell.execDetached({
+                    command: ["app2unit", "--", Configs.generals.apps.videoViewer, filePath]
+                });
+                return;
+            }
+
+            if (mediaType === "image") {
+                Quickshell.execDetached({
+                    command: ["app2unit", "--", Configs.generals.apps.imageViewer, filePath]
+                });
+                return;
+            }
+        }
+
+        const slashIndex = filePath.lastIndexOf("/");
+        const targetDir  = isDir ? filePath : (slashIndex > 0 ? filePath.slice(0, slashIndex) : "/");
+
+        Quickshell.execDetached({
+            command: ["app2unit", "--", Configs.generals.apps.fileExplorer, targetDir]
+        });
+    }
+
     function                 primaryCategory(entry: DesktopEntry): var {
         for (let index = 1; index < categoryDefinitions.length - 1; index++) {
             const category = categoryDefinitions[index];
@@ -215,8 +309,14 @@ Singleton {
     }
 
     function                 reset(): void {
-        query          = "";
-        activeCategory = "";
+        query             = "";
+        activeCategory    = "";
+        fileItems         = [];
+        fileSearchPending = false;
+        hasWalkedFiles    = false;
+        walkedFiles       = [];
+        fileSearchDebounce.stop();
+        SearchEngine.clearFileResults();
     }
 
     function                 resultIndex(itemId: string): int {
@@ -233,10 +333,26 @@ Singleton {
             "categoryId": item.categoryId,
             "categoryLabel": item.categoryLabel,
             "comment": item.comment,
+            "filePath": item.filePath,
             "icon": item.icon,
+            "isDir": item.isDir,
             "itemId": item.id,
+            "kind": item.kind,
             "name": item.name
         };
+    }
+
+    function                 scheduleFileSearch(): void {
+        if (!isFileFallbackActive) {
+            fileSearchDebounce.stop();
+            fileSearchPending = false;
+            fileItems         = [];
+            SearchEngine.clearFileResults();
+            return;
+        }
+
+        fileSearchPending = true;
+        fileSearchDebounce.restart();
     }
 
     function                 syncCategories(): void {
@@ -262,8 +378,48 @@ Singleton {
                 categoriesModel.setProperty(target, "resultCount", category.count);
         }
 
-        if (activeCategory !== "" && categoryIndex(activeCategory) === -1)
+        if (isFileFallbackActive)
+            activeCategory = "files";
+        else if (activeCategory !== "" && categoryIndex(activeCategory) === -1)
             activeCategory = "";
+    }
+
+    function                 syncFileItems(): void {
+        fileSearchPending = false;
+
+        if (!isFileFallbackActive) {
+            fileItems = [];
+            return;
+        }
+
+        const model = SearchEngine.fileResults;
+        const limit = Math.min(model.rowCount(), 50);
+        const items = [];
+
+        // FileSearchModel::Roles: FileNameRole = Qt.UserRole + 0,
+        // FilePathRole = +1, RelativePathRole = +2, FileIsDirRole = +5.
+        for (let row = 0; row < limit; row++) {
+            const index    = model.index(row, 0);
+            const name     = model.data(index, Qt.UserRole) ?? "";
+            const filePath = model.data(index, Qt.UserRole + 1) ?? "";
+            const relPath  = model.data(index, Qt.UserRole + 2) ?? "";
+            const isDir    = Boolean(model.data(index, Qt.UserRole + 5));
+
+            items.push({
+                "categoryId": "files",
+                "categoryLabel": qsTr("Files"),
+                "comment": relPath,
+                "entry": null,
+                "filePath": filePath,
+                "icon": fileIcon(filePath, isDir),
+                "id": "file:" + filePath,
+                "isDir": isDir,
+                "kind": "file",
+                "name": name
+            });
+        }
+
+        fileItems = items;
     }
 
     function                 syncResults(): void {
@@ -297,12 +453,66 @@ Singleton {
 
             const existing = resultsModel.get(target);
 
-            if (existing.categoryId !== item.categoryId || existing.categoryLabel !== item.categoryLabel || existing.name !== item.name || existing.comment !== item.comment || existing.icon !== item.icon)
+            if (existing.categoryId !== item.categoryId || existing.categoryLabel !== item.categoryLabel || existing.kind !== item.kind || existing.name !== item.name || existing.comment !== item.comment || existing.icon !== item.icon || existing.filePath !== item.filePath || existing.isDir !== item.isDir)
                 resultsModel.set(target, resultRow(item));
         }
     }
 
+    DirectoryWalker {
+        id: walker
+
+        excludedDirs: [".git", "node_modules", ".node_modules", ".direnv", "target", "build", "__pycache__", ".venv", "venv", ".cache", ".cargo", ".npm", ".pnpm-store", "dist", ".next", ".nuxt", ".gradle", ".mypy_cache", ".pytest_cache", ".ruff_cache", ".tox"]
+        maxDepth: 3
+        roots: [StandardPaths.standardLocations(StandardPaths.HomeLocation)[0].toString().replace(/^file:\/\//, "")]
+        showHidden: false
+        onWalkFinished: entries => {
+            root.walkedFiles    = entries;
+            root.hasWalkedFiles = true;
+
+            if (root.isFileFallbackActive)
+                SearchEngine.searchFilesAsync(root.walkedFiles, root.query.trim());
+            else
+                root.fileSearchPending = false;
+        }
+    }
+
+    Timer {
+        id: fileSearchDebounce
+
+        interval: 180
+        repeat: false
+        onTriggered: {
+            if (!root.isFileFallbackActive) {
+                root.fileSearchPending = false;
+                return;
+            }
+
+            if (!root.hasWalkedFiles) {
+                if (!walker.walking)
+                    walker.requestWalk();
+
+                return;
+            }
+
+            SearchEngine.searchFilesAsync(root.walkedFiles, root.query.trim());
+        }
+    }
+
+    Connections {
+
+        function onModelReset() {
+            root.syncFileItems();
+        }
+
+        target: SearchEngine.fileResults
+    }
+
     onFilteredItemsChanged: syncResults()
+    onIsFileFallbackActiveChanged: scheduleFileSearch()
+    onQueryChanged: {
+        if (isFileFallbackActive)
+            scheduleFileSearch();
+    }
     onRankedCategoriesChanged: syncCategories()
     Component.onCompleted: {
         syncCategories();
