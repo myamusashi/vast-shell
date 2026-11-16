@@ -24,7 +24,7 @@ Singleton {
 
     property int                        manualIndex: 0
 
-    function syncActivePlayer(): void {
+    function                            syncActivePlayer(): void {
         if (Configs.mediaPlayer.autoSwitchActivePlayer && root.playingIndex >= 0)
             root.manualIndex = root.playingIndex;
     }
@@ -33,12 +33,11 @@ Singleton {
 
     Instantiator {
         model: Mpris.players
-
         delegate: Connections {
             required property int         index
             required property MprisPlayer modelData
 
-            function onPlaybackStateChanged() {
+            function                      onPlaybackStateChanged() {
                 if (!Configs.mediaPlayer.autoSwitchActivePlayer)
                     return;
 
@@ -52,7 +51,6 @@ Singleton {
                 if (Configs.mediaPlayer.autoSwitchActivePlayer && modelData.playbackState === MprisPlaybackState.Playing)
                     root.manualIndex = index;
             }
-
             target: modelData
         }
     }
