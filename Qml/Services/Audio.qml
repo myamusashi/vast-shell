@@ -55,6 +55,20 @@ Singleton {
         return node.audio.muted ? "mic_off" : "mic";
     }
 
+    function               nodeDisplayName(node): string {
+        if (!node)
+            return "";
+        if (node.isStream) {
+            const props     = node.properties ?? {};
+            const appName   = props["application.name"] || props["application.id"] || "";
+            const mediaName = props["media.name"] || node.description || node.nickname || node.name || "";
+            if (appName && mediaName && !mediaName.toLowerCase().includes(appName.toLowerCase()))
+                return `${appName} — ${mediaName}`;
+            return appName || mediaName;
+        }
+        return node.description || node.nickname || node.name || "";
+    }
+
     function               toggleMute(node) {
         node.audio.muted = !node.audio.muted;
     }

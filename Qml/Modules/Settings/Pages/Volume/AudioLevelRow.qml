@@ -98,7 +98,7 @@ ColumnLayout {
                 color: Colours.m3Colors.m3OnSurface
                 elide: Text.ElideRight
                 font.pixelSize: Appearance.fonts.size.normal
-                text: root.node.description || root.node.nickname || root.node.name
+                text: Audio.nodeDisplayName(root.node)
             }
 
             StyledText {

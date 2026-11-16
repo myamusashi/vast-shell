@@ -31,6 +31,22 @@ RowLayout {
         return name.charAt(0).toUpperCase() + name.slice(1);
     }
 
+    function     playerName(player: MprisPlayer): string {
+        if (!player)
+            return "No Player";
+        if (player.desktopEntry)
+            return DesktopEntries.heuristicLookup(player.desktopEntry)?.name || root.cleanDesktopEntry(player.desktopEntry);
+        if (player.identity)
+            return player.identity;
+        const dbusPrefix = "org.mpris.MediaPlayer2.";
+        if (player.dbusName && player.dbusName.startsWith(dbusPrefix)) {
+            const service = player.dbusName.slice(dbusPrefix.length).replace(/\.instance\d+$/, "");
+            if (service)
+                return root.cleanDesktopEntry(service);
+        }
+        return "Unknown Player";
+    }
+
     spacing: Appearance.spacing.small
 
     Item {
@@ -460,7 +476,7 @@ RowLayout {
                             anchors.verticalCenter: parent.verticalCenter
                             implicitHeight: 20
                             implicitWidth: 20
-                            source: Players.active?.desktopEntry === "" ? Quickshell.iconPath("helium", "image-missing") : IconUtils.iconForId(Players.active.desktopEntry)
+                            source: IconUtils.iconForPlayer(Players.active)
                         }
 
                         StyledText {
@@ -469,7 +485,7 @@ RowLayout {
                             elide: Text.ElideRight
                             font.pixelSize: Appearance.fonts.size.large
                             maximumLineCount: 1
-                            text: Players.active?.desktopEntry === "" ? "Helium" : root.cleanDesktopEntry(Players.active?.desktopEntry) ?? "No Player"
+                            text: root.playerName(Players.active)
                             width: 100
                         }
                     }
@@ -549,7 +565,7 @@ RowLayout {
                                 anchors.verticalCenter: parent.verticalCenter
                                 implicitHeight: 20
                                 implicitWidth: 20
-                                source: IconUtils.iconForId(playerDelegate.modelData.desktopEntry)
+                                source: IconUtils.iconForPlayer(playerDelegate.modelData)
                             }
 
                             StyledText {
@@ -557,7 +573,7 @@ RowLayout {
                                 elide: Text.ElideRight
                                 font.pixelSize: Appearance.fonts.size.normal
                                 font.weight: Players.index === playerDelegate.index ? Font.Medium : Font.Normal
-                                text: root.cleanDesktopEntry(playerDelegate.modelData.desktopEntry) ?? ""
+                                text: root.playerName(playerDelegate.modelData)
                             }
                         }
                         onClicked: {

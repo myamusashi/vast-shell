@@ -3,6 +3,7 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
+import Quickshell.Services.Mpris
 import Quickshell.Services.Pipewire
 
 Singleton {
@@ -11,22 +12,49 @@ Singleton {
     readonly property string fallbackSource: Quickshell.iconPath("image-missing")
 
     function                 desktopId(node: PwNode): string {
-        const appId = node.properties["application.id"];
-        if (appId)
-            return appId;
-        const binary = node.properties["application.process.binary"];
+        if (!node)
+            return "";
+        const props = node.properties ?? {};
+        if (props["application.id"])
+            return props["application.id"];
+        if (props["application.name"])
+            return props["application.name"];
+        const binary = props["application.process.binary"];
         if (binary)
-            return binary.split(".").pop();
+            return binary.split("/").pop().replace(/^\./, "").replace(/-wrapped$/, "");
         return (node.name ?? "").split(".").pop();
     }
 
     function                 guessIconPath(node: PwNode): string {
         if (!node)
             return root.fallbackSource;
-        const iconName = node.properties["application.icon-name"];
-        if (iconName)
-            return root.iconSource(iconName);
-        return root.iconForId(root.desktopId(node));
+
+        const props    = node.properties ?? {};
+        const iconName = props["application.icon-name"];
+        if (iconName) {
+            const direct = root.iconSource(iconName);
+            if (direct !== root.fallbackSource)
+                return direct;
+        }
+
+        const candidates = [iconName, props["application.id"], props["application.name"]];
+        const binary     = props["application.process.binary"];
+        if (binary) {
+            const binBase = binary.split("/").pop();
+            candidates.push(binBase.replace(/^\./, "").replace(/-wrapped$/, ""), binBase);
+        }
+        candidates.push(node.nickname, node.description, node.name);
+
+        for (let i = 0; i < candidates.length; i++) {
+            const candidate = candidates[i];
+            if (!candidate)
+                continue;
+            const resolved = root.iconForId(candidate);
+            if (resolved !== root.fallbackSource)
+                return resolved;
+        }
+
+        return root.fallbackSource;
     }
 
     function                 iconForId(desktopId: string): string {
@@ -36,7 +64,45 @@ Singleton {
             const zenIcon = Quickshell.hasThemeIcon("zen-beta") ? "zen-beta" : "zen-twilight";
             return root.iconSource(zenIcon);
         }
-        return root.iconSource(DesktopEntries.heuristicLookup(desktopId)?.icon);
+
+        const entryIcon = DesktopEntries.heuristicLookup(desktopId)?.icon;
+        if (entryIcon) {
+            const resolved = root.iconSource(entryIcon);
+            if (resolved !== root.fallbackSource)
+                return resolved;
+        }
+
+        const lower      = desktopId.toLowerCase();
+        const candidates = [desktopId, lower, lower.replace(/\s+/g, "-")];
+        if (lower.includes("."))
+            candidates.push(lower.split(".").pop());
+
+        for (let i = 0; i < candidates.length; i++) {
+            if (candidates[i] && Quickshell.hasThemeIcon(candidates[i]))
+                return Quickshell.iconPath(candidates[i]);
+        }
+
+        return root.fallbackSource;
+    }
+
+    function                 iconForPlayer(player: MprisPlayer): string {
+        if (!player)
+            return root.fallbackSource;
+
+        const candidates = [player.desktopEntry, player.identity];
+        const dbusPrefix = "org.mpris.MediaPlayer2.";
+        if (player.dbusName && player.dbusName.startsWith(dbusPrefix)) {
+            const service = player.dbusName.slice(dbusPrefix.length).replace(/\.instance\d+$/, "");
+            candidates.push(service);
+        }
+
+        for (let i = 0; i < candidates.length; i++) {
+            const resolved = root.iconForId(candidates[i]);
+            if (resolved !== root.fallbackSource)
+                return resolved;
+        }
+
+        return root.fallbackSource;
     }
 
     function                 iconSource(value: string): string {

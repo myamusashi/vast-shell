@@ -185,7 +185,7 @@ Singleton {
     function                       uniqueNames(nodes, blocked) {
         const map          = blocked ?? {};
         const blockedNames = Object.values(map);
-        const names        = nodes.map(pw => pw.name);
+        const names        = nodes.filter(pw => pw && !blockedNames.includes(pw.name)).map(pw => (pw.properties && pw.properties["application.name"]) || pw.name);
         return [...new Set(names)].filter(name => name.trim() !== "" && !blockedNames.includes(name));
     }
 
