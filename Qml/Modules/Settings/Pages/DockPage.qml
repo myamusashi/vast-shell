@@ -23,6 +23,16 @@ SettingsPageBase {
         }
 
         SettingRow {
+            description: qsTr("Show open windows from every workspace instead of only the active workspace.")
+            label: qsTr("Show All Workspaces:")
+
+            StyledSwitch {
+                checked: Configs.dock.showAllWorkspaces
+                onCheckedChanged: Configs.dock.showAllWorkspaces = checked
+            }
+        }
+
+        SettingRow {
             description: qsTr("Height of the dock in pixels.")
             label: qsTr("Dock Height:")
 

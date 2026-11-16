@@ -12,7 +12,7 @@ Singleton {
     id: root
 
     readonly property var  activeToplevels: {
-        const list = Hypr.toplevelsByWorkspace[Hypr.activeWsAddress] ?? [];
+        const list = Configs.dock.showAllWorkspaces ? (Hypr.toplevels.values ?? Hypr.toplevels ?? []) : (Hypr.toplevelsByWorkspace[Hypr.activeWsAddress] ?? []);
 
         return [...list].sort((a, b) => windowAddressKey(a) - windowAddressKey(b));
     }
