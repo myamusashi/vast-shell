@@ -194,21 +194,20 @@ Rectangle {
                 Layout.fillWidth: true
             }
 
-            SplitButton {
-                id: addPropButton
+            RulePickerField {
+                id: addPropField
 
                 visible: root.availableMatchList.length > 0
-                text: qsTr("Add property")
-                model: root.availableMatchList.map(prop => {
+                placeholderText: qsTr("Add property")
+                items: root.availableMatchList.map(prop => {
+                    const label = root.schema.labelFromKey(prop.key);
                     return {
-                        text: root.schema.labelFromKey(prop.key)
+                        item: prop,
+                        searchText: prop.key + " " + label,
+                        text: label
                     };
                 })
-                onClicked: addPropButton.openMenu()
-                onMenuItemActivated: index => {
-                    const prop = root.availableMatchList[index];
-                    root.services.setMatchProp(root.modelData, prop.key, prop.default);
-                }
+                onItemActivated: prop => root.services.setMatchProp(root.modelData, prop.key, prop.default)
             }
         }
 
@@ -293,22 +292,21 @@ Rectangle {
                 Layout.fillWidth: true
             }
 
-            SplitButton {
-                id: addEffectButton
+            RulePickerField {
+                id: addEffectField
 
                 visible: root.availableEffectList.length > 0
-                text: qsTr("Add effect")
-                model: root.availableEffectList.map(effect => {
+                placeholderText: qsTr("Add effect")
+                showScrollBar: true
+                items: root.availableEffectList.map(effect => {
+                    const label = root.schema.labelFromKey(effect.key);
                     return {
-                        text: root.schema.labelFromKey(effect.key)
+                        item: effect,
+                        searchText: effect.key + " " + label,
+                        text: label
                     };
                 })
-                showScrollBar: true
-                onClicked: addEffectButton.openMenu()
-                onMenuItemActivated: index => {
-                    const effect = root.availableEffectList[index];
-                    root.services.setEffect(root.modelData, effect.key, effect.default);
-                }
+                onItemActivated: effect => root.services.setEffect(root.modelData, effect.key, effect.default)
             }
         }
 
