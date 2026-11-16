@@ -9,7 +9,7 @@ import qs.Core.Configs
 import qs.Services
 import qs.Components.Base
 
-ClippingWrapperRectangle {
+WrapperRectangle {
     id: root
 
     required property Component content

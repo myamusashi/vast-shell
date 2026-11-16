@@ -254,6 +254,5 @@ Item {
         borderWidth: 2.0
         progress: 1.0
         radius: wrapperRect.radius
-        source: wrapperRect
     }
 }

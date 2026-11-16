@@ -134,12 +134,7 @@ LazyLoader {
         color: "transparent"
         implicitHeight: root.boardHeight
         implicitWidth: root.boardWidth
-        visible: opacity > 0.0
-        Behavior on opacity {
-            NAnim {
-                duration: Appearance.animations.durations.small
-            }
-        }
+        visible: board.opacity > 0.0
 
         Timer {
             id: closeTimer
@@ -187,7 +182,13 @@ LazyLoader {
             border.color: Colours.m3Colors.m3OutlineVariant
             border.width: 1
             color: GlobalStates.drawerColors
+            opacity: popupWindow.opacity
             radius: Appearance.rounding.normal
+            Behavior on opacity {
+                NAnim {
+                    duration: Appearance.animations.durations.small
+                }
+            }
 
             ScrollView {
                 anchors.fill: parent
@@ -249,19 +250,12 @@ LazyLoader {
 
         ScreencopyView {
             anchors.centerIn: parent
-            captureSource: cell.waylandHandle
+            captureSource: root.showing ? cell.waylandHandle : null
             constraintSize: Qt.size(cell.width - Appearance.margin.small * 2, cell.height - Appearance.margin.small * 2)
             height: implicitHeight
             live: false
             opacity: 0.5
             width: implicitWidth
-        }
-
-        StyledRect {
-            anchors.fill: parent
-            color: Colours.m3Colors.m3Primary
-            opacity: 0.0
-            radius: parent.radius
         }
 
         ColumnLayout {

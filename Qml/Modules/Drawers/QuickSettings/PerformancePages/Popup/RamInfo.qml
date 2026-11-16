@@ -95,11 +95,12 @@ PopupWidget {
             id: usedBar
 
             color: Colours.m3Colors.m3Green
-            implicitWidth: parent.width * root.usedPercent
             radius: height / 2
-            Behavior on implicitWidth {
+            width: Math.round(parent.width * root.usedPercent)
+            Behavior on width {
                 SpringAnimation {
                     damping: 0.5
+                    epsilon: 0.5
                     spring: 2
                 }
             }

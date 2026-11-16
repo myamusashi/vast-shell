@@ -30,7 +30,7 @@ Item {
     readonly property string effectiveSource: GlobalStates.previewWallpaper !== "" ? GlobalStates.previewWallpaper : Paths.currentWallpaper
     readonly property bool   pauseVideo: {
         const toplevels = Hypr.focusedWorkspace?.toplevels?.values ?? [];
-        return toplevels.some(toplevel => toplevel.wayland?.activated && (toplevel.wayland?.fullscreen || !toplevel.lastIpcObject?.floating) && !GlobalStates.isLockscreenOpen);
+        return toplevels.some(toplevel => (toplevel.wayland?.activated || (GlobalStates.isShellKeyboardGrabActive && toplevel.address === Hypr.lastActiveToplevelAddress)) && (toplevel.wayland?.fullscreen || !toplevel.lastIpcObject?.floating) && !GlobalStates.isLockscreenOpen);
     }
     readonly property var    transitionShaderNames: ["fade", "wipeDown", "circleExpand", "dissolve", "splitHorizontal", "slideUp", "pixelate", "diagonalWipe", "boxExpand", "roll", "hexTile"]
     readonly property var    transitionTypeMap: ({

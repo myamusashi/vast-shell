@@ -6,6 +6,7 @@ import Quickshell.Wayland
 
 import qs.Components.Base
 import qs.Core.Configs
+import qs.Core.States
 import qs.Services
 
 StyledRect {
@@ -31,8 +32,26 @@ StyledRect {
         id: windowNameText
 
         readonly property Toplevel activeWindow: ToplevelManager.activeToplevel
+        readonly property string   liveWinName: activeWindow?.activated ? (activeWindow?.appId ?? "desktop") : "desktop"
 
-        property string            actWinName: activeWindow?.activated ? activeWindow?.appId : "desktop"
+        property string            actWinName: "desktop"
+
+        function                   syncWinName(): void {
+            if (!GlobalStates.isShellKeyboardGrabActive || activeWindow?.activated)
+                actWinName = liveWinName;
+        }
+
+        Component.onCompleted: syncWinName()
+        onLiveWinNameChanged: syncWinName()
+
+        Connections {
+
+            function onIsShellKeyboardGrabActiveChanged(): void {
+                windowNameText.syncWinName();
+            }
+
+            target: GlobalStates
+        }
 
         anchors.centerIn: parent
         color: Colours.m3Colors.m3OnBackground

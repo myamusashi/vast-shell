@@ -48,6 +48,7 @@ Singleton {
     }
     readonly property var               workspaces: Hyprland.workspaces
 
+    property string                     lastActiveToplevelAddress: ""
     property var                        lastFocusedToplevel: ({})
     property var                        monitorData: ({})
 
@@ -65,6 +66,9 @@ Singleton {
         const tl = Hyprland.activeToplevel;
         if (!tl?.activated)
             return;
+
+        if (tl.address)
+            root.lastActiveToplevelAddress = tl.address;
 
         const ws = toplevelWorkspaceAddress(tl);
         if (ws === "" || ws === undefined || root.lastFocusedToplevel[ws] === tl.address)
@@ -158,7 +162,7 @@ Singleton {
                 Hyprland.refreshMonitors();
             else if (n.includes("workspace"))
                 Hyprland.refreshWorkspaces();
-            else if (n.includes("window") || n.includes("group") || ["pin", "fullscreen", "changefloatingmode", "minimize"].includes(n))
+            else if (n !== "activewindow" && (n.includes("window") || n.includes("group") || ["pin", "fullscreen", "changefloatingmode", "minimize"].includes(n)))
                 Hyprland.refreshToplevels();
             root.rememberFocus();
         }

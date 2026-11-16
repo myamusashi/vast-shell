@@ -14,6 +14,7 @@ Slider {
     readonly property bool isWavy: Configs.mediaPlayer.sliderType === "Wavy"
     readonly property int  stepCount: slider.pressed ? Math.ceil(width / 2.0) : Math.ceil(width / 0.6)
 
+    property bool          active: true
     property color         activeColor: Colours.m3Colors.m3Primary
     property real          effectiveWaveRamp: slider.waveRamp
     property bool          enableWave: true
@@ -40,14 +41,34 @@ Slider {
     smooth: true
     snapMode: Slider.NoSnap
     background: Item {
+        id: bgTrack
+
+        readonly property real activeEnd: Math.max(0, width * slider.visualPosition - slider.separatorWidth * 0.5)
+        readonly property real inactiveStart: Math.min(width, width * slider.visualPosition + slider.separatorWidth * 0.5)
+
         implicitHeight: 40
         width: slider.availableWidth
         x: slider.leftPadding
         y: slider.topPadding + slider.availableHeight / 2 - height / 2
 
+        Rectangle {
+            anchors.verticalCenter: parent.verticalCenter
+            color: slider.inactiveColor
+            height: slider.isWaveForm ? 1.8 : 1.5
+            opacity: slider.isWaveForm ? 0.55 : 1.0
+            radius: height / 2
+            visible: width > 0
+            width: Math.max(0, bgTrack.width - bgTrack.inactiveStart)
+            x: bgTrack.inactiveStart
+        }
+
         Loader {
             active: slider.isWavy
-            anchors.fill: parent
+            anchors.verticalCenter: parent.verticalCenter
+            height: Math.ceil(slider.waveAmplitude * 2 + 8)
+            visible: width > 0
+            width: bgTrack.activeEnd
+            x: 0
             sourceComponent: wavyShaderComponent
         }
 
@@ -56,14 +77,14 @@ Slider {
 
             ShaderEffect {
                 property color activeColor: slider.activeColor
-                property real  activeEnd: Math.max(0, width * slider.visualPosition - slider.separatorWidth * 0.5)
+                property real  activeEnd: width
                 property real  centerY: height * 0.5
                 property real  effectWidth: width
-                property color inactiveColor: slider.inactiveColor
-                property real  inactiveStart: Math.min(width, width * slider.visualPosition + slider.separatorWidth * 0.5)
+                property color inactiveColor: "transparent"
+                property real  inactiveStart: width + 1.0
                 property real  strokeHalfWidth: 0.75
                 property real  waveAmplitude: slider.waveAmplitude * slider.waveTransition
-                property real  waveFrequency: slider.waveFrequency
+                property real  waveFrequency: slider.waveFrequency * (width / Math.max(bgTrack.width, 1))
                 property real  wavePhase: slider.waveAnimPhase
 
                 blending: true
@@ -73,7 +94,11 @@ Slider {
 
         Loader {
             active: slider.isWaveForm
-            anchors.fill: parent
+            anchors.verticalCenter: parent.verticalCenter
+            height: bgTrack.height
+            visible: width > 0
+            width: bgTrack.activeEnd
+            x: 0
             sourceComponent: waveFormShaderComponent
         }
     }
@@ -127,7 +152,7 @@ Slider {
     FrameAnimation {
         id: wavyPhaseDriver
 
-        running: slider.enableWave && slider.isWavy
+        running: slider.enableWave && slider.active && slider.visible && slider.isWavy
 
         // 2000ms full cycle → 2π / 2.0 radians per second
         onTriggered: slider.waveAnimPhase = (slider.waveAnimPhase + Math.PI * 2 * frameTime / 2.0) % (Math.PI * 2)
@@ -136,7 +161,7 @@ Slider {
     FrameAnimation {
         id: waveFormPhaseDriver
 
-        running: slider.enableWave && slider.isWaveForm
+        running: slider.enableWave && slider.active && slider.visible && slider.isWaveForm
 
         // 3000ms full cycle → 2π / 3.0 radians per second
         onTriggered: slider.wavePhaseBeach = (slider.wavePhaseBeach + Math.PI * 2 * frameTime / 3.0) % (Math.PI * 2)
@@ -146,22 +171,24 @@ Slider {
         id: waveFormShaderComponent
 
         ShaderEffect {
-            property color activeColor: slider.activeColor
-            property real  activeEnd: Math.max(0, width * slider.visualPosition - slider.separatorWidth * 0.5)
-            property real  amplitudeFloor: slider.waveFloor
-            property real  baselineY: height * 0.5
-            property real  effectWidth: width
-            property color inactiveColor: slider.inactiveColor
-            property real  inactiveStart: Math.min(width, width * slider.visualPosition + slider.separatorWidth * 0.5)
-            property real  leadingRamp: slider.waveRampIn
-            property real  playheadRamp: slider.effectiveWaveRamp
-            property real  playPosition: slider.visualPosition
-            property real  shapeExponent: slider.wavePow
-            property real  strokeHalfWidth: 0.9
-            property real  transitionAmount: slider.waveTransition
-            property real  waveAmplitude: height * slider.waveMaxAmpRatio
-            property real  waveFrequency: slider.waveFreqBeach
-            property real  wavePhase: slider.wavePhaseBeach
+            readonly property real widthScale: bgTrack.width / Math.max(width, 1)
+
+            property color         activeColor: slider.activeColor
+            property real          activeEnd: width
+            property real          amplitudeFloor: slider.waveFloor
+            property real          baselineY: height * 0.5
+            property real          effectWidth: width
+            property color         inactiveColor: "transparent"
+            property real          inactiveStart: width + 1.0
+            property real          leadingRamp: slider.waveRampIn * widthScale
+            property real          playheadRamp: slider.effectiveWaveRamp * widthScale
+            property real          playPosition: 1.0
+            property real          shapeExponent: slider.wavePow
+            property real          strokeHalfWidth: 0.9
+            property real          transitionAmount: slider.waveTransition
+            property real          waveAmplitude: height * slider.waveMaxAmpRatio
+            property real          waveFrequency: slider.waveFreqBeach * (width / Math.max(bgTrack.width, 1))
+            property real          wavePhase: slider.wavePhaseBeach
 
             blending: true
             fragmentShader: Paths.projectRoot + "/Assets/shaders/waveForm.frag.qsb"

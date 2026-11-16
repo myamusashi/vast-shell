@@ -23,14 +23,15 @@ Drawer {
     readonly property bool         isWallpaperActive: GlobalStates.isWallpaperSwitcherOpen
     readonly property real         launcherDepthRatio: 0.5
     readonly property real         launcherLengthRatio: 0.45
-    readonly property real         panelDepthRatio: isLauncherActive ? launcherDepthRatio : wallpaperDepthRatio
-    readonly property real         panelLengthRatio: isLauncherActive ? launcherLengthRatio : wallpaperLengthRatio
+    readonly property real         panelDepthRatio: isLauncherActive || (!isPanelActive && lastPanel === "launcher") ? launcherDepthRatio : wallpaperDepthRatio
+    readonly property real         panelLengthRatio: isLauncherActive || (!isPanelActive && lastPanel === "launcher") ? launcherLengthRatio : wallpaperLengthRatio
     readonly property real         panelWidth: parent.width * panelLengthRatio
     readonly property real         reservedHeight: isDockVisible ? Configs.dock.dockHeight : 0
     readonly property real         wallpaperDepthRatio: 0.3
     readonly property real         wallpaperLengthRatio: 0.6
 
     property real                  activePanelWidth: 0
+    property string                lastPanel: "launcher"
     property bool                  panelVisible: false
     property var                   parentWindow: null
 
@@ -95,6 +96,7 @@ Drawer {
             if (!root.isLauncherActive)
                 return;
 
+            root.lastPanel        = "launcher";
             root.activePanelWidth = root.parent.width * root.launcherLengthRatio;
 
             if (!root.border.isFocusedMonitor)
@@ -128,6 +130,7 @@ Drawer {
                 return;
             }
 
+            root.lastPanel        = "wallpaper";
             root.activePanelWidth = root.parent.width * root.wallpaperLengthRatio;
 
             if (!root.border.isFocusedMonitor)

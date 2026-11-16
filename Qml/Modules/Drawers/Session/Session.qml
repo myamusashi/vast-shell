@@ -41,7 +41,7 @@ Drawer {
 
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
     animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
-    clipContent: false
+    clipContent: true
     color: GlobalStates.drawerColors
     cornerRadius: Appearance.rounding.normal
     depth: 80

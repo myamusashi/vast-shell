@@ -20,6 +20,7 @@ Singleton {
     readonly property bool   hasInlineReply: inlineReplyOwner !== null
     readonly property bool   isCapsLockOSDVisible: osd.isActive("capslock")
     readonly property bool   isNumLockOSDVisible: osd.isActive("numlock")
+    readonly property bool   isShellKeyboardGrabActive: isLauncherOpen || isSessionOpen || isWallpaperSwitcherOpen || isClipboardOpen || hasInlineReply || isAddTodoListOpen || isEditTodoListOpen
     readonly property bool   isVolumeOSDVisible: osd.isActive("volume")
 
     property var             inlineReplyOwner: null

@@ -6,6 +6,7 @@ import Quickshell.Widgets
 
 import qs.Components.Base
 import qs.Core.Configs
+import qs.Core.States
 import qs.Core.Utils
 import qs.Services
 
@@ -16,7 +17,7 @@ Item {
     required property var    entry
     required property var    toplevel
 
-    readonly property bool   isFocusedToplevel: toplevel !== null && toplevel.wayland?.activated === true
+    readonly property bool   isFocusedToplevel: toplevel !== null && (toplevel.wayland?.activated === true || (GlobalStates.isShellKeyboardGrabActive && toplevel.address === Hypr.lastActiveToplevelAddress))
     readonly property bool   showsIndicator: toplevel !== null || (isPinned && entry !== null && DockServices.runningEntryIds.includes(entryId))
 
     property bool            hovered: false

@@ -7,19 +7,20 @@ import Quickshell.Widgets
 import qs.Core.Configs
 import qs.Services
 
-ClippingWrapperRectangle {
+Item {
     id: root
 
     property var trackArtColors: TrackArt.colors
 
     Layout.fillWidth: true
-    color: "transparent"
     implicitHeight: 150
-    radius: Appearance.rounding.small
     visible: Players.active !== null
 
-    Item {
+    ClippingRectangle {
         anchors.fill: parent
+        color: "transparent"
+        radius: Appearance.rounding.small
+        visible: !!Players.active?.trackArtUrl
 
         Image {
             id: trackArt
@@ -29,7 +30,6 @@ ClippingWrapperRectangle {
             cache: false
             fillMode: Image.PreserveAspectCrop
             source: TrackArt.cachedPath.startsWith("/") ? "file://" + TrackArt.cachedPath : TrackArt.cachedPath
-            visible: !!Players.active?.trackArtUrl
 
             Rectangle {
                 anchors.fill: parent
@@ -38,17 +38,17 @@ ClippingWrapperRectangle {
                 z: 2
             }
         }
+    }
 
-        Loader {
-            id: contentLoader
+    Loader {
+        id: contentLoader
 
-            active: Players.active !== null
-            anchors.fill: parent
-            asynchronous: true
-            sourceComponent: ContentMediaPlayer {
-                trackArtColors: root.trackArtColors
-                width: contentLoader.width
-            }
+        active: Players.active !== null
+        anchors.fill: parent
+        asynchronous: true
+        sourceComponent: ContentMediaPlayer {
+            trackArtColors: root.trackArtColors
+            width: contentLoader.width
         }
     }
 }

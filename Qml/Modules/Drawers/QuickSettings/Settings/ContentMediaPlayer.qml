@@ -116,15 +116,11 @@ RowLayout {
                 Wavy {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 10
+                    active: GlobalStates.isQuickSettingsOpen
                     activeColor: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary
                     enableWave: Players.active?.playbackState === MprisPlaybackState.Playing && !pressed
                     value: Players.active === null ? 0 : Players.active.length > 0 ? Players.active.position / Players.active.length : 0
                     onMoved: Players.active ? Players.active.position = value * Players.active.length : {}
-
-                    FrameAnimation {
-                        running: GlobalStates.isMediaPlayerOpen && Players.active?.playbackState == MprisPlaybackState.Playing
-                        onTriggered: Players.active.positionChanged()
-                    }
                 }
 
                 RowLayout {
@@ -339,16 +335,12 @@ RowLayout {
 
             Wavy {
                 Layout.fillWidth: true
+                active: GlobalStates.isQuickSettingsOpen
                 activeColor: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary
                 enableWave: Players.active?.playbackState === MprisPlaybackState.Playing && !pressed
                 implicitWidth: 28
                 value: Players.active === null ? 0 : Players.active.length > 0 ? Players.active.position / Players.active.length : 0
                 onMoved: Players.active ? Players.active.position = value * Players.active.length : {}
-
-                FrameAnimation {
-                    running: GlobalStates.isMediaPlayerOpen && Players.active?.playbackState == MprisPlaybackState.Playing
-                    onTriggered: Players.active.positionChanged()
-                }
             }
 
             Item {

@@ -7,9 +7,9 @@ import Quickshell
 import Quickshell.Networking
 import Quickshell.Services.UPower
 import Quickshell.Widgets
-import QtGraphs
 
 import qs.Core.Configs
+import qs.Core.States
 import qs.Widgets as WID
 import qs.Core.Utils
 import qs.Services
@@ -86,7 +86,9 @@ Item {
                                 delegate: StyledText {
                                     required property int freqMHz
 
+                                    Layout.preferredWidth: 96
                                     color: Colours.m3Colors.m3OnSurfaceVariant
+                                    font.family: Fonts.mono
                                     font.pixelSize: Appearance.fonts.size.large
                                     text: `${freqMHz} MHz`
                                 }
@@ -639,33 +641,69 @@ Item {
 
         readonly property int maxPoints: 30
 
-        property int          counter: -1
-        property real         currentValue: 0
+        property var          samples: []
 
-        function              pushValue() {
-            if (!graphView || graphView.width === 0 || graphView.height === 0)
-                return;
-
-            counter += 1;
-            currentValue = SystemUsage.cpuPerc;
-            dataPoints.append(counter, currentValue);
-
-            if (dataPoints.count > maxPoints + 1)
-                dataPoints.removeMultiple(0, dataPoints.count - maxPoints - 1);
-
-            axisX.min = Math.max(0, counter - maxPoints);
-            axisX.max = counter;
+        function              packVec4(startIdx: int): vector4d {
+            const s  = graph.samples;
+            const v0 = startIdx < s.length ? s[startIdx] : 0;
+            const v1 = startIdx + 1 < s.length ? s[startIdx + 1] : v0;
+            const v2 = startIdx + 2 < s.length ? s[startIdx + 2] : v1;
+            const v3 = startIdx + 3 < s.length ? s[startIdx + 3] : v2;
+            return Qt.vector4d(v0, v1, v2, v3);
         }
 
-        Component.onCompleted: Qt.callLater(pushValue)
+        function              pushValue(): void {
+            const next = graph.samples.slice();
+            next.push(Math.max(0, Math.min(1, SystemUsage.cpuPerc / 100.0)));
+            if (next.length > maxPoints)
+                next.shift();
+            graph.samples = next;
+            if (graph.visible && GlobalStates.isQuickSettingsOpen)
+                syncUniforms();
+        }
+
+        function              syncUniforms(): void {
+            const count = graph.samples.length;
+            if (count < 2)
+                return;
+            graphShader.pointCount = count;
+            graphShader.p0         = packVec4(0);
+            graphShader.p1         = packVec4(4);
+            graphShader.p2         = packVec4(8);
+            graphShader.p3         = packVec4(12);
+            graphShader.p4         = packVec4(16);
+            graphShader.p5         = packVec4(20);
+            graphShader.p6         = packVec4(24);
+            graphShader.p7         = packVec4(28);
+        }
+
+        Component.onCompleted: {
+            const initial = Math.max(0, Math.min(1, SystemUsage.cpuPerc / 100.0));
+            graph.samples = [initial, initial];
+            syncUniforms();
+        }
+        onVisibleChanged: {
+            if (visible)
+                syncUniforms();
+        }
 
         Connections {
 
-            function onCpuPercChanged() {
+            function onCpuPercChanged(): void {
                 graph.pushValue();
             }
 
             target: SystemUsage
+        }
+
+        Connections {
+
+            function onIsQuickSettingsOpenChanged(): void {
+                if (GlobalStates.isQuickSettingsOpen && graph.visible)
+                    graph.syncUniforms();
+            }
+
+            target: GlobalStates
         }
 
         Rectangle {
@@ -678,47 +716,29 @@ Item {
                 width: 1
             }
 
-            GraphsView {
-                id: graphView
+            ShaderEffect {
+                id: graphShader
+
+                property color    fillColor: Qt.alpha(Colours.m3Colors.m3Green, 0.2)
+                property color    gridColor: Qt.alpha(Colours.m3Colors.m3OutlineVariant, 0.25)
+                property real     gridLines: 4
+                property color    lineColor: Colours.m3Colors.m3Green
+                property real     lineWidth: 2.0
+                property vector4d p0: Qt.vector4d(0, 0, 0, 0)
+                property vector4d p1: Qt.vector4d(0, 0, 0, 0)
+                property vector4d p2: Qt.vector4d(0, 0, 0, 0)
+                property vector4d p3: Qt.vector4d(0, 0, 0, 0)
+                property vector4d p4: Qt.vector4d(0, 0, 0, 0)
+                property vector4d p5: Qt.vector4d(0, 0, 0, 0)
+                property vector4d p6: Qt.vector4d(0, 0, 0, 0)
+                property vector4d p7: Qt.vector4d(0, 0, 0, 0)
+                property real     pointCount: 2
+                property vector2d resolution: Qt.vector2d(width, height)
 
                 anchors.fill: parent
-                marginBottom: 1
-                marginLeft: 1
-                marginRight: 1
-                marginTop: 1
-                axisX: ValueAxis {
-                    id: axisX
-
-                    gridVisible: false
-                    lineVisible: false
-                    subGridVisible: false
-                    visible: false
-                }
-                axisY: ValueAxis {
-                    id: axisY
-
-                    gridVisible: false
-                    lineVisible: false
-                    max: 100
-                    min: 0
-                    subGridVisible: false
-                    visible: false
-                }
-                theme: GraphsTheme {
-                    backgroundVisible: false
-                    borderWidth: 0
-                    gridVisible: true
-                    plotAreaBackgroundColor: "transparent"
-                }
-
-                AreaSeries {
-                    borderColor: Colours.m3Colors.m3Green
-                    borderWidth: 2
-                    color: Qt.alpha(Colours.m3Colors.m3Green, 0.2)
-                    upperSeries: LineSeries {
-                        id: dataPoints
-                    }
-                }
+                anchors.margins: 1
+                blending: true
+                fragmentShader: Paths.projectRoot + "/Assets/shaders/cpuGraph.frag.qsb"
             }
         }
     }

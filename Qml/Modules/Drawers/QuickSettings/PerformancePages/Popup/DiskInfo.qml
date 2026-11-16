@@ -187,11 +187,12 @@ PopupWidget {
             id: usedBar
 
             color: Colours.m3Colors.m3Green
-            implicitWidth: parent.width * root.usedPercent
             radius: height / 2
-            Behavior on implicitWidth {
+            width: Math.round(parent.width * root.usedPercent)
+            Behavior on width {
                 SpringAnimation {
                     damping: 0.5
+                    epsilon: 0.5
                     spring: 2
                 }
             }
@@ -228,11 +229,12 @@ PopupWidget {
 
             color: Qt.alpha(Colours.m3Colors.m3Green, 0.5)
             radius: height / 2
-            width: parent.width * root.systemPlusAppsRatio
+            width: Math.round(parent.width * root.systemPlusAppsRatio)
             z: 1
             Behavior on width {
                 SpringAnimation {
                     damping: 0.5
+                    epsilon: 0.5
                     spring: 2
                 }
             }
@@ -249,11 +251,12 @@ PopupWidget {
 
             color: Colours.m3Colors.m3Green
             radius: height / 2
-            width: parent.width * root.appsRatio
+            width: Math.round(parent.width * root.appsRatio)
             z: 2
             Behavior on width {
                 SpringAnimation {
                     damping: 0.5
+                    epsilon: 0.5
                     spring: 2
                 }
             }

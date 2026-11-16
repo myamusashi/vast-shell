@@ -79,10 +79,17 @@ Drawer {
 
     Loader {
         active: root.launcherShouldBeActive || root.launcherKeepAlive
-        anchors.fill: parent
         asynchronous: true
         enabled: root.isLauncherActive
+        height: Math.max(0, root.parent.height - GlobalStates.reservedBottomSpace) * root.depthRatio
         visible: root.isLauncherActive
+        width: root.parent.width * root.lengthRatio
+
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            top: parent.top
+        }
+
         sourceComponent: Component {
 
             LauncherModule.Launcher {}
@@ -91,10 +98,17 @@ Drawer {
 
     Loader {
         active: root.wallpaperShouldBeActive || root.wallpaperKeepAlive
-        anchors.fill: parent
         asynchronous: true
         enabled: root.isWallpaperActive
+        height: Math.max(0, root.parent.height - GlobalStates.reservedBottomSpace) * root.depthRatio
         visible: root.isWallpaperActive
+        width: root.parent.width * root.lengthRatio
+
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            top: parent.top
+        }
+
         sourceComponent: Component {
 
             WallpaperModule.WallpaperSelector {}

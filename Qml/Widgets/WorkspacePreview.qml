@@ -102,14 +102,15 @@ LazyLoader {
         aboveWindows: true
         color: "transparent"
         exclusionMode: ExclusionMode.Ignore
+        visible: board.visible
         HyprlandWindow.visibleMask: Region {
-            item: board
+            item: board.visible ? boardHost : null
         }
         BackgroundEffect.blurRegion: Region {
-            item: board
+            item: board.visible ? boardHost : null
         }
         mask: Region {
-            item: boardHost
+            item: board.visible ? boardHost : null
         }
 
         anchors {
@@ -275,7 +276,7 @@ LazyLoader {
 
         ScreencopyView {
             anchors.centerIn: parent
-            captureSource: cell.waylandHandle
+            captureSource: root.mapped ? cell.waylandHandle : null
             constraintSize: Qt.size(cell.width - Appearance.margin.small * 2, cell.height - Appearance.margin.small * 2)
             height: implicitHeight
             live: false
@@ -288,6 +289,7 @@ LazyLoader {
             color: Colours.m3Colors.m3Primary
             opacity: root.hoveredIndex === cell.index ? 0.16 : 0.0
             radius: parent.radius
+            visible: opacity > 0
             Behavior on opacity {
                 NAnim {
                     duration: Appearance.animations.durations.small

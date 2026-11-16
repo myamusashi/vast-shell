@@ -46,6 +46,14 @@ WrapperRectangle {
     Loader {
         active: root.shouldBeActive || root.keepAlive
         asynchronous: true
+        height: Configs.clipboard.height
+        width: root.implicitWidth
+
+        anchors {
+            horizontalCenter: parent.horizontalCenter
+            top: parent.top
+        }
+
         sourceComponent: FocusCage {
             active: GlobalStates.isClipboardOpen
             anchors.fill: parent

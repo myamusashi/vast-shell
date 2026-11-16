@@ -21,7 +21,7 @@ Drawer {
     cornerRadius: Appearance.rounding.normal
     depth: 60 + (Volume.openPerAppVolume && loader.item ? loader.item.perAppWidth + Volume.itemSpacing : 0) // qmllint disable
     edge: Qt.RightEdge
-    edgeOffset: session.width
+    edgeOffset: session.visible ? session.width : 0
     filletRadius: 40
     length: 280
     open: shown
