@@ -30,71 +30,14 @@ SettingsPageBase {
     }
 
     pageTitle: qsTr("Wallpaper Engine")
+    Component.onCompleted: {
+        Svc.Wallpaper.wallpaperType = MediaKind.isVideo(Paths.currentWallpaper) ? 1 : 0;
+        Qt.callLater(() => wallpaperCarousel.selectCurrentWallpaper());
+    }
 
     SettingsCard {
         Layout.fillWidth: true
         title: qsTr("Wallpaper Picker")
-
-        Rectangle {
-            Layout.fillWidth: true
-            Layout.preferredHeight: 150
-            color: Colours.m3Colors.m3SurfaceContainerHigh
-            radius: Appearance.rounding.normal
-
-            Image {
-                id: currentPreview
-
-                anchors.fill: parent
-                asynchronous: true
-                cache: true
-                fillMode: Image.PreserveAspectCrop
-                source: root.currentWallpaperPreview
-                sourceSize: Qt.size(720, 150)
-                visible: status === Image.Ready
-
-                Rectangle {
-                    anchors.fill: parent
-                    color: Colours.m3Colors.m3SurfaceContainerHigh
-                    visible: !currentPreview.visible
-
-                    Icon {
-                        anchors.centerIn: parent
-                        color: Colours.m3Colors.m3OnSurfaceVariant
-                        font.pixelSize: Appearance.fonts.size.extraLarge
-                        icon: "image"
-                    }
-                }
-            }
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignCenter
-            spacing: Appearance.spacing.normal
-
-            // qmlformat off
-            readonly property list<color> palettePreviewColors: [
-                Colours.m3Colors.m3Primary,
-                Colours.m3Colors.m3PrimaryContainer,
-                Colours.m3Colors.m3Secondary,
-                Colours.m3Colors.m3SecondaryContainer,
-                Colours.m3Colors.m3Tertiary,
-                Colours.m3Colors.m3TertiaryContainer,
-            ]
-            // qmlformat on
-
-            Repeater {
-                model: parent.palettePreviewColors
-                delegate: Rectangle {
-                    required property color modelData
-
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: 24
-                    color: modelData
-                    radius: Appearance.rounding.small
-                }
-            }
-        }
 
         RowLayout {
             Layout.fillWidth: true
@@ -109,8 +52,8 @@ SettingsPageBase {
             MaterialTextField {
                 Layout.fillWidth: true
                 placeholderText: qsTr("Search wallpapers…")
-                text: Svc.WallpaperFileModels.searchQuery
-                onTextChanged: {
+                Component.onCompleted: text = Svc.WallpaperFileModels.searchQuery
+                onTextEdited: {
                     Svc.WallpaperFileModels.searchQuery = text;
                     wallpaperCarousel.currentIndex      = 0;
                 }
@@ -147,6 +90,35 @@ SettingsPageBase {
             controller: Svc.Wallpaper
             thumbnailAvailability: Svc.Wallpaper.thumbnailAvailability
             visibleWallpapers: Svc.Wallpaper.visibleWallpapers
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignCenter
+            spacing: Appearance.spacing.normal
+
+            // qmlformat off
+            readonly property list<color> palettePreviewColors: [
+                Colours.m3Colors.m3Primary,
+                Colours.m3Colors.m3PrimaryContainer,
+                Colours.m3Colors.m3Secondary,
+                Colours.m3Colors.m3SecondaryContainer,
+                Colours.m3Colors.m3Tertiary,
+                Colours.m3Colors.m3TertiaryContainer,
+            ]
+            // qmlformat on
+
+            Repeater {
+                model: parent.palettePreviewColors
+                delegate: Rectangle {
+                    required property color modelData
+
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 24
+                    color: modelData
+                    radius: Appearance.rounding.small
+                }
+            }
         }
 
         StyledText {

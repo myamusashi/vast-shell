@@ -178,6 +178,16 @@ Item {
         if (Configs.wallpaper.livePreview && count > 0)
             GlobalStates.previewWallpaper = (visibleWallpapers ?? [])[currentIndex] ?? "";
     }
+    onVisibleWallpapersChanged: Qt.callLater(() => root.selectCurrentWallpaper())
+
+    Connections {
+
+        function onCurrentWallpaperChanged(): void {
+            Qt.callLater(() => root.selectCurrentWallpaper());
+        }
+
+        target: Paths
+    }
 
     Connections {
 
