@@ -44,7 +44,8 @@ namespace vast {
         }
 
       Q_SIGNALS:
-        void currentIndexChanged();
+        void currentLineIndexChanged();
+        void currentWordIndexChanged();
         void currentWordDurationChanged();
 
       private:

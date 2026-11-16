@@ -97,10 +97,12 @@ void TestLyricsScheduler::settingTheSameOffsetIsANoOp() {
     mScheduler.setPlayback(0.0, 1.0, false);
     mScheduler.setOffsetMs(150);
 
-    QSignalSpy spy(&mScheduler, &vast::LyricsScheduler::currentIndexChanged);
+    QSignalSpy lineSpy(&mScheduler, &vast::LyricsScheduler::currentLineIndexChanged);
+    QSignalSpy wordSpy(&mScheduler, &vast::LyricsScheduler::currentWordIndexChanged);
     mScheduler.setOffsetMs(150);
 
-    QCOMPARE(spy.count(), 0);
+    QCOMPARE(lineSpy.count(), 0);
+    QCOMPARE(wordSpy.count(), 0);
 }
 
 void TestLyricsScheduler::pausedAndPlayingResolveTheSameCurrentLine() {
@@ -191,7 +193,7 @@ void TestLyricsScheduler::emitsCurrentIndexChangedOnlyWhenTheIndexMoves() {
     mScheduler.setPlayback(10.0, 1.0, false);
     QCOMPARE(mScheduler.currentWordIndex(), 0);
 
-    QSignalSpy spy(&mScheduler, &vast::LyricsScheduler::currentIndexChanged);
+    QSignalSpy spy(&mScheduler, &vast::LyricsScheduler::currentWordIndexChanged);
 
     // Still within the first word's slot, so nothing moves and nothing is emitted.
     mScheduler.setPlayback(10.2, 1.0, false);
@@ -269,7 +271,7 @@ void TestLyricsScheduler::resetClearsTheIndicesAndSignals() {
     mScheduler.setPlayback(10.0, 1.0, false);
     QCOMPARE(mScheduler.currentLineIndex(), 0);
 
-    QSignalSpy spy(&mScheduler, &vast::LyricsScheduler::currentIndexChanged);
+    QSignalSpy spy(&mScheduler, &vast::LyricsScheduler::currentWordIndexChanged);
     mScheduler.reset();
 
     QCOMPARE(spy.count(), 1);

@@ -67,11 +67,16 @@ namespace vast {
         mWordTimer.stop();
         mBoundaries.clear();
         mWordLines.clear();
-        mBoundaryPos     = 0;
-        mCurLine         = -1;
-        mCurWord         = -1;
-        mCurWordDuration = 0;
-        Q_EMIT currentIndexChanged();
+        mBoundaryPos           = 0;
+        const bool lineChanged = (mCurLine != -1);
+        const bool wordChanged = (mCurWord != -1);
+        mCurLine               = -1;
+        mCurWord               = -1;
+        mCurWordDuration       = 0;
+        if (lineChanged)
+            Q_EMIT currentLineIndexChanged();
+        if (wordChanged)
+            Q_EMIT currentWordIndexChanged();
     }
 
     void LyricsScheduler::seekTo(qint64 posMs) {
@@ -95,11 +100,18 @@ namespace vast {
             durationChanged  = true;
         }
 
-        if (newLine != mCurLine || newWord != mCurWord) {
+        const bool lineChanged = (newLine != mCurLine);
+        const bool wordChanged = (newWord != mCurWord);
+
+        if (lineChanged)
             mCurLine = newLine;
+        if (wordChanged)
             mCurWord = newWord;
-            Q_EMIT currentIndexChanged();
-        }
+
+        if (lineChanged)
+            Q_EMIT currentLineIndexChanged();
+        if (wordChanged)
+            Q_EMIT currentWordIndexChanged();
 
         if (durationChanged)
             Q_EMIT currentWordDurationChanged();
@@ -130,18 +142,27 @@ namespace vast {
 
         const qint64 nowMs = currentPositionMs();
 
-        bool         changedIndex = false;
+        bool         changedLine = false;
+        bool         changedWord = false;
         while (mBoundaryPos < mBoundaries.size() && mBoundaries.at(mBoundaryPos).timeMs <= nowMs) {
             const auto b = mBoundaries.at(mBoundaryPos);
-            mCurLine     = b.lineIndex;
-            mCurWord     = b.wordIndex;
-            changedIndex = true;
+            if (b.lineIndex != mCurLine) {
+                mCurLine    = b.lineIndex;
+                changedLine = true;
+            }
+            if (b.wordIndex != mCurWord) {
+                mCurWord    = b.wordIndex;
+                changedWord = true;
+            }
             ++mBoundaryPos;
         }
 
-        if (changedIndex) {
-            Q_EMIT currentIndexChanged();
+        if (changedLine)
+            Q_EMIT currentLineIndexChanged();
+        if (changedWord)
+            Q_EMIT currentWordIndexChanged();
 
+        if (changedLine || changedWord) {
             qint64 newDuration = 0;
             if (mCurLine >= 0 && mCurWord >= 0 && mCurLine < mWordLines.size()) {
                 const auto wl    = mWordLines.at(mCurLine).toMap();

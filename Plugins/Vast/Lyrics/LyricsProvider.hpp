@@ -27,8 +27,8 @@ class LyricsProvider : public QObject {
     Q_PROPERTY(bool wordSynced READ wordSynced NOTIFY lyricsChanged)
     Q_PROPERTY(int offsetMs READ offsetMs WRITE setOffsetMs NOTIFY offsetMsChanged)
 
-    Q_PROPERTY(int currentLineIndex READ currentLineIndex NOTIFY currentIndexChanged)
-    Q_PROPERTY(int currentWordIndex READ currentWordIndex NOTIFY currentIndexChanged)
+    Q_PROPERTY(int currentLineIndex READ currentLineIndex NOTIFY currentLineIndexChanged)
+    Q_PROPERTY(int currentWordIndex READ currentWordIndex NOTIFY currentWordIndexChanged)
     Q_PROPERTY(qint64 currentWordDuration READ currentWordDuration NOTIFY currentWordDurationChanged)
 
   public:
@@ -83,7 +83,8 @@ class LyricsProvider : public QObject {
   Q_SIGNALS:
     void stateChanged();
     void lyricsChanged();
-    void currentIndexChanged();
+    void currentLineIndexChanged();
+    void currentWordIndexChanged();
     void currentWordDurationChanged();
     void offsetMsChanged();
 

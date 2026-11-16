@@ -19,7 +19,8 @@
 #include <qvariant.h>
 
 LyricsProvider::LyricsProvider(QObject* parent) : QObject(parent), mNam(new QNetworkAccessManager(this)), mScheduler(new vast::LyricsScheduler(this)) {
-    connect(mScheduler, &vast::LyricsScheduler::currentIndexChanged, this, &LyricsProvider::currentIndexChanged);
+    connect(mScheduler, &vast::LyricsScheduler::currentLineIndexChanged, this, &LyricsProvider::currentLineIndexChanged);
+    connect(mScheduler, &vast::LyricsScheduler::currentWordIndexChanged, this, &LyricsProvider::currentWordIndexChanged);
     connect(mScheduler, &vast::LyricsScheduler::currentWordDurationChanged, this, &LyricsProvider::currentWordDurationChanged);
 }
 
@@ -96,7 +97,7 @@ void LyricsProvider::clear() {
     mWordLines.clear();
     mSynced     = false;
     mWordSynced = false;
-    mScheduler->reset(); // emits currentIndexChanged itself
+    mScheduler->reset(); // emits currentLineIndexChanged/currentWordIndexChanged itself
     setState(State::Idle);
     Q_EMIT lyricsChanged();
 }
