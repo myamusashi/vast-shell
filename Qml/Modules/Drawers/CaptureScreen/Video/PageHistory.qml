@@ -84,13 +84,25 @@ StyledRect {
                 required property int index
                 required property var modelData
 
+                property string       loadedVideoPath: ""
                 property alias        thumbLoader: thumbLoader
+
+                function              requestThumbnail(): void {
+                    const path = modelData?.path ?? "";
+                    if (path === loadedVideoPath)
+                        return;
+                    loadedVideoPath       = path;
+                    thumbLoader.thumbPath = "";
+                    if (path)
+                        ThumbnailQueue.generate(path, ThumbnailQueue.pathFor(path, Paths.cacheDir + "/video-thumbnails"), null);
+                }
 
                 color: listView.currentIndex === index ? Qt.alpha(Colours.m3Colors.m3Primary, 0.15) : (delegateMouse.containsMouse ? Qt.alpha(Colours.m3Colors.m3Primary, 0.08) : "transparent")
                 height: 56
                 radius: Appearance.rounding.small
                 width: listView.width
-                Component.onCompleted: ThumbnailQueue.generate(modelData.path, ThumbnailQueue.pathFor(modelData.path, Paths.cacheDir + "/video-thumbnails"), null)
+                Component.onCompleted: requestThumbnail()
+                onModelDataChanged: requestThumbnail()
 
                 Connections {
 
