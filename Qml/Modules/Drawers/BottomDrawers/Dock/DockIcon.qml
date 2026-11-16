@@ -20,12 +20,17 @@ Item {
     readonly property bool   isFocusedToplevel: toplevel !== null && (toplevel.wayland?.activated === true || (GlobalStates.isShellKeyboardGrabActive && toplevel.address === Hypr.lastActiveToplevelAddress))
     readonly property bool   showsIndicator: toplevel !== null || (isPinned && entry !== null && DockServices.runningEntryIds.includes(entryId))
 
+    property bool            draggable: false
+    property bool            dragging: false
     property bool            hovered: false
     property real            iconSlot: 44
     property bool            isPinned: false
 
     signal                   activated
     signal                   contextMenuRequested(real anchorX, real anchorY)
+    signal                   dragEnded
+    signal                   dragMoved(real deltaX)
+    signal                   dragStarted
     signal                   hoverEntered
     signal                   hoverExited
 
@@ -33,6 +38,13 @@ Item {
     implicitWidth: iconSlot + Appearance.spacing.small * 2
     height: implicitHeight
     width: implicitWidth
+    z: dragging ? 10 : 0
+    scale: dragging ? 1.08 : 1.0
+    Behavior on scale {
+        NAnim {
+            duration: Appearance.animations.durations.small
+        }
+    }
 
     StyledRect {
         anchors.fill: parent
@@ -64,11 +76,59 @@ Item {
     }
 
     MArea {
+        property bool dragActive: false
+        property real pressParentX: 0
+        property bool suppressNextClick: false
+
         acceptedButtons: Qt.LeftButton
         anchors.fill: parent
-        cursorShape: Qt.PointingHandCursor
+        cursorShape: root.dragging ? Qt.ClosedHandCursor : Qt.PointingHandCursor
         layerRadius: Appearance.rounding.normal
-        onClicked: root.activated()
+        onPressed: mouse => {
+            pressParentX      = root.mapToItem(root.parent, mouse.x, 0).x;
+            dragActive        = false;
+            suppressNextClick = false;
+        }
+        onPositionChanged: mouse => {
+            if (!root.draggable || !pressed)
+                return;
+
+            const currentParentX = root.mapToItem(root.parent, mouse.x, 0).x;
+            const deltaX         = currentParentX - pressParentX;
+            if (!dragActive && Math.abs(deltaX) >= Qt.styleHints.startDragDistance) {
+                dragActive    = true;
+                root.dragging = true;
+                root.dragStarted();
+            }
+
+            if (dragActive)
+                root.dragMoved(deltaX);
+        }
+        onReleased: {
+            if (!dragActive)
+                return;
+
+            suppressNextClick = true;
+            dragActive        = false;
+            root.dragging     = false;
+            root.dragEnded();
+        }
+        onCanceled: {
+            if (!dragActive)
+                return;
+
+            dragActive    = false;
+            root.dragging = false;
+            root.dragEnded();
+        }
+        onClicked: {
+            if (suppressNextClick) {
+                suppressNextClick = false;
+                return;
+            }
+
+            root.activated();
+        }
     }
 
     HoverHandler {
@@ -85,7 +145,7 @@ Item {
     MouseArea {
         acceptedButtons: Qt.RightButton
         anchors.fill: parent
-        enabled: root.entry !== null
+        enabled: root.entry !== null && !root.dragging
         onClicked: mouse => {
             const point = root.mapToItem(null, mouse.x, 0);
             root.contextMenuRequested(point.x, point.y);

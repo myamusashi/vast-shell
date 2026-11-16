@@ -86,6 +86,30 @@ Singleton {
         LauncherServices.launch(entry);
     }
 
+    function               reorderPinned(entryId: string, targetIndex: int): void {
+        const current   = (Configs.dock.pinnedApps ?? []).slice();
+        const fromIndex = current.indexOf(entryId);
+        if (fromIndex < 0)
+            return;
+
+        const validIds = pinnedEntries.map(entry => entry.id);
+        if (validIds.length === 0)
+            return;
+
+        const clampedTarget = Math.max(0, Math.min(targetIndex, validIds.length - 1));
+        const targetId      = validIds[clampedTarget];
+        if (!targetId || targetId === entryId)
+            return;
+
+        const targetRawIndex = current.indexOf(targetId);
+        if (targetRawIndex < 0)
+            return;
+
+        current.splice(fromIndex, 1);
+        current.splice(targetRawIndex, 0, entryId);
+        Configs.dock.pinnedApps = current;
+    }
+
     function               setReservedBottomSpace(value: real): void {
         GlobalStates.reservedBottomSpace = value;
     }
