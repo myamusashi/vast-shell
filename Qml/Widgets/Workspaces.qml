@@ -47,6 +47,7 @@ StyledRect {
     WorkspacePreview {
         dotHovered: root.previewWorkspace > 0
         dotX: root.previewDotX
+        monitor: root.monitor
         toplevels: root.previewToplevels
     }
 

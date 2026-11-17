@@ -17,35 +17,37 @@ import qs.Services
 LazyLoader {
     id: root
 
-    required property bool      dotHovered
-    required property real      dotX
+    required property bool        dotHovered
+    required property real        dotX
+    required property ShellScreen monitor
 
-    readonly property real      barBottom: (Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0) + Configs.bar.barHeight
-    readonly property real      boardHeight: root.shownRows * root.cellSize + Math.max(0, root.shownRows - 1) * root.cellGap + root.cardPadding * 2
-    readonly property real      boardWidth: root.shownColumns * root.cellSize + Math.max(0, root.shownColumns - 1) * root.cellGap + root.cardPadding * 2
-    readonly property real      cardPadding: Appearance.padding.small
-    readonly property real      cellGap: Appearance.margin.small
-    readonly property int       cells: 9
-    readonly property real      cellSize: 150
-    readonly property int       columns: 3
+    readonly property real        barBottom: (Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0) + Configs.bar.barHeight
+    readonly property real        boardHeight: root.shownRows * root.cellSize + Math.max(0, root.shownRows - 1) * root.cellGap + root.cardPadding * 2
+    readonly property real        boardWidth: root.shownColumns * root.cellSize + Math.max(0, root.shownColumns - 1) * root.cellGap + root.cardPadding * 2
+    readonly property real        cardPadding: Appearance.padding.small
+    readonly property real        cellGap: Appearance.margin.small
+    readonly property int         cells: 9
+    readonly property real        cellSize: 150
+    readonly property int         columns: 3
+    readonly property real        maxBoardHeight: 3 * root.cellSize + 2 * root.cellGap + root.cardPadding * 2
     // Grace window between leaving the dot and the board actually closing, so
     // the pointer can travel down onto the board. Mirrors closeTimer.running
     // without the root having to reach into the window for the timer id.
-    property bool               grace: false
+    property bool                 grace: false
 
     // Cell currently under the pointer, -1 when it is off the grid
-    property int                hoveredIndex: -1
+    property int                  hoveredIndex: -1
 
     // Cell order as it stood when the board opened; empty while it is closed.
-    property var                latchedOrder: []
+    property var                  latchedOrder: []
     // Whether the window is mapped. Split from `showing` so the surface stays
     // up for the whole fade and is only unmapped once the board has faded out.
-    property bool               mapped: false
+    property bool                 mapped: false
     // `toplevels` arrives already ordered with that workspace's last focused
     // window first.
-    required property var       toplevels
+    required property var         toplevels
 
-    readonly property list<var> orderedToplevels: {
+    readonly property list<var>   orderedToplevels: {
         const live = [...(root.toplevels ?? [])].slice(0, root.cells);
         if (root.latchedOrder.length === 0)
             return live;
@@ -56,14 +58,14 @@ LazyLoader {
 
         return root.latchedOrder.map(address => byAddress[address]).filter(toplevel => toplevel !== undefined);
     }
-    readonly property bool      showing: root.shownCount > 0 && (root.dotHovered || root.pointerInside || root.grace)
-    readonly property int       shownColumns: Math.min(root.columns, root.shownCount)
-    readonly property int       shownCount: root.orderedToplevels.length
-    readonly property int       shownRows: Math.ceil(root.shownCount / root.columns)
+    readonly property bool        showing: root.shownCount > 0 && (root.dotHovered || root.pointerInside || root.grace)
+    readonly property int         shownColumns: Math.min(root.columns, root.shownCount)
+    readonly property int         shownCount: root.orderedToplevels.length
+    readonly property int         shownRows: Math.ceil(root.shownCount / root.columns)
 
-    property bool               pointerInside: false
+    property bool                 pointerInside: false
 
-    function                    activateCell(index: int): void {
+    function                      activateCell(index: int): void {
         if (index < 0)
             return;
         root.orderedToplevels[index]?.wayland?.activate();
@@ -71,7 +73,7 @@ LazyLoader {
 
     // Cell under a board-relative point, or -1 outside the grid.
 
-    function                    cellAt(x: real, y: real): int {
+    function                      cellAt(x: real, y: real): int {
         const column = Math.floor((x - root.cardPadding) / (root.cellSize + root.cellGap));
         const row    = Math.floor((y - root.cardPadding) / (root.cellSize + root.cellGap));
         if (column < 0 || column >= root.shownColumns || row < 0 || row >= root.shownRows)
@@ -83,7 +85,7 @@ LazyLoader {
     // Freeze the hovered workspace's window list, so the board keeps showing it
     // after the pointer has left the dot.
 
-    function                    latch(): void {
+    function                      latch(): void {
         const latched = root.latchOrder(root.toplevels);
         if (latched.length > 0 && latched.join() !== root.latchedOrder.join())
             root.latchedOrder = latched;
@@ -92,28 +94,28 @@ LazyLoader {
     // Snapshot the display order at open time, so it outlives the activation
     // the click is about to cause.
 
-    function                    latchOrder(list: var): var {
+    function                      latchOrder(list: var): var {
         return [...(list ?? [])].slice(0, root.cells).map(toplevel => toplevel.address);
     }
 
     loading: true
     component: PanelWindow {
-        WlrLayershell.layer: WlrLayer.Overlay
-        aboveWindows: true
+        WlrLayershell.layer: WlrLayer.Top
         color: "transparent"
         exclusionMode: ExclusionMode.Ignore
-        HyprlandWindow.visibleMask: Region {
-            item: board.visible ? boardHost : null
-        }
-        BackgroundEffect.blurRegion: Region {
-            item: board.visible ? boardHost : null
-        }
-        mask: Region {
+        implicitHeight: root.maxBoardHeight
+        margins.top: root.barBottom // qmllint disable
+        screen: root.monitor
+        HyprlandWindow.visibleMask: regionContent
+        BackgroundEffect.blurRegion: regionContent
+        mask: regionContent
+
+        Region {
+            id: regionContent
             item: board.visible ? boardHost : null
         }
 
         anchors {
-            bottom: true
             left: true
             right: true
             top: true
@@ -177,7 +179,7 @@ LazyLoader {
             // The bar window is anchored to the screen's top-left, so scene
             // coordinates on the dot are screen coordinates here.
             x: root.dotX - board.bodyInsetX
-            y: root.barBottom
+            y: 0
             Behavior on x {
                 NAnim {
                     duration: Appearance.animations.durations.expressiveDefaultSpatial
