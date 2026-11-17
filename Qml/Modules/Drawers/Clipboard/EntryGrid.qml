@@ -250,7 +250,13 @@ Item {
         anchors.centerIn: verticalFlick
         color: Colours.m3Colors.m3OnSurfaceVariant
         font.pixelSize: Appearance.fonts.size.medium
-        text: root.searchText.length > 0 ? qsTr("No results for ") + root.searchText : qsTr("Clipboard is empty")
+        text: {
+            if (root.searchText.length > 0)
+                return qsTr("No results for ") + root.searchText;
+            if (ClipboardManager.model.typeFilter !== ClipboardModel.All)
+                return qsTr("No matching entries");
+            return qsTr("Clipboard is empty");
+        }
         visible: gridEntryList.count === 0
     }
 

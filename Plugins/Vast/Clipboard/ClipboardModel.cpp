@@ -11,6 +11,7 @@
 #include <qnamespace.h>
 #include <qregularexpression.h>
 #include <qset.h>
+#include <qstringview.h>
 
 #include <algorithm>
 #include <qobject.h>
@@ -67,6 +68,7 @@ namespace vast {
     }
 
     void ClipboardModel::reset(QList<ClipboardEntry> entries) {
+        const bool typeChanged = mTypeFilter != TypeFilter::All;
         beginResetModel();
         for (auto& entry : entries) {
             if (entry.preview.isEmpty() && !entry.isImage())
@@ -75,8 +77,11 @@ namespace vast {
         mEntries   = std::move(entries);
         mFiltering = false;
         mFilterQuery.clear();
+        mTypeFilter = TypeFilter::All;
         mFiltered.clear();
         endResetModel();
+        if (typeChanged)
+            Q_EMIT typeFilterChanged();
         Q_EMIT countChanged();
     }
 
@@ -221,11 +226,42 @@ namespace vast {
     void ClipboardModel::setFilter(const QString& query) {
         beginResetModel();
         mFilterQuery = query;
-        mFiltering   = !query.isEmpty();
+        mFiltering   = !mFilterQuery.isEmpty() || mTypeFilter != TypeFilter::All;
         rebuildFilter();
 
         endResetModel();
         Q_EMIT countChanged();
+    }
+
+    ClipboardModel::TypeFilter ClipboardModel::typeFilter() const noexcept {
+        return mTypeFilter;
+    }
+
+    void ClipboardModel::setTypeFilter(TypeFilter filter) {
+        if (mTypeFilter == filter)
+            return;
+
+        beginResetModel();
+        mTypeFilter = filter;
+        mFiltering  = !mFilterQuery.isEmpty() || mTypeFilter != TypeFilter::All;
+        rebuildFilter();
+        endResetModel();
+        Q_EMIT typeFilterChanged();
+        Q_EMIT countChanged();
+    }
+
+    void ClipboardModel::cycleTypeFilter() {
+        switch (mTypeFilter) {
+            case TypeFilter::All: setTypeFilter(TypeFilter::Text); break;
+            case TypeFilter::Text: setTypeFilter(TypeFilter::Html); break;
+            case TypeFilter::Html: setTypeFilter(TypeFilter::LinksAndFiles); break;
+            case TypeFilter::LinksAndFiles: setTypeFilter(TypeFilter::Image); break;
+            case TypeFilter::Image: setTypeFilter(TypeFilter::All); break;
+        }
+    }
+
+    void ClipboardModel::resetTypeFilter() {
+        setTypeFilter(TypeFilter::All);
     }
 
     void ClipboardModel::bumpToTop(qint64 id) {
@@ -309,8 +345,10 @@ namespace vast {
 
         if (queryWords.isEmpty()) {
             mFiltered.reserve(static_cast<size_t>(mEntries.size()));
-            for (int i = 0; i < mEntries.size(); ++i)
-                mFiltered.push_back(i);
+            for (int i = 0; i < mEntries.size(); ++i) {
+                if (matchesTypeFilter(mEntries.at(i)))
+                    mFiltered.push_back(i);
+            }
             return;
         }
 
@@ -334,6 +372,10 @@ namespace vast {
 
         int i = 0;
         for (ClipboardEntry& e : mEntries) {
+            if (!matchesTypeFilter(e)) {
+                ++i;
+                continue;
+            }
             ensureSearchIndex(e);
 
             double totalScore = 0.0;
@@ -414,6 +456,26 @@ namespace vast {
         if (it == mEntries.end())
             return -1;
         return static_cast<int>(std::distance(mEntries.begin(), it));
+    }
+
+    bool ClipboardModel::isUrlOrLink(const QString& content) {
+        const QStringView trimmed = QStringView(content).trimmed();
+        if (trimmed.isEmpty())
+            return false;
+
+        static const QRegularExpression kUrlRegex(QStringLiteral(R"(^(?:[a-zA-Z][a-zA-Z0-9+.-]*://|mailto:|magnet:\?)[^\s]+$)"), QRegularExpression::CaseInsensitiveOption);
+        return kUrlRegex.matchView(trimmed).hasMatch();
+    }
+
+    bool ClipboardModel::matchesTypeFilter(const ClipboardEntry& e) const {
+        switch (mTypeFilter) {
+            case TypeFilter::All: return true;
+            case TypeFilter::Text: return e.type == ClipboardType::Text;
+            case TypeFilter::Html: return e.type == ClipboardType::Html;
+            case TypeFilter::LinksAndFiles: return e.type == ClipboardType::Files || (e.type == ClipboardType::Text && isUrlOrLink(e.content));
+            case TypeFilter::Image: return e.type == ClipboardType::Image;
+        }
+        return true;
     }
 
     QString ClipboardModel::makePreview(const ClipboardEntry& e) {

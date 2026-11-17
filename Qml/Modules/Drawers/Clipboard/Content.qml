@@ -167,7 +167,9 @@ ColumnLayout {
             }
             break;
         case Qt.Key_Tab:
-            uiState.previewFocused = true;
+            uiState.visualActive = false;
+            ClipboardManager.model.cycleTypeFilter();
+            entryGrid.resetToBeginning();
             event.accepted = true;
             break;
         default:

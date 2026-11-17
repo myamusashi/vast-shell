@@ -59,6 +59,7 @@ Singleton {
             "expand_less": "caret-up",
             "expand_more": "caret-down",
             "explore": "navigation-arrow",
+            "filter_list": "funnel",
             "folder": "folder",
             "folder_open": "folder-open",
             "format_color_fill": "palette",

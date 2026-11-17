@@ -69,8 +69,10 @@ Singleton {
 
         function               clearTransientState(): void {
             visualActive = false;
-            if (ClipboardManager.model)
+            if (ClipboardManager.model) {
                 ClipboardManager.model.setFilter("");
+                ClipboardManager.model.resetTypeFilter();
+            }
         }
 
         function               confirmDelete(): void {

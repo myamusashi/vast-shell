@@ -67,6 +67,8 @@ class TestClipboardModel : public QObject {
     void idAtRowAndTypeAtRowRejectOutOfRange();
     void entriesExposesEveryField();
     void countChangedFiresOnMutation();
+    void typeFilterFiltersByCategoryAndCombinesWithQuery();
+    void cycleTypeFilterCyclesInExpectedOrder();
 };
 
 void TestClipboardModel::roleNamesMatchQmlContract() {
@@ -415,6 +417,64 @@ void TestClipboardModel::countChangedFiresOnMutation() {
     const int afterPrepend = spy.count();
     model.removeById(1);
     QVERIFY(spy.count() > afterPrepend);
+}
+
+void TestClipboardModel::typeFilterFiltersByCategoryAndCombinesWithQuery() {
+    vast::ClipboardModel model;
+    using TypeFilter = vast::ClipboardModel::TypeFilter;
+
+    model.reset({
+        entry(1, QStringLiteral("hello world"), 1000, false, vast::ClipboardType::Text),
+        entry(2, QStringLiteral("https://example.com/docs"), 2000, false, vast::ClipboardType::Text),
+        entry(3, QStringLiteral("<p>html snippet</p>"), 3000, false, vast::ClipboardType::Html),
+        entry(4, QStringLiteral("file:///home/user/notes.txt"), 4000, false, vast::ClipboardType::Files),
+        entry(5, QStringLiteral("ignored"), 5000, false, vast::ClipboardType::Image),
+    });
+
+    QCOMPARE(visibleIds(model), (QList<qint64>{1, 2, 3, 4, 5}));
+
+    model.setTypeFilter(TypeFilter::Text);
+    QCOMPARE(visibleIds(model), (QList<qint64>{1, 2}));
+
+    model.setTypeFilter(TypeFilter::Html);
+    QCOMPARE(visibleIds(model), (QList<qint64>{3}));
+
+    model.setTypeFilter(TypeFilter::LinksAndFiles);
+    QCOMPARE(visibleIds(model), (QList<qint64>{2, 4}));
+
+    model.setTypeFilter(TypeFilter::Image);
+    QCOMPARE(visibleIds(model), (QList<qint64>{5}));
+
+    model.setTypeFilter(TypeFilter::LinksAndFiles);
+    model.setFilter(QStringLiteral("example"));
+    QCOMPARE(visibleIds(model), (QList<qint64>{2}));
+
+    model.resetTypeFilter();
+    QCOMPARE(visibleIds(model), (QList<qint64>{2}));
+
+    model.setFilter(QString());
+    QCOMPARE(visibleIds(model), (QList<qint64>{1, 2, 3, 4, 5}));
+}
+
+void TestClipboardModel::cycleTypeFilterCyclesInExpectedOrder() {
+    vast::ClipboardModel model;
+    using TypeFilter = vast::ClipboardModel::TypeFilter;
+
+    QSignalSpy spy(&model, &vast::ClipboardModel::typeFilterChanged);
+    QCOMPARE(model.typeFilter(), TypeFilter::All);
+
+    model.cycleTypeFilter();
+    QCOMPARE(model.typeFilter(), TypeFilter::Text);
+    model.cycleTypeFilter();
+    QCOMPARE(model.typeFilter(), TypeFilter::Html);
+    model.cycleTypeFilter();
+    QCOMPARE(model.typeFilter(), TypeFilter::LinksAndFiles);
+    model.cycleTypeFilter();
+    QCOMPARE(model.typeFilter(), TypeFilter::Image);
+    model.cycleTypeFilter();
+    QCOMPARE(model.typeFilter(), TypeFilter::All);
+
+    QCOMPARE(spy.count(), 5);
 }
 
 QTEST_MAIN(TestClipboardModel)

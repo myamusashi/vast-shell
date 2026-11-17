@@ -23,6 +23,7 @@ namespace vast {
         Q_DISABLE_COPY(ClipboardModel)
 
         Q_PROPERTY(int count READ rowCount NOTIFY countChanged)
+        Q_PROPERTY(TypeFilter typeFilter READ typeFilter WRITE setTypeFilter NOTIFY typeFilterChanged)
 
       public:
         enum class Roles : uint16_t {
@@ -37,6 +38,15 @@ namespace vast {
             FileNameRole,
         };
         Q_ENUM(Roles)
+
+        enum class TypeFilter : uint8_t {
+            All = 0,
+            Text,
+            Html,
+            LinksAndFiles,
+            Image,
+        };
+        Q_ENUM(TypeFilter)
 
         explicit ClipboardModel(QObject* parent = nullptr);
         ~ClipboardModel() override                                             = default;
@@ -55,6 +65,10 @@ namespace vast {
         Q_INVOKABLE void                           removeByIds(const QVariantList& ids);
         void                                       setPinById(qint64 id, bool pinned);
         Q_INVOKABLE void                           setFilter(const QString& query);
+        [[nodiscard]] TypeFilter                   typeFilter() const noexcept;
+        Q_INVOKABLE void                           setTypeFilter(TypeFilter filter);
+        Q_INVOKABLE void                           cycleTypeFilter();
+        Q_INVOKABLE void                           resetTypeFilter();
 
         void                                       bumpToTop(qint64 id);
 
@@ -64,9 +78,12 @@ namespace vast {
 
       Q_SIGNALS:
         void countChanged();
+        void typeFilterChanged();
 
       private:
         [[nodiscard]] static QString        makePreview(const ClipboardEntry& e);
+        [[nodiscard]] static bool           isUrlOrLink(const QString& content);
+        [[nodiscard]] bool                  matchesTypeFilter(const ClipboardEntry& e) const;
         static void                         ensureSearchIndex(ClipboardEntry& e);
         [[nodiscard]] int                   indexById(qint64 id) const;
 
@@ -78,6 +95,7 @@ namespace vast {
         QList<ClipboardEntry>               mEntries;
         std::vector<int>                    mFiltered;
         QString                             mFilterQuery;
+        TypeFilter                          mTypeFilter{TypeFilter::All};
         bool                                mFiltering{false};
     };
 }

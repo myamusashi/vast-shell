@@ -61,19 +61,97 @@ Item {
                 Keys.onPressed: event => root.keyPressed(event)
             }
 
-            StyledText {
-                color: Colours.m3Colors.m3OnSurfaceVariant
-                font.pixelSize: Appearance.fonts.size.small
-                text: (root.entryList.currentPage + 1) + " / " + root.entryList.totalPages
-                visible: root.entryList.totalPages > 0 && searchField.text.length === 0 && !root.uiState.visualActive
-            }
+            ColumnLayout {
+                Layout.alignment: Qt.AlignRight
+                spacing: Appearance.spacing.small
 
-            StyledText {
-                color: Colours.m3Colors.m3Primary
-                font.bold: true
-                font.pixelSize: Appearance.fonts.size.small
-                text: qsTr("VISUAL") + " " + root.entryList.visualSelectableCount
-                visible: root.uiState.visualActive
+                StyledRect {
+                    id: filterIndicator
+
+                    readonly property string filterIcon: {
+                        switch (ClipboardManager.model.typeFilter) {
+                        case ClipboardModel.Text:
+                            return "notes";
+                        case ClipboardModel.Html:
+                            return "code";
+                        case ClipboardModel.LinksAndFiles:
+                            return "link";
+                        case ClipboardModel.Image:
+                            return "image";
+                        default:
+                            return "filter_list";
+                        }
+                    }
+                    readonly property string filterLabel: {
+                        switch (ClipboardManager.model.typeFilter) {
+                        case ClipboardModel.Text:
+                            return qsTr("Text");
+                        case ClipboardModel.Html:
+                            return qsTr("HTML");
+                        case ClipboardModel.LinksAndFiles:
+                            return qsTr("Links & Files");
+                        case ClipboardModel.Image:
+                            return qsTr("Image");
+                        default:
+                            return qsTr("All");
+                        }
+                    }
+                    readonly property bool   isFiltered: ClipboardManager.model.typeFilter !== ClipboardModel.All
+
+                    Layout.alignment: Qt.AlignCenter
+                    color: isFiltered ? Colours.m3Colors.m3SecondaryContainer : Colours.m3Colors.m3SurfaceContainerHigh
+                    implicitHeight: 26
+                    implicitWidth: filterIndicatorRow.implicitWidth + Appearance.padding.normal * 2
+                    radius: Appearance.rounding.small
+
+                    RowLayout {
+                        id: filterIndicatorRow
+
+                        anchors.centerIn: parent
+                        spacing: Appearance.spacing.smaller
+
+                        Icon {
+                            color: filterIndicator.isFiltered ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurfaceVariant
+                            font.pixelSize: Appearance.fonts.size.small
+                            icon: filterIndicator.filterIcon
+                        }
+
+                        StyledText {
+                            color: filterIndicator.isFiltered ? Colours.m3Colors.m3OnSecondaryContainer : Colours.m3Colors.m3OnSurfaceVariant
+                            font.pixelSize: Appearance.fonts.size.small
+                            font.weight: filterIndicator.isFiltered ? Font.Medium : Font.Normal
+                            text: filterIndicator.filterLabel
+                        }
+                    }
+
+                    TapHandler {
+                        onTapped: {
+                            root.uiState.visualActive = false;
+                            ClipboardManager.model.cycleTypeFilter();
+                        }
+                    }
+
+                    HoverHandler {
+                        cursorShape: Qt.PointingHandCursor
+                    }
+                }
+
+                StyledText {
+                    Layout.alignment: Qt.AlignCenter
+                    color: Colours.m3Colors.m3OnSurfaceVariant
+                    font.pixelSize: Appearance.fonts.size.small
+                    text: (root.entryList.currentPage + 1) + " / " + root.entryList.totalPages
+                    visible: root.entryList.totalPages > 0 && searchField.text.length === 0 && !root.uiState.visualActive
+                }
+
+                StyledText {
+                    Layout.alignment: Qt.AlignCenter
+                    color: Colours.m3Colors.m3Primary
+                    font.bold: true
+                    font.pixelSize: Appearance.fonts.size.small
+                    text: qsTr("VISUAL") + " " + root.entryList.visualSelectableCount
+                    visible: root.uiState.visualActive
+                }
             }
         }
 
