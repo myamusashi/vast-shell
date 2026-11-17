@@ -16,8 +16,9 @@ StyledRect {
     required property ShellScreen monitor
 
     readonly property real        barBottom: (Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0) + Configs.bar.barHeight
-    readonly property real        horizontalPadding: Appearance.spacing.normal
+    readonly property real        horizontalPadding: Appearance.padding.small
     readonly property real        shadowPadding: 12
+    readonly property real        slotSize: 20
 
     property var                  activeMenu: null
     property int                  hoveredIndex: -1
@@ -77,9 +78,9 @@ StyledRect {
     }
 
     color: "transparent"
-    implicitHeight: 35
-    implicitWidth: visible ? systemTrayRow.width + horizontalPadding * 1.2 : 0
-    radius: Appearance.rounding.small
+    implicitHeight: 24
+    implicitWidth: visible ? systemTrayRow.width + horizontalPadding * 2 : 0
+    radius: 6
     visible: SystemTray.items.values.length > 0
     Behavior on implicitWidth {
         NAnim {}
@@ -87,18 +88,18 @@ StyledRect {
 
     Item {
         anchors.centerIn: parent
-        height: 25
+        height: root.slotSize
         width: systemTrayRow.width
 
         StyledRect {
             id: hoverHighlight
 
             color: Colours.m3Colors.m3Primary
-            height: 25
-            radius: Appearance.rounding.normal
+            height: root.slotSize
+            radius: 6
             visible: root.hoveredIndex >= 0 && root.hoveredIndex < trayRepeater.count
-            width: 25
-            x: root.hoveredIndex >= 0 ? root.hoveredIndex * (25 + systemTrayRow.spacing) : 0
+            width: root.slotSize
+            x: root.hoveredIndex >= 0 ? root.hoveredIndex * (root.slotSize + systemTrayRow.spacing) : 0
             y: 0
             Behavior on x {
                 enabled: hoverHighlight.visible
@@ -129,18 +130,18 @@ StyledRect {
 
                     readonly property bool           isHovered: root.hoveredIndex === index
 
-                    height: 25
-                    width: 25
+                    height: root.slotSize
+                    width: root.slotSize
 
                     IconImage {
                         anchors.centerIn: parent
                         backer.cache: true
-                        height: Appearance.fonts.size.large * 1.2
+                        height: Appearance.fonts.size.normal
                         layer.enabled: true
                         mipmap: true
                         smooth: true
                         source: IconUtils.iconSource(delegateTray.modelData ? delegateTray.modelData.icon : "")
-                        width: Appearance.fonts.size.large * 1.2
+                        width: Appearance.fonts.size.normal
                         layer.effect: MultiEffect {
                             autoPaddingEnabled: false
                             colorization: 1.0
@@ -155,7 +156,7 @@ StyledRect {
             id: trayMouseArea
 
             function updateHover(mouseX: real): void {
-                const slot = 25 + systemTrayRow.spacing;
+                const slot = root.slotSize + systemTrayRow.spacing;
                 const idx  = Math.floor(mouseX / slot);
                 if (idx < 0 || idx >= trayRepeater.count) {
                     root.hoveredIndex = -1;
@@ -177,7 +178,7 @@ StyledRect {
             cursorShape: Qt.PointingHandCursor
             hoverEnabled: true
             onClicked: mouse => {
-                const slot = 25 + systemTrayRow.spacing;
+                const slot = root.slotSize + systemTrayRow.spacing;
                 const idx  = Math.floor(mouse.x / slot);
                 if (idx < 0 || idx >= trayRepeater.count)
                     return;

@@ -40,9 +40,9 @@ StyledRect {
 
     clip: true
     color: Colours.m3Colors.m3SurfaceContainer
-    implicitHeight: 30
-    implicitWidth: windowNameMetrics.advanceWidth(root.displayedText) + Appearance.padding.normal * 2
-    radius: Appearance.rounding.full
+    implicitHeight: 22
+    implicitWidth: windowNameMetrics.advanceWidth(root.displayedText) + Appearance.padding.small * 2
+    radius: 6
     Behavior on implicitWidth {
         SpringAnimation {
             damping: 0.45
@@ -170,10 +170,11 @@ StyledRect {
 
         anchors.horizontalCenter: parent.horizontalCenter
         color: Colours.m3Colors.m3OnSurface
-        font.pixelSize: Appearance.fonts.size.large
-        font.weight: Font.Light
+        font.pixelSize: Appearance.fonts.size.small
+        font.weight: Font.Medium
         height: parent.height
         horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
         visible: false
     }
 
@@ -182,10 +183,11 @@ StyledRect {
 
         anchors.horizontalCenter: parent.horizontalCenter
         color: Colours.m3Colors.m3OnSurface
-        font.pixelSize: Appearance.fonts.size.large
-        font.weight: Font.Light
+        font.pixelSize: Appearance.fonts.size.small
+        font.weight: Font.Medium
         height: parent.height
         horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
         text: root.displayedText
         y: 0
     }

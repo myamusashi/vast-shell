@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Layouts
 
 import qs.Components.Base
 import qs.Core.Configs
@@ -8,22 +7,25 @@ import qs.Core.Utils
 import qs.Services
 
 StyledRect {
-    Layout.fillHeight: true
     color: "transparent"
-    implicitWidth: childrenRect.width
-    radius: 5
+    implicitHeight: 22
+    implicitWidth: osIcon.implicitWidth + Appearance.padding.small * 2
+    radius: 6
 
     Icon {
-        Layout.alignment: Qt.AlignLeft | Qt.AlignHCenter
+        id: osIcon
+
+        anchors.centerIn: parent
         color: Colours.m3Colors.m3Primary
-        font.pixelSize: Appearance.fonts.size.extraLarge
+        font.pixelSize: Appearance.fonts.size.large
         icon: Distro.icon(SystemUsage.osId, SystemUsage.osIdLike)
         type: Icon.Nerd
+    }
 
-        MouseArea {
-            anchors.fill: parent
-            cursorShape: Qt.PointingHandCursor
-            onClicked: GlobalStates.isSettingsOpen = true
-        }
+    MArea {
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        layerRadius: 6
+        onClicked: GlobalStates.isSettingsOpen = true
     }
 }

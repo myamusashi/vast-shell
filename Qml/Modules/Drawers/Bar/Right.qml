@@ -12,26 +12,35 @@ RowLayout {
 
     required property ShellScreen monitor
 
-    Wid.Clock {}
+    Wid.Clock {
+        Layout.alignment: Qt.AlignVCenter
+    }
 
     Wid.NotificationDots {
-        implicitHeight: parent.height
+        Layout.alignment: Qt.AlignVCenter
     }
 
     Wid.Tray {
+        Layout.alignment: Qt.AlignVCenter
         monitor: root.monitor
     }
 
-    Wid.KdeConnect {}
-
-    Wid.Battery {
-        heightBattery: 18
-        widthBattery: 36
+    Wid.KdeConnect {
+        Layout.alignment: Qt.AlignVCenter
     }
 
-    Wid.Sound {}
+    Wid.Battery {
+        Layout.alignment: Qt.AlignVCenter
+        heightBattery: 16
+        widthBattery: 32
+    }
+
+    Wid.Sound {
+        Layout.alignment: Qt.AlignVCenter
+    }
 
     Wid.Privacy {
+        Layout.alignment: Qt.AlignVCenter
         visible: Configs.privacy.enablePrivacyIndicator
     }
 }

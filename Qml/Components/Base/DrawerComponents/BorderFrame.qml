@@ -26,7 +26,7 @@ Item {
     readonly property real        holeTop: topThickness
     readonly property real        holeWidth: Math.max(0, width - leftThickness - rightThickness)
 
-    property real                 barHeight: 40
+    property real                 barHeight: 30
     property real                 bottomThickness: exclusiveBottom.zone
     property real                 dockHeight: 0
     property bool                 enableOuterBorder: false

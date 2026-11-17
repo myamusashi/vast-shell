@@ -1,11 +1,11 @@
 pragma ComponentBehavior: Bound
 
-import QtGraphs
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Networking
 import Quickshell.Services.UPower
+import QtGraphs
 
 import qs.Components.Base
 import qs.Core.Configs
@@ -21,8 +21,8 @@ SettingsPageBase {
 
     readonly property var    appCounts: {
         let graphicalCount = 0;
-        let terminalCount = 0;
-        const entries = DesktopEntries.applications.values;
+        let terminalCount  = 0;
+        const entries      = DesktopEntries.applications.values;
         for (let index = 0; index < entries.length; index++) {
             if (entries[index].runInTerminal)
                 terminalCount++;
@@ -37,7 +37,7 @@ SettingsPageBase {
     readonly property string batteryRemaining: FormatTimeUtils.formatBattery(UPower.displayDevice.timeToEmpty ?? 0)
     readonly property bool   isWiredNetwork: SystemUsage.statusWiredInterface === "connected" && (Networking.wifiEnabled ?? false)
     readonly property real   maxCoreFrequencyMHz: {
-        let peak = 3000;
+        let peak    = 3000;
         const cores = SystemUsage.cpuCores ?? [];
         for (let index = 0; index < cores.length; index++) {
             if (cores[index].freqMHz > peak)
@@ -577,7 +577,7 @@ SettingsPageBase {
                 delegate: Rectangle {
                     id: batteryDelegate
 
-                    required property var modelData
+                    required property var  modelData
 
                     readonly property real capacityRatio: (modelData?.designCapacity ?? 0) > 0 ? (modelData.currentCapacity / modelData.designCapacity) : 0
 
@@ -941,10 +941,10 @@ SettingsPageBase {
 
         function              packVec4(startIndex: int): vector4d {
             const list = graph.samples;
-            const v0 = startIndex < list.length ? list[startIndex] : 0;
-            const v1 = startIndex + 1 < list.length ? list[startIndex + 1] : v0;
-            const v2 = startIndex + 2 < list.length ? list[startIndex + 2] : v1;
-            const v3 = startIndex + 3 < list.length ? list[startIndex + 3] : v2;
+            const v0   = startIndex < list.length ? list[startIndex] : 0;
+            const v1   = startIndex + 1 < list.length ? list[startIndex + 1] : v0;
+            const v2   = startIndex + 2 < list.length ? list[startIndex + 2] : v1;
+            const v3   = startIndex + 3 < list.length ? list[startIndex + 3] : v2;
             return Qt.vector4d(v0, v1, v2, v3);
         }
 
@@ -963,14 +963,14 @@ SettingsPageBase {
             if (count < 2)
                 return;
             graphShader.pointCount = count;
-            graphShader.p0 = packVec4(0);
-            graphShader.p1 = packVec4(4);
-            graphShader.p2 = packVec4(8);
-            graphShader.p3 = packVec4(12);
-            graphShader.p4 = packVec4(16);
-            graphShader.p5 = packVec4(20);
-            graphShader.p6 = packVec4(24);
-            graphShader.p7 = packVec4(28);
+            graphShader.p0         = packVec4(0);
+            graphShader.p1         = packVec4(4);
+            graphShader.p2         = packVec4(8);
+            graphShader.p3         = packVec4(12);
+            graphShader.p4         = packVec4(16);
+            graphShader.p5         = packVec4(20);
+            graphShader.p6         = packVec4(24);
+            graphShader.p7         = packVec4(28);
         }
 
         border.color: Colours.m3Colors.m3OutlineVariant
@@ -1031,7 +1031,6 @@ SettingsPageBase {
             fragmentShader: Paths.projectRoot + "/Assets/shaders/cpuGraph.frag.qsb"
         }
     }
-
     component InfoPair: RowLayout {
         id: infoPair
 
@@ -1063,7 +1062,6 @@ SettingsPageBase {
             wrapMode: Text.WordWrap
         }
     }
-
     component LegendValue: RowLayout {
         id: legendItem
 
@@ -1096,7 +1094,6 @@ SettingsPageBase {
             font.weight: Font.DemiBold
         }
     }
-
     component MetricBadge: Rectangle {
         id: badge
 
@@ -1134,7 +1131,6 @@ SettingsPageBase {
             }
         }
     }
-
     component StorageSegmentedBar: Item {
         id: segBar
 
@@ -1162,7 +1158,6 @@ SettingsPageBase {
             radius: height / 2
             width: Math.round(parent.width * segBar.systemPlusAppsRatio)
             z: 1
-
             Behavior on width {
                 SpringAnimation {
                     damping: 0.6
@@ -1180,7 +1175,6 @@ SettingsPageBase {
             radius: height / 2
             width: Math.round(parent.width * segBar.appsRatio)
             z: 2
-
             Behavior on width {
                 SpringAnimation {
                     damping: 0.6
@@ -1190,7 +1184,6 @@ SettingsPageBase {
             }
         }
     }
-
     component UsageBar: Item {
         id: usageBar
 
@@ -1216,7 +1209,6 @@ SettingsPageBase {
             color: usageBar.fillColor
             radius: height / 2
             width: Math.round(parent.width * usageBar.clampedRatio)
-
             Behavior on width {
                 SpringAnimation {
                     damping: 0.6

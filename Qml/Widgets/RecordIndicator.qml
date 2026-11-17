@@ -25,8 +25,8 @@ StyledRect {
 
             property bool isHovering: false
 
-            Layout.preferredHeight: 30
-            Layout.preferredWidth: 30
+            Layout.preferredHeight: 22
+            Layout.preferredWidth: 22
             Behavior on scale {
                 NAnim {
                     duration: Appearance.animations.durations.small
@@ -38,7 +38,7 @@ StyledRect {
 
                 anchors.centerIn: parent
                 color: Colours.m3Colors.m3OnPrimary
-                font.pixelSize: Appearance.fonts.size.large * 1.3
+                font.pixelSize: Appearance.fonts.size.normal
                 icon: "screen_record"
                 opacity: iconStatus.isHovering ? 0 : 1
                 scale: iconStatus.isHovering ? 0.5 : 1.0
@@ -60,7 +60,7 @@ StyledRect {
 
                 anchors.centerIn: parent
                 color: Colours.m3Colors.m3OnPrimary
-                font.pixelSize: Appearance.fonts.size.large * 1.3
+                font.pixelSize: Appearance.fonts.size.normal
                 icon: "stop_circle"
                 opacity: iconStatus.isHovering ? 1 : 0
                 scale: iconStatus.isHovering ? 1.0 : 0.5
@@ -99,6 +99,7 @@ StyledRect {
         StyledText {
             color: Colours.m3Colors.m3OnBackground
             font.bold: true
+            font.pixelSize: Appearance.fonts.size.small
             text: FormatTimeUtils.formatDuration(CaptureScreenVideo.recordingElapsedSeconds)
         }
     }

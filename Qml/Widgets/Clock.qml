@@ -10,24 +10,26 @@ StyledRect {
     id: clock
 
     color: "transparent"
-    implicitHeight: parent.height
-    implicitWidth: timeContainer.width
-    radius: Appearance.rounding.small
+    implicitHeight: parent ? parent.height : 22
+    implicitWidth: timeContainer.width + Appearance.padding.small
+    radius: 6
 
     Dots {
         id: timeContainer
 
+        spacing: 4
+
         Icon {
             color: Colours.m3Colors.m3OnBackground
             font.bold: true
-            font.pixelSize: Appearance.fonts.size.large
+            font.pixelSize: Appearance.fonts.size.normal
             icon: "schedule"
         }
 
         StyledText {
             color: Colours.m3Colors.m3OnBackground
             font.bold: true
-            font.pixelSize: Appearance.fonts.size.medium
+            font.pixelSize: Appearance.fonts.size.small
             text: Qt.formatDateTime(Time?.date, "h:mm AP")
         }
     }

@@ -17,8 +17,8 @@ StyledRect {
 
     color: "transparent"
     implicitHeight: parent.height
-    implicitWidth: container.width
-    radius: Appearance.rounding.small
+    implicitWidth: container.width + Appearance.padding.small
+    radius: 6
     Behavior on implicitWidth {
         NAnim {}
     }
@@ -26,12 +26,12 @@ StyledRect {
     Dots {
         id: container
 
-        spacing: Appearance.spacing.small
+        spacing: 4
 
         Icon {
             Layout.alignment: Qt.AlignVCenter
             color: Colours.m3Colors.m3OnBackground
-            font.pixelSize: Appearance.fonts.size.large * 1.5
+            font.pixelSize: Appearance.fonts.size.normal
             icon: Audio.getIcon(root.audioNode)
             type: Icon.Material
         }
@@ -39,7 +39,7 @@ StyledRect {
         StyledText {
             Layout.alignment: Qt.AlignVCenter
             color: Colours.m3Colors.m3OnBackground
-            font.pixelSize: Appearance.fonts.size.medium
+            font.pixelSize: Appearance.fonts.size.small
             text: (root.audioNode.audio.volume * 100).toFixed(0) + "%"
         }
     }

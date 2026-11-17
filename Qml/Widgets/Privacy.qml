@@ -19,8 +19,8 @@ RowLayout {
     MaterialShape {
         animationDuration: 0
         color: Colours.m3Colors.m3Error
-        implicitHeight: 10
-        implicitWidth: 10
+        implicitHeight: 8
+        implicitWidth: 8
         shape: MaterialShape.Circle
         visible: PrivacyServices.activeAppNames.length > 0
     }
@@ -28,7 +28,7 @@ RowLayout {
     Icon {
         Layout.alignment: Qt.AlignVCenter
         color: Colours.m3Colors.m3OnSurface
-        font.pixelSize: Appearance.fonts.size.larger
+        font.pixelSize: Appearance.fonts.size.normal
         icon: "videocam"
         type: Icon.Material
         visible: PrivacyServices.screenshareAppNames.length > 0
@@ -37,7 +37,7 @@ RowLayout {
     Icon {
         Layout.alignment: Qt.AlignVCenter
         color: Colours.m3Colors.m3OnSurface
-        font.pixelSize: Appearance.fonts.size.larger
+        font.pixelSize: Appearance.fonts.size.normal
         icon: "mic"
         type: Icon.Material
         visible: PrivacyServices.audioInAppNames.length > 0
@@ -46,7 +46,7 @@ RowLayout {
     Icon {
         Layout.alignment: Qt.AlignVCenter
         color: Colours.m3Colors.m3OnSurface
-        font.pixelSize: Appearance.fonts.size.larger
+        font.pixelSize: Appearance.fonts.size.normal
         icon: "volume_up"
         type: Icon.Material
         visible: PrivacyServices.audioOutAppNames.length > 0
@@ -55,12 +55,12 @@ RowLayout {
     Item {
         id: marquee
 
-        readonly property real gap: 32
-        readonly property real maxViewportWidth: 240
+        readonly property real gap: 24
+        readonly property real maxViewportWidth: 180
         readonly property bool overflowing: content.implicitWidth > maxViewportWidth
 
         Layout.alignment: Qt.AlignVCenter
-        Layout.preferredHeight: 20
+        Layout.preferredHeight: 16
         Layout.preferredWidth: Math.min(content.implicitWidth, maxViewportWidth)
         clip: true
         visible: PrivacyServices.activeAppNames.length > 0
@@ -145,8 +145,8 @@ RowLayout {
 
             IconImage {
                 Layout.alignment: Qt.AlignVCenter
-                Layout.preferredHeight: 20
-                Layout.preferredWidth: 20
+                Layout.preferredHeight: 16
+                Layout.preferredWidth: 16
                 source: IconUtils.iconForId(entry.modelData)
                 visible: Configs.privacy.enablePrivacyIcon
             }

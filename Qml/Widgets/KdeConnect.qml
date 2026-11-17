@@ -16,8 +16,8 @@ StyledRect {
 
     color: dragHover ? Qt.alpha(Colours.m3Colors.m3Primary, 0.12) : "transparent"
     implicitHeight: parent.height
-    implicitWidth: kdeIcon.width + Appearance.padding.normal * 2
-    radius: Appearance.rounding.small
+    implicitWidth: kdeIcon.width + Appearance.padding.small * 2
+    radius: 6
     Behavior on color {
         CAnim {
             duration: Appearance.animations.durations.small
@@ -29,7 +29,7 @@ StyledRect {
 
         anchors.centerIn: parent
         backer.cache: true
-        implicitSize: Appearance.fonts.size.large * 1.5
+        implicitSize: Appearance.fonts.size.normal
         opacity: KDEConnect.hasAvailableDevices ? 1.0 : 0.4
         source: Quickshell.iconPath("kdeconnect", "image-missing")
         Behavior on opacity {

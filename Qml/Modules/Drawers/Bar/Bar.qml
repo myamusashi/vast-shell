@@ -11,13 +11,13 @@ WrapperItem {
 
     required property ScreenBorder border
 
-    property real                  barHeight: 40
+    property real                  barHeight: border.barHeight
     property bool                  open: false
 
     clip: true
     height: border.topThickness
-    leftMargin: 5
-    rightMargin: 5
+    leftMargin: Appearance.margin.small
+    rightMargin: Appearance.margin.small
 
     anchors {
         left: parent.left
@@ -39,17 +39,15 @@ WrapperItem {
                     verticalCenter: parent.verticalCenter
                 }
 
-                spacing: Appearance.spacing.normal
+                spacing: Appearance.spacing.small
                 implicitHeight: parent.height
-                implicitWidth: parent.width / 6
                 monitor: root.border.window
             }
 
             Middle {
                 anchors.centerIn: parent
-                spacing: Appearance.spacing.normal
+                spacing: Appearance.spacing.small
                 implicitHeight: parent.height
-                implicitWidth: parent.width / 6
             }
 
             Right {
@@ -60,9 +58,8 @@ WrapperItem {
                 }
 
                 layoutDirection: Qt.RightToLeft
-                spacing: Appearance.spacing.normal
+                spacing: Appearance.spacing.small
                 implicitHeight: parent.height
-                implicitWidth: parent.width / 6
                 monitor: root.border.window
             }
         }

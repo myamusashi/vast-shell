@@ -11,7 +11,7 @@ Item {
     readonly property list<Item> borderMaskItems: [topBorderArea, bottomBorderArea, leftBorderArea, rightBorderArea, topLeftCornerArea, topRightCornerArea, bottomLeftCornerArea, bottomRightCornerArea]
     readonly property real       cornerAreaSize: frame.effectiveInnerRadius
 
-    property real                barHeight: 40
+    property real                barHeight: 30
     property alias               bottomThickness: frame.bottomThickness
     default property alias       content: holeItem.data
     property real                dockHeight: 0

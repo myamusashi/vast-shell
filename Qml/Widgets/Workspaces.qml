@@ -16,8 +16,8 @@ StyledRect {
 
     required property ShellScreen monitor
 
-    property real                 containerHeight: 30
-    property real                 containerWidth: 60
+    property real                 containerHeight: 22
+    property real                 containerWidth: 44
     // Screen x of the hovered dot's left edge. The bar window is anchored to
     // the screen's top-left, so the dot's scene position is its screen position.
     readonly property var         previewToplevels: root.toplevelsByWorkspace[root.shownWorkspace] ?? []
@@ -33,7 +33,7 @@ StyledRect {
     // Caelestia credit
     readonly property var         toplevelsByWorkspace: Hypr.toplevelsByWorkspace
 
-    implicitHeight: 30
+    implicitHeight: 22
     implicitWidth: loader.item?.implicitWidth ?? 0 // qmllint disable
 
     Loader {
@@ -110,7 +110,7 @@ StyledRect {
                     property int          workspaceId: index + 1
 
                     implicitHeight: parent.height
-                    implicitWidth: isActive ? 40 : (height ? height : 1)
+                    implicitWidth: isActive ? 26 : 18
                     Behavior on implicitWidth {
                         NAnim {
                             duration: container.transitionDuration
@@ -121,7 +121,7 @@ StyledRect {
                     MArea {
                         anchors.fill: parent
                         layerColor: Qt.alpha(Colours.m3Colors.m3Primary, 0.8)
-                        layerRadius: 5
+                        layerRadius: 6
                         visible: !delegateRoot.isActive
                         onClicked: Workspaces.focusToplevel(delegateRoot.workspaceId, delegateRoot.toplevel?.address ?? "")
                     }
@@ -154,10 +154,10 @@ StyledRect {
 
                                 PropertyChanges {
                                     color: Colours.m3Colors.m3OutlineVariant
-                                    height: 8
+                                    height: 6
                                     opacity: 0.5
                                     target: shapeIndicator
-                                    width: 8
+                                    width: 6
                                 }
                             },
                             State {
@@ -165,10 +165,10 @@ StyledRect {
 
                                 PropertyChanges {
                                     color: Colours.m3Colors.m3Primary
-                                    height: 20
+                                    height: 16
                                     opacity: 1.0
                                     target: shapeIndicator
-                                    width: Appearance.fonts.size.extraLarge
+                                    width: 24
                                 }
                             },
                             State {
@@ -176,10 +176,10 @@ StyledRect {
 
                                 PropertyChanges {
                                     color: Colours.m3Colors.m3PrimaryFixedDim
-                                    height: 20
+                                    height: 16
                                     opacity: 0.5
                                     target: shapeIndicator
-                                    width: Appearance.fonts.size.extraLarge
+                                    width: 16
                                 }
                             },
                             State {
@@ -187,10 +187,10 @@ StyledRect {
 
                                 PropertyChanges {
                                     color: Colours.m3Colors.m3OutlineVariant
-                                    height: 20
+                                    height: 14
                                     opacity: 0.5
                                     target: shapeIndicator
-                                    width: Appearance.fonts.size.extraLarge
+                                    width: 14
                                 }
                             }
                         ]
@@ -218,7 +218,7 @@ StyledRect {
                             anchors.centerIn: parent
                             asynchronous: false
                             backer.cache: true
-                            implicitSize: Appearance.fonts.size.small
+                            implicitSize: 11
                             source: container.iconForToplevel(delegateRoot.toplevel)
                             visible: source !== ""
                         }

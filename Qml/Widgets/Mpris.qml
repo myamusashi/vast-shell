@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import Quickshell.Services.Mpris
 
 import qs.Components.Base
@@ -10,66 +9,197 @@ import qs.Core.Utils
 import qs.Services
 
 StyledRect {
-    readonly property int index: 0
+    id: mprisRoot
+
+    readonly property int    index: 0
+    readonly property string liveLyric: {
+        if (!Players.active || !Lyrics.synced || !Lyrics.lines)
+            return "";
+        const idx = Lyrics.currentLineIndex;
+        if (idx < 0 || idx >= Lyrics.lines.length)
+            return "";
+        return (Lyrics.lines[idx]?.text ?? "").trim();
+    }
+
+    property string          displayedLyric: ""
 
     color: "transparent"
     implicitHeight: parent.height
-    implicitWidth: mediaInfo.width
+    implicitWidth: rowButton.implicitWidth + (artistText.visible ? Appearance.spacing.small + artistText.width : 0)
+    Component.onCompleted: displayedLyric = liveLyric
+    onLiveLyricChanged: {
+        if (liveLyric === displayedLyric)
+            return;
+        if (displayedLyric === "" || liveLyric === "") {
+            lyricScrollAnim.stop();
+            outgoingLyric.visible = false;
+            incomingLyric.y       = 0;
+            incomingLyric.opacity = 1;
+            displayedLyric        = liveLyric;
+            return;
+        }
+        outgoingLyric.text    = displayedLyric;
+        outgoingLyric.y       = 0;
+        outgoingLyric.opacity = 1;
+        outgoingLyric.visible = true;
+        displayedLyric        = liveLyric;
+        lyricScrollAnim.restart();
+    }
 
-    RowLayout {
-        id: mediaInfo
+    FontMetrics {
+        id: lyricsMetrics
 
-        anchors.centerIn: parent
-        spacing: Appearance.spacing.small
+        font: incomingLyric.font
+    }
 
-        RowButton {
-            model: [
-                {
-                    icon: "skip_previous"
-                },
-                {
-                    icon: Players.active === null ? "question_mark" : Players.active.playbackState === MprisPlaybackState.Playing ? "genres" : "play_circle"
-                },
-                {
-                    icon: "skip_next"
-                }
-            ]
-            contentColor: Colours.m3Colors.m3OnSecondaryContainer
-            containerColor: Colours.m3Colors.m3SecondaryContainer
-            onButtonClicked: index => {
-                if (index === 0)
-                    Players.active?.previous();
-                else if (index === 1)
-                    Players.active?.togglePlaying();
-                else
-                    Players.active?.next();
+    Item {
+        id: lyricsBox
+
+        anchors {
+            right: rowButton.left
+            rightMargin: Appearance.spacing.small
+            verticalCenter: rowButton.verticalCenter
+        }
+
+        clip: true
+        height: 20
+        visible: mprisRoot.displayedLyric !== ""
+        width: mprisRoot.displayedLyric !== "" ? lyricsMetrics.advanceWidth(mprisRoot.displayedLyric) + Appearance.padding.small : 0
+        Behavior on width {
+            NAnim {
+                duration: Appearance.animations.durations.small
+            }
+        }
+
+        ParallelAnimation {
+            id: lyricScrollAnim
+
+            onFinished: outgoingLyric.visible = false
+
+            NAnim {
+                duration: Appearance.animations.durations.small
+                from: 0
+                property: "y"
+                target: outgoingLyric
+                to: -lyricsBox.height
+            }
+
+            NAnim {
+                duration: Appearance.animations.durations.small
+                from: 1
+                property: "opacity"
+                target: outgoingLyric
+                to: 0
+            }
+
+            NAnim {
+                duration: Appearance.animations.durations.small
+                from: lyricsBox.height
+                property: "y"
+                target: incomingLyric
+                to: 0
+            }
+
+            NAnim {
+                duration: Appearance.animations.durations.small
+                from: 0
+                property: "opacity"
+                target: incomingLyric
+                to: 1
             }
         }
 
         StyledText {
+            id: outgoingLyric
+
             color: Colours.m3Colors.m3OnBackground
-            font.weight: Font.DemiBold
-            text: Players.active === null ? "null" : Players.active.trackArtist
+            font.pixelSize: Appearance.fonts.size.small
+            height: lyricsBox.height
+            opacity: 0
+            verticalAlignment: Text.AlignVCenter
+            visible: false
+            width: lyricsBox.width
         }
+
+        StyledText {
+            id: incomingLyric
+
+            color: Colours.m3Colors.m3OnBackground
+            font.pixelSize: Appearance.fonts.size.small
+            height: lyricsBox.height
+            text: mprisRoot.displayedLyric
+            verticalAlignment: Text.AlignVCenter
+            width: lyricsBox.width
+            y: 0
+        }
+    }
+
+    RowButton {
+        id: rowButton
+
+        anchors {
+            left: parent.left
+            verticalCenter: parent.verticalCenter
+        }
+
+        contentColor: Colours.m3Colors.m3OnSecondaryContainer
+        containerColor: Colours.m3Colors.m3SecondaryContainer
+        model: [
+            {
+                icon: "skip_previous"
+            },
+            {
+                icon: Players.active === null ? "question_mark" : Players.active.playbackState === MprisPlaybackState.Playing ? "genres" : "play_circle"
+            },
+            {
+                icon: "skip_next"
+            }
+        ]
+        onButtonClicked: index => {
+            if (index === 0)
+                Players.active?.previous();
+            else if (index === 1)
+                Players.active?.togglePlaying();
+            else
+                Players.active?.next();
+        }
+    }
+
+    StyledText {
+        id: artistText
+
+        anchors {
+            left: rowButton.right
+            leftMargin: Appearance.spacing.small
+            verticalCenter: rowButton.verticalCenter
+        }
+
+        color: Colours.m3Colors.m3OnBackground
+        elide: Text.ElideRight
+        font.pixelSize: Appearance.fonts.size.small
+        font.weight: Font.DemiBold
+        text: Players.active?.trackArtist ?? ""
+        visible: text !== ""
+        width: Math.min(implicitWidth, 160)
     }
 
     component RowButton: Row {
         id: root
 
-        property int    buttonHeight: 24
-        property int    buttonWidth: 40
+        property int    buttonHeight: 20
+        property int    buttonWidth: 24
         property color  containerColor
         property color  contentColor
         property real   disabledContainerOpacity: 0.10
         property real   disabledContentOpacity: 0.38
         property string iconFontFamily: "Material Symbols Rounded"
-        property int    iconSize: 20
-        property int    innerCornerRadius: 4
+        property int    iconSize: 15
+        property int    innerCornerRadius: 3
         property var    model: []
 
         signal          buttonClicked(int index)
 
-        spacing: 2
+        spacing: 1
 
         Repeater {
             model: root.model

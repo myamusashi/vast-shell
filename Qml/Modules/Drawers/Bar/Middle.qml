@@ -4,8 +4,13 @@ import QtQuick.Layouts
 import qs.Widgets
 
 RowLayout {
+    id: root
 
-    Mpris {}
+    Mpris {
+        Layout.alignment: Qt.AlignVCenter
+    }
 
-    RecordIndicator {}
+    RecordIndicator {
+        Layout.alignment: Qt.AlignVCenter
+    }
 }
