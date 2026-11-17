@@ -16,11 +16,11 @@ Drawer {
 
     readonly property real         dockWidth: DockServices.contentLength(parent.width)
     readonly property bool         isDockVisible: border.isDockVisible
-    readonly property bool         isLauncherActive: GlobalStates.isLauncherOpen
-    readonly property bool         isPanelActive: isLauncherActive || isWallpaperActive
+    readonly property bool         isLauncherActive: GlobalStates.activeDrawer === "launcher"
+    readonly property bool         isPanelActive: GlobalStates.activeDrawer !== ""
     readonly property bool         isPanelAttached: root.isDockVisible && root.isPanelActive && !root.isPanelMerged
-    readonly property bool         isPanelMerged: root.dockWidth <= root.activePanelWidth
-    readonly property bool         isWallpaperActive: GlobalStates.isWallpaperSwitcherOpen
+    readonly property bool         isPanelMerged: root.dockWidth <= root.panelWidth
+    readonly property bool         isWallpaperActive: GlobalStates.activeDrawer === "wallpaperSwitcher"
     readonly property real         launcherDepthRatio: 0.5
     readonly property real         launcherLengthRatio: 0.45
     readonly property real         panelDepthRatio: isLauncherActive || (!isPanelActive && lastPanel === "launcher") ? launcherDepthRatio : wallpaperDepthRatio
@@ -30,7 +30,6 @@ Drawer {
     readonly property real         wallpaperDepthRatio: 0.3
     readonly property real         wallpaperLengthRatio: 0.6
 
-    property real                  activePanelWidth: 0
     property string                lastPanel: "launcher"
     property bool                  panelVisible: false
     property var                   parentWindow: null
@@ -96,8 +95,7 @@ Drawer {
             if (!root.isLauncherActive)
                 return;
 
-            root.lastPanel        = "launcher";
-            root.activePanelWidth = root.parent.width * root.launcherLengthRatio;
+            root.lastPanel = "launcher";
 
             if (!root.border.isFocusedMonitor)
                 return;
@@ -130,8 +128,7 @@ Drawer {
                 return;
             }
 
-            root.lastPanel        = "wallpaper";
-            root.activePanelWidth = root.parent.width * root.wallpaperLengthRatio;
+            root.lastPanel = "wallpaper";
 
             if (!root.border.isFocusedMonitor)
                 return;

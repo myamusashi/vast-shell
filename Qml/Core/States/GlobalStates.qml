@@ -23,6 +23,7 @@ Singleton {
     readonly property bool   isShellKeyboardGrabActive: isLauncherOpen || isSessionOpen || isWallpaperSwitcherOpen || isClipboardOpen || hasInlineReply || isAddTodoListOpen || isEditTodoListOpen
     readonly property bool   isVolumeOSDVisible: osd.isActive("volume")
 
+    property alias           activeDrawer: panel.activeDrawer
     property var             inlineReplyOwner: null
     property bool            isAddTodoListOpen: false
     property bool            isBarOpen: Configs.bar.alwaysOpenBar

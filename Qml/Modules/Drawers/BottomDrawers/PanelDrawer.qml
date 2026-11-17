@@ -20,9 +20,9 @@ Drawer {
     required property real         lengthRatio
 
     readonly property bool         isFocusedMonitor: border.isFocusedMonitor
-    readonly property bool         isLauncherActive: GlobalStates.isLauncherOpen
-    readonly property bool         isPanelActive: isLauncherActive || isWallpaperActive
-    readonly property bool         isWallpaperActive: GlobalStates.isWallpaperSwitcherOpen
+    readonly property bool         isLauncherActive: GlobalStates.activeDrawer === "launcher"
+    readonly property bool         isPanelActive: GlobalStates.activeDrawer !== ""
+    readonly property bool         isWallpaperActive: GlobalStates.activeDrawer === "wallpaperSwitcher"
     readonly property bool         launcherShouldBeActive: isFocusedMonitor && isLauncherActive
     readonly property bool         wallpaperShouldBeActive: isFocusedMonitor && isWallpaperActive
 
@@ -90,12 +90,12 @@ Drawer {
         active: root.launcherShouldBeActive || root.launcherKeepAlive
         asynchronous: true
         enabled: root.isLauncherActive
-        height: Math.max(0, root.parent.height - GlobalStates.reservedBottomSpace) * root.depthRatio
+        height: Math.round(Math.max(0, root.parent.height - GlobalStates.reservedBottomSpace) * root.depthRatio)
         visible: root.isLauncherActive
-        width: root.parent.width * root.lengthRatio
+        width: Math.round(root.parent.width * root.lengthRatio)
+        x: Math.round(root.parentLeftInset + (root.parentHoleWidth - width) / 2) - root.x - root.bodyInsetX
 
         anchors {
-            horizontalCenter: parent.horizontalCenter
             top: parent.top
         }
 
@@ -109,12 +109,12 @@ Drawer {
         active: root.wallpaperShouldBeActive || root.wallpaperKeepAlive
         asynchronous: true
         enabled: root.isWallpaperActive
-        height: Math.max(0, root.parent.height - GlobalStates.reservedBottomSpace) * root.depthRatio
+        height: Math.round(Math.max(0, root.parent.height - GlobalStates.reservedBottomSpace) * root.depthRatio)
         visible: root.isWallpaperActive
-        width: root.parent.width * root.lengthRatio
+        width: Math.round(root.parent.width * root.lengthRatio)
+        x: Math.round(root.parentLeftInset + (root.parentHoleWidth - width) / 2) - root.x - root.bodyInsetX
 
         anchors {
-            horizontalCenter: parent.horizontalCenter
             top: parent.top
         }
 

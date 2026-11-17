@@ -33,11 +33,9 @@ Variants {
         readonly property bool        barOpen: FocusedMonitor.isOnFocusedMonitor(modelData.name) && GlobalStates.isBarOpen
         readonly property bool        dockVisible: FocusedMonitor.isOnFocusedMonitor(modelData.name) && Configs.dock.enabled
         readonly property bool        needFocusKeyboard: {
-            if (GlobalStates.isLauncherOpen)
+            if (GlobalStates.activeDrawer !== "")
                 return true;
             if (GlobalStates.isSessionOpen && !sessionDrawer.showConfirmDialog)
-                return true;
-            if (GlobalStates.isWallpaperSwitcherOpen)
                 return true;
             if (GlobalStates.isClipboardOpen)
                 return true;
