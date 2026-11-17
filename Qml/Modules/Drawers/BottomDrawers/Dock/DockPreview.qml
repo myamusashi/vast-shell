@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Hyprland
 import Quickshell.Wayland
 import Quickshell.Widgets
 
@@ -119,22 +120,33 @@ LazyLoader {
     }
 
     loading: true
-    component: PopupWindow {
+    component: PanelWindow {
         id: popupWindow
 
-        property real opacity: root.showing ? 1.0 : 0.0
-
-        anchor.window: root.parentWindow
-        anchor.rect: Qt.rect(Math.round(Math.max(0, Math.min(root.hoveredIconLeft + root.hoveredIconWidth / 2 - root.boardWidth / 2, root.parentWindow ? root.parentWindow.width - root.boardWidth : 0))), Math.round((() => {
-                let y = root.hoveredIconTop - root.boardHeight - Appearance.spacing.small;
-                if (y < 0)
-                    y = root.hoveredIconTop + root.hoveredIconHeight + Appearance.spacing.small;
-                return y;
-            })()), 1, 1)
+        WlrLayershell.layer: WlrLayer.Top
         color: "transparent"
-        implicitHeight: root.boardHeight
-        implicitWidth: root.boardWidth
-        visible: board.opacity > 0.0
+        exclusionMode: ExclusionMode.Ignore
+        implicitHeight: Math.max(1, root.boardHeight)
+        implicitWidth: Math.max(1, root.boardWidth)
+        screen: root.parentWindow ? root.parentWindow.screen : null
+        HyprlandWindow.visibleMask: regionContent
+        BackgroundEffect.blurRegion: regionContent
+        mask: regionContent
+
+        Region {
+            id: regionContent
+            item: popupWindow.contentItem
+        }
+
+        anchors {
+            bottom: true
+            left: true
+        }
+
+        margins { // qmllint disable
+            bottom: root.parentWindow ? Math.max(0, Math.round(root.parentWindow.height - root.hoveredIconTop + Appearance.spacing.small)) : Appearance.spacing.small
+            left: Math.round(Math.max(0, Math.min(root.hoveredIconLeft + root.hoveredIconWidth / 2 - root.boardWidth / 2, root.parentWindow ? root.parentWindow.width - root.boardWidth : 0)))
+        }
 
         Timer {
             id: closeTimer
@@ -182,7 +194,7 @@ LazyLoader {
             border.color: Colours.m3Colors.m3OutlineVariant
             border.width: 1
             color: GlobalStates.drawerColors
-            opacity: popupWindow.opacity
+            opacity: root.showing ? 1.0 : 0.0
             radius: Appearance.rounding.normal
             Behavior on opacity {
                 NAnim {
