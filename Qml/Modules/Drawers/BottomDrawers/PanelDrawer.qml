@@ -19,11 +19,13 @@ Drawer {
     required property bool         isPanelMerged
     required property real         lengthRatio
 
+    readonly property bool         isFilletVisible: !isPanelMerged && dockWidth >= parent.width * lengthRatio + minimumFilletDockExcess
     readonly property bool         isFocusedMonitor: border.isFocusedMonitor
     readonly property bool         isLauncherActive: GlobalStates.activeDrawer === "launcher"
     readonly property bool         isPanelActive: GlobalStates.activeDrawer !== ""
     readonly property bool         isWallpaperActive: GlobalStates.activeDrawer === "wallpaperSwitcher"
     readonly property bool         launcherShouldBeActive: isFocusedMonitor && isLauncherActive
+    readonly property real         minimumFilletDockExcess: 25
     readonly property bool         wallpaperShouldBeActive: isFocusedMonitor && isWallpaperActive
 
     property bool                  launcherKeepAlive: false
@@ -35,9 +37,9 @@ Drawer {
     cornerRadius: Appearance.rounding.normal
     depth: Math.max(0, parent.height - GlobalStates.reservedBottomSpace) * depthRatio
     edge: Qt.BottomEdge
-    edgeOffset: GlobalStates.reservedBottomSpace
+    edgeOffset: Math.max(0, GlobalStates.reservedBottomSpace - 1)
     filletRadius: Appearance.rounding.normal
-    attachedFilletRadius: isPanelMerged ? 0 : Appearance.rounding.normal
+    attachedFilletRadius: isFilletVisible ? Appearance.rounding.normal : 0
     length: isPanelActive ? parent.width * lengthRatio : dockWidth
     open: isFocusedMonitor && isPanelActive
     Behavior on attachedFilletRadius {
