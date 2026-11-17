@@ -8,40 +8,40 @@ import Quickshell.Wayland
 import qs.Core.States
 
 Scope {
-    property alias lock: lock
+    property alias lock: sessionLock
 
     WlSessionLock {
-        id: lock
+        id: sessionLock
 
         signal unlock
 
         Surface {
             id: surface
 
-            lock: lock
-            pam: pam
+            lock: sessionLock
+            pam: pamAuth
         }
     }
 
     Pam {
-        id: pam
+        id: pamAuth
 
-        lock: lock
+        lock: sessionLock
     }
 
     IpcHandler {
 
         function isLocked(): bool {
-            return lock.locked;
+            return sessionLock.locked;
         }
 
         function lock(): void {
-            lock.locked                   = true;
+            sessionLock.locked            = true;
             GlobalStates.isLockscreenOpen = true;
         }
 
         function unlock(): void {
-            lock.unlock();
+            sessionLock.unlock();
         }
 
         target: "lock"

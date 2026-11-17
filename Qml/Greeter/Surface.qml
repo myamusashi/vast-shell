@@ -199,7 +199,7 @@ WlSessionLockSurface {
 
             loops: MediaPlayer.Infinite
             source: root.useVideoWallpaper ? GreeterWallpaper.effectiveWallpaper(true, root.wallpaperPath, root.wallpaperPath) : ""
-            videoOutput: videoOutput
+            videoOutput: wallpaperVideoOutput
             onMediaStatusChanged: {
                 if (!root.useVideoWallpaper)
                     return;
@@ -215,7 +215,7 @@ WlSessionLockSurface {
         }
 
         VideoOutput {
-            id: videoOutput
+            id: wallpaperVideoOutput
 
             anchors.fill: parent
             fillMode: VideoOutput.PreserveAspectCrop

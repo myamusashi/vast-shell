@@ -10,25 +10,25 @@ MouseArea {
 
     property real      clickOpacity: 0.2
     property real      hoverOpacity: 0.08
-    property alias     layerColor: layer.color
+    property alias     layerColor: stateLayer.color
     property Animation layerOpacityAnimation: SpringAnimation {
         damping: 0.3
         spring: 2
     }
-    property alias     layerRadius: layer.radius
-    property alias     layerRect: layer
+    property alias     layerRadius: stateLayer.radius
+    property alias     layerRect: stateLayer
 
     anchors.fill: parent
     hoverEnabled: true
     Component.onCompleted: {
-        if (layer.radius === 0)
-            layer.radius = Appearance.rounding.small;
+        if (stateLayer.radius === 0)
+            stateLayer.radius = Appearance.rounding.small;
     }
-    onContainsMouseChanged: layer.opacity = (area.containsMouse) ? area.hoverOpacity : 0
-    onContainsPressChanged: layer.opacity = (area.containsPress) ? area.clickOpacity : area.hoverOpacity
+    onContainsMouseChanged: stateLayer.opacity = (area.containsMouse) ? area.hoverOpacity : 0
+    onContainsPressChanged: stateLayer.opacity = (area.containsPress) ? area.clickOpacity : area.hoverOpacity
 
     StyledRect {
-        id: layer
+        id: stateLayer
 
         anchors.fill: parent
         clip: true
@@ -42,8 +42,8 @@ MouseArea {
             acceptEvent: false
             anchors.fill: parent
             color: Colours.m3Colors.m3OnSurface
-            xClipRadius: layer.radius
-            yClipRadius: layer.radius
+            xClipRadius: stateLayer.radius
+            yClipRadius: stateLayer.radius
         }
     }
 }

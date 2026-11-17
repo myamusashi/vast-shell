@@ -26,12 +26,12 @@ StyledRect {
     readonly property color dynSurfaceVariant: Configs.mediaPlayer.dynamicColorsCover ? trackArtColors.surfaceVariant : Colours.m3Colors.m3SurfaceVariant
     readonly property color dynTertiary: Configs.mediaPlayer.dynamicColorsCover ? trackArtColors.tertiary : Colours.m3Colors.m3Tertiary
 
-    property alias          mediaLayout: mediaLayout
+    property alias          mediaLayout: mediaColumnLayout
     property var            trackArtColors: TrackArt.colors
 
     Layout.alignment: Qt.AlignVCenter
     color: GlobalStates.drawerColors
-    implicitHeight: mediaLayout.implicitHeight + Appearance.margin.small * 2
+    implicitHeight: mediaColumnLayout.implicitHeight + Appearance.margin.small * 2
     implicitWidth: Math.max(336, (mediaRow.implicitWidth + Appearance.margin.normal * 2) * 1.2)
     radius: Appearance.rounding.normal
     visible: Players.active !== null
@@ -43,7 +43,7 @@ StyledRect {
     }
 
     ColumnLayout {
-        id: mediaLayout
+        id: mediaColumnLayout
 
         spacing: Appearance.spacing.small
 

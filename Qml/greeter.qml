@@ -22,13 +22,13 @@ ShellRoot {
     id: root
 
     WlSessionLock {
-        id: lock
+        id: sessionLock
 
         locked: false
 
         Surface {
             auth: authenticator // qmllint disable
-            lock: lock
+            lock: sessionLock
         }
     }
 
@@ -73,7 +73,7 @@ ShellRoot {
         running: true
         onTriggered: {
             rootFlow.introducing = false;
-            lock.locked          = true;
+            sessionLock.locked   = true;
         }
     }
 
@@ -91,7 +91,7 @@ ShellRoot {
 
             required property ShellScreen modelData
 
-            readonly property bool        splashVisible: rootFlow.introducing || (rootFlow.launching && !lock.locked)
+            readonly property bool        splashVisible: rootFlow.introducing || (rootFlow.launching && !sessionLock.locked)
 
             color: "transparent"
             contentItem.opacity: splashVisible ? 1 : 0

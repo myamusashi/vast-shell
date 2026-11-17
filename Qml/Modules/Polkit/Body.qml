@@ -12,20 +12,20 @@ ColumnLayout {
     readonly property bool   responseVisible: PolAgent.agent?.flow?.responseVisible ?? false // qmllint disable
     readonly property bool   supplementaryIsError: PolAgent.agent?.flow?.supplementaryIsError ?? false // qmllint disable
 
-    property alias           passwordInput: passwordInput
+    property alias           passwordInput: passwordField
 
     // AuthFlow state; null-safe because the flow only exists during an active request.
     readonly property string supplementaryMessage: PolAgent.agent?.flow?.supplementaryMessage ?? "" // qmllint disable
 
     function                 cancel() {
-        passwordInput.text = "";
+        passwordField.text = "";
         PolAgent.cancel();
     }
 
     function                 submit() {
-        const response     = passwordInput.text;
+        const response     = passwordField.text;
 
-        passwordInput.text = "";
+        passwordField.text = "";
         if (response.length > 0)
             PolAgent.submit(response);
     }
@@ -44,7 +44,7 @@ ColumnLayout {
     }
 
     StyledTextInput {
-        id: passwordInput
+        id: passwordField
 
         Layout.fillWidth: true
         Layout.preferredHeight: 44

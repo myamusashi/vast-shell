@@ -14,13 +14,13 @@ Item {
     id: root
 
     readonly property int   dotStep: 24
-    readonly property bool  hasSelection: passwordInput.selectionStart !== passwordInput.selectionEnd
-    readonly property bool  hasText: passwordInput.text.length > 0
-    readonly property alias isFocused: passwordInput.activeFocus
+    readonly property bool  hasSelection: textInputField.selectionStart !== textInputField.selectionEnd
+    readonly property bool  hasText: textInputField.text.length > 0
+    readonly property alias isFocused: textInputField.activeFocus
     readonly property bool  isUnlocked: root.pam ? root.pam.isUnlock : false
-    readonly property bool  selectedAll: passwordInput.selectionStart === 0 && passwordInput.selectionEnd === passwordInput.text.length && passwordInput.text.length > 0
-    readonly property int   selectionEnd: passwordInput.selectionEnd
-    readonly property int   selectionStart: passwordInput.selectionStart
+    readonly property bool  selectedAll: textInputField.selectionStart === 0 && textInputField.selectionEnd === textInputField.text.length && textInputField.text.length > 0
+    readonly property int   selectionEnd: textInputField.selectionEnd
+    readonly property int   selectionStart: textInputField.selectionStart
     readonly property var   shapeList: [MaterialShape.Clover4Leaf, MaterialShape.Arrow, MaterialShape.Pill, MaterialShape.SoftBurst, MaterialShape.Diamond, MaterialShape.ClamShell, MaterialShape.Pentagon]
     readonly property bool  showFailure: root.pam ? root.pam.showFailure : false
     readonly property bool  unlockInProgress: root.pam ? root.pam.unlockInProgress : false
@@ -30,26 +30,26 @@ Item {
     property var            pam: null
     property bool           passwordMode: false
     property string         placeholderText: ""
-    property alias          text: passwordInput.text
-    property alias          toggleButtonVisible: toggleButton.visible
+    property alias          text: textInputField.text
+    property alias          toggleButtonVisible: visibilityToggleButton.visible
 
     signal                  accepted
     signal                  editingFinished
     signal                  keyPressed(var event)
 
     function                forceActiveFocus() {
-        passwordInput.forceActiveFocus();
+        textInputField.forceActiveFocus();
     }
 
     function                requestKeyboardFocus() {
-        passwordInput.forceActiveFocus();
+        textInputField.forceActiveFocus();
     }
 
     implicitHeight: 44
     implicitWidth: 240
 
     TextInput {
-        id: passwordInput
+        id: textInputField
 
         clip: true
         echoMode: TextInput.Password
@@ -69,8 +69,8 @@ Item {
                 return;
 
             if (root.hasSelection) {
-                passwordInput.cursorPosition = passwordInput.selectionEnd;
-                passwordInput.deselect();
+                textInputField.cursorPosition = textInputField.selectionEnd;
+                textInputField.deselect();
                 event.accepted = true;
             }
         }
@@ -82,7 +82,7 @@ Item {
                 return;
 
             if (event.key === Qt.Key_A && (event.modifiers & Qt.ControlModifier)) {
-                passwordInput.selectAll();
+                textInputField.selectAll();
                 event.accepted = true;
             }
         }
@@ -97,18 +97,18 @@ Item {
                 root.pam.currentText = text;
 
             const len = text.length;
-            while (dotsModel.count < len)
-                dotsModel.append({});
-            if (dotsModel.count > len)
-                dotsModel.remove(len, dotsModel.count - len);
+            while (dotsListModel.count < len)
+                dotsListModel.append({});
+            if (dotsListModel.count > len)
+                dotsListModel.remove(len, dotsListModel.count - len);
         }
     }
 
     Connections {
 
         function onCurrentTextChanged() {
-            if (passwordInput.text !== root.pam.currentText)
-                passwordInput.text = root.pam.currentText;
+            if (textInputField.text !== root.pam.currentText)
+                textInputField.text = root.pam.currentText;
         }
 
         enabled: root.pam !== null
@@ -116,7 +116,7 @@ Item {
     }
 
     ListModel {
-        id: dotsModel
+        id: dotsListModel
     }
 
     Rectangle {
@@ -180,14 +180,14 @@ Item {
         id: passwordModeComponent
 
         TI.PasswordInput {
-            dotsModel: dotsModel
+            dotsModel: dotsListModel
             hasSelection: root.hasSelection
             isFocused: root.isFocused
             isUnlocked: root.isUnlocked
-            passwordInput: passwordInput
+            passwordInput: textInputField
             selectionEnd: root.selectionEnd
             selectionStart: root.selectionStart
-            toggleButton: toggleButton
+            toggleButton: visibilityToggleButton
             unlockInProgress: root.unlockInProgress
         }
     }
@@ -206,16 +206,16 @@ Item {
         TI.VisibleInput {
             hasSelection: root.hasSelection
             isFocused: root.isFocused
-            passwordInput: passwordInput
+            passwordInput: textInputField
             selectionEnd: root.selectionEnd
             selectionStart: root.selectionStart
-            toggleButton: toggleButton
+            toggleButton: visibilityToggleButton
             unlockInProgress: root.unlockInProgress
         }
     }
 
     Item {
-        id: toggleButton
+        id: visibilityToggleButton
 
         implicitHeight: 32
         implicitWidth: 32
@@ -274,7 +274,7 @@ Item {
             onClicked: {
                 if (root.toggleButtonVisible) {
                     root.passwordMode = !root.passwordMode;
-                    passwordInput.forceActiveFocus();
+                    textInputField.forceActiveFocus();
                 }
             }
         }
@@ -284,6 +284,6 @@ Item {
         anchors.fill: parent
         propagateComposedEvents: true
         z: 0
-        onClicked: passwordInput.forceActiveFocus()
+        onClicked: textInputField.forceActiveFocus()
     }
 }

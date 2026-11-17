@@ -3,7 +3,6 @@ pragma Singleton
 import QtQuick
 import Quickshell
 
-import qs.Core.States
 import qs.Core.Utils
 import qs.Services.CaptureScreenImage
 import qs.Services.CaptureScreenVideo
