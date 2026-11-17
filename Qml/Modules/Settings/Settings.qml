@@ -172,6 +172,10 @@ LazyLoader {
                                     {
                                         icon: "info",
                                         label: qsTr("About")
+                                    },
+                                    {
+                                        icon: "speed",
+                                        label: qsTr("System Monitor")
                                     }
                                 ]
                             },
@@ -264,7 +268,7 @@ LazyLoader {
                         id: pagesColumn
                         readonly property string currentHyprlandCategory: (hyprlandCategoryOffset >= 0 && hyprlandCategoryOffset < hyprlandCategories.length) ? hyprlandCategories[hyprlandCategoryOffset] : ""
                         readonly property var    hyprlandCategories: ["general", "decoration", "input", "group", "misc", "binds", "render", "cursor", "debug", "advanced"]
-                        readonly property int    hyprlandCategoryOffset: settingsLoader.currentPage - 22
+                        readonly property int    hyprlandCategoryOffset: settingsLoader.currentPage - 23
 
                         function                 revealCard(cardTitle: string) {
                             const kids = pagesColumn.children;
@@ -402,13 +406,18 @@ LazyLoader {
 
                         PageLoader {
                             pageIndex: 21
+                            sourceComponent: PerformancePage {}
+                        }
+
+                        PageLoader {
+                            pageIndex: 22
                             sourceComponent: MonitorsPage {}
                         }
 
                         Loader {
                             id: hyprlandOptionsLoader
 
-                            readonly property bool isCurrentPage: settingsLoader.currentPage >= 22 && settingsLoader.currentPage <= 31
+                            readonly property bool isCurrentPage: settingsLoader.currentPage >= 23 && settingsLoader.currentPage <= 32
 
                             property string        activeCategory: "general"
                             property bool          keepAlive: false
@@ -446,12 +455,12 @@ LazyLoader {
                         }
 
                         PageLoader {
-                            pageIndex: 32
+                            pageIndex: 33
                             sourceComponent: WindowRulesPage {}
                         }
 
                         PageLoader {
-                            pageIndex: 33
+                            pageIndex: 34
                             sourceComponent: LayerRulesPage {}
                         }
                     }

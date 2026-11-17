@@ -44,7 +44,6 @@ Item {
 
         RowLayout {
             Layout.alignment: Qt.AlignLeft
-            Layout.fillHeight: true
             spacing: Appearance.spacing.normal
 
             StyledText {
@@ -62,10 +61,8 @@ Item {
 
         MediaPlayer {}
 
-        Notifications {
-            Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+        Item {
             Layout.fillHeight: true
-            Layout.fillWidth: true
         }
     }
 

@@ -79,8 +79,8 @@ Drawer {
                             label: qsTr("Volume")
                         },
                         {
-                            icon: "speed",
-                            label: qsTr("Performance")
+                            icon: "notifications",
+                            label: qsTr("Notifications")
                         }
                     ]
                     onClicked: selectedIndex => root.saveIndex = selectedIndex
@@ -116,7 +116,7 @@ Drawer {
                     pageIndex: 2
                     content: Component {
 
-                        Performances {}
+                        Notifications {}
                     }
                 }
             }

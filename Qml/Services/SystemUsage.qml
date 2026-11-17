@@ -113,7 +113,7 @@ Singleton {
     Binding {
         target: SystemUsageMonitor
         property: "running"
-        value: GlobalStates.isQuickSettingsOpen
+        value: GlobalStates.isSettingsOpen
     }
 
     Binding {

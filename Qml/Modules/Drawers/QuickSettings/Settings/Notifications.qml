@@ -20,6 +20,8 @@ StyledRect {
     radius: Appearance.rounding.normal
 
     Row {
+        id: headerButtons
+
         height: 50
         spacing: Appearance.spacing.small
 
@@ -234,9 +236,12 @@ StyledRect {
         }
 
         anchors {
+            bottom: parent.bottom
             bottomMargin: 10
-            fill: parent
-            topMargin: 50
+            left: parent.left
+            right: parent.right
+            top: headerButtons.bottom
+            topMargin: Appearance.margin.normal
         }
     }
 }
