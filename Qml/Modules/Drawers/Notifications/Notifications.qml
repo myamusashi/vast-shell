@@ -31,7 +31,7 @@ Drawer {
         boundsBehavior: Flickable.StopAtBounds
         cacheBuffer: implicitHeight
         clip: true
-        spacing: Appearance.spacing.normal
+        spacing: Appearance.spacing.small
         delegate: Wrapper {
             required property int index
             required property var modelData

@@ -98,14 +98,14 @@ StyledRect {
 
                 boundsBehavior: Flickable.StopAtBounds
                 cacheBuffer: 200
-                spacing: Appearance.spacing.normal
+                spacing: Appearance.spacing.small
                 delegate: WrapperItem {
                     id: root
 
                     required property var modelData
 
                     clip: true
-                    implicitHeight: contentLayout.height * 1.3
+                    implicitHeight: Math.max(iconLayout.implicitHeight, contentLayout.implicitHeight) + 20
                     implicitWidth: notifListView.width
                     leftMargin: 10
 
@@ -150,7 +150,7 @@ StyledRect {
                     WrapperRectangle {
                         clip: true
                         color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.m3Colors.m3ErrorContainer : Colours.m3Colors.m3SurfaceContainer
-                        margin: Appearance.margin.normal
+                        margin: Appearance.margin.small
                         radius: Appearance.rounding.normal
 
                         border {
@@ -188,13 +188,13 @@ StyledRect {
                             }
 
                             Row {
-                                spacing: Appearance.spacing.normal
+                                spacing: Appearance.spacing.smaller
 
                                 anchors {
                                     fill: parent
-                                    leftMargin: 10
-                                    rightMargin: 10
-                                    topMargin: 10
+                                    leftMargin: Appearance.margin.small
+                                    rightMargin: Appearance.margin.small
+                                    topMargin: Appearance.margin.small
                                 }
 
                                 N.NotifIcon {
@@ -207,7 +207,7 @@ StyledRect {
                                     id: contentLayout
 
                                     modelData: root.modelData
-                                    width: parent.width - iconLayout.width
+                                    width: parent.width - iconLayout.width - parent.spacing
                                 }
                             }
                         }

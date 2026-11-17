@@ -18,14 +18,14 @@ Item {
     readonly property bool hasAppIcon: modelData.appIcon?.length > 0
     readonly property bool hasImage: modelData.image?.length > 0
 
-    implicitHeight: 40
-    implicitWidth: 40
+    implicitHeight: 36
+    implicitWidth: 36
 
     ClippingRectangle {
         anchors.centerIn: parent
         color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.m3Colors.m3Error : root.modelData.urgency === NotificationUrgency.Low ? Colours.m3Colors.m3SecondaryContainer : Colours.m3Colors.m3PrimaryContainer
-        implicitHeight: 40
-        implicitWidth: 40
+        implicitHeight: 36
+        implicitWidth: 36
         radius: Appearance.rounding.full
 
         Loader {

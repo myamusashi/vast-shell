@@ -30,7 +30,7 @@ Column {
             GlobalStates.inlineReplyOwner = null;
     }
 
-    spacing: Appearance.spacing.small
+    spacing: 4
     Component.onDestruction: {
         if (GlobalStates.inlineReplyOwner === root)
             GlobalStates.inlineReplyOwner = null;
@@ -54,7 +54,7 @@ Column {
             Layout.fillWidth: true
             color: Colours.m3Colors.m3OnSurfaceVariant
             elide: Text.ElideRight
-            font.pixelSize: Appearance.fonts.size.large
+            font.pixelSize: Appearance.fonts.size.small
             font.weight: Font.Medium
             text: root.modelData.appName
         }
@@ -62,7 +62,7 @@ Column {
         StyledText {
             Layout.preferredWidth: implicitWidth
             color: Colours.m3Colors.m3OnSurfaceVariant
-            font.pixelSize: Appearance.fonts.size.large
+            font.pixelSize: Appearance.fonts.size.small
             text: "•"
         }
 
@@ -71,6 +71,7 @@ Column {
 
             Layout.preferredWidth: implicitWidth
             color: Colours.m3Colors.m3OnSurfaceVariant
+            font.pixelSize: Appearance.fonts.size.small
             Component.onCompleted: text = FormatTimeUtils.timeAgoWithIfElse(root.modelData.time)
 
             Timer {
@@ -83,13 +84,13 @@ Column {
 
         FloatingButton {
             Layout.alignment: Qt.AlignVCenter
-            Layout.preferredHeight: 32
-            Layout.preferredWidth: 32
-            backgroundRadius: Appearance.rounding.large
+            Layout.preferredHeight: 24
+            Layout.preferredWidth: 24
+            backgroundRadius: 6
             color: "transparent"
             icon.color: Colours.m3Colors.m3OnSurfaceVariant
             icon.name: root.isShowMoreBody ? "expand_less" : "expand_more"
-            icon.size: Appearance.fonts.size.extraLarge
+            icon.size: Appearance.fonts.size.large
             onClicked: root.isShowMoreBody = !root.isShowMoreBody
         }
     }
@@ -106,8 +107,8 @@ Column {
     }
 
     StyledText {
-        color: Colours.m3Colors.m3OnSurface
-        font.pixelSize: Appearance.fonts.size.medium
+        color: Colours.m3Colors.m3OnSurfaceVariant
+        font.pixelSize: Appearance.fonts.size.small
         maximumLineCount: root.isShowMoreBody ? 0 : 1
         text: root.modelData.body || ""
         textFormat: Text.StyledText
@@ -116,14 +117,14 @@ Column {
     }
 
     Column {
-        topPadding: 8
+        topPadding: 4
         visible: root.hasActions || root.hasInlineReply
         width: parent.width
 
         RowLayout {
             id: actionsRow
 
-            spacing: Appearance.spacing.normal
+            spacing: 6
             visible: !root.isReplying
             width: parent.width
 
@@ -136,12 +137,14 @@ Column {
                     required property var modelData
 
                     Layout.fillWidth: true
-                    Layout.preferredHeight: 40
+                    Layout.preferredHeight: 28
                     Layout.preferredWidth: 0
-                    color: Colours.m3Colors.m3SurfaceContainerHigh
-                    radius: Appearance.rounding.full
+                    color: actionMouse.containsMouse ? Colours.m3Colors.m3SurfaceContainerHighest : Colours.m3Colors.m3SurfaceContainerHigh
+                    radius: 8
 
                     MArea {
+                        id: actionMouse
+
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
                         hoverEnabled: true
@@ -151,7 +154,7 @@ Column {
                     StyledText {
                         color: Colours.m3Colors.m3OnBackground
                         elide: Text.ElideRight
-                        font.pixelSize: Appearance.fonts.size.medium
+                        font.pixelSize: Appearance.fonts.size.small
                         font.weight: Font.Medium
                         horizontalAlignment: Text.AlignHCenter
                         text: actionButton.modelData.text
@@ -171,13 +174,15 @@ Column {
                 id: replyButton
 
                 Layout.fillWidth: true
-                Layout.preferredHeight: 40
+                Layout.preferredHeight: 28
                 Layout.preferredWidth: 0
-                color: Colours.m3Colors.m3SurfaceContainerHigh
-                radius: Appearance.rounding.full
+                color: replyMouse.containsMouse ? Colours.m3Colors.m3SurfaceContainerHighest : Colours.m3Colors.m3SurfaceContainerHigh
+                radius: 8
                 visible: root.hasInlineReply
 
                 MArea {
+                    id: replyMouse
+
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     hoverEnabled: true
@@ -187,7 +192,7 @@ Column {
                 StyledText {
                     color: Colours.m3Colors.m3OnBackground
                     elide: Text.ElideRight
-                    font.pixelSize: Appearance.fonts.size.medium
+                    font.pixelSize: Appearance.fonts.size.small
                     font.weight: Font.Medium
                     horizontalAlignment: Text.AlignHCenter
                     text: qsTr("Reply")
@@ -225,19 +230,19 @@ Column {
                     root.isReplying = false;
                 }
 
-                spacing: Appearance.spacing.normal
+                spacing: 6
                 Component.onCompleted: replyField.forceActiveFocus()
 
                 FloatingButton {
                     id: backButton
 
-                    Layout.preferredHeight: 40
-                    Layout.preferredWidth: 40
-                    backgroundRadius: Appearance.rounding.full
+                    Layout.preferredHeight: 28
+                    Layout.preferredWidth: 28
+                    backgroundRadius: 8
                     color: Colours.m3Colors.m3SurfaceContainerHigh
                     icon.color: Colours.m3Colors.m3OnBackground
                     icon.name: "arrow_back"
-                    icon.size: Appearance.fonts.size.extraLarge
+                    icon.size: Appearance.fonts.size.large
                     onClicked: root.isReplying = false
                 }
 
@@ -246,6 +251,8 @@ Column {
 
                     Layout.fillWidth: true
                     Layout.preferredWidth: 0
+                    compact: true
+                    outlined: true
                     placeholderText: root.modelData.inlineReplyPlaceholder !== "" ? root.modelData.inlineReplyPlaceholder : qsTr("Reply…")
                     onAccepted: replyRow.sendReply()
                     onActiveFocusChanged: root.replyFocused = activeFocus
@@ -260,15 +267,15 @@ Column {
                 FloatingButton {
                     id: sendButton
 
-                    Layout.preferredHeight: 40
-                    Layout.preferredWidth: 40
-                    backgroundRadius: Appearance.rounding.full
+                    Layout.preferredHeight: 28
+                    Layout.preferredWidth: 28
+                    backgroundRadius: 8
                     color: Colours.m3Colors.m3SurfaceContainerHigh
-                    icon.color: Qt.alpha(Colours.m3Colors.m3OnBackground, replyField.length > 0 ? 1 : 0.4)
+                    icon.color: Qt.alpha(Colours.m3Colors.m3OnBackground, replyField.text.trim().length > 0 ? 1 : 0.4)
                     icon.name: "send"
-                    icon.size: Appearance.fonts.size.extraLarge
+                    icon.size: Appearance.fonts.size.large
                     onClicked: {
-                        if (replyField.length > 0)
+                        if (replyField.text.trim().length > 0)
                             replyRow.sendReply();
                     }
                 }

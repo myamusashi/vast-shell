@@ -12,14 +12,14 @@ TextField {
 
     readonly property color         accentColor: hasError ? errorColor : activeFocus ? primaryColor : contentVariantColor
     readonly property int           animationDuration: Appearance.animations.durations.small
-    readonly property real          containerHeight: 56
+    readonly property real          containerHeight: compact ? 32 : 56
     readonly property bool          counterVisible: showCharacterCounter && maximumLength < 32767
     readonly property bool          hasError: errorText.length > 0
     readonly property bool          hasLeadingIcon: leadingIcon.name !== ""
     readonly property bool          hasTrailingIcon: trailingIcon.name !== ""
-    readonly property real          horizontalPadding: Appearance.padding.large
-    readonly property real          iconInset: Appearance.margin.larger
-    readonly property real          iconSize: Appearance.fonts.size.large * 1.5 // 24px
+    readonly property real          horizontalPadding: compact ? Appearance.padding.normal : Appearance.padding.large
+    readonly property real          iconInset: compact ? Appearance.margin.small : Appearance.margin.larger
+    readonly property real          iconSize: compact ? Appearance.fonts.size.large : Appearance.fonts.size.large * 1.5 // 24px
     readonly property real          iconTextOffset: iconInset + iconSize + horizontalPadding
     readonly property color         indicatorColor: {
         if (hasError)
@@ -30,7 +30,7 @@ TextField {
             return contentColor;
         return outlined ? outlineColor : contentVariantColor;
     }
-    readonly property real          inputLineHeight: 24
+    readonly property real          inputLineHeight: compact ? 20 : 24
     readonly property bool          labelFloating: activeFocus || length > 0 || preeditText.length > 0
     readonly property IconComponent leadingIcon: IconComponent {
         iconColor: root.contentVariantColor
@@ -44,6 +44,7 @@ TextField {
         size: Appearance.fonts.size.large
     }
 
+    property bool                   compact: false
     property color                  contentColor: Colours.m3Colors.m3OnSurface
     property color                  contentVariantColor: Colours.m3Colors.m3OnSurfaceVariant
     property color                  errorColor: Colours.m3Colors.m3Error
@@ -64,7 +65,7 @@ TextField {
     implicitHeight: containerHeight + supportingAreaHeight
     leftPadding: hasLeadingIcon ? iconTextOffset : horizontalPadding
     rightPadding: hasTrailingIcon ? iconTextOffset : horizontalPadding
-    topPadding: outlined || label.length === 0 ? 16 : 24
+    topPadding: compact ? (outlined || label.length === 0 ? 6 : 12) : (outlined || label.length === 0 ? 16 : 24)
     bottomPadding: containerHeight - topPadding - inputLineHeight + supportingAreaHeight
     verticalAlignment: TextInput.AlignVCenter
     opacity: enabled ? 1 : 0.38
@@ -72,8 +73,8 @@ TextField {
     selectionColor: Qt.alpha(primaryColor, 0.4)
     selectedTextColor: contentColor
     placeholderTextColor: label.length === 0 || activeFocus ? contentVariantColor : "transparent"
-    font.pixelSize: 16
-    font.letterSpacing: 0.5
+    font.pixelSize: compact ? Appearance.fonts.size.medium : 16
+    font.letterSpacing: compact ? 0.25 : 0.5
     cursorDelegate: Rectangle {
         visible: root.activeFocus
         width: 2
@@ -113,7 +114,7 @@ TextField {
             visible: root.outlined
             width: parent.width
             height: root.containerHeight
-            radius: 4
+            radius: root.compact ? 8 : 4
             color: "transparent"
             border.width: root.activeFocus ? 2 : 1
             border.color: root.indicatorColor

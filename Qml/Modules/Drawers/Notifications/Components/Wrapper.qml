@@ -51,7 +51,7 @@ Item {
     }
 
     clip: true
-    implicitHeight: innerRow.implicitHeight + 20
+    implicitHeight: innerRow.implicitHeight + 14
     implicitWidth: parent.width
     x: parent.width
     Behavior on implicitHeight {
@@ -208,15 +208,15 @@ Item {
         Row {
             id: innerRow
 
-            spacing: Appearance.spacing.normal
+            spacing: Appearance.spacing.smaller
 
             anchors {
                 left: parent.left
-                leftMargin: Appearance.margin.small
+                leftMargin: Appearance.margin.smaller
                 right: parent.right
-                rightMargin: Appearance.margin.small
+                rightMargin: Appearance.margin.smaller
                 top: parent.top
-                topMargin: Appearance.margin.small
+                topMargin: Appearance.margin.smaller
             }
 
             NotifIcon {
