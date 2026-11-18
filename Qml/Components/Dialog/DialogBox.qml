@@ -21,6 +21,7 @@ LazyLoader {
     property string             acceptedText: qsTr("Yes")
     property int                cardPaddingHeight: 40
     property int                cardPaddingWidth: 60
+    property int                contentMaxWidth: 420
     property int                contentMinWidth: 300
     property int                contentSpacing: Appearance.spacing.large
     property bool               needKeyboardFocus: true
@@ -82,9 +83,8 @@ LazyLoader {
                 id: column
 
                 anchors.centerIn: parent
-                anchors.margins: 20
                 spacing: root.contentSpacing
-                width: Math.max(root.contentMinWidth, loaderHeader.item ? loaderHeader.implicitWidth : 0, loaderBody.item ? loaderBody.implicitWidth : 0, rowButtons.implicitWidth)
+                width: Math.min(root.contentMaxWidth, Math.max(root.contentMinWidth, rowButtons.implicitWidth))
                 Keys.onBacktabPressed: tabNav.previous()
                 Keys.onTabPressed: tabNav.next()
 
@@ -127,8 +127,6 @@ LazyLoader {
                     ExtendedFloatingButton {
                         backgroundRadius: Appearance.rounding.normal
                         color: "transparent"
-                        icon.color: Colours.m3Colors.m3Primary
-                        icon.name: "cancel"
                         implicitHeight: 40
                         implicitWidth: 80
                         text: root.rejectedText
@@ -139,8 +137,6 @@ LazyLoader {
                         id: acceptButton
 
                         color: "transparent"
-                        icon.color: Colours.m3Colors.m3Primary
-                        icon.name: "check"
                         implicitHeight: 40
                         implicitWidth: 80
                         text: root.acceptedText
