@@ -8,13 +8,13 @@ import qs.Core.Configs
 import qs.Services
 
 RowLayout {
-    implicitWidth: parent.width
+    spacing: Appearance.spacing.normal
 
     StyledRect {
         Layout.alignment: Qt.AlignHCenter
         Layout.preferredHeight: 48
         Layout.preferredWidth: 48
-        color: Qt.alpha(Colours.m3Colors.m3Primary, 0.12)
+        color: Qt.alpha(Colours.m3Colors.m3Primary, 0.5)
         radius: Appearance.rounding.full
 
         IconImage {
@@ -26,8 +26,8 @@ RowLayout {
     }
 
     ColumnLayout {
-        Layout.fillHeight: true
         Layout.fillWidth: true
+        spacing: Appearance.spacing.small
 
         StyledText {
             Layout.fillWidth: true
@@ -35,15 +35,19 @@ RowLayout {
             font.pixelSize: Appearance.fonts.size.larger
             font.weight: Font.Bold
             horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
             text: qsTr("Authentication Is Required")
         }
 
         StyledText {
             Layout.fillWidth: true
             color: Colours.m3Colors.m3OnSurface
+            elide: Text.ElideRight
             font.pixelSize: Appearance.fonts.size.normal
             font.weight: Font.Normal
             horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            maximumLineCount: 3
             text: PolAgent.agent?.flow?.message || qsTr("<no message>") // qmllint disable
             wrapMode: Text.Wrap
         }

@@ -30,14 +30,15 @@ ColumnLayout {
             PolAgent.submit(response);
     }
 
-    implicitWidth: parent.width
     spacing: Appearance.spacing.small
 
     StyledText {
         Layout.fillWidth: true
         color: Colours.m3Colors.m3OnSurfaceVariant
+        elide: Text.ElideRight
         font.pixelSize: Appearance.fonts.size.medium
         font.weight: Font.Medium
+        maximumLineCount: 3
         text: PolAgent.agent?.flow?.inputPrompt ?? "" // qmllint disable
         visible: text !== ""
         wrapMode: Text.Wrap
@@ -60,8 +61,10 @@ ColumnLayout {
     StyledText {
         Layout.fillWidth: true
         color: root.supplementaryIsError ? Colours.m3Colors.m3Error : Colours.m3Colors.m3OnSurfaceVariant
+        elide: Text.ElideRight
         font.pixelSize: Appearance.fonts.size.small
         font.weight: Font.Medium
+        maximumLineCount: 3
         text: root.supplementaryMessage
         visible: text !== ""
         wrapMode: Text.Wrap
@@ -70,8 +73,10 @@ ColumnLayout {
     StyledText {
         Layout.fillWidth: true
         color: Colours.m3Colors.m3Error
+        elide: Text.ElideRight
         font.pixelSize: Appearance.fonts.size.small
         font.weight: Font.Medium
+        maximumLineCount: 3
         text: qsTr("Authentication failed. Please try again.")
         visible: root.authenticationFailed && root.supplementaryMessage === ""
         wrapMode: Text.Wrap

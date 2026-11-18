@@ -10,11 +10,12 @@ DialogBox {
     id: root
 
     activeAsync: PolAgent.agent?.isActive
-    cardPaddingHeight: 24
+    cardPaddingHeight: 32
 
     // Compact card proportions for the auth prompt.
-    cardPaddingWidth: 36
-    contentMinWidth: 280
+    cardPaddingWidth: 48
+    contentMaxWidth: 420
+    contentMinWidth: 360
     contentSpacing: Appearance.spacing.normal
     needKeyboardFocus: true
     body: Body {
