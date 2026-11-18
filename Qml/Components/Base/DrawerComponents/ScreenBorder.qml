@@ -28,8 +28,15 @@ Item {
     function                     collectMaskItems() {
         const items        = borderMaskItems.slice();
         const holeChildren = holeItem.children;
-        for (let index = 0; index < holeChildren.length; index++)
-            items.push(holeChildren[index]);
+        for (let index = 0; index < holeChildren.length; index++) {
+            const child = holeChildren[index];
+            if (child.maskItems !== undefined) {
+                for (let maskIndex = 0; maskIndex < child.maskItems.length; maskIndex++)
+                    items.push(child.maskItems[maskIndex]);
+            } else {
+                items.push(child);
+            }
+        }
         return items;
     }
 

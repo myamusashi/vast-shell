@@ -21,7 +21,6 @@ import "Volume"
 import "Brightness"
 import "CaptureScreen"
 import "BottomDrawers"
-import "BottomDrawers/Dock"
 
 Variants {
     model: Quickshell.screens
@@ -146,20 +145,10 @@ Variants {
                 id: weathersDrawer
             }
 
-            PanelDrawer {
-                id: panelDrawer
+            BottomDrawers {
+                id: bottomDrawers
 
                 border: screenBorder
-                depthRatio: dock.panelDepthRatio
-                dockWidth: dock.dockWidth
-                isPanelMerged: dock.isPanelMerged
-                lengthRatio: dock.panelLengthRatio
-            }
-
-            Dock {
-                id: dock
-                border: screenBorder
-                panelVisible: panelDrawer.visible
                 parentWindow: panelWindow
             }
         }
