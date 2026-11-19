@@ -11,7 +11,6 @@ Drawer {
     id: root
 
     property var  activeMenu: null
-    property bool keepAlive: false
     property real maxHeight: 500
     property bool menuMapped: false
     property real menuWidth: 280
@@ -27,10 +26,8 @@ Drawer {
 
     onActiveMenuChanged: root.syncMenu()
     onOpenChanged: {
-        if (open) {
-            keepAlive = true;
+        if (open)
             root.syncMenu();
-        }
     }
     alignment: Qt.AlignRight
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -45,16 +42,9 @@ Drawer {
     Loader {
         id: loader
 
-        active: root.open || root.menuMapped || root.keepAlive
+        active: root.open || root.menuMapped || root.visible
         anchors.fill: parent
         onLoaded: root.syncMenu()
-
-        Timer {
-            interval: 120000
-            running: root.keepAlive && !root.open && !root.menuMapped
-            onTriggered: root.keepAlive = false
-        }
-
         sourceComponent: Item {
             id: itemLoader
 
@@ -74,14 +64,26 @@ Drawer {
                 pages = pages.concat(page);
             }
 
+            function               destroyPagesFrom(startIndex: int): void {
+                if (startIndex >= pages.length)
+                    return;
+                const remaining = pages.slice(0, startIndex);
+                const removed   = pages.slice(startIndex);
+                pages           = remaining;
+                for (let index = 0; index < removed.length; index++) {
+                    removed[index].handle = null;
+                    removed[index].destroy();
+                }
+            }
+
             function               openMenu(handle: var): void {
+                destroyPagesFrom(1);
                 const page = pageAt(0);
                 if (!page) {
                     createPage(handle, "");
                     return;
                 }
-                for (let index = 0; index < pages.length; index++)
-                    pages[index].handle = index === 0 ? handle : null;
+                page.handle              = handle;
                 page.title               = "";
                 stackLayout.currentIndex = 0;
             }
@@ -94,6 +96,7 @@ Drawer {
                 if (stackLayout.currentIndex <= 0)
                     return;
                 stackLayout.currentIndex -= 1;
+                destroyPagesFrom(stackLayout.currentIndex + 1);
             }
 
             function               pushSubmenu(entry: var): void {
@@ -105,7 +108,8 @@ Drawer {
                     return;
                 }
                 const level = stackLayout.currentIndex + 1;
-                const page  = pageAt(level);
+                destroyPagesFrom(level + 1);
+                const page = pageAt(level);
                 if (page) {
                     page.handle = entry;
                     page.title  = entry.text ?? "";

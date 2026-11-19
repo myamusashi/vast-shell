@@ -23,6 +23,10 @@ LazyLoader {
     property real         railScrollPosition: 0
 
     activeAsync: GlobalStates.isSettingsOpen
+    onActiveChanged: {
+        if (!active)
+            GlobalStates.requestGc();
+    }
     component: FloatingWindow {
         color: GlobalStates.drawerColors
         minimumSize: Qt.size(1100, 600)
@@ -429,17 +433,14 @@ LazyLoader {
                             readonly property bool isCurrentPage: settingsLoader.currentPage >= 24 && settingsLoader.currentPage <= 33
 
                             property string        activeCategory: "general"
-                            property bool          keepAlive: false
 
                             Layout.fillHeight: true
                             Layout.fillWidth: true
-                            active: isCurrentPage || keepAlive
+                            active: isCurrentPage
                             visible: isCurrentPage
                             onIsCurrentPageChanged: {
-                                if (isCurrentPage) {
-                                    keepAlive      = true;
+                                if (isCurrentPage)
                                     activeCategory = pagesColumn.currentHyprlandCategory;
-                                }
                             }
 
                             Connections {
@@ -450,12 +451,6 @@ LazyLoader {
                                 }
 
                                 target: settingsLoader
-                            }
-
-                            Timer {
-                                interval: 60000
-                                running: hyprlandOptionsLoader.keepAlive && !hyprlandOptionsLoader.isCurrentPage
-                                onTriggered: hyprlandOptionsLoader.keepAlive = false
                             }
 
                             sourceComponent: HyprlandOptionsPage {
@@ -484,21 +479,9 @@ LazyLoader {
 
         readonly property bool isCurrentPage: settingsLoader.currentPage === pageIndex
 
-        property bool          keepAlive: false
-
         Layout.fillHeight: true
         Layout.fillWidth: true
-        active: isCurrentPage || keepAlive
+        active: isCurrentPage
         visible: isCurrentPage
-        onIsCurrentPageChanged: {
-            if (isCurrentPage)
-                keepAlive = true;
-        }
-
-        Timer {
-            interval: 60000
-            running: pageLoader.keepAlive && !pageLoader.isCurrentPage
-            onTriggered: pageLoader.keepAlive = false
-        }
     }
 }

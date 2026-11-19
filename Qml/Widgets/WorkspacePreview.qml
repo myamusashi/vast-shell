@@ -14,12 +14,15 @@ import qs.Core.States
 import qs.Core.Utils
 import qs.Services
 
-LazyLoader {
+Scope {
     id: root
 
     required property bool        dotHovered
     required property real        dotX
     required property ShellScreen monitor
+    // `toplevels` arrives already ordered with that workspace's last focused
+    // window first.
+    required property var         toplevels
 
     readonly property real        barBottom: (Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0) + Configs.bar.barHeight
     readonly property real        boardHeight: root.shownRows * root.cellSize + Math.max(0, root.shownRows - 1) * root.cellGap + root.cardPadding * 2
@@ -30,23 +33,6 @@ LazyLoader {
     readonly property real        cellSize: 150
     readonly property int         columns: 3
     readonly property real        maxBoardHeight: 3 * root.cellSize + 2 * root.cellGap + root.cardPadding * 2
-    // Grace window between leaving the dot and the board actually closing, so
-    // the pointer can travel down onto the board. Mirrors closeTimer.running
-    // without the root having to reach into the window for the timer id.
-    property bool                 grace: false
-
-    // Cell currently under the pointer, -1 when it is off the grid
-    property int                  hoveredIndex: -1
-
-    // Cell order as it stood when the board opened; empty while it is closed.
-    property var                  latchedOrder: []
-    // Whether the window is mapped. Split from `showing` so the surface stays
-    // up for the whole fade and is only unmapped once the board has faded out.
-    property bool                 mapped: false
-    // `toplevels` arrives already ordered with that workspace's last focused
-    // window first.
-    required property var         toplevels
-
     readonly property list<var>   orderedToplevels: {
         const live = [...(root.toplevels ?? [])].slice(0, root.cells);
         if (root.latchedOrder.length === 0)
@@ -63,6 +49,16 @@ LazyLoader {
     readonly property int         shownCount: root.orderedToplevels.length
     readonly property int         shownRows: Math.ceil(root.shownCount / root.columns)
 
+    // Grace window between leaving the dot and the board actually closing, so
+    // the pointer can travel down onto the board.
+    property bool                 grace: false
+    // Cell currently under the pointer, -1 when it is off the grid
+    property int                  hoveredIndex: -1
+    // Cell order as it stood when the board opened; empty while it is closed.
+    property var                  latchedOrder: []
+    // Whether the window is mapped. Split from `showing` so the surface stays
+    // up for the whole close animation and is only unmapped once closed.
+    property bool                 mapped: false
     property bool                 pointerInside: false
 
     function                      activateCell(index: int): void {
@@ -98,166 +94,163 @@ LazyLoader {
         return [...(list ?? [])].slice(0, root.cells).map(toplevel => toplevel.address);
     }
 
-    loading: true
-    component: PanelWindow {
-        WlrLayershell.layer: WlrLayer.Top
-        color: "transparent"
-        exclusionMode: ExclusionMode.Ignore
-        implicitHeight: root.maxBoardHeight
-        margins.top: root.barBottom // qmllint disable
-        screen: root.monitor
-        HyprlandWindow.visibleMask: regionContent
-        BackgroundEffect.blurRegion: regionContent
-        mask: regionContent
-
-        Region {
-            id: regionContent
-            item: board.visible ? boardHost : null
+    onDotHoveredChanged: {
+        if (root.dotHovered) {
+            closeTimer.stop();
+            root.grace = false;
+        } else {
+            closeTimer.restart();
+            root.grace = true;
         }
-
-        anchors {
-            left: true
-            right: true
-            top: true
+    }
+    onShowingChanged: {
+        if (root.showing) {
+            hideTimer.stop();
+            root.hoveredIndex = -1;
+            root.mapped       = true;
+        } else {
+            hideTimer.restart();
         }
+    }
+    onToplevelsChanged: root.latch()
 
-        Timer {
-            id: closeTimer
+    Timer {
+        id: closeTimer
 
-            interval: Appearance.animations.durations.small
-            onTriggered: {
-                root.pointerInside = false;
-                root.grace         = false;
+        interval: Appearance.animations.durations.small
+        onTriggered: {
+            root.pointerInside = false;
+            root.grace         = false;
+        }
+    }
+
+    Timer {
+        id: hideTimer
+
+        interval: Appearance.animations.durations.expressiveDefaultSpatial
+        onTriggered: {
+            root.mapped       = false;
+            root.latchedOrder = [];
+        }
+    }
+
+    LazyLoader {
+        id: previewLoader
+
+        activeAsync: root.showing || root.mapped
+        component: PanelWindow {
+            WlrLayershell.layer: WlrLayer.Top
+            color: "transparent"
+            exclusionMode: ExclusionMode.Ignore
+            implicitHeight: root.maxBoardHeight
+            margins.top: root.barBottom // qmllint disable
+            screen: root.monitor
+            HyprlandWindow.visibleMask: regionContent
+            BackgroundEffect.blurRegion: regionContent
+            mask: regionContent
+
+            Region {
+                id: regionContent
+
+                item: board.visible ? boardHost : null
             }
-        }
 
-        Timer {
-            id: hideTimer
-
-            interval: Appearance.animations.durations.small
-            onTriggered: {
-                root.mapped       = false;
-                root.latchedOrder = [];
+            anchors {
+                left: true
+                right: true
+                top: true
             }
-        }
 
-        Connections {
+            Item {
+                id: boardHost
 
-            function onDotHoveredChanged(): void {
-                if (root.dotHovered) {
-                    closeTimer.stop();
-                    root.grace = false;
-                } else {
-                    closeTimer.restart();
-                    root.grace = true;
+                height: board.height
+                width: board.width
+
+                // The bar window is anchored to the screen's top-left, so scene
+                // coordinates on the dot are screen coordinates here.
+                x: root.dotX - board.bodyInsetX
+                y: 0
+                Behavior on x {
+                    NAnim {
+                        duration: Appearance.animations.durations.expressiveDefaultSpatial
+                        easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                    }
                 }
-            }
 
-            function onShowingChanged(): void {
-                if (root.showing) {
-                    hideTimer.stop();
-                    root.hoveredIndex = -1;
-                    root.mapped       = true;
-                } else {
-                    hideTimer.restart();
-                }
-            }
+                Drawer {
+                    id: board
 
-            function onToplevelsChanged(): void {
-                root.latch();
-            }
+                    // Flush to neither side: both top corners flare into the bar, both bottom
+                    // corners stay rounded, so the board never ends in a square corner
+                    alignment: Qt.AlignHCenter
+                    animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
+                    animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                    color: GlobalStates.drawerColors
+                    cornerRadius: Appearance.rounding.normal
+                    depth: root.boardHeight
+                    edge: Qt.TopEdge
+                    filletRadius: 40
+                    length: root.boardWidth
+                    // Latched to `showing`: board animates closed while `mapped` keeps
+                    // the surface alive until `hideTimer` finishes.
+                    open: root.showing
 
-            target: root
-        }
-
-        Item {
-            id: boardHost
-
-            height: board.height
-            width: board.width
-
-            // The bar window is anchored to the screen's top-left, so scene
-            // coordinates on the dot are screen coordinates here.
-            x: root.dotX - board.bodyInsetX
-            y: 0
-            Behavior on x {
-                NAnim {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                }
-            }
-
-            Drawer {
-                id: board
-
-                // Flush to neither side: both top corners flare into the bar, both bottom
-                // corners stay rounded, so the board never ends in a square corner
-                alignment: Qt.AlignHCenter
-                animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
-                animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                color: GlobalStates.drawerColors
-                cornerRadius: Appearance.rounding.normal
-                depth: root.boardHeight
-                edge: Qt.TopEdge
-                filletRadius: 40
-                length: root.boardWidth
-                // Latched to `mapped`, not `showing`: the board empties for a tick while the next
-                // workspace's toplevels arrive, and collapsing on that blink made it vanish between dots
-                open: root.mapped
-
-                Loader {
-                    active: root.mapped
-                    anchors.fill: parent
-                    asynchronous: true
-                    sourceComponent: Item {
+                    Loader {
+                        active: root.showing || board.visible
                         anchors.fill: parent
-
-                        GridLayout {
-                            columnSpacing: root.cellGap
-                            columns: root.columns
-                            rowSpacing: root.cellGap
-
-                            anchors {
-                                left: parent.left
-                                margins: root.cardPadding
-                                right: parent.right
-                                top: parent.top
-                            }
-
-                            Repeater {
-                                model: root.shownCount
-                                delegate: PreviewCell {
-                                    toplevel: root?.orderedToplevels[index]
-                                }
-                            }
-                        }
-
-                        // Above every cell, so the hover grab can never be taken away.
-
-                        MouseArea {
-                            acceptedButtons: Qt.LeftButton
+                        asynchronous: true
+                        sourceComponent: Item {
                             anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-                            hoverEnabled: true
-                            onClicked: mouse => root.activateCell(root.cellAt(mouse.x, mouse.y))
-                            onContainsMouseChanged: {
-                                if (containsMouse) {
-                                    root.pointerInside = true;
-                                    root.grace         = false;
-                                    closeTimer.stop();
-                                } else {
-                                    root.hoveredIndex = -1;
-                                    root.grace        = true;
-                                    closeTimer.restart();
+
+                            GridLayout {
+                                columnSpacing: root.cellGap
+                                columns: root.columns
+                                rowSpacing: root.cellGap
+
+                                anchors {
+                                    left: parent.left
+                                    margins: root.cardPadding
+                                    right: parent.right
+                                    top: parent.top
+                                }
+
+                                Repeater {
+                                    model: root.shownCount
+                                    delegate: PreviewCell {
+                                        toplevel: root?.orderedToplevels[index]
+                                    }
                                 }
                             }
-                            onPositionChanged: mouse => root.hoveredIndex = root.cellAt(mouse.x, mouse.y)
+
+                            // Above every cell, so the hover grab can never be taken away.
+
+                            MouseArea {
+                                acceptedButtons: Qt.LeftButton
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                hoverEnabled: true
+                                onClicked: mouse => root.activateCell(root.cellAt(mouse.x, mouse.y))
+                                onContainsMouseChanged: {
+                                    if (containsMouse) {
+                                        root.pointerInside = true;
+                                        root.grace         = false;
+                                        closeTimer.stop();
+                                    } else {
+                                        root.hoveredIndex = -1;
+                                        root.grace        = true;
+                                        closeTimer.restart();
+                                    }
+                                }
+                                onPositionChanged: mouse => root.hoveredIndex = root.cellAt(mouse.x, mouse.y)
+                            }
                         }
                     }
                 }
             }
         }
     }
+
     component PreviewCell: StyledRect {
         id: cell
 

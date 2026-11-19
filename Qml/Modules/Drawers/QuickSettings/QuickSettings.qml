@@ -18,9 +18,7 @@ Drawer {
     id: root
 
     readonly property bool onFocusedMonitor: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) // qmllint disable
-    readonly property bool shouldBeActive: open && onFocusedMonitor
 
-    property bool          keepAlive: false
     property int           saveIndex: 0
 
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -31,26 +29,18 @@ Drawer {
     edge: Qt.LeftEdge
     filletRadius: 40
     length: parent.height * 0.8
-    open: GlobalStates.isQuickSettingsOpen
-    onShouldBeActiveChanged: {
-        if (shouldBeActive)
-            keepAlive = true;
-    }
-
-    Timer {
-        id: idleUnloadTimer
-
-        interval: 120000
-        running: root.keepAlive && !root.shouldBeActive
-        onTriggered: root.keepAlive = false
-    }
+    open: onFocusedMonitor && GlobalStates.isQuickSettingsOpen
 
     Loader {
         id: contentLoader
 
-        active: root.shouldBeActive || root.keepAlive
+        active: root.onFocusedMonitor && (root.open || root.visible)
         anchors.fill: parent
         asynchronous: true
+        onActiveChanged: {
+            if (!active)
+                GlobalStates.requestGc();
+        }
         sourceComponent: ColumnLayout {
             anchors.fill: parent
             anchors.margins: Appearance.margin.normal
@@ -132,8 +122,6 @@ Drawer {
 
         readonly property bool      isCurrentPage: currentIndex === pageIndex
 
-        property bool               keepAlive: isCurrentPage
-
         anchors.fill: parent
         enabled: isCurrentPage
         opacity: isCurrentPage ? 1 : 0
@@ -150,26 +138,14 @@ Drawer {
                 duration: Appearance.animations.durations.small
             }
         }
-        onIsCurrentPageChanged: {
-            if (isCurrentPage)
-                keepAlive = true;
-        }
 
         Loader {
             id: pageLoader
 
-            active: animRoot.isCurrentPage || animRoot.keepAlive
+            active: animRoot.isCurrentPage || animRoot.visible
             anchors.fill: parent
             asynchronous: true
             sourceComponent: animRoot.content
-
-            Timer {
-                id: unloadTimer
-
-                interval: 30000
-                running: animRoot.keepAlive && !animRoot.isCurrentPage
-                onTriggered: animRoot.keepAlive = false
-            }
         }
     }
 }

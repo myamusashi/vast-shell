@@ -106,21 +106,9 @@ SettingsPageBase {
 
         readonly property bool isCurrentTab: root.currentTab === tabIndex
 
-        property bool          keepAlive: false
-
         Layout.fillHeight: true
         Layout.fillWidth: true
-        active: isCurrentTab || keepAlive
+        active: isCurrentTab
         visible: isCurrentTab
-        onIsCurrentTabChanged: {
-            if (isCurrentTab)
-                keepAlive = true;
-        }
-
-        Timer {
-            interval: 60000
-            running: tabLoader.keepAlive && !tabLoader.isCurrentTab
-            onTriggered: tabLoader.keepAlive = false
-        }
     }
 }

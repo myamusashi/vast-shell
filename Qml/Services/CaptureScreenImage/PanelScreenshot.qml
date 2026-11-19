@@ -396,10 +396,14 @@ Scope {
                 repeat: false
                 onTriggered: {
                     compositeCanvas.grabToImage(result => {
+                        const screens = root.allScreenPaths;
+                        for (let i = 0; i < screens.length; i++)
+                            compositeCanvas.unloadImage(screens[i].path);
                         const path = Utils.tempCapturePath();
                         if (result && result.saveToFile(path)) {
                             compositeLoader.resultPath = "file://" + path;
                         }
+                        root.allScreenPaths    = [];
                         compositeLoader.active = false;
                         root.isMultiCapturing  = false;
                         if (root.captureDoneCallback) {

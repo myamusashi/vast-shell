@@ -61,7 +61,7 @@ Singleton {
     function                 hideOSD(name): void {
         osd.hide(name);
         if (osd.allHidden())
-            cleanupTimer.start();
+            requestGc();
     }
 
     function                 isOSDVisible(name): bool {
@@ -74,6 +74,10 @@ Singleton {
 
     function                 pauseOSD(name): void {
         osd.pause(name);
+    }
+
+    function                 requestGc(): void {
+        cleanupTimer.restart();
     }
 
     function                 resumeOSD(name): void {
@@ -131,7 +135,7 @@ Singleton {
     Timer {
         id: cleanupTimer
 
-        interval: 500
+        interval: 1000
         repeat: false
         onTriggered: gc()
     }

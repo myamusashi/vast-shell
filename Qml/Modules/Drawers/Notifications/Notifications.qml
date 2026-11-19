@@ -18,29 +18,36 @@ Drawer {
     animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
     color: GlobalStates.drawerColors
     cornerRadius: Appearance.rounding.normal
-    depth: open ? Math.min(notifListView.contentHeight + 30, parent.height * 0.5) : 0
+    depth: open ? Math.min((notifListLoader.item?.contentHeight ?? 0) + 30, parent.height * 0.5) : 0 // qmllint disable
     edge: Qt.TopEdge
     filletRadius: 40
     length: Math.min(Math.round(parent.width * 0.22), 360)
     open: Notifs.popups.length > 0
 
-    ListView {
-        id: notifListView
+    Loader {
+        id: notifListLoader
 
+        active: root.open || root.visible
         anchors.fill: parent
-        boundsBehavior: Flickable.StopAtBounds
-        cacheBuffer: implicitHeight
-        clip: true
-        spacing: Appearance.spacing.small
-        delegate: Wrapper {
-            required property int index
-            required property var modelData
+        asynchronous: false
+        sourceComponent: ListView {
+            id: notifListView
 
-            isPopup: true
-            notif: modelData
-        }
-        model: ScriptModel {
-            values: [...Notifs.popups]
+            anchors.fill: parent
+            boundsBehavior: Flickable.StopAtBounds
+            cacheBuffer: implicitHeight
+            clip: true
+            spacing: Appearance.spacing.small
+            delegate: Wrapper {
+                required property int index
+                required property var modelData
+
+                isPopup: true
+                notif: modelData
+            }
+            model: ScriptModel {
+                values: [...Notifs.popups]
+            }
         }
     }
 }

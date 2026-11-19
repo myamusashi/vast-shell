@@ -39,14 +39,14 @@ Scope {
 
     function        openFallbackDialog() {
         if (fallbackLoader.active)
-            fallbackLoader.item.destroy();
+            fallbackLoader.activeAsync = false;
         else
             fallbackLoader.activeAsync = true;
     }
 
     function        openFileDialog() {
         if (fallbackLoader.active) {
-            fallbackLoader.item.destroy();
+            fallbackLoader.activeAsync = false;
             return;
         }
         if (portalChooser.busy)
@@ -71,6 +71,16 @@ Scope {
         id: fallbackLoader
 
         activeAsync: false
+        onActiveChanged: {
+            if (!active) {
+                root.searchedEntries = [];
+                root.walkedCacheKey  = "";
+                root.history         = [];
+                root.historyIndex    = -1;
+                root.searchVisible   = false;
+                SearchEngine.clearFileResults();
+            }
+        }
         component: FloatingWindow {
             id: window
 

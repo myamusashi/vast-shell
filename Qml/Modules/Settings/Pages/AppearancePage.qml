@@ -412,6 +412,7 @@ Item {
                 implicitHeight: Math.min(listView.contentHeight + 16, 280)
                 width: input.width
                 y: input.height + 4
+                onClosed: popupLoader.active = false
                 background: StyledRect {
                     color: Colours.m3Colors.m3SurfaceContainerLow
                     radius: Appearance.rounding.large

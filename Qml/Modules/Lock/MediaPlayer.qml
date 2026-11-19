@@ -1,10 +1,10 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Layouts
 import Quickshell.Services.Mpris
 import Quickshell.Widgets
-import Qt5Compat.GraphicalEffects
 import Vast.Lyrics
 
 import qs.Core.Configs
@@ -74,8 +74,10 @@ StyledRect {
                 Image {
                     anchors.fill: parent
                     asynchronous: true
+                    cache: false
                     fillMode: Image.PreserveAspectCrop
                     source: TrackArt.cachedPath.startsWith("/") ? "file://" + TrackArt.cachedPath : TrackArt.cachedPath
+                    sourceSize: Qt.size(48, 48)
                     visible: TrackArt.cachedPath !== ""
                 }
             }
@@ -201,14 +203,17 @@ StyledRect {
 
             anchors.fill: parent
             asynchronous: true
-            cache: true
+            cache: false
             fillMode: Image.PreserveAspectCrop
             layer.enabled: true
             source: TrackArt.cachedPath.startsWith("/") ? "file://" + TrackArt.cachedPath : TrackArt.cachedPath
+            sourceSize: Qt.size(360, 200)
             visible: !!Players.active?.trackArtUrl
-            layer.effect: FastBlur {
-                radius: Configs.generals.coverBlurRadius
-                source: popupCoverArt
+            layer.effect: MultiEffect {
+                autoPaddingEnabled: false
+                blur: 1.0
+                blurEnabled: true
+                blurMax: Configs.generals.coverBlurRadius
             }
         }
 
@@ -247,9 +252,10 @@ StyledRect {
                     Image {
                         anchors.fill: parent
                         asynchronous: true
-                        cache: true
+                        cache: false
                         fillMode: Image.PreserveAspectCrop
                         source: TrackArt.cachedPath.startsWith("/") ? "file://" + TrackArt.cachedPath : TrackArt.cachedPath
+                        sourceSize: Qt.size(96, 96)
                     }
                 }
 

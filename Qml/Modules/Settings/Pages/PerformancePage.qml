@@ -5,7 +5,6 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Networking
 import Quickshell.Services.UPower
-import QtGraphs
 
 import qs.Components.Base
 import qs.Core.Configs
@@ -849,38 +848,32 @@ SettingsPageBase {
             Layout.fillWidth: true
             spacing: Appearance.spacing.large
 
-            GraphsView {
+            Item {
                 Layout.preferredHeight: 160
                 Layout.preferredWidth: 160
-                theme: GraphsTheme {
-                    colorScheme: GraphsTheme.ColorScheme.Dark
-                    theme: GraphsTheme.Theme.QtGreen
+
+                ShaderEffect {
+                    property color    activeColor: Colours.m3Colors.m3Green
+                    property real     maxSweepDeg: 360
+                    property real     progress: root.totalApps > 0 ? root.appCounts.graphical / root.totalApps : 0
+                    property real     radius: Math.max(0, Math.min(width, height) / 2 - 20)
+                    property vector2d resolution: Qt.vector2d(width, height)
+                    property real     startAngleDeg: -90
+                    property real     strokeWidth: 28
+                    property color    trackColor: Qt.alpha(Colours.m3Colors.m3Green, 0.45)
+
+                    anchors.fill: parent
+                    blending: true
+                    fragmentShader: Paths.projectRoot + "/Assets/shaders/arcGauge.frag.qsb"
                 }
 
-                PieSeries {
-                    holeSize: 0.55
-
-                    PieSlice {
-                        borderColor: "transparent"
-                        color: Colours.m3Colors.m3Green
-                        explodeDistanceFactor: 0.02
-                        label: String(root.appCounts.graphical)
-                        labelColor: Colours.m3Colors.m3OnSurface
-                        labelPosition: PieSlice.LabelPosition.Outside
-                        labelVisible: true
-                        value: root.appCounts.graphical
-                    }
-
-                    PieSlice {
-                        borderColor: "transparent"
-                        color: Qt.alpha(Colours.m3Colors.m3Green, 0.45)
-                        explodeDistanceFactor: 0.02
-                        label: String(root.appCounts.terminal)
-                        labelColor: Colours.m3Colors.m3OnSurface
-                        labelPosition: PieSlice.LabelPosition.Outside
-                        labelVisible: true
-                        value: root.appCounts.terminal
-                    }
+                StyledText {
+                    anchors.centerIn: parent
+                    color: Colours.m3Colors.m3OnSurface
+                    font.family: Fonts.mono
+                    font.pixelSize: Appearance.fonts.size.extraLarge
+                    font.weight: Font.DemiBold
+                    text: String(root.totalApps)
                 }
             }
 

@@ -116,6 +116,8 @@ Item {
     }
 
     component LazyPopup: Loader {
+        id: popupLoader
+
         property bool isVisible: false
 
         function      close(): void {
@@ -123,7 +125,8 @@ Item {
         }
 
         function      toggle(): void {
-            active    = true;
+            if (!isVisible)
+                active = true;
             isVisible = !isVisible;
         }
 
@@ -131,5 +134,15 @@ Item {
         anchors.centerIn: parent
         asynchronous: false
         z: 99
+
+        Connections {
+
+            function onClosingChanged(): void {
+                if (!popupLoader.item?.closing && !popupLoader.isVisible) // qmllint disable
+                    popupLoader.active = false;
+            }
+
+            target: popupLoader.item
+        }
     }
 }

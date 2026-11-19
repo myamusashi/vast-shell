@@ -20,9 +20,6 @@ Drawer {
 
     readonly property bool anyPageOpen: drawerLoader.item ? drawerLoader.item.anyPageOpen : false // qmllint disable
     readonly property bool onFocusedMonitor: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) // qmllint disable
-    readonly property bool shouldBeActive: open && onFocusedMonitor
-
-    property bool          keepAlive: false
 
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
     animationEasingCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -32,30 +29,22 @@ Drawer {
     edge: Qt.RightEdge
     filletRadius: 0
     length: root.parentHoleHeight
-    open: GlobalStates.isWeatherPanelOpen
+    open: onFocusedMonitor && GlobalStates.isWeatherPanelOpen
     onOpenChanged: {
         if (!open && drawerLoader.item)
             drawerLoader.item.closeAllPages(); // qmllint disable
-    }
-    onShouldBeActiveChanged: {
-        if (shouldBeActive)
-            keepAlive = true;
-    }
-
-    Timer {
-        id: idleUnloadTimer
-
-        interval: 120000
-        running: root.keepAlive && !root.shouldBeActive
-        onTriggered: root.keepAlive = false
     }
 
     Loader {
         id: drawerLoader
 
-        active: root.shouldBeActive || root.keepAlive
+        active: root.onFocusedMonitor && (root.open || root.visible)
         anchors.fill: parent
         asynchronous: true
+        onActiveChanged: {
+            if (!active)
+                GlobalStates.requestGc();
+        }
         sourceComponent: Item {
             id: drawerContent
 

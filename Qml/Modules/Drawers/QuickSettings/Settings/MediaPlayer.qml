@@ -30,6 +30,7 @@ Item {
             cache: false
             fillMode: Image.PreserveAspectCrop
             source: TrackArt.cachedPath.startsWith("/") ? "file://" + TrackArt.cachedPath : TrackArt.cachedPath
+            sourceSize: Qt.size(400, 200)
 
             Rectangle {
                 anchors.fill: parent

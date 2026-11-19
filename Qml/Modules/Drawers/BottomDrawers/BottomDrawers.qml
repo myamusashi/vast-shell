@@ -227,8 +227,13 @@ Item {
     }
     onIsFocusedMonitorChanged: syncReservedSpace()
     onIsLauncherActiveChanged: {
-        if (!isLauncherActive)
+        if (!isLauncherActive) {
+            if (isFocusedMonitor) {
+                LauncherServices.reset();
+                GlobalStates.requestGc();
+            }
             return;
+        }
 
         lastPanel = "launcher";
 
@@ -240,8 +245,10 @@ Item {
     }
     onIsWallpaperActiveChanged: {
         if (!isWallpaperActive) {
-            if (isFocusedMonitor)
+            if (isFocusedMonitor) {
                 GlobalStates.previewWallpaper = "";
+                GlobalStates.requestGc();
+            }
             return;
         }
 
@@ -332,26 +339,28 @@ Item {
                 x: Math.round((root.width - width) / 2)
                 y: root.height - root.snappedDockDepth - height
 
-                Item {
+                Loader {
+                    active: root.isLauncherActive || (root.snappedPanelDepth > 0 && root.lastPanel === "launcher")
+                    asynchronous: true
                     enabled: root.isLauncherActive
                     height: root.launcherDepth
-                    visible: root.isLauncherActive
+                    visible: active
                     width: root.launcherLength
                     x: root.centeredScreenX(width) - root.x - panelClip.x
                     y: 0
-
-                    LauncherModule.Launcher {}
+                    sourceComponent: LauncherModule.Launcher {}
                 }
 
-                Item {
+                Loader {
+                    active: root.isWallpaperActive || (root.snappedPanelDepth > 0 && root.lastPanel === "wallpaper")
+                    asynchronous: true
                     enabled: root.isWallpaperActive
                     height: root.wallpaperDepth
-                    visible: root.isWallpaperActive
+                    visible: active
                     width: root.wallpaperLength
                     x: root.centeredScreenX(width) - root.x - panelClip.x
                     y: 0
-
-                    WallpaperModule.WallpaperSelector {}
+                    sourceComponent: WallpaperModule.WallpaperSelector {}
                 }
             }
         }

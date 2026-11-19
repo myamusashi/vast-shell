@@ -7,11 +7,16 @@ import Quickshell.Wayland
 import Quickshell.Widgets
 
 import qs.Core.Configs
+import qs.Core.States
 import qs.Core.Utils
 import qs.Services
 
 LazyLoader {
-    loading: true
+    activeAsync: DynamicIslandService.hasContent || DynamicIslandService.closing
+    onActiveChanged: {
+        if (!active)
+            GlobalStates.requestGc();
+    }
     component: PanelWindow {
         id: targetWindow
 

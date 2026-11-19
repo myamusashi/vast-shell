@@ -16,7 +16,7 @@ LazyLoader {
     required property var         trayRoot
     required property ShellScreen screen
 
-    loading: true
+    activeAsync: root.trayRoot.menuMapped
     component: PanelWindow {
         id: panelWindow
 

@@ -9,7 +9,6 @@ import Vast.Clipboard
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
-import qs.Services
 
 Singleton {
     property alias uiState: uiState
@@ -99,15 +98,5 @@ Singleton {
         target: GlobalStates
     }
 
-    FileView {
-        path: `${Paths.cacheDir}/clipboard.db`
-        watchChanges: false
-        onLoadFailed: err => {
-            if (err === FileViewError.FileNotFound) {
-                ToastService.show(qsTr("Clipboard database not found, created it"), qsTr("Clipboard"), "edit-paste");
-                ClipboardManager.initialize(`${Paths.cacheDir}/clipboard.db`);
-            }
-        }
-        onLoaded: ClipboardManager.initialize(`${Paths.cacheDir}/clipboard.db`)
-    }
+    Component.onCompleted: ClipboardManager.initialize(`${Paths.cacheDir}/clipboard.db`)
 }

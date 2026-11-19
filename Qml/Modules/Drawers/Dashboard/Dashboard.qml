@@ -18,9 +18,6 @@ Drawer {
     id: container
 
     readonly property bool onFocusedMonitor: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) // qmllint disable
-    readonly property bool shouldBeActive: open && onFocusedMonitor
-
-    property bool          keepAlive: false
 
     alignment: Qt.AlignRight
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -38,25 +35,17 @@ Drawer {
             GlobalStates.isAddTodoListOpen  = false;
         }
     }
-    onShouldBeActiveChanged: {
-        if (shouldBeActive)
-            keepAlive = true;
-    }
-
-    Timer {
-        id: idleUnloadTimer
-
-        interval: 120000
-        running: container.keepAlive && !container.shouldBeActive
-        onTriggered: container.keepAlive = false
-    }
 
     Loader {
         id: contentLoader
 
-        active: container.shouldBeActive || container.keepAlive
+        active: container.onFocusedMonitor && (container.open || container.visible)
         anchors.fill: parent
         asynchronous: true
+        onActiveChanged: {
+            if (!active)
+                GlobalStates.requestGc();
+        }
         sourceComponent: RowLayout {
 
             anchors {

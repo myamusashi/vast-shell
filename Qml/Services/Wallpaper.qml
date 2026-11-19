@@ -15,7 +15,6 @@ Singleton {
     readonly property var    visibleWallpapers: WallpaperFileModels.filteredWallpaperList.filter(path => wallpaperType === 1 ? MediaKind.isVideo(path) : !MediaKind.isVideo(path))
 
     property var             checkBatch: []
-    property Item            colorSourceImage: null
     property string          pendingVideoPath: ""
     property var             thumbnailAvailability: ({})
     property var             thumbnailCheckQueue: []
@@ -88,8 +87,6 @@ Singleton {
             setWallpaper(path, MediaKind.videoThumbnailPathFor(path));
             return;
         }
-        if (path === Paths.currentWallpaper)
-            updateWallpaperColors(path);
     }
 
     function                 requestThumbnailCheck(path) {
@@ -123,17 +120,6 @@ Singleton {
         Quickshell.execDetached({
             command: ["sh", "-c", `printf '%s' ${JSON.stringify(path)} > ${JSON.stringify(Paths.currentWallpaperFile)}`]
         });
-        if (colorSource !== "" && colorSourceImage)
-            colorSourceImage.source = "file://" + colorSource + (MediaKind.isVideo(path) ? "?v=" + thumbnailVersion : "");
-    }
-
-    function                 updateWallpaperColors(path) {
-        if (path === "" || !colorSourceImage)
-            return;
-        if (MediaKind.isVideo(path))
-            colorSourceImage.source = "file://" + MediaKind.videoThumbnailPathFor(path) + "?v=" + thumbnailVersion;
-        else
-            colorSourceImage.source = "file://" + MediaKind.staticPathFor(path);
     }
 
     Connections {
@@ -149,7 +135,6 @@ Singleton {
 
         function onCurrentWallpaperChanged(): void {
             root.ensureThumbnail(Paths.currentWallpaper);
-            root.updateWallpaperColors(Paths.currentWallpaper);
             TemplateServices.render();
         }
 
@@ -163,7 +148,6 @@ Singleton {
         }
 
         function onSchemeChanged(): void {
-            root.updateWallpaperColors(Paths.currentWallpaper);
             TemplateServices.render();
         }
 
@@ -199,8 +183,6 @@ Singleton {
         }
 
         function set(path: string): void {
-            if (!MediaKind.isVideo(path))
-                ImageCache.preload(path, Qt.size(Screen.width, Screen.height));
             Wallpaper.setWallpaper(path, MediaKind.isVideo(path) ? "" : path);
         }
 

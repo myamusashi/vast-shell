@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell.Widgets
 import QtMultimedia
-import Vast.ImageCache
 
 import qs.Components.Base
 import qs.Core.Configs
@@ -29,12 +28,8 @@ Item {
 
     z: closeness
     onIsCurrentChanged: {
-        if (!isCurrent)
-            return;
-        if (root.isVideo)
+        if (isCurrent && root.isVideo)
             controller.ensureThumbnail(modelData);
-        else
-            ImageCache.preload(modelData, Qt.size(Screen.width, Screen.height));
     }
 
     ClippingRectangle {
@@ -59,7 +54,7 @@ Item {
         Image {
             anchors.fill: parent
             asynchronous: true
-            cache: true
+            cache: false
             fillMode: Image.PreserveAspectCrop
             source: root.visible && !root.isVideo ? "file://" + root.modelData : ""
             sourceSize: Qt.size(200, 200)
@@ -71,8 +66,10 @@ Item {
 
             anchors.fill: parent
             asynchronous: true
+            cache: false
             fillMode: Image.PreserveAspectCrop
             source: root.visible && root.thumbnailAvailability[root.modelData] ? "file://" + MediaKind.videoThumbnailPathFor(root.modelData) + "?v=" + root.controller.thumbnailVersion : ""
+            sourceSize: Qt.size(320, 200)
             visible: root.isVideo && status === Image.Ready && !videoPreview.active
             onStatusChanged: {
                 if (status === Image.Error && root.isVideo && root.thumbnailAvailability[root.modelData])
@@ -83,7 +80,7 @@ Item {
         Loader {
             id: videoPreview
 
-            active: root.isCurrent && root.isVideo
+            active: root.isCurrent && root.isVideo && root.visible
             anchors.fill: parent
             asynchronous: false
             sourceComponent: Component {

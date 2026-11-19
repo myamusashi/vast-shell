@@ -451,6 +451,7 @@ Item {
 
                         anchors.centerIn: parent
                         asynchronous: true
+                        cache: false
                         fillMode: Image.PreserveAspectFit
                         height: imageScroll.height * imageZoom.scale
                         opacity: status === Image.Ready ? 1.0 : 0.0

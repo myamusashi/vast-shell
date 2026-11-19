@@ -102,6 +102,7 @@ Item {
                 root.menuItemActivated(index);
                 close();
             }
+            onClosed: menuLoader.active = false
         }
     }
 

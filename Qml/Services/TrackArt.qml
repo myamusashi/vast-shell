@@ -3,7 +3,6 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import Vast.ImageCache
 import Vast.Utils
 
 import qs.Core.Configs
@@ -36,12 +35,8 @@ Singleton {
         root.cachedPath = "";
         if (url.startsWith("http"))
             downloader.download(url);
-        else {
+        else
             root.cachedPath = url;
-            const localPath = url.replace("file://", "");
-            if (localPath)
-                ImageCache.copyAndPreload(localPath, Qt.size(300, 300));
-        }
     }
 
     Component.onCompleted: root.refresh()

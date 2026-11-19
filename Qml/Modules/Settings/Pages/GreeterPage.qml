@@ -96,9 +96,10 @@ SettingsPageBase {
                 Image {
                     anchors.fill: parent
                     asynchronous: true
-                    cache: true
+                    cache: false
                     fillMode: Image.PreserveAspectCrop
                     source: GreeterWallpaper.colorSource(GreetConfigs.greeterConfig.useVideoWallpaper, GreetConfigs.greeterConfig.videoWallpaper, GreetConfigs.greeterConfig.staticWallpaper) + "?v=" + GreetConfigs.thumbnailVersion
+                    sourceSize: Qt.size(320, 180)
                     visible: status === Image.Ready
                     onStatusChanged: {
                         if (status === Image.Error && GreetConfigs.greeterConfig.useVideoWallpaper)

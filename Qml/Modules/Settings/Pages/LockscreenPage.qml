@@ -34,8 +34,10 @@ SettingsPageBase {
                 Image {
                     anchors.fill: parent
                     asynchronous: true
+                    cache: false
                     fillMode: Image.PreserveAspectFit
                     source: root.sourcePreview
+                    sourceSize: Qt.size(480, 240)
                 }
 
                 StyledText {

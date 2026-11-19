@@ -457,8 +457,10 @@ Singleton {
         interval: Appearance.animations.durations.normal
         repeat: false
         onTriggered: {
-            if (!root.isOpen)
+            if (!root.isOpen) {
                 root.surfaceMapped = false;
+                GlobalStates.requestGc();
+            }
         }
     }
 

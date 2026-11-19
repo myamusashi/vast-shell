@@ -13,7 +13,7 @@ import qs.Core.Configs
 import qs.Core.States
 import qs.Services
 
-LazyLoader {
+Scope {
     id: root
 
     readonly property real      boardHeight: root.shownCount === 0 ? 0 : root.shownRows * root.cellSize + Math.max(0, root.shownRows - 1) * root.cellGap + root.cardPadding * 2
@@ -31,6 +31,7 @@ LazyLoader {
                 out.push(toplevel);
         return out;
     }
+    readonly property real      maxBoardHeight: 3 * root.cellSize + 2 * root.cellGap + root.cardPadding * 2
     readonly property list<var> orderedToplevels: {
         const live = [...(root.hoveredToplevels ?? [])];
         if (root.latchedOrder.length === 0)
@@ -47,7 +48,6 @@ LazyLoader {
     readonly property int       shownCount: root.orderedToplevels.length
     readonly property int       shownRows: root.shownCount === 0 ? 0 : Math.min(3, Math.ceil(root.shownCount / root.columns))
 
-    property var                closeTimerRef: null
     property bool               grace: false
     property string             hoveredEntryId: ""
     property real               hoveredIconHeight: 0
@@ -56,6 +56,7 @@ LazyLoader {
     property real               hoveredIconWidth: 0
     property bool               iconHovered: false
     property var                latchedOrder: []
+    property bool               mapped: false
     property var                parentWindow: null
     property bool               popupPointerInside: false
 
@@ -71,16 +72,14 @@ LazyLoader {
         root.iconHovered        = false;
         root.popupPointerInside = false;
         root.grace              = false;
-        if (root.closeTimerRef)
-            root.closeTimerRef.stop();
+        closeTimer.stop();
     }
 
     function                    iconExited(entryId: string): void {
         if (root.hoveredEntryId !== entryId)
             return;
         root.iconHovered = false;
-        if (root.closeTimerRef)
-            root.closeTimerRef.restart();
+        closeTimer.restart();
         root.grace = true;
     }
 
@@ -114,135 +113,132 @@ LazyLoader {
         root.hoveredIconWidth  = iconWidth;
         root.hoveredIconHeight = iconHeight;
         root.iconHovered       = true;
-        if (root.closeTimerRef)
-            root.closeTimerRef.stop();
+        closeTimer.stop();
         root.grace = false;
     }
 
-    loading: true
-    component: PanelWindow {
-        id: popupWindow
-
-        WlrLayershell.layer: WlrLayer.Top
-        color: "transparent"
-        exclusionMode: ExclusionMode.Ignore
-        implicitHeight: Math.max(1, root.boardHeight)
-        implicitWidth: Math.max(1, root.boardWidth)
-        screen: root.parentWindow ? root.parentWindow.screen : null
-        HyprlandWindow.visibleMask: regionContent
-        BackgroundEffect.blurRegion: regionContent
-        mask: regionContent
-
-        Region {
-            id: regionContent
-            item: popupWindow.contentItem
+    onHoveredToplevelsChanged: root.latch()
+    onShowingChanged: {
+        if (root.showing) {
+            hideTimer.stop();
+            root.mapped = true;
+        } else {
+            hideTimer.restart();
         }
+    }
 
-        anchors {
-            bottom: true
-            left: true
+    Timer {
+        id: closeTimer
+
+        interval: Appearance.animations.durations.small
+        onTriggered: {
+            root.popupPointerInside = false;
+            root.grace              = false;
         }
+    }
 
-        margins { // qmllint disable
-            bottom: root.parentWindow ? Math.max(0, Math.round(root.parentWindow.height - root.hoveredIconTop + Appearance.spacing.small)) : Appearance.spacing.small
-            left: Math.round(Math.max(0, Math.min(root.hoveredIconLeft + root.hoveredIconWidth / 2 - root.boardWidth / 2, root.parentWindow ? root.parentWindow.width - root.boardWidth : 0)))
+    Timer {
+        id: hideTimer
+
+        interval: Appearance.animations.durations.small
+        onTriggered: {
+            root.mapped         = false;
+            root.latchedOrder   = [];
+            root.hoveredEntryId = "";
         }
+    }
 
-        Timer {
-            id: closeTimer
-            interval: Appearance.animations.durations.small
-            onTriggered: {
-                root.popupPointerInside = false;
-                root.grace              = false;
-            }
-        }
+    LazyLoader {
+        id: previewLoader
 
-        Timer {
-            id: hideTimer
-            interval: Appearance.animations.durations.small
-            onTriggered: {
-                root.latchedOrder   = [];
-                root.hoveredEntryId = "";
-            }
-        }
+        activeAsync: root.showing || root.mapped
+        component: PanelWindow {
+            id: popupWindow
 
-        Component.onCompleted: {
-            root.closeTimerRef = closeTimer;
-        }
+            WlrLayershell.layer: WlrLayer.Top
+            color: "transparent"
+            exclusionMode: ExclusionMode.Ignore
+            implicitHeight: root.maxBoardHeight
+            screen: root.parentWindow ? root.parentWindow.screen : null
+            HyprlandWindow.visibleMask: regionContent
+            BackgroundEffect.blurRegion: regionContent
+            mask: regionContent
 
-        Connections {
+            Region {
+                id: regionContent
 
-            function onHoveredToplevelsChanged(): void {
-                root.latch();
+                item: board.opacity > 0 ? board : null
             }
 
-            function onShowingChanged(): void {
-                if (root.showing) {
-                    hideTimer.stop();
-                } else {
-                    hideTimer.restart();
+            anchors {
+                bottom: true
+                left: true
+                right: true
+            }
+
+            margins { // qmllint disable
+                bottom: root.parentWindow ? Math.max(0, Math.round(root.parentWindow.height - root.hoveredIconTop + Appearance.spacing.small)) : Appearance.spacing.small
+            }
+
+            StyledRect {
+                id: board
+
+                anchors.bottom: parent.bottom
+                border.color: Colours.m3Colors.m3OutlineVariant
+                border.width: 1
+                color: GlobalStates.drawerColors
+                height: Math.max(1, root.boardHeight)
+                opacity: root.showing ? 1.0 : 0.0
+                radius: Appearance.rounding.normal
+                width: Math.max(1, root.boardWidth)
+                x: Math.round(Math.max(0, Math.min(root.hoveredIconLeft + root.hoveredIconWidth / 2 - width / 2, popupWindow.width - width)))
+                Behavior on opacity {
+                    NAnim {
+                        duration: Appearance.animations.durations.small
+                    }
                 }
-            }
 
-            target: root
-        }
+                ScrollView {
+                    anchors.fill: parent
+                    anchors.margins: root.cardPadding
+                    clip: true
+                    contentWidth: availableWidth
+                    ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+                    ScrollBar.vertical.policy: ScrollBar.AsNeeded
 
-        StyledRect {
-            id: board
+                    GridLayout {
+                        id: grid
 
-            anchors.fill: parent
-            border.color: Colours.m3Colors.m3OutlineVariant
-            border.width: 1
-            color: GlobalStates.drawerColors
-            opacity: root.showing ? 1.0 : 0.0
-            radius: Appearance.rounding.normal
-            Behavior on opacity {
-                NAnim {
-                    duration: Appearance.animations.durations.small
+                        columns: root.columns
+                        columnSpacing: root.cellGap
+                        rowSpacing: root.cellGap
+                        width: parent.availableWidth
+
+                        Repeater {
+                            model: root.shownCount
+                            delegate: PreviewCell {
+                                toplevel: root.orderedToplevels[index]
+                            }
+                        }
+                    }
                 }
-            }
 
-            ScrollView {
-                anchors.fill: parent
-                anchors.margins: root.cardPadding
-                clip: true
-                contentWidth: availableWidth
-                ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
-                ScrollBar.vertical.policy: ScrollBar.AsNeeded
-
-                GridLayout {
-                    id: grid
-
-                    columns: root.columns
-                    columnSpacing: root.cellGap
-                    rowSpacing: root.cellGap
-                    width: parent.availableWidth
-
-                    Repeater {
-                        model: root.shownCount
-                        delegate: PreviewCell {
-                            toplevel: root.orderedToplevels[index]
+                HoverHandler {
+                    onHoveredChanged: {
+                        root.popupPointerInside = hovered;
+                        if (hovered) {
+                            closeTimer.stop();
+                            root.grace = false;
+                        } else {
+                            closeTimer.restart();
+                            root.grace = true;
                         }
                     }
                 }
             }
-
-            HoverHandler {
-                onHoveredChanged: {
-                    root.popupPointerInside = hovered;
-                    if (hovered) {
-                        if (root.closeTimerRef)
-                            root.closeTimerRef.stop();
-                        root.grace = false;
-                    } else {
-                        if (root.closeTimerRef)
-                            root.closeTimerRef.restart();
-                        root.grace = true;
-                    }
-                }
-            }
         }
     }
+
     component PreviewCell: StyledRect {
         id: cell
 
