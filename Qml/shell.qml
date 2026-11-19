@@ -17,6 +17,7 @@ import qs.Modules.DynamicIslandHost.KDEConnect
 import qs.Modules.DynamicIslandHost.Privacy
 import qs.Modules.DynamicIslandHost.Status
 import qs.Modules.Lock
+import qs.Modules.Overview
 import qs.Modules.Polkit
 import qs.Modules.Wallpaper
 import qs.Modules.Settings
@@ -44,6 +45,8 @@ ShellRoot {
     DynamicIsland {}
 
     Settings {}
+
+    Overview {}
 
     Toast {}
 }

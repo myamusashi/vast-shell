@@ -25,6 +25,7 @@ Singleton {
     property alias lockscreen: adapter.lockscreen
     property alias mediaPlayer: adapter.mediaPlayer
     property alias notification: adapter.notification
+    property alias overview: adapter.overview
     property alias privacy: adapter.privacy
     property alias search: adapter.search
     property alias wallpaper: adapter.wallpaper
@@ -73,6 +74,7 @@ Singleton {
             property LockscreenConfig         lockscreen: LockscreenConfig {}
             property MediaPlayerConfig        mediaPlayer: MediaPlayerConfig {}
             property NotificationConfig       notification: NotificationConfig {}
+            property OverviewConfig           overview: OverviewConfig {}
             property PrivacyIndicatorConfig   privacy: PrivacyIndicatorConfig {}
             property SearchConfig             search: SearchConfig {}
             property WallpaperConfig          wallpaper: WallpaperConfig {}

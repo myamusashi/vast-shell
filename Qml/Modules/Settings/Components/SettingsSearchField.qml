@@ -177,12 +177,18 @@ Item {
         },
         {
             page: 14,
+            pageLabel: "Overview",
+            card: "Behavior & Appearance",
+            terms: ["Enable Workspace Overview", "Close on New Workspace", "Live Window Previews", "Background Dimming Alpha", "Workspace Overview"]
+        },
+        {
+            page: 15,
             pageLabel: "Network & Internet",
             card: "Hotspot",
             terms: ["Hotspot Sharing", "User Hotspot", "Hotspot Password", "Hotspot Interface", "Bandwidth"]
         },
         {
-            page: 14,
+            page: 15,
             pageLabel: "Network & Internet",
             card: "Wi-Fi",
             terms: ["Enable Wi-Fi"]
@@ -194,73 +200,73 @@ Item {
             terms: ["Template", "Add Template", "Render Now", "Output", "Post hook"]
         },
         {
-            page: 15,
+            page: 16,
             pageLabel: "Bluetooth",
             card: "Adapter",
             terms: ["Bluetooth", "Enable Bluetooth", "Discoverable", "Pairable", "Scanning", "Adapter"]
         },
         {
-            page: 15,
+            page: 16,
             pageLabel: "Bluetooth",
             card: "Paired devices",
             terms: ["Paired", "Connected", "Forget", "Blocked"]
         },
         {
-            page: 15,
+            page: 16,
             pageLabel: "Bluetooth",
             card: "Available devices",
             terms: ["Available", "Pair", "Discover"]
         },
         {
-            page: 16,
+            page: 17,
             pageLabel: "KDE Connect",
             card: "Device Discovery",
             terms: ["Enable Polling", "Poll Interval"]
         },
         {
-            page: 16,
+            page: 17,
             pageLabel: "KDE Connect",
             card: "Local Device",
             terms: ["Device ID"]
         },
         {
-            page: 16,
+            page: 17,
             pageLabel: "KDE Connect",
             card: "Paired Devices",
             terms: ["Paired Devices", "Transfer", "Share File"]
         },
         {
-            page: 16,
+            page: 17,
             pageLabel: "KDE Connect",
             card: "Available Devices",
             terms: ["Available Devices", "Pair"]
         },
         {
-            page: 17,
+            page: 18,
             pageLabel: "Greeter",
             card: "Greeter Wallpaper",
             terms: ["Wallpaper Type", "Upload Wallpaper", "Preview"]
         },
         {
-            page: 18,
+            page: 19,
             pageLabel: "Idle",
             card: "Idle Management",
             terms: ["Enable Idle Detection"]
         },
         {
-            page: 18,
+            page: 19,
             pageLabel: "Idle",
             card: "Timeouts",
             terms: ["Timeout Seconds", "Command On Timeout", "Command On Resume", "Add Timeout"]
         },
         {
-            page: 19,
+            page: 20,
             pageLabel: "Lockscreen",
             card: "Preview",
             terms: ["Lockscreen Preview", "Source"]
         },
         {
-            page: 19,
+            page: 20,
             pageLabel: "Lockscreen",
             card: "Window Privacy",
             terms: ["Blur Windows", "Blur Radius"]
@@ -272,319 +278,319 @@ Item {
             terms: ["Enable Dock", "Dock Height", "Icon Size", "Pinned Applications"]
         },
         {
-            page: 20,
+            page: 21,
             pageLabel: "About",
             card: "System Information",
             terms: ["About", "Version", "Operating System", "Kernel", "Architecture", "Processor", "Displays", "Maintainer", "Latest Update"]
         },
         {
-            page: 20,
+            page: 21,
             pageLabel: "About",
             card: "RAM & Storage",
             terms: ["RAM", "Memory", "Storage", "Disk"]
         },
         {
-            page: 20,
+            page: 21,
             pageLabel: "About",
             card: "Battery",
             terms: ["Battery", "Charge"]
         },
         {
-            page: 21,
+            page: 22,
             pageLabel: "System Monitor",
             card: "CPU & Thermals",
             terms: ["CPU", "Load", "CPU Temp", "GPU Temp", "Frequency", "MHz", "Cores", "Processor"]
         },
         {
-            page: 21,
+            page: 22,
             pageLabel: "System Monitor",
             card: "Memory (RAM)",
             terms: ["RAM", "Memory", "Used", "Free", "GiB"]
         },
         {
-            page: 21,
+            page: 22,
             pageLabel: "System Monitor",
             card: "Storage & Filesystems",
             terms: ["Storage", "Disk", "Root", "Boot", "Free", "Internal Storage", "Filesystem", "Mount"]
         },
         {
-            page: 21,
+            page: 22,
             pageLabel: "System Monitor",
             card: "Battery",
             terms: ["Battery", "Charge", "Temperature", "Health", "Voltage", "Technology", "Capacity"]
         },
         {
-            page: 21,
+            page: 22,
             pageLabel: "System Monitor",
             card: "Network",
             terms: ["Network", "Ethernet", "Wi-Fi", "Download", "Upload", "Link Speed", "Signal Strength", "Data Usage"]
         },
         {
-            page: 21,
+            page: 22,
             pageLabel: "System Monitor",
             card: "Display & Graphics",
             terms: ["Display", "GPU", "Vulkan", "OpenGL", "VA-API", "Renderer", "Vendor", "Monitor", "Refresh Rate"]
         },
         {
-            page: 21,
+            page: 22,
             pageLabel: "System Monitor",
             card: "Installed Applications",
             terms: ["Apps", "Installed Applications", "GUI", "CLI", "Terminal"]
         },
         {
-            page: 22,
+            page: 23,
             pageLabel: "Hyprland Monitors",
             card: "Monitor Layout",
             terms: ["Monitor Position", "Drag Monitors", "Monitor Arrangement", "Display Layout"]
         },
         {
-            page: 22,
+            page: 23,
             pageLabel: "Hyprland Monitors",
             card: "Monitors",
             terms: ["Resolution", "Refresh Rate", "Scale", "Transform", "Bit Depth", "Color Preset", "SDR Brightness", "SDR Saturation", "ICC Profile", "Disable Monitor"]
         },
         {
-            page: 23,
+            page: 24,
             pageLabel: "Hyprland General",
             card: "Windows",
             terms: ["Tearing", "Border Size", "Gaps In", "Gaps Out", "Layout", "Resize On Border", "Resize Corner"]
         },
         {
-            page: 23,
+            page: 24,
             pageLabel: "Hyprland General",
             card: "Snapping",
             terms: ["Snap", "Monitor Gap", "Window Gap", "Respect Gaps", "Border Overlap"]
         },
         {
-            page: 24,
+            page: 25,
             pageLabel: "Hyprland Decoration",
             card: "Decoration",
             terms: ["Opacity", "Rounding", "Dim Inactive", "Dim Strength", "Screen Shader"]
         },
         {
-            page: 24,
+            page: 25,
             pageLabel: "Hyprland Decoration",
             card: "Blur",
             terms: ["Blur Size", "Blur Passes", "Noise", "Contrast", "Brightness", "Vibrancy", "Xray", "Blur Variant"]
         },
         {
-            page: 24,
+            page: 25,
             pageLabel: "Hyprland Decoration",
             card: "Blur Acrylic",
             terms: ["Acrylic", "Aberration", "Bulb", "Clarity", "Refraction", "Tint"]
         },
         {
-            page: 24,
+            page: 25,
             pageLabel: "Hyprland Decoration",
             card: "Blur Aurora",
             terms: ["Aurora", "Color1", "Color2", "Intensity", "Speed"]
         },
         {
-            page: 24,
+            page: 25,
             pageLabel: "Hyprland Decoration",
             card: "Blur Drops",
             terms: ["Drops", "Speed"]
         },
         {
-            page: 24,
+            page: 25,
             pageLabel: "Hyprland Decoration",
             card: "Blur Fluid Jar",
             terms: ["Fluid Jar", "Distortion", "Fill Amount", "Mass", "Precision", "Speed", "Turbulence"]
         },
         {
-            page: 24,
+            page: 25,
             pageLabel: "Hyprland Decoration",
             card: "Blur Glass",
             terms: ["Glass", "Refraction", "Roughness", "Size"]
         },
         {
-            page: 24,
+            page: 25,
             pageLabel: "Hyprland Decoration",
             card: "Blur Haze",
             terms: ["Haze", "Intensity", "Iridescence"]
         },
         {
-            page: 24,
+            page: 25,
             pageLabel: "Hyprland Decoration",
             card: "Blur Heat Shimmer",
             terms: ["Heat Shimmer", "Speed"]
         },
         {
-            page: 24,
+            page: 25,
             pageLabel: "Hyprland Decoration",
             card: "Blur Ripple",
             terms: ["Ripple", "Duration", "Radius", "Strength", "Width"]
         },
         {
-            page: 24,
+            page: 25,
             pageLabel: "Hyprland Decoration",
             card: "Blur Water",
             terms: ["Water", "Damping", "Duration", "Radius", "Speed", "Strength"]
         },
         {
-            page: 24,
+            page: 25,
             pageLabel: "Hyprland Decoration",
             card: "Shadow",
             terms: ["Shadow Range", "Shadow Scale", "Shadow Sharp", "Render Power"]
         },
         {
-            page: 24,
+            page: 25,
             pageLabel: "Hyprland Decoration",
             card: "Glow",
             terms: ["Glow", "Glow Color", "Glow Range", "Render Power"]
         },
         {
-            page: 24,
+            page: 25,
             pageLabel: "Hyprland Decoration",
             card: "Motion Blur",
             terms: ["Motion Blur", "Samples"]
         },
         {
-            page: 24,
+            page: 25,
             pageLabel: "Hyprland Decoration",
             card: "Wobble",
             terms: ["Wobble Windows", "Stiffness", "Damping", "Mass", "Intensity"]
         },
         {
-            page: 25,
+            page: 26,
             pageLabel: "Hyprland Input",
             card: "Input",
             terms: ["Keyboard Layout", "Repeat Delay", "Repeat Rate", "Follow Mouse", "Sensitivity", "Scroll Factor", "Natural Scroll", "Numlock"]
         },
         {
-            page: 25,
+            page: 26,
             pageLabel: "Hyprland Input",
             card: "Touchpad",
             terms: ["Tap To Click", "Disable While Typing", "Drag Lock", "Clickfinger Behavior", "Middle Button Emulation"]
         },
         {
-            page: 25,
+            page: 26,
             pageLabel: "Hyprland Input",
             card: "Touch Devices",
             terms: ["Touch Device", "Touch Output", "Touch Transform"]
         },
         {
-            page: 25,
+            page: 26,
             pageLabel: "Hyprland Input",
             card: "Virtual Keyboard",
             terms: ["Virtual Keyboard", "Release Pressed On Close", "Share States"]
         },
         {
-            page: 25,
+            page: 26,
             pageLabel: "Hyprland Input",
             card: "Tablet",
             terms: ["Tablet Output", "Relative Input", "Active Area"]
         },
         {
-            page: 25,
+            page: 26,
             pageLabel: "Hyprland Input",
             card: "Tablet Tools",
             terms: ["Tablet Tool", "Eraser Button", "Pressure Range"]
         },
         {
-            page: 26,
+            page: 27,
             pageLabel: "Hyprland Group",
             card: "Group",
             terms: ["Auto Group", "Drag Into Group", "Insert After Current", "Merge Groups"]
         },
         {
-            page: 26,
+            page: 27,
             pageLabel: "Hyprland Group",
             card: "Group Bar",
             terms: ["Group Bar Height", "Font Size", "Render Titles", "Stacked", "Text Color"]
         },
         {
-            page: 27,
+            page: 28,
             pageLabel: "Hyprland Misc",
             card: "Misc",
             terms: ["Font Family", "VRR", "Swallow", "Focus On Activate", "Splash", "Force Default Wallpaper", "Middle Click Paste", "Disable Autoreload"]
         },
         {
-            page: 27,
+            page: 28,
             pageLabel: "Hyprland Misc",
             card: "Splash",
             terms: ["Splash Color", "Col Splash"]
         },
         {
-            page: 28,
+            page: 29,
             pageLabel: "Hyprland Binds",
             card: "Binds",
             terms: ["Workspace Cycles", "Scroll Event Delay", "Drag Threshold", "Workspace Back And Forth", "Pass Mouse When Bound"]
         },
         {
-            page: 29,
+            page: 30,
             pageLabel: "Hyprland Render",
             card: "Render",
             terms: ["Direct Scanout", "Color Management", "CM Auto HDR", "Use FP16", "Async Commit"]
         },
         {
-            page: 30,
+            page: 31,
             pageLabel: "Hyprland Cursor",
             card: "Cursor",
             terms: ["Cursor Size", "Zoom Factor", "Inactive Timeout", "Hardware Cursors", "Hide On Touch", "Use CPU Buffer"]
         },
         {
-            page: 31,
+            page: 32,
             pageLabel: "Hyprland Debug",
             card: "Debug",
             terms: ["Damage Tracking", "Disable Logs", "Overlay", "VFR", "Error Limit", "Stdout Logs"]
         },
         {
-            page: 32,
+            page: 33,
             pageLabel: "Hyprland Advanced",
             card: "Layers",
             terms: ["Layers Hog Keyboard Focus", "Allow New Top Layers Over Existing Fullscreen"]
         },
         {
-            page: 32,
+            page: 33,
             pageLabel: "Hyprland Advanced",
             card: "Layout",
             terms: ["Single Window Aspect Ratio", "Aspect Ratio Tolerance"]
         },
         {
-            page: 32,
+            page: 33,
             pageLabel: "Hyprland Advanced",
             card: "Xwayland",
             terms: ["Xwayland", "Force Zero Scaling", "Nearest Neighbor", "Create Abstract Socket"]
         },
         {
-            page: 32,
+            page: 33,
             pageLabel: "Hyprland Advanced",
             card: "OpenGL",
             terms: ["Nvidia Anti Flicker", "OpenGL"]
         },
         {
-            page: 32,
+            page: 33,
             pageLabel: "Hyprland Advanced",
             card: "Ecosystem",
             terms: ["Enforce Permissions", "Donation Nag", "Update News"]
         },
         {
-            page: 32,
+            page: 33,
             pageLabel: "Hyprland Advanced",
             card: "Quirks",
             terms: ["Prefer HDR", "Skip Non KMS Dmabuf Formats", "Quirks"]
         },
         {
-            page: 32,
+            page: 33,
             pageLabel: "Hyprland Advanced",
             card: "Input Capture",
             terms: ["Input Capture", "Capture Modifiers", "Enforce Barriers"]
         },
         {
-            page: 32,
+            page: 33,
             pageLabel: "Hyprland Advanced",
             card: "Experimental",
             terms: ["Experimental", "WP CM 1 2"]
         },
         {
-            page: 33,
+            page: 34,
             pageLabel: "Window Rules",
             card: "Rules",
             terms: ["Window Rules", "Float Windows", "Opacity Rules", "Border Color", "Rounding", "Match Class", "Match Title", "Pin Windows", "Fullscreen Rule", "Suppress Events"]
         },
         {
-            page: 34,
+            page: 35,
             pageLabel: "Layer Rules",
             card: "Rules",
             terms: ["Layer Rules", "Layer Blur", "Blur Bar", "Namespace", "Ignore Alpha", "Dim Around", "Blur Popups", "Above Lock", "No Screen Share"]

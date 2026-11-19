@@ -129,6 +129,10 @@ LazyLoader {
                                     {
                                         icon: "description",
                                         label: qsTr("Templates")
+                                    },
+                                    {
+                                        icon: "grid_view",
+                                        label: qsTr("Overview")
                                     }
                                 ]
                             },
@@ -268,7 +272,7 @@ LazyLoader {
                         id: pagesColumn
                         readonly property string currentHyprlandCategory: (hyprlandCategoryOffset >= 0 && hyprlandCategoryOffset < hyprlandCategories.length) ? hyprlandCategories[hyprlandCategoryOffset] : ""
                         readonly property var    hyprlandCategories: ["general", "decoration", "input", "group", "misc", "binds", "render", "cursor", "debug", "advanced"]
-                        readonly property int    hyprlandCategoryOffset: settingsLoader.currentPage - 23
+                        readonly property int    hyprlandCategoryOffset: settingsLoader.currentPage - 24
 
                         function                 revealCard(cardTitle: string) {
                             const kids = pagesColumn.children;
@@ -371,53 +375,58 @@ LazyLoader {
 
                         PageLoader {
                             pageIndex: 14
-                            sourceComponent: InternetPage {}
+                            sourceComponent: OverviewPage {}
                         }
 
                         PageLoader {
                             pageIndex: 15
-                            sourceComponent: BluetoothPage {}
+                            sourceComponent: InternetPage {}
                         }
 
                         PageLoader {
                             pageIndex: 16
-                            sourceComponent: KDEConnectPage {}
+                            sourceComponent: BluetoothPage {}
                         }
 
                         PageLoader {
                             pageIndex: 17
-                            sourceComponent: GreeterPage {}
+                            sourceComponent: KDEConnectPage {}
                         }
 
                         PageLoader {
                             pageIndex: 18
-                            sourceComponent: IdlePage {}
+                            sourceComponent: GreeterPage {}
                         }
 
                         PageLoader {
                             pageIndex: 19
-                            sourceComponent: LockscreenPage {}
+                            sourceComponent: IdlePage {}
                         }
 
                         PageLoader {
                             pageIndex: 20
-                            sourceComponent: AboutPage {}
+                            sourceComponent: LockscreenPage {}
                         }
 
                         PageLoader {
                             pageIndex: 21
-                            sourceComponent: PerformancePage {}
+                            sourceComponent: AboutPage {}
                         }
 
                         PageLoader {
                             pageIndex: 22
+                            sourceComponent: PerformancePage {}
+                        }
+
+                        PageLoader {
+                            pageIndex: 23
                             sourceComponent: MonitorsPage {}
                         }
 
                         Loader {
                             id: hyprlandOptionsLoader
 
-                            readonly property bool isCurrentPage: settingsLoader.currentPage >= 23 && settingsLoader.currentPage <= 32
+                            readonly property bool isCurrentPage: settingsLoader.currentPage >= 24 && settingsLoader.currentPage <= 33
 
                             property string        activeCategory: "general"
                             property bool          keepAlive: false
@@ -455,12 +464,12 @@ LazyLoader {
                         }
 
                         PageLoader {
-                            pageIndex: 33
+                            pageIndex: 34
                             sourceComponent: WindowRulesPage {}
                         }
 
                         PageLoader {
-                            pageIndex: 34
+                            pageIndex: 35
                             sourceComponent: LayerRulesPage {}
                         }
                     }

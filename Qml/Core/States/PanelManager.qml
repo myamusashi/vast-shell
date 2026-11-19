@@ -21,7 +21,8 @@ Scope {
             "weather": "isWeatherPanelOpen",
             "settings": "isSettingsOpen",
             "clipboard": "isClipboardOpen",
-            "recordingPanel": "isRecordingPanelOpen"
+            "recordingPanel": "isRecordingPanelOpen",
+            "overview": "isOverviewOpen"
         })
 
     property string        activeDrawer: ""
@@ -29,6 +30,7 @@ Scope {
     property bool          isDashboardOpen: false
     property bool          isMediaPlayerOpen: false
     property bool          isNotificationCenterOpen: false
+    property bool          isOverviewOpen: false
     property bool          isQuickSettingsOpen: false
     property bool          isRecordingPanelOpen: false
     property bool          isSessionOpen: false
@@ -49,6 +51,17 @@ Scope {
     }
 
     function               setPanel(name, value) {
+        if (name === "overview") {
+            if (value && !Configs.overview.enabled)
+                return;
+            if (value) {
+                root.activeDrawer    = "";
+                root.isClipboardOpen = false;
+                root.isSessionOpen   = false;
+            }
+            root.isOverviewOpen = value;
+            return;
+        }
         if (root.exclusiveDrawers.includes(name)) {
             if (!value && root.activeDrawer !== name)
                 return;

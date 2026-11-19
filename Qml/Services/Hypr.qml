@@ -55,7 +55,9 @@ Singleton {
     signal                              configReloaded
 
     function                            dispatch(request: string): void {
-        Hyprland.dispatch(request);
+        Quickshell.execDetached({
+            command: ["hyprctl", "dispatch", request]
+        });
     }
 
     function                            monitorFor(screen: ShellScreen): HyprlandMonitor {

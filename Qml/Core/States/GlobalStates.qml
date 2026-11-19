@@ -20,7 +20,7 @@ Singleton {
     readonly property bool   hasInlineReply: inlineReplyOwner !== null
     readonly property bool   isCapsLockOSDVisible: osd.isActive("capslock")
     readonly property bool   isNumLockOSDVisible: osd.isActive("numlock")
-    readonly property bool   isShellKeyboardGrabActive: isLauncherOpen || isSessionOpen || isWallpaperSwitcherOpen || isClipboardOpen || hasInlineReply || isAddTodoListOpen || isEditTodoListOpen
+    readonly property bool   isShellKeyboardGrabActive: isLauncherOpen || isSessionOpen || isWallpaperSwitcherOpen || isClipboardOpen || hasInlineReply || isAddTodoListOpen || isEditTodoListOpen || isOverviewOpen
     readonly property bool   isVolumeOSDVisible: osd.isActive("volume")
 
     property alias           activeDrawer: panel.activeDrawer
@@ -37,6 +37,7 @@ Singleton {
     property alias           isMediaPlayerOpen: panel.isMediaPlayerOpen
     property alias           isNotificationCenterOpen: panel.isNotificationCenterOpen
     property alias           isNumLockOSDShow: root.isNumLockOSDVisible
+    property alias           isOverviewOpen: panel.isOverviewOpen
     property alias           isQuickSettingsOpen: panel.isQuickSettingsOpen
     property alias           isRecordingPanelOpen: panel.isRecordingPanelOpen
     property bool            isScreenshotSelectionOpen: false
@@ -172,6 +173,10 @@ Singleton {
             {
                 panel: "recordingPanel",
                 shortcut: "recordingPanel"
+            },
+            {
+                panel: "overview",
+                shortcut: "overview"
             }
         ]
         delegate: PanelController {
