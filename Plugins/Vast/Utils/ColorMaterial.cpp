@@ -1,6 +1,7 @@
 #include "ColorMaterial.hpp"
 
 #include <qcolor.h>
+#include <qcoreapplication.h>
 #include <qstring.h>
 #include <qurl.h>
 #include <qvariant.h>
@@ -8,6 +9,7 @@
 #include <qnamespace.h>
 #include <qlatin1stringview.h>
 #include <qobject.h>
+#include <qpointer.h>
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
@@ -154,20 +156,25 @@ void ColorMaterial::rebuild() {
         applyResult({}, {}, QString());
         return;
     }
-    const QString mode          = mDarkMode ? QStringLiteral("dark") : QStringLiteral("light");
-    const QString scheme        = schemeToString(mScheme);
-    const int     rescaleSize   = mRescaleSize;
-    const double  contrastLevel = mContrastLevel;
-    const bool    smart         = mSmart;
+    const QString                 mode          = mDarkMode ? QStringLiteral("dark") : QStringLiteral("light");
+    const QString                 scheme        = schemeToString(mScheme);
+    const int                     rescaleSize   = mRescaleSize;
+    const double                  contrastLevel = mContrastLevel;
+    const bool                    smart         = mSmart;
 
-    vast::JobExecutor::instance().post([this, generation, path, mode, scheme, rescaleSize, contrastLevel, smart] {
+    const QPointer<ColorMaterial> self(this);
+    vast::JobExecutor::instance().post([self, generation, path, mode, scheme, rescaleSize, contrastLevel, smart] {
         const auto result = buildPalette(path, mode, scheme, smart, rescaleSize, contrastLevel);
+        auto*      app    = QCoreApplication::instance();
+        if (!app)
+            return;
+
         QMetaObject::invokeMethod(
-            this,
-            [this, generation, result] {
-                if (generation != mGeneration)
+            app,
+            [self, generation, result] {
+                if (self.isNull() || generation != self->mGeneration)
                     return;
-                applyResult(colorsToVariantMap(result.colors), QColor(result.colors.value(QStringLiteral("sourceColor"))), result.error);
+                self->applyResult(colorsToVariantMap(result.colors), QColor(result.colors.value(QStringLiteral("sourceColor"))), result.error);
             },
             Qt::QueuedConnection);
     });

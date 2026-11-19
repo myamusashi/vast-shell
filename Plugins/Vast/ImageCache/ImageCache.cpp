@@ -12,6 +12,8 @@
 #include <qdir.h>
 #include <qfile.h>
 #include <qassert.h>
+#include <qcoreapplication.h>
+#include <qpointer.h>
 #include <qquickimageprovider.h>
 #include <expected>
 #include <qtmetamacros.h>
@@ -68,7 +70,8 @@ void ImageCache::preload(const QString& path, QSize targetSize) {
         return;
     mLoading.insert(path);
 
-    vast::JobExecutor::instance().post([this, path, targetSize]() {
+    const QPointer<ImageCache> self(this);
+    vast::JobExecutor::instance().post([self, path, targetSize]() {
         QImageReader reader(path);
         reader.setAutoTransform(true);
         if (targetSize.isValid())
@@ -77,11 +80,17 @@ void ImageCache::preload(const QString& path, QSize targetSize) {
         if (reader.read().isNull())
             qWarning() << "[ImageCache] Failed to preload:" << path;
 
+        auto* app = QCoreApplication::instance();
+        if (!app)
+            return;
+
         QMetaObject::invokeMethod(
-            this,
-            [this, path] {
-                store(path);
-                Q_EMIT imageReady(path);
+            app,
+            [self, path] {
+                if (self.isNull())
+                    return;
+                self->store(path);
+                Q_EMIT self->imageReady(path);
             },
             Qt::QueuedConnection);
     });
@@ -145,10 +154,13 @@ void ImageCache::store(const QString& path) {
 
     constexpr qsizetype kMaxCacheEntries = 200;
     if (mDone.size() > kMaxCacheEntries) {
-        const qsizetype toRemove = mDone.size() - kMaxCacheEntries;
-        qsizetype       removed  = 0;
-        for (auto it = mDone.cbegin(); it != mDone.cend() && removed < toRemove; ++it, ++removed)
-            mDone.remove(*it);
+        qsizetype toRemove = mDone.size() - kMaxCacheEntries;
+        mDone.removeIf([&toRemove](const QString&) {
+            if (toRemove <= 0)
+                return false;
+            --toRemove;
+            return true;
+        });
     }
 }
 

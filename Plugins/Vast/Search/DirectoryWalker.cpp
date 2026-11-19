@@ -2,10 +2,12 @@
 #include "../FuzzyMatcher.hpp"
 #include "../Jobs/JobExecutor.hpp"
 
+#include <qcoreapplication.h>
 #include <qdir.h>
 #include <qfileinfo.h>
 #include <qnamespace.h>
 #include <qobjectdefs.h>
+#include <qpointer.h>
 #include <qset.h>
 #include <qstring.h>
 #include <qstringlist.h>
@@ -103,10 +105,11 @@ namespace vast {
         const int generation = mGeneration.fetchAndAddRelaxed(1) + 1;
         setWalking(true);
 
-        const WalkConfig  cfg{.showHidden = mShowHidden, .nameFilters = mNameFilters, .excludedDirs = QSet<QString>(mExcludedDirs.cbegin(), mExcludedDirs.cend())};
-        const int         maxDepth = mMaxDepth;
-        const QStringList roots    = mRoots;
-        vast::JobExecutor::instance().post([this, generation, cfg, maxDepth, roots]() {
+        const WalkConfig                cfg{.showHidden = mShowHidden, .nameFilters = mNameFilters, .excludedDirs = QSet<QString>(mExcludedDirs.cbegin(), mExcludedDirs.cend())};
+        const int                       maxDepth = mMaxDepth;
+        const QStringList               roots    = mRoots;
+        const QPointer<DirectoryWalker> self(this);
+        vast::JobExecutor::instance().post([self, generation, cfg, maxDepth, roots]() {
             QVariantList  entries;
             int           budget = K_MAX_ENTRIES;
             QSet<QString> visited;
@@ -126,13 +129,17 @@ namespace vast {
                     break;
             }
 
+            auto* app = QCoreApplication::instance();
+            if (!app)
+                return;
+
             QMetaObject::invokeMethod(
-                this,
-                [this, generation, entries = std::move(entries)]() mutable {
-                    if (mGeneration.loadRelaxed() != generation)
+                app,
+                [self, generation, entries = std::move(entries)]() mutable {
+                    if (self.isNull() || self->mGeneration.loadRelaxed() != generation)
                         return;
-                    setWalking(false);
-                    Q_EMIT walkFinished(std::move(entries));
+                    self->setWalking(false);
+                    Q_EMIT self->walkFinished(std::move(entries));
                 },
                 Qt::QueuedConnection);
         });
