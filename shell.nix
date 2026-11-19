@@ -56,17 +56,9 @@
                 eval qsb $flags -o "$output" "$input"
             fi
         }
-        TRANSITIONS=(
-            fade wipeDown circleExpand dissolve splitHorizontal
-            hexTile slideUp pixelate diagonalWipe boxExpand roll
-        )
-        for name in "''${TRANSITIONS[@]}"; do
-            compile_if_missing "Assets/shaders/transitions/$name.frag.qsb" "Assets/shaders/transitions/$name.frag" "$FRAG_ONLY_FLAGS"
-        done
-
-        SHADERS=(borderProgress wavy waveForm circleWave cornerFillet drawerShape arcGauge linearProgress triangleCaret waveFill celestialArc cpuGraph)
-        for shader in "''${SHADERS[@]}"; do
-            compile_if_missing "Assets/shaders/$shader.frag.qsb" "Assets/shaders/$shader.frag" "$FRAG_ONLY_FLAGS"
+        for src in Assets/shaders/transitions/*.frag Assets/shaders/*.frag; do
+            [ -e "$src" ] || continue
+            compile_if_missing "''${src}.qsb" "$src" "$FRAG_ONLY_FLAGS"
         done
         echo "vast-shell environment (clang toolchain)"
     '';

@@ -98,20 +98,13 @@
             find Assets/shaders -name "*.qsb" -delete
 
             echo "Compile shaders..."
-            for name in fade wipeDown hexTile circleExpand dissolve splitHorizontal slideUp pixelate diagonalWipe boxExpand roll; do
-                echo "Compiling ''${name}.frag..."
+            for src in Assets/shaders/transitions/*.frag Assets/shaders/*.frag; do
+                [ -e "$src" ] || continue
+                echo "Compiling $(basename "$src")..."
                 ${qt6.qtshadertools}/bin/qsb \
                     --glsl "150,330,300 es" --hlsl 50 --msl 12 \
-                    -o Assets/shaders/transitions/''${name}.frag.qsb \
-                       Assets/shaders/transitions/''${name}.frag
-            done
-
-            for name in borderProgress wavy circleWave waveForm cornerFillet drawerShape arcGauge linearProgress triangleCaret waveFill celestialArc cpuGraph; do
-                echo "Compiling ''${name}.frag..."
-                ${qt6.qtshadertools}/bin/qsb \
-                    --glsl "150,330,300 es" --hlsl 50 --msl 12 \
-                    -o Assets/shaders/''${name}.frag.qsb \
-                       Assets/shaders/''${name}.frag
+                    -o "''${src}.qsb" \
+                       "$src"
             done
             runHook postBuild
         '';

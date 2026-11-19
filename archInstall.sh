@@ -381,13 +381,10 @@ compile_shaders() {
 
 	if [[ -d $transition_dir ]]; then
 		log "Compiling transition shaders..."
-		local -ra transitions=(
-			fade wipeDown hexTile circleExpand dissolve splitHorizontal
-			slideUp pixelate diagonalWipe boxExpand roll
-		)
 		local failed=0
-		for name in "${transitions[@]}"; do
-			compile_shader_stage "$qsb" "$transition_dir/${name}.frag" "$transition_dir/${name}.frag.qsb" "150,330,300 es" ||
+		for src in "$transition_dir"/*.frag; do
+			[[ -e $src ]] || continue
+			compile_shader_stage "$qsb" "$src" "${src}.qsb" "150,330,300 es" ||
 				failed=$((failed + 1))
 		done
 		((failed == 0)) || warn "$failed transition shader(s) failed to compile"
@@ -395,10 +392,10 @@ compile_shaders() {
 		warn "Transitions directory not found: $transition_dir — skipping"
 	fi
 
-	log "Compiling border progress, wavy, wave form and circleWave shaders..."
-	local -ra frag_only_shaders=(borderProgress wavy waveForm circleWave cornerFillet drawerShape arcGauge linearProgress triangleCaret waveFill celestialArc)
-	for name in "${frag_only_shaders[@]}"; do
-		compile_shader_stage "$qsb" "$shader_dir/${name}.frag" "$shader_dir/${name}.frag.qsb" "150,330,300 es" || true
+	log "Compiling shaders..."
+	for src in "$shader_dir"/*.frag; do
+		[[ -e $src ]] || continue
+		compile_shader_stage "$qsb" "$src" "${src}.qsb" "150,330,300 es" || true
 	done
 }
 
