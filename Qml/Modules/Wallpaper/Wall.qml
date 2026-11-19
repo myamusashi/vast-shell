@@ -28,7 +28,7 @@ Variants {
             top: true
         }
 
-        Wallpaper {
+        BaseWallpaper {
             anchors.fill: parent
         }
     }
