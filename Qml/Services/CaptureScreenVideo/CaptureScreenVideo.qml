@@ -407,23 +407,23 @@ Singleton {
     IpcHandler {
 
         function pause(): void {
-            CaptureScreenVideo.togglePause();
+            root.togglePause();
         }
 
         function start(): void {
-            CaptureScreenVideo.startRecording("");
+            root.startRecording("");
         }
 
         function status(): bool {
-            return CaptureScreenVideo.isRecording;
+            return root.isRecording;
         }
 
         function stop(): void {
-            CaptureScreenVideo.stopRecording();
+            root.stopRecording();
         }
 
         function toggle(): void {
-            CaptureScreenVideo.isRecording ? CaptureScreenVideo.stopRecording() : CaptureScreenVideo.startRecording("");
+            root.isRecording ? root.stopRecording() : root.startRecording("");
         }
 
         target: "captureScreenVideo"

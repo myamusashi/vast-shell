@@ -98,5 +98,5 @@ Singleton {
         target: GlobalStates
     }
 
-    Component.onCompleted: ClipboardManager.initialize(`${Paths.cacheDir}/clipboard.db`)
+    Component.onCompleted: ClipboardManager.initialize(Paths.cacheDir + "/clipboard.db")
 }

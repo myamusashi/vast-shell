@@ -95,7 +95,7 @@ Item {
 
             const currentParentX = root.mapToItem(root.parent, mouse.x, 0).x;
             const deltaX         = currentParentX - pressParentX;
-            if (!dragActive && Math.abs(deltaX) >= Qt.styleHints.startDragDistance) {
+            if (!dragActive && Math.abs(deltaX) >= Qt.styleHints.startDragDistance) { // qmllint disable
                 dragActive    = true;
                 root.dragging = true;
                 root.dragStarted();

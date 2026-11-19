@@ -97,11 +97,10 @@ Singleton {
     }
 
     function               runKdeConnect(args, warnTag) {
-        const process   = kdeConnectProcess.createObject(root, {
+        kdeConnectProcess.createObject(root, {
             command: args,
             warnTag: warnTag
         });
-        process.running = true;
     }
 
     function               sendClipboard(deviceId) {
@@ -202,6 +201,8 @@ Singleton {
 
             property string stderrText: ""
             property string warnTag: ""
+
+            running: true
 
             stderr: StdioCollector {
                 onStreamFinished: process.stderrText = text

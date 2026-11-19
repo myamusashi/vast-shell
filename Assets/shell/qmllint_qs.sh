@@ -26,12 +26,14 @@ else
     fi
 
     ARGS=("-I" "${ROOT}/Qml" "-I" "${BUILDDIR}")
-    if [ -d "${ROOT}/build/default/qml" ]; then
-        ARGS+=("-I" "${ROOT}/build/default/qml")
-    fi
     while IFS= read -r path; do
         ARGS+=("-I" "${path}")
     done < <(grep importPaths "${INI}" | cut -d'"' -f2 | tr ':' '\n' | sed '/^$/d')
+    # Local build output last: its qmltypes can lag behind the sources (stale
+    # plugin API) and must never shadow the runtime-resolved paths above.
+    if [ -d "${ROOT}/build/default/qml" ]; then
+        ARGS+=("-I" "${ROOT}/build/default/qml")
+    fi
 fi
 
 if [ "$#" -eq 0 ]; then
