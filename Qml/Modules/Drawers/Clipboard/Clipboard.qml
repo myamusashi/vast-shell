@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell.Widgets
+import Vast.Clipboard
 
 import qs.Core.Configs
 import qs.Core.States
@@ -12,22 +13,8 @@ import qs.Components.Dialog
 
 WrapperRectangle {
     id: root
+
     readonly property bool shouldBeActive: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) && GlobalStates.isClipboardOpen // qmllint disable
-
-    property bool          keepAlive: false
-
-    onShouldBeActiveChanged: {
-        if (shouldBeActive)
-            keepAlive = true;
-    }
-
-    Timer {
-        id: idleUnloadTimer
-
-        interval: 120000
-        running: root.keepAlive && !root.shouldBeActive
-        onTriggered: root.keepAlive = false
-    }
 
     anchors.centerIn: parent
     clip: true
@@ -44,10 +31,16 @@ WrapperRectangle {
     }
 
     Loader {
-        active: root.shouldBeActive || root.keepAlive
+        active: root.shouldBeActive || root.visible
         asynchronous: true
         height: Configs.clipboard.height
         width: root.implicitWidth
+        onActiveChanged: {
+            if (!active) {
+                ClipboardManager.model.clearSearchIndex();
+                GlobalStates.requestGc();
+            }
+        }
 
         anchors {
             horizontalCenter: parent.horizontalCenter

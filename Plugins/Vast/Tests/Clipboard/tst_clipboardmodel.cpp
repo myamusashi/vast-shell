@@ -69,6 +69,7 @@ class TestClipboardModel : public QObject {
     void countChangedFiresOnMutation();
     void typeFilterFiltersByCategoryAndCombinesWithQuery();
     void cycleTypeFilterCyclesInExpectedOrder();
+    void clearSearchIndexDropsCacheAndRebuildsOnNextFilter();
 };
 
 void TestClipboardModel::roleNamesMatchQmlContract() {
@@ -475,6 +476,29 @@ void TestClipboardModel::cycleTypeFilterCyclesInExpectedOrder() {
     QCOMPARE(model.typeFilter(), TypeFilter::All);
 
     QCOMPARE(spy.count(), 5);
+}
+
+void TestClipboardModel::clearSearchIndexDropsCacheAndRebuildsOnNextFilter() {
+    vast::ClipboardModel model;
+    model.reset({
+        entry(1, QStringLiteral("alpha bravo"), 1000),
+        entry(2, QStringLiteral("<p>charlie delta</p>"), 2000, false, vast::ClipboardType::Html),
+    });
+
+    model.setFilter(QStringLiteral("charlie"));
+    QCOMPARE(visibleIds(model), (QList<qint64>{2}));
+
+    model.setFilter(QString());
+    QCOMPARE(visibleIds(model), (QList<qint64>{1, 2}));
+
+    model.clearSearchIndex();
+    QCOMPARE(visibleIds(model), (QList<qint64>{1, 2}));
+
+    model.setFilter(QStringLiteral("charlie"));
+    QCOMPARE(visibleIds(model), (QList<qint64>{2}));
+
+    model.setFilter(QStringLiteral("alpha"));
+    QCOMPARE(visibleIds(model), (QList<qint64>{1}));
 }
 
 QTEST_MAIN(TestClipboardModel)

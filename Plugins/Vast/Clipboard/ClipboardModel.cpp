@@ -264,6 +264,22 @@ namespace vast {
         setTypeFilter(TypeFilter::All);
     }
 
+    void ClipboardModel::clearSearchIndex() {
+        for (ClipboardEntry& entry : mEntries) {
+            if (!entry.searchIndexed)
+                continue;
+            entry.searchContent.clear();
+            entry.searchContent.squeeze();
+            entry.searchFileName.clear();
+            entry.searchFileName.squeeze();
+            entry.searchSourceApp.clear();
+            entry.searchSourceApp.squeeze();
+            entry.searchIndexed = false;
+        }
+        if (!mFiltering)
+            mFiltered.shrink_to_fit();
+    }
+
     void ClipboardModel::bumpToTop(qint64 id) {
         const int existing = indexById(id);
         if (existing < 0)

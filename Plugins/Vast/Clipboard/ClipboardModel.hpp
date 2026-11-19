@@ -69,6 +69,7 @@ namespace vast {
         Q_INVOKABLE void                           setTypeFilter(TypeFilter filter);
         Q_INVOKABLE void                           cycleTypeFilter();
         Q_INVOKABLE void                           resetTypeFilter();
+        Q_INVOKABLE void                           clearSearchIndex();
 
         void                                       bumpToTop(qint64 id);
 
