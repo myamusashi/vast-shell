@@ -7,7 +7,6 @@
 //@ pragma Env QT_FFMPEG_DECODING_HW_DEVICE_TYPES=vaapi
 //@ pragma Env MALLOC_CONF=background_thread:true,dirty_decay_ms:2000,muzzy_decay_ms:2000
 
-
 import QtQuick
 import Quickshell
 

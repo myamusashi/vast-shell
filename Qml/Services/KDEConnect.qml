@@ -203,7 +203,6 @@ Singleton {
             property string warnTag: ""
 
             running: true
-
             stderr: StdioCollector {
                 onStreamFinished: process.stderrText = text
             }
