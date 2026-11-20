@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Services
 import qs.Services.Hyprland
@@ -116,5 +117,11 @@ Rectangle {
             if (root.draggable)
                 root.finalizePosition();
         }
+    }
+
+    Tooltip {
+        anchorItem: root
+        enabled: !root.dragActive && root.rectData !== null
+        text: root.rectData ? `${root.rectData.label} (${Math.round(root.rectData.width)}×${Math.round(root.rectData.height)})` : ""
     }
 }

@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Widgets
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
@@ -150,5 +151,12 @@ Item {
             const point = root.mapToItem(null, mouse.x, 0);
             root.contextMenuRequested(point.x, point.y);
         }
+    }
+
+    Tooltip {
+        anchorItem: root
+        enabled: (!root.showsIndicator || root.entryId === "") && !root.dragging
+        position: Edges.Top
+        text: root.entry?.name || root.toplevel?.lastIpcObject?.title || ""
     }
 }

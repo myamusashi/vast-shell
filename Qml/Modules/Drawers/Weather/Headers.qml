@@ -9,6 +9,7 @@ import qs.Services
 import qs.Components.Base
 import qs.Components.Button
 import qs.Components.Feedback
+import qs.Components.Tooltip
 
 ColumnLayout {
     id: root
@@ -44,23 +45,33 @@ ColumnLayout {
             }
 
             StyledText {
+                id: locationText
+
                 Layout.fillWidth: true
                 color: Colours.m3Colors.m3OnSurface
                 elide: Text.ElideRight
                 font.pixelSize: Appearance.fonts.size.large
                 text: Weather.locationName + ", " + Weather.locationRegion + ", " + Weather.locationCountry
+
+                Tooltip {
+                    anchorItem: locationText
+                    enabled: locationText.truncated
+                    text: locationText.text
+                }
             }
 
             FloatingButton {
                 Layout.alignment: Qt.AlignRight
                 backgroundRadius: Appearance.rounding.normal
+                buttonEnabled: Weather.canRefresh
                 color: "transparent"
-                enabled: Weather.canRefresh
+                disabledTooltipText: qsTr("Refreshing weather…")
                 icon.color: Colours.m3Colors.m3OnSurface
                 icon.name: "refresh"
                 icon.size: Appearance.fonts.size.large * 1.5
                 implicitHeight: 32
                 implicitWidth: 32
+                tooltipText: qsTr("Refresh weather")
                 onClicked: Weather.refresh()
             }
         }

@@ -6,6 +6,7 @@ import QtQuick.Layouts
 
 import qs.Components.Base
 import qs.Components.Button
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Services
 import qs.Services.Hyprland
@@ -172,12 +173,19 @@ SettingRow {
     description: descriptionText()
 
     Rectangle {
+        id: modifiedDot
+
         Layout.alignment: Qt.AlignVCenter
         Layout.preferredHeight: 6
         Layout.preferredWidth: 6
         color: Colours.m3Colors.m3Primary
         radius: 3
         visible: root.modified
+
+        Tooltip {
+            anchorItem: modifiedDot
+            text: qsTr("Modified — will be written on Apply")
+        }
     }
 
     Loader {
@@ -485,6 +493,11 @@ SettingRow {
                     value: root.gapUniformText()
                     when: !uniformField.activeFocus
                 }
+
+                Tooltip {
+                    anchorItem: uniformField
+                    text: qsTr("All sides")
+                }
             }
 
             SideField {
@@ -502,6 +515,11 @@ SettingRow {
                     property: "text"
                     value: root.gapSideText("top")
                     when: !topField.activeFocus
+                }
+
+                Tooltip {
+                    anchorItem: topField
+                    text: qsTr("Top gap")
                 }
             }
 
@@ -521,6 +539,11 @@ SettingRow {
                     value: root.gapSideText("left")
                     when: !leftField.activeFocus
                 }
+
+                Tooltip {
+                    anchorItem: leftField
+                    text: qsTr("Left gap")
+                }
             }
 
             SideField {
@@ -539,6 +562,11 @@ SettingRow {
                     value: root.gapSideText("right")
                     when: !rightField.activeFocus
                 }
+
+                Tooltip {
+                    anchorItem: rightField
+                    text: qsTr("Right gap")
+                }
             }
 
             SideField {
@@ -556,6 +584,11 @@ SettingRow {
                     property: "text"
                     value: root.gapSideText("bottom")
                     when: !bottomField.activeFocus
+                }
+
+                Tooltip {
+                    anchorItem: bottomField
+                    text: qsTr("Bottom gap")
                 }
             }
         }

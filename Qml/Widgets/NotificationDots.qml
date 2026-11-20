@@ -1,5 +1,6 @@
 import QtQuick
 
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
@@ -50,5 +51,16 @@ Item {
         hoverEnabled: true
         layerColor: "transparent"
         onClicked: GlobalStates.isNotificationCenterOpen = !GlobalStates.isNotificationCenterOpen
+    }
+
+    Tooltip {
+        anchorItem: dots
+        text: {
+            if (root.isDndEnable)
+                return root.notificationCount > 0 ? qsTr("Do Not Disturb · %n notification(s)", "", root.notificationCount) : qsTr("Do Not Disturb");
+            if (root.notificationCount > 0)
+                return qsTr("%n notification(s)", "", root.notificationCount);
+            return qsTr("No notifications");
+        }
     }
 }

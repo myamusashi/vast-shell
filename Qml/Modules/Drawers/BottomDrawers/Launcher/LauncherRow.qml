@@ -6,6 +6,7 @@ import Quickshell
 import Quickshell.Widgets
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -86,6 +87,8 @@ Item {
         }
 
         Item {
+            id: pinButton
+
             Layout.alignment: Qt.AlignVCenter
             Layout.rightMargin: Appearance.margin.normal
             implicitHeight: 32
@@ -105,6 +108,12 @@ Item {
                 layerRadius: Appearance.rounding.normal
                 z: 1
                 onClicked: DockServices.togglePin(root.itemId)
+            }
+
+            Tooltip {
+                anchorItem: pinButton
+                enabled: root.kind === "app"
+                text: root.isPinned ? qsTr("Unpin from Dock") : qsTr("Pin to Dock")
             }
         }
     }

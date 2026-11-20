@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -119,6 +120,11 @@ GridLayout {
                         connectedGrid.checkedIndex = button.index;
                     connectedGrid.buttonClicked(button.index);
                 }
+            }
+
+            Tooltip {
+                anchorItem: button
+                text: button.modelData.tooltip ?? ""
             }
         }
     }

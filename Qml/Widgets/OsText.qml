@@ -1,12 +1,15 @@
 import QtQuick
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
 import qs.Services
 
 StyledRect {
+    id: root
+
     color: "transparent"
     implicitHeight: 22
     implicitWidth: osIcon.implicitWidth + Appearance.padding.small * 2
@@ -27,5 +30,10 @@ StyledRect {
         cursorShape: Qt.PointingHandCursor
         layerRadius: 6
         onClicked: GlobalStates.isSettingsOpen = true
+    }
+
+    Tooltip {
+        anchorItem: root
+        text: SystemUsage.osPrettyName ? qsTr("%1 · Settings").arg(SystemUsage.osPrettyName) : qsTr("Settings")
     }
 }

@@ -8,6 +8,7 @@ import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
 import qs.Components.Button
+import qs.Components.Tooltip
 import qs.Services
 
 Column {
@@ -51,12 +52,20 @@ Column {
         width: parent.width
 
         StyledText {
+            id: appNameText
+
             Layout.fillWidth: true
             color: Colours.m3Colors.m3OnSurfaceVariant
             elide: Text.ElideRight
             font.pixelSize: Appearance.fonts.size.small
             font.weight: Font.Medium
             text: root.modelData.appName
+
+            Tooltip {
+                anchorItem: appNameText
+                enabled: appNameText.truncated
+                text: appNameText.text
+            }
         }
 
         StyledText {
@@ -80,6 +89,11 @@ Column {
                 running: root.visible
                 onTriggered: timeText.text = FormatTimeUtils.timeAgoWithIfElse(root.modelData.time)
             }
+
+            Tooltip {
+                anchorItem: timeText
+                text: root.modelData?.time ? FormatTimeUtils.formatTimestampWithTime(root.modelData.time) : ""
+            }
         }
 
         FloatingButton {
@@ -91,11 +105,14 @@ Column {
             icon.color: Colours.m3Colors.m3OnSurfaceVariant
             icon.name: root.isShowMoreBody ? "expand_less" : "expand_more"
             icon.size: Appearance.fonts.size.large
+            tooltipText: root.isShowMoreBody ? qsTr("Show less") : qsTr("Show more")
             onClicked: root.isShowMoreBody = !root.isShowMoreBody
         }
     }
 
     StyledText {
+        id: summaryText
+
         color: Colours.m3Colors.m3OnSurface
         elide: Text.ElideRight
         font.pixelSize: Appearance.fonts.size.medium
@@ -104,6 +121,12 @@ Column {
         text: root.modelData.summary
         width: parent.width
         wrapMode: Text.Wrap
+
+        Tooltip {
+            anchorItem: summaryText
+            enabled: summaryText.truncated
+            text: summaryText.text
+        }
     }
 
     StyledText {
@@ -152,6 +175,8 @@ Column {
                     }
 
                     StyledText {
+                        id: actionLabel
+
                         color: Colours.m3Colors.m3OnBackground
                         elide: Text.ElideRight
                         font.pixelSize: Appearance.fonts.size.small
@@ -166,6 +191,12 @@ Column {
                             rightMargin: Appearance.padding.small
                             verticalCenter: parent.verticalCenter
                         }
+                    }
+
+                    Tooltip {
+                        anchorItem: actionButton
+                        enabled: actionLabel.truncated
+                        text: actionButton.modelData.text ?? ""
                     }
                 }
             }
@@ -243,6 +274,7 @@ Column {
                     icon.color: Colours.m3Colors.m3OnBackground
                     icon.name: "arrow_back"
                     icon.size: Appearance.fonts.size.large
+                    tooltipText: qsTr("Cancel reply")
                     onClicked: root.isReplying = false
                 }
 
@@ -270,10 +302,13 @@ Column {
                     Layout.preferredHeight: 28
                     Layout.preferredWidth: 28
                     backgroundRadius: 8
+                    buttonEnabled: replyField.text.trim().length > 0
                     color: Colours.m3Colors.m3SurfaceContainerHigh
+                    disabledTooltipText: qsTr("Type a message to reply")
                     icon.color: Qt.alpha(Colours.m3Colors.m3OnBackground, replyField.text.trim().length > 0 ? 1 : 0.4)
                     icon.name: "send"
                     icon.size: Appearance.fonts.size.large
+                    tooltipText: qsTr("Send reply")
                     onClicked: {
                         if (replyField.text.trim().length > 0)
                             replyRow.sendReply();

@@ -56,22 +56,32 @@ Rectangle {
             model: [
                 {
                     icon: "arrow_back",
+                    tooltip: qsTr("Back"),
+                    disabledTooltip: qsTr("No previous folder"),
                     clicked: () => root.backClicked()
                 },
                 {
                     icon: "arrow_forward",
+                    tooltip: qsTr("Forward"),
+                    disabledTooltip: qsTr("No next folder"),
                     clicked: () => root.forwardClicked()
                 },
                 {
                     icon: "arrow_upward",
+                    tooltip: qsTr("Up to parent folder"),
+                    disabledTooltip: qsTr("Already at root folder"),
                     clicked: () => root.upClicked()
                 },
                 {
                     icon: "refresh",
+                    tooltip: qsTr("Refresh"),
+                    disabledTooltip: "",
                     clicked: () => root.refreshClicked()
                 },
                 {
                     icon: "search",
+                    tooltip: qsTr("Search files"),
+                    disabledTooltip: "",
                     clicked: () => root.searchToggled()
                 }
             ]
@@ -84,12 +94,14 @@ Rectangle {
                 Layout.preferredHeight: Appearance.fonts.size.large * 1.2 + Appearance.spacing.large
                 Layout.preferredWidth: Appearance.fonts.size.large * 1.2 + Appearance.spacing.large
                 backgroundRadius: Appearance.rounding.full
+                buttonEnabled: index === 0 ? root.canGoBack : index === 1 ? root.canGoForward : index === 2 ? root.canGoUp : true
                 color: "transparent"
-                enabled: index === 0 ? root.canGoBack : index === 1 ? root.canGoForward : index === 2 ? root.canGoUp : true
+                disabledTooltipText: modelData.disabledTooltip
                 icon.color: Colours.m3Colors.m3OnSurfaceVariant
                 icon.name: modelData.icon
                 icon.size: Appearance.fonts.size.large * 1.2
                 spinning: index === 3 && root.isLoading
+                tooltipText: modelData.tooltip
                 onClicked: modelData.clicked()
             }
         }

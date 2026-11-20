@@ -1,10 +1,12 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Quickshell
 import Quickshell.Widgets
 import QtMultimedia
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.Utils
 
@@ -130,6 +132,16 @@ Item {
                     root.selectRequested(root.cardIndex);
                 else
                     root.activateRequested(root.modelData);
+            }
+        }
+
+        Tooltip {
+            anchorItem: card
+            enabled: root.foldFraction > 0.5 && Boolean(root.modelData)
+            position: Edges.Top
+            text: {
+                const name = root.modelData ? String(root.modelData).split("/").pop() : "";
+                return root.isCurrent && name ? qsTr("%1 — Click to apply").arg(name) : name;
             }
         }
     }

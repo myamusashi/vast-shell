@@ -5,6 +5,7 @@ import QtQuick.Layouts
 
 import qs.Components.Base
 import qs.Components.Button
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -36,12 +37,19 @@ RowLayout {
         verticalAlignment: Text.AlignVCenter
 
         MArea {
+            id: headerTitleMouse
+
             anchors.centerIn: parent
             cursorShape: Qt.PointingHandCursor
             height: headerLabel.contentHeight
             hoverEnabled: true
             width: headerLabel.contentWidth
             onClicked: root.titleClicked()
+        }
+
+        Tooltip {
+            anchorItem: headerTitleMouse
+            text: qsTr("Select month and year")
         }
     }
 
@@ -56,6 +64,7 @@ RowLayout {
             icon.color: Colours.m3Colors.m3OnSurface
             icon.name: "chevron_left"
             icon.size: Appearance.fonts.size.larger
+            tooltipText: qsTr("Previous month")
             onClicked: root.prevClicked()
         }
 
@@ -66,6 +75,7 @@ RowLayout {
             icon.color: Colours.m3Colors.m3OnSurface
             icon.name: "chevron_right"
             icon.size: Appearance.fonts.size.larger
+            tooltipText: qsTr("Next month")
             onClicked: root.nextClicked()
         }
     }

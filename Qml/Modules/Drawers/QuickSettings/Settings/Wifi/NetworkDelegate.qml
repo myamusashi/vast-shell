@@ -7,6 +7,7 @@ import Quickshell.Widgets
 
 import qs.Components.Base
 import qs.Components.Button
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -46,6 +47,8 @@ ClippingWrapperRectangle {
         spacing: Appearance.spacing.small
 
         Item {
+            id: signalIcon
+
             implicitHeight: 28
             implicitWidth: 28
 
@@ -62,6 +65,11 @@ ClippingWrapperRectangle {
                 font.pixelSize: Appearance.fonts.size.large * 1.5
                 icon: WifiUtils.iconFor(root.network?.signalStrength ?? 0, root.network ? !root.network.known : false)
             }
+
+            Tooltip {
+                anchorItem: signalIcon
+                text: qsTr("Signal: %1%").arg(Math.round((root.network?.signalStrength ?? 0) * 100))
+            }
         }
 
         ColumnLayout {
@@ -69,11 +77,19 @@ ClippingWrapperRectangle {
             spacing: Appearance.spacing.small * 0.5
 
             StyledText {
+                id: ssidText
+
                 Layout.fillWidth: true
                 color: root.network.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
                 elide: Text.ElideRight
                 font.pixelSize: Appearance.fonts.size.normal
                 text: root.network?.name ?? ""
+
+                Tooltip {
+                    anchorItem: ssidText
+                    enabled: ssidText.truncated
+                    text: ssidText.text
+                }
             }
 
             StyledText {
@@ -91,6 +107,7 @@ ClippingWrapperRectangle {
             icon.size: Appearance.fonts.size.large * 1.5
             implicitHeight: 28
             implicitWidth: 28
+            tooltipText: root.network?.connected ? qsTr("Disconnect") : qsTr("Connect")
             onClicked: root.network?.connected ? root.network.disconnect() : root.tryConnect()
         }
 
@@ -102,6 +119,7 @@ ClippingWrapperRectangle {
             icon.size: Appearance.fonts.size.large * 1.5
             implicitHeight: 28
             implicitWidth: 28
+            tooltipText: qsTr("Forget network")
             onClicked: root.network?.forget()
         }
     }

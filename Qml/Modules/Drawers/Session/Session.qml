@@ -7,6 +7,7 @@ import Quickshell
 import qs.Components.Base.DrawerComponents
 import qs.Components.Dialog
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
@@ -186,6 +187,12 @@ Drawer {
                                 parent.focus      = true;
                                 root.currentIndex = rectDelegate.index;
                             }
+                        }
+
+                        Tooltip {
+                            anchorItem: iconDelegate
+                            position: Edges.Left
+                            text: rectDelegate.modelData.name
                         }
                     }
                 }

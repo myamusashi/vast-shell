@@ -5,6 +5,7 @@ import QtQuick.Layouts
 
 import qs.Components.Base
 import qs.Components.Button
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Services
 
@@ -42,6 +43,8 @@ SettingRow {
         active: root.showBadge && root.descriptor !== null
         visible: active
         sourceComponent: Rectangle {
+            id: dynamicBadge
+
             implicitHeight: badgeText.implicitHeight + 8
             implicitWidth: badgeText.implicitWidth + 12
             color: Colours.m3Colors.m3SurfaceContainerHighest
@@ -54,6 +57,11 @@ SettingRow {
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 font.pixelSize: Appearance.fonts.size.small
                 text: root.descriptor?.dynamic ? qsTr("dynamic") : qsTr("static")
+            }
+
+            Tooltip {
+                anchorItem: dynamicBadge
+                text: root.descriptor?.dynamic ? qsTr("Dynamic — re-applied when matched properties change") : qsTr("Static — applied once when the window opens")
             }
         }
     }
@@ -91,6 +99,7 @@ SettingRow {
         size: "small"
         icon.name: "close"
         icon.color: Colours.m3Colors.m3OnSurfaceVariant
+        tooltipText: qsTr("Remove %1").arg(root.label)
         onClicked: root.removed()
     }
 }

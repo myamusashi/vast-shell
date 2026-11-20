@@ -2,21 +2,23 @@ import QtQuick
 import Quickshell.Services.UPower
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
+import qs.Core.Utils
 import qs.Services
 
 Item {
     id: root
 
-    readonly property bool  batCharging: UPower.displayDevice.state == UPowerDeviceState.Charging
-    readonly property real  batFill: batteryBody.width * batPercentage
-    readonly property real  batPercentage: chargePercent / 100
-    readonly property bool  batteryLow: batPercentage <= 0.2 && !batCharging
-    readonly property real  bodyRadius: Appearance.rounding.small * 0.5
-    readonly property int   chargePercent: Math.round(UPower.displayDevice.percentage * 100)
-    readonly property real  fillAreaHeight: batteryBody.height - fillInset * 2
-    readonly property real  fillAreaWidth: batteryBody.width - fillInset * 2
-    readonly property color fillColor: {
+    readonly property bool   batCharging: UPower.displayDevice.state == UPowerDeviceState.Charging
+    readonly property real   batFill: batteryBody.width * batPercentage
+    readonly property real   batPercentage: chargePercent / 100
+    readonly property bool   batteryLow: batPercentage <= 0.2 && !batCharging
+    readonly property real   bodyRadius: Appearance.rounding.small * 0.5
+    readonly property int    chargePercent: Math.round(UPower.displayDevice.percentage * 100)
+    readonly property real   fillAreaHeight: batteryBody.height - fillInset * 2
+    readonly property real   fillAreaWidth: batteryBody.width - fillInset * 2
+    readonly property color  fillColor: {
         if (batCharging)
             return Qt.alpha(Colours.m3Colors.m3Green, 0.5);
         if (batPercentage <= 0.2)
@@ -25,13 +27,38 @@ Item {
             return Qt.alpha(Colours.m3Colors.m3Yellow, 0.5);
         return Colours.m3Colors.m3OnSurface;
     }
-    readonly property real  fillInset: 2
-    readonly property color outlineColor: batteryLow ? Qt.alpha(Colours.m3Colors.m3Error, 0.8) : Qt.alpha(Colours.m3Colors.m3Outline, 0.5)
-    readonly property real  outlineWidth: 1
+    readonly property real   fillInset: 2
+    readonly property color  outlineColor: batteryLow ? Qt.alpha(Colours.m3Colors.m3Error, 0.8) : Qt.alpha(Colours.m3Colors.m3Outline, 0.5)
+    readonly property real   outlineWidth: 1
+    readonly property string tooltipSummary: {
+        const parts = [root.chargePercent + "%"];
+        const dev   = UPower.displayDevice;
+        if (!dev)
+            return parts[0];
+        if (dev.state === UPowerDeviceState.Charging) {
+            parts.push(qsTr("Charging"));
+            if (dev.timeToFull > 0)
+                parts.push(qsTr("%1 until full").arg(FormatTimeUtils.formatBattery(dev.timeToFull)));
+        } else if (dev.state === UPowerDeviceState.Discharging) {
+            parts.push(qsTr("Discharging"));
+            if (dev.timeToEmpty > 0)
+                parts.push(qsTr("%1 left").arg(FormatTimeUtils.formatBattery(dev.timeToEmpty)));
+        } else if (dev.state === UPowerDeviceState.FullyCharged) {
+            parts.push(qsTr("Fully charged"));
+        } else if (dev.state === UPowerDeviceState.PendingCharge) {
+            parts.push(qsTr("Pending charge"));
+        } else if (dev.state === UPowerDeviceState.PendingDischarge) {
+            parts.push(qsTr("Pending discharge"));
+        }
+        if (dev.changeRate > 0)
+            parts.push(dev.changeRate.toFixed(1) + " W");
+        return parts.join(" · ");
+    }
 
-    property alias          heightBattery: batteryBody.implicitHeight
-    property int            previousChargePercent: 0
-    property alias          widthBattery: batteryBody.implicitWidth
+    property alias           heightBattery: batteryBody.implicitHeight
+    property int             previousChargePercent: 0
+    property bool            showTooltip: true
+    property alias           widthBattery: batteryBody.implicitWidth
 
     implicitHeight: heightBattery
     implicitWidth: widthBattery
@@ -144,5 +171,11 @@ Item {
             leftMargin: 0.5
             verticalCenter: parent.verticalCenter
         }
+    }
+
+    Tooltip {
+        anchorItem: root
+        enabled: root.showTooltip
+        text: root.tooltipSummary
     }
 }

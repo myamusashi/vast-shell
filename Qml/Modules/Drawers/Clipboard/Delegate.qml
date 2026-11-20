@@ -168,6 +168,7 @@ ItemDelegate {
                 icon.name: root.pinned ? "keep" : "keep_off"
                 icon.size: Appearance.fonts.size.large
                 opacity: pinButton.hovered ? 1.0 : 0.6
+                tooltipText: root.pinned ? qsTr("Unpin") : qsTr("Pin")
                 Behavior on opacity {
                     NAnim {}
                 }

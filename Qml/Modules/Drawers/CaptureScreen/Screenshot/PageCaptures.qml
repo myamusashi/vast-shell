@@ -7,6 +7,7 @@ import Quickshell
 import Quickshell.Widgets
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -121,6 +122,11 @@ WrapperItem {
                         gridView.currentIndex = delegateRoot.index;
                         root.openFile(delegateRoot.modelData.path);
                     }
+                }
+
+                Tooltip {
+                    anchorItem: delegateRoot
+                    text: delegateRoot.modelData?.name ?? ""
                 }
             }
             model: ScriptModel {

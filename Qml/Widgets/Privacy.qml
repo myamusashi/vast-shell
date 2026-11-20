@@ -6,6 +6,7 @@ import Quickshell.Widgets
 import M3Shapes
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -26,30 +27,51 @@ RowLayout {
     }
 
     Icon {
+        id: screenshareIcon
+
         Layout.alignment: Qt.AlignVCenter
         color: Colours.m3Colors.m3OnSurface
         font.pixelSize: Appearance.fonts.size.normal
         icon: "videocam"
         type: Icon.Material
         visible: PrivacyServices.screenshareAppNames.length > 0
+
+        Tooltip {
+            anchorItem: screenshareIcon
+            text: PrivacyServices.screenshareAppNames.length > 0 ? qsTr("Screen sharing: %1").arg(PrivacyServices.screenshareAppNames.join(", ")) : ""
+        }
     }
 
     Icon {
+        id: micIcon
+
         Layout.alignment: Qt.AlignVCenter
         color: Colours.m3Colors.m3OnSurface
         font.pixelSize: Appearance.fonts.size.normal
         icon: "mic"
         type: Icon.Material
         visible: PrivacyServices.audioInAppNames.length > 0
+
+        Tooltip {
+            anchorItem: micIcon
+            text: PrivacyServices.audioInAppNames.length > 0 ? qsTr("Microphone: %1").arg(PrivacyServices.audioInAppNames.join(", ")) : ""
+        }
     }
 
     Icon {
+        id: audioOutIcon
+
         Layout.alignment: Qt.AlignVCenter
         color: Colours.m3Colors.m3OnSurface
         font.pixelSize: Appearance.fonts.size.normal
         icon: "volume_up"
         type: Icon.Material
         visible: PrivacyServices.audioOutAppNames.length > 0
+
+        Tooltip {
+            anchorItem: audioOutIcon
+            text: PrivacyServices.audioOutAppNames.length > 0 ? qsTr("Audio output: %1").arg(PrivacyServices.audioOutAppNames.join(", ")) : ""
+        }
     }
 
     Item {
@@ -130,6 +152,12 @@ RowLayout {
             }
 
             target: PrivacyServices
+        }
+
+        Tooltip {
+            anchorItem: marquee
+            enabled: marquee.overflowing
+            text: PrivacyServices.activeAppNames.join(", ")
         }
     }
 

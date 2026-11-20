@@ -4,6 +4,7 @@ import QtQuick
 import Quickshell.Services.Mpris
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -146,13 +147,16 @@ StyledRect {
         containerColor: Colours.m3Colors.m3SecondaryContainer
         model: [
             {
-                icon: "skip_previous"
+                icon: "skip_previous",
+                tooltip: qsTr("Previous track")
             },
             {
-                icon: Players.active === null ? "question_mark" : Players.active.playbackState === MprisPlaybackState.Playing ? "genres" : "play_circle"
+                icon: Players.active === null ? "question_mark" : Players.active.playbackState === MprisPlaybackState.Playing ? "genres" : "play_circle",
+                tooltip: Players.active === null ? qsTr("No active media player") : (Players.active.playbackState === MprisPlaybackState.Playing ? qsTr("Pause") : qsTr("Play"))
             },
             {
-                icon: "skip_next"
+                icon: "skip_next",
+                tooltip: qsTr("Next track")
             }
         ]
         onButtonClicked: index => {
@@ -181,6 +185,15 @@ StyledRect {
         text: Players.active?.trackArtist ?? ""
         visible: text !== ""
         width: Math.min(implicitWidth, 160)
+
+        Tooltip {
+            anchorItem: artistText
+            text: {
+                if (!Players.active)
+                    return "";
+                return [Players.active.trackTitle, Players.active.trackArtist, Players.active.trackAlbum].filter(Boolean).join(" — ");
+            }
+        }
     }
 
     component RowButton: Row {
@@ -256,6 +269,11 @@ StyledRect {
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
                     onClicked: root.buttonClicked(button.index)
+                }
+
+                Tooltip {
+                    anchorItem: button
+                    text: button.modelData.tooltip ?? ""
                 }
             }
         }

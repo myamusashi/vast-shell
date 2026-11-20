@@ -2,11 +2,13 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 import Quickshell.Services.Mpris
 import Quickshell.Services.Pipewire
 import Quickshell.Widgets
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
@@ -35,6 +37,8 @@ ColumnLayout {
     }
 
     Item {
+        id: topIconContainer
+
         Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
         implicitHeight: 30
         implicitWidth: 30
@@ -115,6 +119,13 @@ ColumnLayout {
                     Audio.toggleMute(root.audioNode);
             }
         }
+
+        Tooltip {
+            anchorItem: topIconContainer
+            enabled: root.showAppIcon || root.enableMuteToggle
+            position: Edges.Left
+            text: root.showAppIcon ? (Audio.nodeDisplayName(root.audioNode) || qsTr("Application audio")) : (root.audioNode?.audio?.muted ? qsTr("Unmute") : qsTr("Mute"))
+        }
     }
 
     Timer {
@@ -149,6 +160,8 @@ ColumnLayout {
     }
 
     Item {
+        id: mixerToggle
+
         Layout.alignment: Qt.AlignHCenter
         implicitHeight: 15
         implicitWidth: 15
@@ -168,6 +181,12 @@ ColumnLayout {
             }
             onEntered: GlobalStates.pauseOSD("volume")
             onExited: GlobalStates.resumeOSD("volume")
+        }
+
+        Tooltip {
+            anchorItem: mixerToggle
+            position: Edges.Left
+            text: root.footerController?.openPerAppVolume ? qsTr("Hide app mixer") : qsTr("Show app mixer")
         }
     }
 }

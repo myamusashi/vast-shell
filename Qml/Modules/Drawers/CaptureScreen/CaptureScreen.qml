@@ -96,6 +96,7 @@ Drawer {
                         icon.size: Appearance.fonts.size.large
                         implicitHeight: 28
                         implicitWidth: 28
+                        tooltipText: qsTr("Close")
                         onClicked: GlobalStates.isRecordingPanelOpen = false
                     }
                 }

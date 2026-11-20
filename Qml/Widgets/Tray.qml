@@ -7,6 +7,7 @@ import Quickshell.Services.SystemTray
 import Quickshell.Widgets
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -219,5 +220,18 @@ StyledRect {
     TrayPanel {
         screen: root.monitor
         trayRoot: root
+    }
+
+    Tooltip {
+        readonly property var hoveredItem: root.hoveredIndex >= 0 && root.hoveredIndex < trayRepeater.count ? SystemTray.items.values[root.hoveredIndex] : null
+
+        anchorItem: hoveredItem && !hoveredItem.hasMenu ? trayRepeater.itemAt(root.hoveredIndex) : null
+        text: {
+            if (!hoveredItem || hoveredItem.hasMenu)
+                return "";
+            const title = hoveredItem.tooltipTitle || hoveredItem.title || hoveredItem.id || "";
+            const desc  = hoveredItem.tooltipDescription || "";
+            return desc && desc !== title ? `${title} — ${desc}` : title;
+        }
     }
 }

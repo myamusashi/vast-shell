@@ -5,6 +5,7 @@ import QtQuick.Layouts
 
 import qs.Components.Base
 import qs.Components.Button
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Services
 
@@ -117,9 +118,16 @@ Rectangle {
             spacing: Appearance.spacing.small
 
             StyledSwitch {
+                id: ruleEnabledSwitch
+
                 Layout.alignment: Qt.AlignVCenter
                 checked: root.rule?.enabled ?? true
                 onToggled: root.services.setRuleField(root.modelData, "enabled", checked)
+
+                Tooltip {
+                    anchorItem: ruleEnabledSwitch
+                    text: (root.rule?.enabled ?? true) ? qsTr("Disable rule") : qsTr("Enable rule")
+                }
             }
 
             MaterialTextField {
@@ -137,19 +145,23 @@ Rectangle {
 
             FloatingButton {
                 Layout.alignment: Qt.AlignVCenter
-                enabled: root.index > 0
+                buttonEnabled: root.index > 0
+                disabledTooltipText: qsTr("Already at top")
                 size: "small"
                 icon.color: Colours.m3Colors.m3OnSurfaceVariant
                 icon.name: "keyboard_arrow_up"
+                tooltipText: qsTr("Move rule up")
                 onClicked: root.services.moveRule(root.modelData, -1)
             }
 
             FloatingButton {
                 Layout.alignment: Qt.AlignVCenter
-                enabled: root.index < root.ruleCount - 1
+                buttonEnabled: root.index < root.ruleCount - 1
+                disabledTooltipText: qsTr("Already at bottom")
                 size: "small"
                 icon.color: Colours.m3Colors.m3OnSurfaceVariant
                 icon.name: "keyboard_arrow_down"
+                tooltipText: qsTr("Move rule down")
                 onClicked: root.services.moveRule(root.modelData, 1)
             }
 
@@ -158,6 +170,7 @@ Rectangle {
                 size: "small"
                 icon.color: Colours.m3Colors.m3OnSurfaceVariant
                 icon.name: "content_copy"
+                tooltipText: qsTr("Duplicate rule")
                 onClicked: root.services.duplicateRule(root.modelData)
             }
 
@@ -166,6 +179,7 @@ Rectangle {
                 size: "small"
                 icon.color: Colours.m3Colors.m3Error
                 icon.name: "delete"
+                tooltipText: qsTr("Delete rule")
                 onClicked: root.services.deleteRule(root.modelData)
             }
         }

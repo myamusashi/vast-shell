@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import Quickshell
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
@@ -177,6 +178,8 @@ Item {
             implicitWidth: Configs.dock.iconSlot + Appearance.spacing.small * 2
 
             Icon {
+                id: launcherIcon
+
                 anchors.centerIn: parent
                 color: GlobalStates.isLauncherOpen ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
                 font.pixelSize: Appearance.fonts.size.extraLarge
@@ -185,6 +188,12 @@ Item {
                 MArea {
                     cursorShape: Qt.PointingHandCursor
                     onClicked: GlobalStates.togglePanel("launcher")
+                }
+
+                Tooltip {
+                    anchorItem: launcherIcon
+                    position: Edges.Top
+                    text: GlobalStates.isLauncherOpen ? qsTr("Close Launcher") : qsTr("App Launcher")
                 }
             }
         }

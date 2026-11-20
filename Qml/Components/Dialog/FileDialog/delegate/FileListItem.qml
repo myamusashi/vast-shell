@@ -6,6 +6,7 @@ import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
+import qs.Components.Tooltip
 
 import "../../../Base"
 
@@ -195,6 +196,12 @@ Rectangle {
                 property: "nameColorBlendProgress"
                 target: fileName
                 to: 1.0
+            }
+
+            Tooltip {
+                anchorItem: fileName
+                enabled: fileName.truncated
+                text: fileName.text
             }
         }
 

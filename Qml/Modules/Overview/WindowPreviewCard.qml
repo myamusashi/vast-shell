@@ -7,6 +7,7 @@ import Quickshell.Wayland
 import Quickshell.Widgets
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -105,12 +106,20 @@ Item {
                     }
 
                     StyledText {
+                        id: titleText
+
                         Layout.fillWidth: true
                         color: Colours.m3Colors.m3OnSurface
                         elide: Text.ElideRight
                         font.pixelSize: Appearance.fonts.size.small
                         font.weight: Font.Medium
                         text: root.windowTitle
+
+                        Tooltip {
+                            anchorItem: titleText
+                            enabled: titleText.truncated && !root.dragging && !root.isDragged
+                            text: root.windowTitle
+                        }
                     }
 
                     StyledRect {
@@ -138,6 +147,12 @@ Item {
                             layerColor: Colours.m3Colors.m3Error
                             layerRadius: closeButton.radius
                             onClicked: root.closeRequested(root.toplevel)
+                        }
+
+                        Tooltip {
+                            anchorItem: closeButton
+                            enabled: !root.dragging && !root.isDragged
+                            text: qsTr("Close window")
                         }
                     }
                 }

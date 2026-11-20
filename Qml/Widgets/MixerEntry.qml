@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import Quickshell.Services.Pipewire
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -34,6 +35,8 @@ ColumnLayout {
     }
 
     StyledText {
+        id: nodeTitle
+
         Layout.alignment: Qt.AlignLeft
         Layout.fillWidth: true
         color: Colours.m3Colors.m3OnSurface
@@ -42,6 +45,12 @@ ColumnLayout {
         font.weight: Font.Medium
         text: Audio.nodeDisplayName(root.audioNode)
         visible: text !== ""
+
+        Tooltip {
+            anchorItem: nodeTitle
+            enabled: nodeTitle.truncated
+            text: nodeTitle.text
+        }
     }
 
     RowLayout {
@@ -49,6 +58,8 @@ ColumnLayout {
         Layout.fillWidth: true
 
         StyledRect {
+            id: muteButton
+
             Layout.alignment: Qt.AlignCenter
             implicitHeight: 30
             implicitWidth: 30
@@ -75,6 +86,11 @@ ColumnLayout {
                         Audio.toggleMute(root.audioNode);
                 }
                 onWheel: mouseEvent => Audio.wheelAction(mouseEvent, root.audioNode)
+            }
+
+            Tooltip {
+                anchorItem: muteButton
+                text: root.audioNode?.audio?.muted ? qsTr("Unmute") : qsTr("Mute")
             }
         }
 

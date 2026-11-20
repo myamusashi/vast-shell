@@ -6,6 +6,7 @@ import QtQuick.Layouts
 import qs.Components.Base
 import qs.Components.Button
 import qs.Components.Dialog.FileDialog
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Services
 
@@ -163,14 +164,22 @@ SettingsPageBase {
                             }
 
                             StyledSwitch {
+                                id: templateEnabledSwitch
+
                                 checked: templateDelegate.templateEnabled
                                 onCheckedChanged: root.saveField(templateDelegate.index, "templateEnabled", checked)
+
+                                Tooltip {
+                                    anchorItem: templateEnabledSwitch
+                                    text: templateDelegate.templateEnabled ? qsTr("Disable template") : qsTr("Enable template")
+                                }
                             }
 
                             FloatingButton {
                                 implicitHeight: 32
                                 implicitWidth: 32
                                 icon.name: "delete"
+                                tooltipText: qsTr("Delete template")
                                 onClicked: root.removeTemplate(templateDelegate.index)
                             }
                         }
@@ -192,6 +201,7 @@ SettingsPageBase {
                                 implicitHeight: 32
                                 implicitWidth: 32
                                 icon.name: "folder_open"
+                                tooltipText: qsTr("Browse template file")
                                 onClicked: {
                                     root.browseIndex = templateDelegate.index;
                                     templateFileDialog.openFileDialog();

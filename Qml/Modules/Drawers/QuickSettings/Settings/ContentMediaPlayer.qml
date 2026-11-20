@@ -16,6 +16,7 @@ import qs.Core.States
 import qs.Services
 import qs.Components.Base
 import qs.Components.Button
+import qs.Components.Tooltip
 import qs.Widgets
 
 RowLayout {
@@ -145,11 +146,19 @@ RowLayout {
                     spacing: Appearance.spacing.large
 
                     StyledText {
+                        id: lyricsArtistText
+
                         color: Configs.mediaPlayer.dynamicColorsCover ? Qt.alpha(root.trackArtColors.onSurface, 0.8) : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.8)
                         elide: Text.ElideRight
                         font.pixelSize: Appearance.fonts.size.small
                         font.weight: Font.DemiBold
                         text: Players.active?.trackArtist ?? ""
+
+                        Tooltip {
+                            anchorItem: lyricsArtistText
+                            enabled: lyricsArtistText.truncated
+                            text: lyricsArtistText.text
+                        }
                     }
 
                     Item {
@@ -183,18 +192,21 @@ RowLayout {
                         icon.size: Appearance.fonts.size.large
                         implicitHeight: 18
                         implicitWidth: 18
+                        tooltipText: qsTr("Hide lyrics")
                         onClicked: Configs.mediaPlayer.showLyrics = false
                     }
 
                     FloatingButton {
                         backgroundRadius: Appearance.rounding.normal
+                        buttonEnabled: Boolean(Players.active?.shuffleSupported)
                         color: "transparent"
-                        enabled: Players.active?.shuffleSupported
+                        disabledTooltipText: qsTr("Shuffle not supported by player")
                         icon.color: Players.active?.shuffleSupported || Players.active?.shuffle ? (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary) : (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.outline : Colours.m3Colors.m3Outline)
                         icon.name: Players.active?.shuffleSupported || Players.active?.shuffleSupported || Players.active?.shuffle ? "shuffle_on" : "shuffle"
                         icon.size: Appearance.fonts.size.large
                         implicitHeight: 18
                         implicitWidth: 18
+                        tooltipText: Players.active?.shuffle ? qsTr("Disable shuffle") : qsTr("Enable shuffle")
                         onClicked: {
                             if (Players.active)
                                 Players.active.shuffle = !Players.active.shuffle;
@@ -209,6 +221,7 @@ RowLayout {
                         icon.size: Appearance.fonts.size.extraLarge
                         implicitHeight: 22
                         implicitWidth: 22
+                        tooltipText: qsTr("Previous track")
                         onClicked: Players.active?.previous()
                     }
 
@@ -220,6 +233,7 @@ RowLayout {
                         icon.size: Appearance.fonts.size.extraLarge
                         implicitHeight: 32
                         implicitWidth: 32
+                        tooltipText: Players.active?.playbackState === MprisPlaybackState.Playing ? qsTr("Pause") : qsTr("Play")
                         onClicked: Players.active?.togglePlaying()
                     }
 
@@ -231,17 +245,20 @@ RowLayout {
                         icon.size: Appearance.fonts.size.extraLarge
                         implicitHeight: 22
                         implicitWidth: 22
+                        tooltipText: qsTr("Next track")
                         onClicked: Players.active?.next()
                     }
 
                     FloatingButton {
                         backgroundRadius: Appearance.rounding.normal
+                        buttonEnabled: Boolean(Players.active?.loopSupported)
                         color: "transparent"
-                        enabled: Players.active?.loopSupported
+                        disabledTooltipText: qsTr("Repeat not supported by player")
                         icon.color: Players.active?.loopSupported || (Players.active?.loopState === MprisLoopState.Playlist || Players.active?.loopState === MprisLoopState.Track) ? (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary) : (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.outline : Colours.m3Colors.m3Outline)
                         icon.name: Players.active?.loopState === MprisLoopState.Playlist ? "repeat_on" : Players.active?.loopState === MprisLoopState.Track ? "repeat_one_on" : "repeat"
                         implicitHeight: 18
                         implicitWidth: 18
+                        tooltipText: Players.active?.loopState === MprisLoopState.Playlist ? qsTr("Repeat: Playlist") : Players.active?.loopState === MprisLoopState.Track ? qsTr("Repeat: Track") : qsTr("Repeat: Off")
                         onClicked: {
                             if (!Players.active)
                                 return;
@@ -286,6 +303,8 @@ RowLayout {
             }
 
             StyledText {
+                id: playerTrackTitle
+
                 Layout.fillWidth: true
                 color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
                 elide: Text.ElideRight
@@ -293,6 +312,12 @@ RowLayout {
                 font.weight: Font.DemiBold
                 text: Players.active?.trackTitle ?? ""
                 wrapMode: Text.NoWrap
+
+                Tooltip {
+                    anchorItem: playerTrackTitle
+                    enabled: playerTrackTitle.truncated
+                    text: playerTrackTitle.text
+                }
             }
 
             RowLayout {
@@ -300,11 +325,19 @@ RowLayout {
                 spacing: Appearance.spacing.small
 
                 StyledText {
+                    id: playerArtistText
+
                     color: Configs.mediaPlayer.dynamicColorsCover ? Qt.alpha(root.trackArtColors.onSurface, 0.8) : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.8)
                     elide: Text.ElideRight
                     font.pixelSize: Appearance.fonts.size.small
                     font.weight: Font.DemiBold
                     text: Players.active?.trackArtist ?? ""
+
+                    Tooltip {
+                        anchorItem: playerArtistText
+                        enabled: playerArtistText.truncated
+                        text: playerArtistText.text
+                    }
                 }
 
                 Item {
@@ -348,13 +381,15 @@ RowLayout {
 
                     FloatingButton {
                         backgroundRadius: Appearance.rounding.normal
+                        buttonEnabled: LyricsProvider.state === LyricsProvider.State.Ready
                         color: "transparent"
-                        enabled: LyricsProvider.state === LyricsProvider.State.Ready
-                        icon.color: enabled ? (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary) : (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurfaceVariant : Colours.m3Colors.m3OnSurfaceVariant)
+                        disabledTooltipText: LyricsProvider.state === LyricsProvider.State.Loading ? qsTr("Loading lyrics…") : qsTr("Lyrics unavailable")
+                        icon.color: LyricsProvider.state === LyricsProvider.State.Ready ? (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary) : (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurfaceVariant : Colours.m3Colors.m3OnSurfaceVariant)
                         icon.name: "lyrics"
                         icon.size: Appearance.fonts.size.larger
                         implicitHeight: 24
                         implicitWidth: 24
+                        tooltipText: qsTr("Show lyrics")
                         onClicked: {
                             if (LyricsProvider.state === LyricsProvider.State.Ready)
                                 Configs.mediaPlayer.showLyrics = true;
@@ -363,13 +398,15 @@ RowLayout {
 
                     FloatingButton {
                         backgroundRadius: Appearance.rounding.normal
+                        buttonEnabled: Boolean(Players.active?.shuffleSupported)
                         color: "transparent"
-                        enabled: Players.active?.shuffleSupported
+                        disabledTooltipText: qsTr("Shuffle not supported by player")
                         icon.color: Players.active?.shuffleSupported || Players.active?.shuffle ? (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary) : (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.outline : Colours.m3Colors.m3Outline)
                         icon.name: Players.active?.shuffleSupported || Players.active?.shuffleSupported || Players.active?.shuffle ? "shuffle_on" : "shuffle"
                         icon.size: Appearance.fonts.size.larger
                         implicitHeight: 24
                         implicitWidth: 24
+                        tooltipText: Players.active?.shuffle ? qsTr("Disable shuffle") : qsTr("Enable shuffle")
                         onClicked: {
                             if (Players.active)
                                 Players.active.shuffle = !Players.active.shuffle;
@@ -384,6 +421,7 @@ RowLayout {
                         icon.size: Appearance.fonts.size.extraLarge
                         implicitHeight: 32
                         implicitWidth: 32
+                        tooltipText: qsTr("Previous track")
                         onClicked: Players.active?.previous()
                     }
 
@@ -395,6 +433,7 @@ RowLayout {
                         icon.size: Appearance.fonts.size.extraLarge * 1.2
                         implicitHeight: 36
                         implicitWidth: 36
+                        tooltipText: Players.active?.playbackState === MprisPlaybackState.Playing ? qsTr("Pause") : qsTr("Play")
                         onClicked: Players.active?.togglePlaying()
                     }
 
@@ -406,17 +445,20 @@ RowLayout {
                         icon.size: Appearance.fonts.size.extraLarge
                         implicitHeight: 32
                         implicitWidth: 32
+                        tooltipText: qsTr("Next track")
                         onClicked: Players.active?.next()
                     }
 
                     FloatingButton {
                         backgroundRadius: Appearance.rounding.normal
+                        buttonEnabled: Boolean(Players.active?.loopSupported)
                         color: "transparent"
-                        enabled: Players.active?.loopSupported
+                        disabledTooltipText: qsTr("Repeat not supported by player")
                         icon.color: Players.active?.loopSupported || (Players.active?.loopState === MprisLoopState.Playlist || Players.active?.loopState === MprisLoopState.Track) ? (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary) : (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.outline : Colours.m3Colors.m3Outline)
                         icon.name: Players.active?.loopState === MprisLoopState.Playlist ? "repeat_on" : Players.active?.loopState === MprisLoopState.Track ? "repeat_one_on" : "repeat"
                         implicitHeight: 24
                         implicitWidth: 24
+                        tooltipText: Players.active?.loopState === MprisLoopState.Playlist ? qsTr("Repeat: Playlist") : Players.active?.loopState === MprisLoopState.Track ? qsTr("Repeat: Track") : qsTr("Repeat: Off")
                         onClicked: {
                             if (!Players.active)
                                 return;
@@ -437,6 +479,12 @@ RowLayout {
 
                 ComboBox {
                     id: playerComboBox
+
+                    Tooltip {
+                        anchorItem: playerComboBox
+                        enabled: !playerComboBox.popup.visible
+                        text: qsTr("Switch player (%1)").arg(root.playerName(Players.active))
+                    }
 
                     anchors {
                         right: parent.right

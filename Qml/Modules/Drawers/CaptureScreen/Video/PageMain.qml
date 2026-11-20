@@ -5,6 +5,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
@@ -173,11 +174,19 @@ StyledRect {
                     }
 
                     StyledText {
+                        id: audioLabelText
+
                         Layout.fillWidth: true
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         elide: Text.ElideRight
                         font.pixelSize: Appearance.fonts.size.normal
                         text: root.audioLabel
+
+                        Tooltip {
+                            anchorItem: audioLabelText
+                            enabled: audioLabelText.truncated
+                            text: audioLabelText.text
+                        }
                     }
 
                     Icon {

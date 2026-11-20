@@ -6,6 +6,7 @@ import Quickshell.Widgets
 
 import qs.Components.Button
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -54,12 +55,20 @@ ClippingWrapperRectangle {
             spacing: 2
 
             StyledText {
+                id: deviceNameText
+
                 Layout.fillWidth: true
                 color: root.device?.connected ? Colours.m3Colors.m3OnPrimaryContainer : Colours.m3Colors.m3OnSurface
                 elide: Text.ElideRight
                 font.pixelSize: Appearance.fonts.size.normal
                 font.weight: Font.Medium
                 text: BluetoothServices.displayName(root.device)
+
+                Tooltip {
+                    anchorItem: deviceNameText
+                    enabled: deviceNameText.truncated
+                    text: deviceNameText.text
+                }
             }
 
             StyledText {
@@ -69,23 +78,33 @@ ClippingWrapperRectangle {
             }
 
             StyledText {
+                id: deviceAddressText
+
                 Layout.fillWidth: true
                 color: Colours.m3Colors.m3OnSurfaceVariant
                 elide: Text.ElideRight
                 font.pixelSize: Appearance.fonts.size.small
                 text: BluetoothServices.addressLine(root.device) + (root.device?.batteryAvailable ? ` · ${Math.round(root.device.battery * 100)}%` : "")
                 visible: !!root.device?.address
+
+                Tooltip {
+                    anchorItem: deviceAddressText
+                    enabled: deviceAddressText.truncated
+                    text: deviceAddressText.text
+                }
             }
         }
 
         FloatingButton {
             backgroundRadius: Appearance.rounding.normal
+            buttonEnabled: !root.showPairActions || !root.device?.pairing
             color: "transparent"
-            enabled: !root.showPairActions || !root.device?.pairing
+            disabledTooltipText: qsTr("Pairing in progress…")
             icon.color: root.showPairActions ? Colours.m3Colors.m3OnSurfaceVariant : root.showBlockAction ? (root.device?.blocked ? Colours.m3Colors.m3Error : Colours.m3Colors.m3OnSurfaceVariant) : (root.device?.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurfaceVariant)
             icon.name: root.showPairActions ? (root.device?.pairing ? "close" : "bluetooth") : root.showBlockAction ? "block" : (root.device?.connected ? "link_off" : "link")
             implicitHeight: 32
             implicitWidth: 32
+            tooltipText: root.showPairActions ? qsTr("Pair device") : root.showBlockAction ? (root.device?.blocked ? qsTr("Unblock device") : qsTr("Block device")) : (root.device?.connected ? qsTr("Disconnect") : qsTr("Connect"))
             onClicked: {
                 if (root.showBlockAction && !root.showPairActions)
                     root.blockToggled();
@@ -103,6 +122,7 @@ ClippingWrapperRectangle {
                 icon.name: "close"
                 implicitHeight: 32
                 implicitWidth: 32
+                tooltipText: qsTr("Cancel pairing")
                 onClicked: root.secondaryAction()
             }
         }
@@ -117,6 +137,7 @@ ClippingWrapperRectangle {
                 icon.name: "delete"
                 implicitHeight: 32
                 implicitWidth: 32
+                tooltipText: qsTr("Forget device")
                 onClicked: root.forgetAction()
             }
         }

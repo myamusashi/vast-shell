@@ -1,12 +1,12 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
 
 import qs.Components.Base
 import qs.Components.Button
 import qs.Components.Dialog.FileDialog
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Services
 import qs.Services.Hyprland
@@ -109,17 +109,18 @@ Rectangle {
             }
 
             Rectangle {
+                id: modifiedDot
+
                 Layout.alignment: Qt.AlignVCenter
                 Layout.preferredHeight: 6
                 Layout.preferredWidth: 6
                 color: Colours.m3Colors.m3Primary
                 radius: 3
                 visible: root.modified
-                ToolTip.visible: modifiedHover.hovered
-                ToolTip.text: qsTr("Modified — will be written on Apply")
 
-                HoverHandler {
-                    id: modifiedHover
+                Tooltip {
+                    anchorItem: modifiedDot
+                    text: qsTr("Modified — will be written on Apply")
                 }
             }
 
@@ -319,6 +320,7 @@ Rectangle {
                 backgroundRadius: Appearance.rounding.small
                 icon.name: "folder_open"
                 icon.size: Appearance.fonts.size.normal
+                tooltipText: qsTr("Browse ICC profile")
                 onClicked: iccFileDialog.openFileDialog()
             }
         }

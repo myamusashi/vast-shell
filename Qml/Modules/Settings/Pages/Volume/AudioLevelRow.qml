@@ -8,6 +8,7 @@ import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
+import qs.Components.Tooltip
 
 ColumnLayout {
     id: root
@@ -63,10 +64,17 @@ ColumnLayout {
                 TapHandler {
                     onTapped: root.defaultRequested()
                 }
+
+                Tooltip {
+                    anchorItem: defaultIndicator
+                    text: root.isCurrent ? qsTr("Default device") : qsTr("Set as default")
+                }
             }
         }
 
         StyledRect {
+            id: muteButton
+
             Layout.alignment: Qt.AlignVCenter
             Layout.preferredHeight: 36
             Layout.preferredWidth: 36
@@ -87,6 +95,11 @@ ColumnLayout {
                 }
                 onWheel: mouse => Audio.wheelAction(mouse, root.node)
             }
+
+            Tooltip {
+                anchorItem: muteButton
+                text: root.node?.audio?.muted ? qsTr("Unmute") : qsTr("Mute")
+            }
         }
 
         ColumnLayout {
@@ -94,11 +107,19 @@ ColumnLayout {
             spacing: 2
 
             StyledText {
+                id: deviceNameText
+
                 Layout.fillWidth: true
                 color: Colours.m3Colors.m3OnSurface
                 elide: Text.ElideRight
                 font.pixelSize: Appearance.fonts.size.normal
                 text: Audio.nodeDisplayName(root.node)
+
+                Tooltip {
+                    anchorItem: deviceNameText
+                    enabled: deviceNameText.truncated
+                    text: deviceNameText.text
+                }
             }
 
             StyledText {

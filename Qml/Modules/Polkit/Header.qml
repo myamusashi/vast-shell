@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Widgets
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Services
 
@@ -40,6 +41,8 @@ RowLayout {
         }
 
         StyledText {
+            id: messageText
+
             Layout.fillWidth: true
             color: Colours.m3Colors.m3OnSurface
             elide: Text.ElideRight
@@ -50,6 +53,12 @@ RowLayout {
             maximumLineCount: 3
             text: PolAgent.agent?.flow?.message || qsTr("<no message>") // qmllint disable
             wrapMode: Text.Wrap
+
+            Tooltip {
+                anchorItem: messageText
+                enabled: messageText.truncated
+                text: messageText.text
+            }
         }
     }
 }

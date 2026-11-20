@@ -5,6 +5,7 @@ import QtQuick.Layouts
 
 import qs.Components.Button
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Services
 
@@ -84,6 +85,12 @@ RowLayout {
                 text: root.targets[root.selectedIndex]?.display ?? qsTr("All")
                 textRole: "display"
                 onMenuItemActivated: index => root.targetId = root.targets[index].value
+
+                Tooltip {
+                    anchorItem: splitButton
+                    enabled: !splitButton.menuOpen
+                    text: root.selectedDisplay ? qsTr("Brightness target: %1").arg(root.selectedDisplay.name) : qsTr("Select brightness display")
+                }
             }
         }
     }
@@ -92,6 +99,7 @@ RowLayout {
         color: Hyprsunset.isNightModeOn ? Colours.m3Colors.m3Primary : Qt.alpha(Colours.m3Colors.m3Primary, 0.3)
         icon.color: Hyprsunset.isNightModeOn ? Colours.m3Colors.m3OnPrimary : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.38)
         icon.name: "bedtime"
+        tooltipText: Hyprsunset.isNightModeOn ? qsTr("Disable night light") : qsTr("Enable night light")
         onClicked: Hyprsunset.isNightModeOn ? Hyprsunset.down() : Hyprsunset.up()
     }
 }

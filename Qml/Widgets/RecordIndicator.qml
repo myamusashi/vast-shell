@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -101,6 +102,15 @@ StyledRect {
             font.bold: true
             font.pixelSize: Appearance.fonts.size.small
             text: FormatTimeUtils.formatDuration(CaptureScreenVideo.recordingElapsedSeconds)
+        }
+    }
+
+    Tooltip {
+        anchorItem: root
+        text: {
+            const elapsed = FormatTimeUtils.formatDuration(CaptureScreenVideo.recordingElapsedSeconds);
+            const state   = CaptureScreenVideo.isPaused ? qsTr(" (Paused)") : "";
+            return qsTr("Click icon to stop recording · %1%2").arg(elapsed).arg(state);
         }
     }
 }

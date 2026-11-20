@@ -224,6 +224,7 @@ Item {
                             icon.name: "refresh"
                             implicitHeight: 40
                             implicitWidth: 40
+                            tooltipText: qsTr("Reload icon fonts")
                             onClicked: IconFonts.reload()
                         }
                     }

@@ -10,6 +10,7 @@ import qs.Components.Feedback
 import qs.Components.Base
 import qs.Components.Button
 import qs.Components.Dialog
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Core.States
@@ -268,11 +269,19 @@ Item {
                                     spacing: Appearance.spacing.small * 0.5
 
                                     StyledText {
+                                        id: wifiSsidText
+
                                         Layout.fillWidth: true
                                         color: networkDelegate.modelData.connected ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
                                         elide: Text.ElideRight
                                         font.pixelSize: Appearance.fonts.size.normal
                                         text: networkDelegate.modelData?.name ?? ""
+
+                                        Tooltip {
+                                            anchorItem: wifiSsidText
+                                            enabled: wifiSsidText.truncated
+                                            text: wifiSsidText.text
+                                        }
                                     }
 
                                     StyledText {
@@ -289,6 +298,7 @@ Item {
                                     icon.size: Appearance.fonts.size.large * 1.5
                                     implicitHeight: 28
                                     implicitWidth: 28
+                                    tooltipText: networkDelegate.modelData?.connected ? qsTr("Disconnect") : qsTr("Connect")
                                     onClicked: networkDelegate.modelData?.connected ? networkDelegate.modelData.disconnect() : networkDelegate.tryConnect()
                                 }
 
@@ -299,6 +309,7 @@ Item {
                                     icon.size: Appearance.fonts.size.large * 1.5
                                     implicitHeight: 28
                                     implicitWidth: 28
+                                    tooltipText: qsTr("Forget network")
                                     onClicked: networkDelegate.modelData?.forget()
                                 }
                             }

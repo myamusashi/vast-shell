@@ -1,10 +1,12 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Quickshell
 import Quickshell.Widgets
 import AnotherRipple
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -15,16 +17,21 @@ Item {
     readonly property int   actionButtonIconSize: size === "small" ? 16 : size === "large" ? 36 : 24
     readonly property int   actionButtonRadius: size === "small" ? 12 : size === "regular" ? 12 : size === "large" ? 28 : 16
     readonly property int   actionButtonSize: size === "small" ? 32 : size === "regular" ? 40 : size === "large" ? 96 : 56
-    readonly property color backgroundColor: enabled || color.a === 0 ? color : Qt.alpha(color, 0.12)
+    readonly property color backgroundColor: isInteractive || color.a === 0 ? color : Qt.alpha(color, 0.12)
+    readonly property bool  isInteractive: enabled && buttonEnabled
     readonly property bool  keyboardFocused: activeFocus
 
     property alias          backgroundRadius: background.radius
+    property bool           buttonEnabled: true
     property color          color: Colours.m3Colors.m3PrimaryContainer
+    property string         disabledTooltipText: ""
     property bool           hovered: hoverHandler.hovered
     property IconComponent  icon: IconComponent {}
     property bool           pressed: tapHandler.pressed
     property string         size: "medium"
     property bool           spinning: false
+    property int            tooltipPosition: Edges.Bottom
+    property string         tooltipText: ""
 
     signal                  clicked
 
@@ -35,7 +42,7 @@ Item {
     states: [
         State {
             name: "disabled"
-            when: !root.enabled
+            when: !root.isInteractive
 
             PropertyChanges {
                 opacity: 0.38
@@ -44,7 +51,7 @@ Item {
         },
         State {
             name: "focused"
-            when: root.enabled && root.keyboardFocused
+            when: root.isInteractive && root.keyboardFocused
 
             PropertyChanges {
                 opacity: 1
@@ -53,17 +60,17 @@ Item {
         },
         State {
             name: "normal"
-            when: root.enabled && !root.hovered && !root.pressed && !root.keyboardFocused
+            when: root.isInteractive && !root.hovered && !root.pressed && !root.keyboardFocused
         }
     ]
     Keys.onReturnPressed: event => {
-        if (enabled) {
+        if (isInteractive) {
             clicked();
             event.accepted = true;
         }
     }
     Keys.onSpacePressed: event => {
-        if (enabled) {
+        if (isInteractive) {
             clicked();
             event.accepted = true;
         }
@@ -99,7 +106,7 @@ Item {
     Elevation {
         level: root.hovered && !root.pressed ? 4 : 3
         radius: background.radius
-        visible: root.backgroundColor.a > 0 && root.enabled
+        visible: root.backgroundColor.a > 0 && root.isInteractive
     }
 
     ClippingRectangle {
@@ -107,7 +114,7 @@ Item {
 
         anchors.fill: parent
         color: root.backgroundColor
-        radius: root.enabled && root.pressed ? height * 0.5 : root.actionButtonRadius
+        radius: root.isInteractive && root.pressed ? height * 0.5 : root.actionButtonRadius
         Behavior on radius {
             NAnim {
                 duration: Appearance.animations.durations.normal
@@ -118,6 +125,7 @@ Item {
         SimpleRipple {
             anchors.fill: parent
             color: Colours.m3Colors.m3OnSurfaceVariant
+            visible: root.isInteractive
         }
 
         ParticleRipple {
@@ -125,13 +133,14 @@ Item {
             color: Colours.m3Colors.m3OutlineVariant
             opacity: 0.5
             particleCount: 2
+            visible: root.isInteractive
         }
     }
 
     StateLayer {
         anchors.fill: parent
         color: root.icon.color
-        layerEnabled: root.enabled
+        layerEnabled: root.isInteractive
         layerHovered: root.hovered
         layerPressed: root.pressed
         radius: background.radius
@@ -173,14 +182,21 @@ Item {
     HoverHandler {
         id: hoverHandler
 
-        cursorShape: root.enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+        cursorShape: root.isInteractive ? Qt.PointingHandCursor : Qt.ArrowCursor
     }
 
     TapHandler {
         id: tapHandler
 
-        enabled: root.enabled
+        enabled: root.isInteractive
         onTapped: root.clicked()
+    }
+
+    Tooltip {
+        anchorItem: root
+        enabled: root.isInteractive ? root.tooltipText.length > 0 : root.disabledTooltipText.length > 0
+        position: root.tooltipPosition
+        text: !root.isInteractive && root.disabledTooltipText.length > 0 ? root.disabledTooltipText : root.tooltipText
     }
 
     component IconComponent: QtObject {

@@ -9,6 +9,7 @@ import Vast.Clipboard
 import qs.Components.Feedback
 import qs.Components.Button
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -237,6 +238,8 @@ Item {
                     }
 
                     StyledText {
+                        id: imageFileNameText
+
                         Layout.fillWidth: false
                         Layout.maximumWidth: 220
                         color: Colours.m3Colors.m3OnSurfaceVariant
@@ -244,6 +247,12 @@ Item {
                         font.pixelSize: Appearance.fonts.size.normal
                         text: entryDetails.fileName
                         visible: entryDetails.isImage && entryDetails.fileName.length > 0
+
+                        Tooltip {
+                            anchorItem: imageFileNameText
+                            enabled: imageFileNameText.truncated
+                            text: imageFileNameText.text
+                        }
                     }
 
                     StyledRect {
@@ -288,6 +297,7 @@ Item {
                 icon.color: entryDetails.pinned ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
                 icon.name: entryDetails.pinned ? "keep" : "keep_off"
                 size: "small"
+                tooltipText: entryDetails.pinned ? qsTr("Unpin") : qsTr("Pin")
                 onClicked: root.pinToggled(root.entryId, !entryDetails.pinned)
             }
 

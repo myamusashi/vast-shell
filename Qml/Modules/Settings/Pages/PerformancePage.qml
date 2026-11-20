@@ -501,6 +501,7 @@ SettingsPageBase {
 
             WID.Battery {
                 heightBattery: 24
+                showTooltip: false
                 widthBattery: 44
             }
 

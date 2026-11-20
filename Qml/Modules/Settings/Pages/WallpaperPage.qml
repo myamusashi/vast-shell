@@ -11,6 +11,7 @@ import qs.Services as Svc
 import qs.Components.Base
 import qs.Components.Button
 import qs.Components.Dialog.FileDialog
+import qs.Components.Tooltip
 import qs.Modules.Drawers.BottomDrawers.WallpaperSelector
 
 import "../Components"
@@ -111,12 +112,22 @@ SettingsPageBase {
             Repeater {
                 model: parent.palettePreviewColors
                 delegate: Rectangle {
+                    id: swatch
+
+                    required property int   index
                     required property color modelData
+
+                    readonly property var   roleNames: [qsTr("Primary"), qsTr("Primary Container"), qsTr("Secondary"), qsTr("Secondary Container"), qsTr("Tertiary"), qsTr("Tertiary Container")]
 
                     Layout.fillWidth: true
                     Layout.preferredHeight: 24
                     color: modelData
                     radius: Appearance.rounding.small
+
+                    Tooltip {
+                        anchorItem: swatch
+                        text: `${swatch.roleNames[swatch.index] ?? ""} (${swatch.modelData.toString().toUpperCase()})`
+                    }
                 }
             }
         }

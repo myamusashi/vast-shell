@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -47,6 +48,12 @@ StyledRect {
             elide: Text.ElideRight
             font.pixelSize: Appearance.fonts.size.normal
             text: root.audioDescription
+
+            Tooltip {
+                anchorItem: audioDescriptionText
+                enabled: audioDescriptionText.truncated
+                text: audioDescriptionText.text
+            }
         }
 
         Icon {

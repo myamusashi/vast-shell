@@ -6,6 +6,7 @@ import Quickshell.Widgets
 import M3Shapes
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
@@ -222,6 +223,12 @@ StyledRect {
                             source: container.iconForToplevel(delegateRoot.toplevel)
                             visible: source !== ""
                         }
+                    }
+
+                    Tooltip {
+                        anchorItem: delegateRoot
+                        enabled: !delegateRoot.isOccupied
+                        text: delegateRoot.isActive ? qsTr("Workspace %1 (Active)").arg(delegateRoot.workspaceId) : qsTr("Workspace %1 · Empty").arg(delegateRoot.workspaceId)
                     }
                 }
             }

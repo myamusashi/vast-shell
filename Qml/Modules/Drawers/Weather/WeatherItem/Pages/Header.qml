@@ -49,6 +49,7 @@ Row {
         icon.name: "close"
         icon.size: Appearance.fonts.size.large * 1.5
         size: "regular"
+        tooltipText: qsTr("Close")
         onClicked: root.clicked()
     }
 }

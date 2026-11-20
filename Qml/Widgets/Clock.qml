@@ -1,6 +1,7 @@
 import QtQuick
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
@@ -39,5 +40,10 @@ StyledRect {
         cursorShape: Qt.PointingHandCursor
         hoverEnabled: true
         onClicked: GlobalStates.isDashboardOpen = !GlobalStates.isDashboardOpen
+    }
+
+    Tooltip {
+        anchorItem: clock
+        text: Time?.date ? Qt.formatDateTime(Time.date, "dddd, MMMM d, yyyy") : ""
     }
 }

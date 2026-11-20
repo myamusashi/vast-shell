@@ -6,6 +6,7 @@ import Quickshell.Widgets
 
 import qs.Components.Base
 import qs.Components.Button
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -59,11 +60,19 @@ ColumnLayout {
                 }
 
                 StyledText {
+                    id: deviceNameText
+
                     Layout.fillWidth: true
                     color: Colours.m3Colors.m3OnSurface
                     elide: Text.ElideRight
                     font.pixelSize: Appearance.fonts.size.normal
                     text: BluetoothServices.displayName(blockedDelegate.modelData)
+
+                    Tooltip {
+                        anchorItem: deviceNameText
+                        enabled: deviceNameText.truncated
+                        text: deviceNameText.text
+                    }
                 }
 
                 FloatingButton {
@@ -72,6 +81,7 @@ ColumnLayout {
                     icon.name: "block"
                     implicitHeight: 28
                     implicitWidth: 28
+                    tooltipText: qsTr("Unblock device")
                     onClicked: blockedDelegate.modelData.blocked = false
                 }
             }

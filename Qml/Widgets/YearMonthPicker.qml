@@ -5,6 +5,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -29,6 +30,8 @@ Control {
             Layout.preferredHeight: 36
 
             StyledRect {
+                id: prevDecadeButton
+
                 Layout.preferredHeight: 32
                 Layout.preferredWidth: 32
                 color: "transparent"
@@ -46,6 +49,11 @@ Control {
                     cursorShape: Qt.PointingHandCursor
                     onClicked: root.startYear = Math.max(1900, root.startYear - 10)
                 }
+
+                Tooltip {
+                    anchorItem: prevDecadeButton
+                    text: qsTr("Previous decade (%1 – %2)").arg(Math.max(1900, root.startYear - 10)).arg(Math.max(1900, root.startYear - 10) + 9)
+                }
             }
 
             StyledText {
@@ -58,6 +66,8 @@ Control {
             }
 
             StyledRect {
+                id: nextDecadeButton
+
                 Layout.preferredHeight: 32
                 Layout.preferredWidth: 32
                 color: "transparent"
@@ -74,6 +84,11 @@ Control {
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
                     onClicked: root.startYear += 10
+                }
+
+                Tooltip {
+                    anchorItem: nextDecadeButton
+                    text: qsTr("Next decade (%1 – %2)").arg(root.startYear + 10).arg(root.startYear + 19)
                 }
             }
         }

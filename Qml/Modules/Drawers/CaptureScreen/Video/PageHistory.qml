@@ -6,6 +6,7 @@ import QtQuick.Layouts
 import Quickshell
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -164,12 +165,20 @@ StyledRect {
                         spacing: 2
 
                         StyledText {
+                            id: recordingNameText
+
                             Layout.fillWidth: true
                             color: listView.currentIndex === delegateRoot.index ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurface
                             elide: Text.ElideRight
                             font.pixelSize: Appearance.fonts.size.normal
                             font.weight: Font.Medium
                             text: delegateRoot.modelData.name
+
+                            Tooltip {
+                                anchorItem: recordingNameText
+                                enabled: recordingNameText.truncated
+                                text: recordingNameText.text
+                            }
                         }
 
                         StyledText {
@@ -189,6 +198,8 @@ StyledRect {
                     }
 
                     Icon {
+                        id: openExternalIcon
+
                         Layout.alignment: Qt.AlignVCenter
                         color: Colours.m3Colors.m3OnSurfaceVariant
                         font.pixelSize: Appearance.fonts.size.medium
@@ -200,6 +211,11 @@ StyledRect {
                             anchors.margins: -5
                             cursorShape: Qt.PointingHandCursor
                             onClicked: root.openFile(delegateRoot.modelData.path)
+                        }
+
+                        Tooltip {
+                            anchorItem: openExternalIcon
+                            text: qsTr("Open in video viewer")
                         }
                     }
                 }

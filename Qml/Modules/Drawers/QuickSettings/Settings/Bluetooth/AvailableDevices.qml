@@ -27,13 +27,15 @@ ColumnLayout {
 
         FloatingButton {
             backgroundRadius: Appearance.rounding.small
+            buttonEnabled: BluetoothServices.adapterAvailable && !BluetoothServices.adapterBlocked
             color: "transparent"
-            enabled: BluetoothServices.adapterAvailable && !BluetoothServices.adapterBlocked
+            disabledTooltipText: !BluetoothServices.adapterAvailable ? qsTr("No Bluetooth adapter available") : qsTr("Bluetooth adapter is blocked")
             icon.color: Colours.m3Colors.m3OnSurfaceVariant
             icon.name: "refresh"
             implicitHeight: 28
             implicitWidth: 28
             spinning: BluetoothServices.isDiscovering
+            tooltipText: BluetoothServices.isDiscovering ? qsTr("Stop scanning") : qsTr("Scan for devices")
             onClicked: {
                 if (BluetoothServices.isDiscovering)
                     BluetoothServices.setDiscovering(false);

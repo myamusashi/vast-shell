@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import Vast.Clipboard
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
@@ -133,6 +134,11 @@ Item {
 
                     HoverHandler {
                         cursorShape: Qt.PointingHandCursor
+                    }
+
+                    Tooltip {
+                        anchorItem: filterIndicator
+                        text: qsTr("Filter: %1 (Click or press Tab to cycle)").arg(filterIndicator.filterLabel)
                     }
                 }
 

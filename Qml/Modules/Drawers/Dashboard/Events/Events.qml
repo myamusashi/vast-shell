@@ -7,6 +7,7 @@ import Quickshell.Widgets
 
 import qs.Components.Base
 import qs.Components.Button
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
@@ -79,6 +80,7 @@ WrapperRectangle {
                 icon.color: Colours.m3Colors.m3OnSurface
                 icon.name: "add"
                 size: "small"
+                tooltipText: root.addingTodo ? qsTr("Save todo") : qsTr("Add todo")
                 onClicked: {
                     if (root.addingTodo) {
                         root.addTodo();
@@ -167,6 +169,8 @@ WrapperRectangle {
                 width: todoList.width
 
                 Icon {
+                    id: todoCheckbox
+
                     color: Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.large
                     icon: todoRow.modelData.done ? "check_box" : "check_box_outline_blank"
@@ -175,6 +179,11 @@ WrapperRectangle {
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
                         onClicked: TodoModel.toggle(todoRow.modelData.id)
+                    }
+
+                    Tooltip {
+                        anchorItem: todoCheckbox
+                        text: todoRow.modelData.done ? qsTr("Mark as incomplete") : qsTr("Mark as complete")
                     }
                 }
 
@@ -214,6 +223,7 @@ WrapperRectangle {
                     icon.color: Colours.m3Colors.m3OnSurface
                     icon.name: "edit"
                     size: "small"
+                    tooltipText: qsTr("Edit todo")
                     onClicked: todoRow.editing = true
                 }
 
@@ -223,6 +233,7 @@ WrapperRectangle {
                     icon.color: Colours.m3Colors.m3OnSurface
                     icon.name: "delete"
                     size: "small"
+                    tooltipText: qsTr("Delete todo")
                     onClicked: TodoModel.remove(todoRow.modelData.id)
                 }
             }

@@ -11,6 +11,7 @@ import qs.Core.States
 import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Modules.Drawers.Notifications.Components as N
 
 StyledRect {
@@ -61,6 +62,8 @@ StyledRect {
         }
 
         StyledRect {
+            id: dndButton
+
             anchors.verticalCenter: parent.verticalCenter
             color: Colours.m3Colors.m3SurfaceContainer
             implicitHeight: 30
@@ -81,6 +84,11 @@ StyledRect {
                 cursorShape: Qt.PointingHandCursor
                 hoverEnabled: true
                 onClicked: Notifs.dnd = !Notifs.dnd
+            }
+
+            Tooltip {
+                anchorItem: dndButton
+                text: Notifs.dnd ? qsTr("Disable Do Not Disturb") : qsTr("Enable Do Not Disturb")
             }
         }
     }

@@ -64,28 +64,34 @@ ColumnLayout {
         model: [
             {
                 icon: WeatherIcon.windy,
-                label: `${Weather.usAQI} AQI`
+                label: `${Weather.usAQI} AQI`,
+                tooltip: qsTr("US Air Quality Index: %1").arg(Weather.usAQI)
             },
             {
                 icon: WeatherIcon.humidity,
-                label: `${Weather.humidity}%`
+                label: `${Weather.humidity}%`,
+                tooltip: qsTr("Humidity: %1%").arg(Weather.humidity)
             },
             {
                 icon: WeatherIcon.hot,
-                label: `${Weather.uvIndex} UVI`
+                label: `${Weather.uvIndex} UVI`,
+                tooltip: qsTr("UV Index: %1").arg(Weather.uvIndex)
             },
             {
                 icon: WeatherIcon.thermometer,
-                label: qsTr("Feels like %1°").arg(Weather.feelsLike)
+                label: qsTr("Feels like %1°").arg(Weather.feelsLike),
+                tooltip: qsTr("Feels like %1°").arg(Weather.feelsLike)
             },
             {
                 icon: WeatherIcon.raindrops,
-                label: `${Weather.precipitationDaily} mm`
+                label: `${Weather.precipitationDaily} mm`,
+                tooltip: qsTr("Daily precipitation: %1 mm").arg(Weather.precipitationDaily)
             },
             {
                 icon: showSunset ? WeatherIcon.sunset : WeatherIcon.sunrise,
                 iconColor: showSunset ? Colours.m3Colors.m3Orange : Colours.m3Colors.m3Yellow,
-                label: showSunset ? Weather.sunSet : Weather.sunRise
+                label: showSunset ? Weather.sunSet : Weather.sunRise,
+                tooltip: showSunset ? qsTr("Sunset at %1").arg(Weather.sunSet) : qsTr("Sunrise at %1").arg(Weather.sunRise)
             }
         ]
     }

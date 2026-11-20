@@ -4,6 +4,7 @@ import QtQuick
 import Quickshell.Wayland
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.States
 import qs.Services
@@ -190,5 +191,14 @@ StyledRect {
         verticalAlignment: Text.AlignVCenter
         text: root.displayedText
         y: 0
+    }
+
+    Tooltip {
+        anchorItem: root
+        text: {
+            if (root.activeWindow?.activated && root.activeWindow?.title)
+                return qsTr("Workspace %1 · %2").arg(root.activeWorkspaceId).arg(root.activeWindow.title);
+            return qsTr("Workspace %1 · Desktop").arg(root.activeWorkspaceId);
+        }
     }
 }

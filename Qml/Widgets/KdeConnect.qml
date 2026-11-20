@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Widgets
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.States
 import qs.Services
@@ -55,6 +56,17 @@ StyledRect {
         onPositionChanged: drag => {
             if (root.dragHover !== drag.hasUrls)
                 root.dragHover = drag.hasUrls;
+        }
+    }
+
+    Tooltip {
+        anchorItem: root
+        enabled: !root.dragHover
+        text: {
+            if (!KDEConnect.hasAvailableDevices)
+                return qsTr("KDE Connect · No devices available");
+            const names = KDEConnect.availableDevices.map(d => d.name).filter(Boolean).join(", ");
+            return names ? qsTr("KDE Connect: %1 · Drop files to share").arg(names) : qsTr("KDE Connect · Drop files to share");
         }
     }
 }

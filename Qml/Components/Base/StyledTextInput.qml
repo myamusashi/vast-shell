@@ -4,6 +4,7 @@ import QtQuick
 import M3Shapes
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
@@ -277,6 +278,12 @@ Item {
                     textInputField.forceActiveFocus();
                 }
             }
+        }
+
+        Tooltip {
+            anchorItem: visibilityToggleButton
+            enabled: root.toggleButtonVisible
+            text: root.passwordMode ? qsTr("Show password") : qsTr("Hide password")
         }
     }
 

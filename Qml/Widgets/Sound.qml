@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import Quickshell.Services.Pipewire
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Core.States
 import qs.Core.Utils
@@ -54,5 +55,16 @@ StyledRect {
                 GlobalStates.toggleOSD("volume");
         }
         onWheel: mouseEvent => Audio.wheelAction(mouseEvent, root.audioNode)
+    }
+
+    Tooltip {
+        anchorItem: root
+        text: {
+            const name = Audio.nodeDisplayName(root.audioNode) || qsTr("Audio");
+            if (!root.audioNode?.audio)
+                return name;
+            const state = root.audioNode.audio.muted ? qsTr("Muted") : Math.round(root.audioNode.audio.volume * 100) + "%";
+            return qsTr("%1 · %2").arg(name).arg(state);
+        }
     }
 }

@@ -11,6 +11,7 @@ import Vast.Utils
 import qs.Core.Configs
 import qs.Core.Utils
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Services
 
 import "components"
@@ -399,11 +400,19 @@ Scope {
                                 spacing: Appearance.spacing.small
 
                                 StyledText {
+                                    id: previewFileName
+
                                     Layout.fillWidth: true
                                     color: Colours.m3Colors.m3OnSurface
                                     elide: Text.ElideRight
                                     font.pixelSize: Appearance.fonts.size.small
                                     text: previewPanel.fileName
+
+                                    Tooltip {
+                                        anchorItem: previewFileName
+                                        enabled: previewFileName.truncated
+                                        text: previewFileName.text
+                                    }
                                 }
 
                                 StyledText {

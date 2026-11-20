@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 
 import qs.Components.Base
+import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Services
 
@@ -99,6 +100,20 @@ Item {
             color: Colours.m3Colors.m3Primary
             opacity: gridMouseArea.pressed ? 0.2 : 0.08
             radius: parent.radius
+        }
+
+        Tooltip {
+            anchorItem: hoverHighlight
+            enabled: root.hoveredInCurrentMonth && Configs.generals.showHolidays
+            text: {
+                if (!root.hoveredInCurrentMonth || !Configs.generals.showHolidays)
+                    return "";
+                HolidayModel.holidaysByDate;
+                const cell = root.cells[root.hoveredIndex];
+                if (!cell)
+                    return "";
+                return HolidayModel.getHolidaysForDate(cell.isoDate).map(h => h.name).join(" • ");
+            }
         }
     }
 
