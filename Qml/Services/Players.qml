@@ -25,6 +25,17 @@ Singleton {
 
     property int                        manualIndex: 0
 
+    function                            boundedPosition(player: MprisPlayer): real {
+        if (!player)
+            return 0;
+        const position = player.position;
+        if (player.length <= 0 || position <= player.length)
+            return Math.max(position, 0);
+
+        // Some players never report a seek when the track restarts, so the position keeps growing.
+        return player.loopState === MprisLoopState.Track ? position % player.length : player.length;
+    }
+
     function                            syncActivePlayer(): void {
         if (Configs.mediaPlayer.autoSwitchActivePlayer && root.playingIndex >= 0)
             root.manualIndex = root.playingIndex;

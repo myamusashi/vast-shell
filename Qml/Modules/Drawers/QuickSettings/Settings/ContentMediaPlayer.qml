@@ -97,6 +97,7 @@ RowLayout {
         RowLayout {
             spacing: Appearance.spacing.large
             Component.onCompleted: {
+                Lyrics.syncPlayback();
                 if (LyricsProvider.currentLineIndex < 0)
                     lyricsView.listView.positionViewAtBeginning();
                 else
@@ -135,7 +136,7 @@ RowLayout {
                     active: GlobalStates.isQuickSettingsOpen
                     activeColor: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary
                     enableWave: Players.active?.playbackState === MprisPlaybackState.Playing && !pressed
-                    value: Players.active === null ? 0 : Players.active.length > 0 ? Players.active.position / Players.active.length : 0
+                    value: Players.active === null ? 0 : Players.active.length > 0 ? Players.boundedPosition(Players.active) / Players.active.length : 0
                     onMoved: Players.active ? Players.active.position = value * Players.active.length : {}
                 }
 
@@ -159,7 +160,7 @@ RowLayout {
                         color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
                         font.pixelSize: Appearance.fonts.size.small
                         font.weight: Font.DemiBold
-                        text: Players.active == null ? "0:00" : `${FormatTimeUtils.formatDuration(Players.active?.position)} / ${FormatTimeUtils.formatDuration(Players.active?.length)}`
+                        text: Players.active == null ? "0:00" : `${FormatTimeUtils.formatDuration(Players.boundedPosition(Players.active))} / ${FormatTimeUtils.formatDuration(Players.active?.length)}`
 
                         Timer {
                             interval: 1000
@@ -260,30 +261,6 @@ RowLayout {
                 }
             }
 
-            Connections {
-
-                function onPositionChanged() {
-                    LyricsProvider.setPlayback(Players.active.position, Players.active.rate, Players.active.isPlaying);
-                }
-
-                function onPostTrackChanged() {
-                    if (LyricsProvider.currentLineIndex < 0)
-                        lyricsView.listView.positionViewAtBeginning();
-                    else
-                        lyricsView.listView.positionViewAtIndex(LyricsProvider.currentLineIndex, ListView.Center);
-                }
-
-                function onTrackChanged() {
-                    if (LyricsProvider.currentLineIndex < 0) {
-                        LyricsProvider.fetch(Players.active.trackTitle, Players.active.trackArtist, Players.active.length);
-                        lyricsView.listView.positionViewAtBeginning();
-                    } else
-                        lyricsView.listView.positionViewAtIndex(LyricsProvider.currentLineIndex, ListView.Center);
-                }
-
-                target: Players.active
-            }
-
             LyricsView {
                 id: lyricsView
 
@@ -338,7 +315,7 @@ RowLayout {
                     color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
                     font.pixelSize: Appearance.fonts.size.small
                     font.weight: Font.DemiBold
-                    text: Players.active == null ? "0:00" : `${FormatTimeUtils.formatDuration(Players.active?.position)} / ${FormatTimeUtils.formatDuration(Players.active?.length)}`
+                    text: Players.active == null ? "0:00" : `${FormatTimeUtils.formatDuration(Players.boundedPosition(Players.active))} / ${FormatTimeUtils.formatDuration(Players.active?.length)}`
 
                     Timer {
                         interval: 1000
@@ -355,7 +332,7 @@ RowLayout {
                 activeColor: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary
                 enableWave: Players.active?.playbackState === MprisPlaybackState.Playing && !pressed
                 implicitWidth: 28
-                value: Players.active === null ? 0 : Players.active.length > 0 ? Players.active.position / Players.active.length : 0
+                value: Players.active === null ? 0 : Players.active.length > 0 ? Players.boundedPosition(Players.active) / Players.active.length : 0
                 onMoved: Players.active ? Players.active.position = value * Players.active.length : {}
             }
 

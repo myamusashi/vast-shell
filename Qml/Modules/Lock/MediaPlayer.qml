@@ -141,7 +141,7 @@ StyledRect {
             enableWave: Players.active?.playbackState === MprisPlaybackState.Playing
             implicitHeight: 28
             inactiveColor: mediaPlayerRect.dynSurfaceVariant
-            value: Players.active === null ? 0 : Players.active.length > 0 ? Players.active.position / Players.active.length : 0
+            value: Players.active === null ? 0 : Players.active.length > 0 ? Players.boundedPosition(Players.active) / Players.active.length : 0
             onMoved: Players.active ? Players.active.position = value * Players.active.length : {}
 
             FrameAnimation {
@@ -288,7 +288,7 @@ StyledRect {
                 enableWave: Players.active?.playbackState === MprisPlaybackState.Playing
                 implicitHeight: 24
                 inactiveColor: mediaPlayerRect.dynSurfaceVariant
-                value: Players.active === null ? 0 : Players.active.length > 0 ? Players.active.position / Players.active.length : 0
+                value: Players.active === null ? 0 : Players.active.length > 0 ? Players.boundedPosition(Players.active) / Players.active.length : 0
                 onMoved: Players.active ? Players.active.position = value * Players.active.length : {}
 
                 FrameAnimation {
