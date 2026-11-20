@@ -21,7 +21,6 @@ readonly VAST_SHELL_REVISION
 readonly INSTALL_DIR="/usr/local/share/quickshell"
 readonly BIN_DIR="/usr/local/bin"
 readonly LIBEXEC_DIR="/usr/local/libexec"
-readonly VDPAU_DIR="/usr/lib/vdpau"
 readonly QML_DIR="/usr/lib/qt6/qml"
 readonly BUILD_DIR="/tmp/quickshell-build"
 
@@ -46,7 +45,7 @@ install_system_packages() {
 		pipewire ddcutil i2c-tools go wayland wayland-protocols
 		findutils grep sed gawk util-linux libnotify scdoc
 		iw polkit wl-clipboard ffmpeg foot hyprland xdg-desktop-portal
-		spirv-tools vulkan-headers cli11 cpptrace jemalloc libdrm mesa libxcb glib2 libvdpau-va-gl
+		spirv-tools vulkan-headers cli11 cpptrace jemalloc libdrm mesa libxcb glib2
 	)
 
 	log "Checking system dependencies..."
@@ -507,8 +506,8 @@ export VAST_SHELL_REVISION="$VAST_SHELL_REVISION"
 export VAST_SHELL_DIRECTORY="$INSTALL_DIR"
 export QUICKSHELL_CONFIG_DIR="\$VAST_SHELL_DIRECTORY"
 export QT_MEDIA_BACKEND="ffmpeg"
-export VDPAU_DRIVER="va_gl"
-export VDPAU_DRIVER_PATH="$VDPAU_DIR"
+export QT_FFMPEG_DECODING_HW_DEVICE_TYPES="\${QT_FFMPEG_DECODING_HW_DEVICE_TYPES:-vaapi}"
+export QT_FFMPEG_ENCODING_HW_DEVICE_TYPES="\${QT_FFMPEG_ENCODING_HW_DEVICE_TYPES:-vaapi}"
 export QML2_IMPORT_PATH="$QML_DIR\${QML2_IMPORT_PATH:+:\$QML2_IMPORT_PATH}"
 export PATH="$BIN_DIR:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin\${HOME:+:\$HOME/.local/bin}\${PATH:+:\$PATH}"
 export PATH="\$PATH:/opt/bin:/usr/games:/usr/local/games"

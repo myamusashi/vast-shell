@@ -1,6 +1,8 @@
 //@ pragma UseQApplication
 //@ pragma NativeTextRendering
 //@ pragma DropExpensiveFonts
+//@ pragma Env QT_FFMPEG_DECODING_HW_DEVICE_TYPES=vaapi
+//@ pragma Env QT_FFMPEG_ENCODING_HW_DEVICE_TYPES=vaapi
 
 pragma ComponentBehavior: Bound
 

@@ -93,7 +93,7 @@ qt6-base qt6-declarative qt6-wayland qt6-svg qt6-graphs qt6-multimedia
 qt6-5compat qt6-shadertools qt6-tools rust pipewire ddcutil i2c-tools go
 wayland wayland-protocols findutils grep sed gawk util-linux libnotify scdoc iw
 polkit wl-clipboard ffmpeg foot hyprland xdg-desktop-portal spirv-tools
-vulkan-headers cli11 cpptrace jemalloc libdrm mesa libxcb glib2 libvdpau-va-gl
+vulkan-headers cli11 cpptrace jemalloc libdrm mesa libxcb glib2
 ```
 
 **AUR** (installed with `yay`): `ttf-weather-icons`, `app2unit`
@@ -103,7 +103,7 @@ vulkan-headers cli11 cpptrace jemalloc libdrm mesa libxcb glib2 libvdpau-va-gl
 |---|---|
 | Qt6 | `qt6-base`, `qt6-declarative`, `qt6-wayland`, `qt6-svg`, `qt6-graphs`, `qt6-multimedia`, `qt6-5compat`, `qt6-shadertools`, `qt6-tools` |
 | Shell | `hyprland`, `foot`, `polkit`, `xdg-desktop-portal` |
-| Media | `ffmpeg`, `wl-clipboard`, `wl-screenrec`, `libvdpau-va-gl` |
+| Media | `ffmpeg`, `wl-clipboard`, `wl-screenrec` |
 | Network / Notifications | `iw`, `libnotify` |
 | Utils | `findutils`, `grep`, `gawk`, `sed`, `util-linux` |
 | Other | `app2unit` (AUR), `ddcutil`, `i2c-tools` |

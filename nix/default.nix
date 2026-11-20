@@ -24,7 +24,6 @@
     hyprland,
     qt6,
     callPackage,
-    libvdpau-va-gl,
     version ? "0.1.0",
     revision ? "unknown",
 }: let
@@ -144,8 +143,8 @@
                 --set VAST_SHELL_VERSION ${version} \
                 --set VAST_SHELL_REVISION ${revision} \
                 --set QT_MEDIA_BACKEND ffmpeg \
-                --set VDPAU_DRIVER va_gl \
-                --set VDPAU_DRIVER_PATH "${libvdpau-va-gl}/lib/vdpau" \
+                --set-default QT_FFMPEG_DECODING_HW_DEVICE_TYPES vaapi \
+                --set-default QT_FFMPEG_ENCODING_HW_DEVICE_TYPES vaapi \
                 --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
                 --prefix QML2_IMPORT_PATH : "${qt6.qt5compat}/${qt6.qtbase.qtQmlPrefix}" \
                 --prefix QML2_IMPORT_PATH : "${qt6.qtgraphs}/${qt6.qtbase.qtQmlPrefix}" \
@@ -161,8 +160,8 @@
                 --set VAST_SHELL_VERSION ${version} \
                 --set VAST_SHELL_REVISION ${revision} \
                 --set QT_MEDIA_BACKEND ffmpeg \
-                --set VDPAU_DRIVER va_gl \
-                --set VDPAU_DRIVER_PATH "${libvdpau-va-gl}/lib/vdpau" \
+                --set-default QT_FFMPEG_DECODING_HW_DEVICE_TYPES vaapi \
+                --set-default QT_FFMPEG_ENCODING_HW_DEVICE_TYPES vaapi \
                 --prefix QML2_IMPORT_PATH : "$out/lib/qt-${qt6.qtbase.version}/qml" \
                 --prefix QML2_IMPORT_PATH : "${qt6.qt5compat}/${qt6.qtbase.qtQmlPrefix}" \
                 --prefix QML2_IMPORT_PATH : "${qt6.qtgraphs}/${qt6.qtbase.qtQmlPrefix}" \
