@@ -5,7 +5,7 @@
 #include <qlist.h>
 #include <qnamespace.h>
 #include <qqmlintegration.h>
-#include <qquickpainteditem.h>
+#include <qquickitem.h>
 #include <qrect.h>
 #include <qstring.h>
 #include <qtextlayout.h>
@@ -13,12 +13,12 @@
 #include <qtypes.h>
 #include <qvariant.h>
 
+#include "LyricRenderUtils.hpp"
 #include "LyricsTimeline.hpp"
 
-class QPainter;
-class QQuickItem;
+class QSGNode;
 
-class AnimatedLyricText : public QQuickPaintedItem {
+class AnimatedLyricText : public QQuickItem {
     Q_OBJECT
     QML_ELEMENT
 
@@ -78,8 +78,6 @@ class AnimatedLyricText : public QQuickPaintedItem {
     [[nodiscard]] QColor       styleColor() const noexcept;
     void                       setStyleColor(const QColor& color);
 
-    void                       paint(QPainter* painter) override;
-
   Q_SIGNALS:
     void textChanged();
     void wordsChanged();
@@ -96,47 +94,37 @@ class AnimatedLyricText : public QQuickPaintedItem {
     void styleColorChanged();
 
   protected:
-    void geometryChange(const QRectF& newGeometry, const QRectF& oldGeometry) override;
+    void     geometryChange(const QRectF& newGeometry, const QRectF& oldGeometry) override;
+    QSGNode* updatePaintNode(QSGNode* oldNode, UpdatePaintNodeData* updatePaintNodeData) override;
 
   private:
-    struct LineSegment {
-        qreal leftX{0.0};
-        qreal width{0.0};
-        qreal topY{0.0};
-        qreal height{0.0};
-    };
+    void                                    relayout();
+    void                                    rebuildTimeline();
+    void                                    invalidateActiveWordCache() noexcept;
+    void                                    ensureActiveWordCache(qsizetype activeWordIndex, int textLength);
 
-    void                            relayout();
-    void                            rebuildTimeline();
-    void                            invalidateActiveWordCache() noexcept;
-    void                            ensureActiveWordCache(qsizetype activeWordIndex, int textLength, const QColor& effectiveActive);
+    QString                                 mText;
+    QVariantList                            mWords;
+    qint64                                  mPositionMs{0};
+    bool                                    mSynced{true};
+    bool                                    mActive{false};
+    qreal                                   mHighlightMix{0.0};
+    QColor                                  mActiveColor{Qt::white};
+    QColor                                  mInactiveColor{Qt::gray};
+    QFont                                   mFont;
+    int                                     mHorizontalAlignment{Qt::AlignLeft};
+    int                                     mWrapMode{4}; // Text.Wrap (WrapAtWordBoundaryOrAnywhere)
+    bool                                    mRaised{false};
+    QColor                                  mStyleColor{Qt::black};
 
-    QString                         mText;
-    QVariantList                    mWords;
-    qint64                          mPositionMs{0};
-    bool                            mSynced{true};
-    bool                            mActive{false};
-    qreal                           mHighlightMix{0.0};
-    QColor                          mActiveColor{Qt::white};
-    QColor                          mInactiveColor{Qt::gray};
-    QFont                           mFont;
-    int                             mHorizontalAlignment{Qt::AlignLeft};
-    int                             mWrapMode{4}; // Text.Wrap (WrapAtWordBoundaryOrAnywhere)
-    bool                            mRaised{false};
-    QColor                          mStyleColor{Qt::black};
+    QTextLayout                             mLayout;
+    qreal                                   mLayoutHeight{0.0};
+    vast::LyricsTimeline                    mTimeline;
 
-    QTextLayout                     mLayout;
-    qreal                           mLayoutHeight{0.0};
-    vast::LyricsTimeline            mTimeline;
-
-    QList<LineSegment>              mCachedSegments;
-    qreal                           mCachedTotalWidth{0.0};
-    qsizetype                       mCachedActiveWordIndex{-1};
-    int                             mCachedWordStart{0};
-    int                             mCachedWordEnd{0};
-    bool                            mSegmentCacheValid{false};
-
-    QList<QTextLayout::FormatRange> mCachedFillRanges;
-    QColor                          mCachedFillColor;
-    bool                            mFillRangesCacheValid{false};
+    QList<vast::lyric_render::SLineSegment> mCachedSegments;
+    qreal                                   mCachedTotalWidth{0.0};
+    qsizetype                               mCachedActiveWordIndex{-1};
+    int                                     mCachedWordStart{0};
+    int                                     mCachedWordEnd{0};
+    bool                                    mSegmentCacheValid{false};
 };

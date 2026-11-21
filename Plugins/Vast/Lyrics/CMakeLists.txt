@@ -11,8 +11,11 @@ vast_module(vast-lyrics
         LyricsScheduler.cpp
         LyricsTimeline.hpp
         LyricsTimeline.cpp
+        LyricRenderUtils.hpp
         AnimatedLyricText.hpp
         AnimatedLyricText.cpp
+        LyricsCanvas.hpp
+        LyricsCanvas.cpp
     LIBRARIES
         Qt::Gui
         Qt::Network

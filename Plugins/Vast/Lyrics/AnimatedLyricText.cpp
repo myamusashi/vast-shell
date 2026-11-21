@@ -2,18 +2,19 @@
 
 #include "../Utils/ColorUtils.hpp"
 
-#include <qbrush.h>
 #include <qcolor.h>
 #include <qfont.h>
 #include <qlist.h>
 #include <qnamespace.h>
-#include <qpainter.h>
 #include <qpoint.h>
 #include <qquickitem.h>
-#include <qquickpainteditem.h>
+#include <qquickwindow.h>
 #include <qrect.h>
+#include <qsggeometry.h>
+#include <qsgnode.h>
+#include <qsgtextnode.h>
+#include <qsgtexture.h>
 #include <qstring.h>
-#include <qtextformat.h>
 #include <qtextlayout.h>
 #include <qtextoption.h>
 #include <qtmetamacros.h>
@@ -22,7 +23,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <utility>
 
 namespace {
     [[nodiscard]] QTextOption::WrapMode mapWrapMode(int wrapMode) noexcept {
@@ -34,15 +34,17 @@ namespace {
         }
     }
 
-    [[nodiscard]] QTextLayout::FormatRange makeRange(int start, int length, const QColor& color) {
-        QTextCharFormat fmt;
-        fmt.setForeground(QBrush(color));
-        return {.start = start, .length = length, .format = fmt};
-    }
+    // Scene Graph node container owned by Qt Quick's render loop.
+    class CAnimatedLyricSGNode : public QSGNode {
+      public:
+        QSGTextNode*        baseNode{nullptr};
+        QSGTextNode*        completedLinesNode{nullptr};
+        QList<QSGClipNode*> clipNodes;
+        QList<QSGTextNode*> clippedTextNodes;
+    };
 } // namespace
 
-AnimatedLyricText::AnimatedLyricText(QQuickItem* parent) : QQuickPaintedItem(parent) {
-    setAntialiasing(true);
+AnimatedLyricText::AnimatedLyricText(QQuickItem* parent) : QQuickItem(parent) {
     setFlag(QQuickItem::ItemHasContents, true);
 }
 
@@ -106,6 +108,10 @@ void AnimatedLyricText::setActive(bool active) {
     if (mActive == active)
         return;
     mActive = active;
+    if (mActive) {
+        mTimeline.updatePosition(mPositionMs);
+        invalidateActiveWordCache();
+    }
     update();
     Q_EMIT activeChanged();
 }
@@ -128,7 +134,7 @@ QColor AnimatedLyricText::activeColor() const noexcept {
 }
 
 void AnimatedLyricText::setActiveColor(const QColor& color) {
-    if (mActiveColor == color)
+    if (!color.isValid() || mActiveColor == color)
         return;
     mActiveColor = color;
     update();
@@ -140,7 +146,7 @@ QColor AnimatedLyricText::inactiveColor() const noexcept {
 }
 
 void AnimatedLyricText::setInactiveColor(const QColor& color) {
-    if (mInactiveColor == color)
+    if (!color.isValid() || mInactiveColor == color)
         return;
     mInactiveColor = color;
     update();
@@ -200,7 +206,7 @@ QColor AnimatedLyricText::styleColor() const noexcept {
 }
 
 void AnimatedLyricText::setStyleColor(const QColor& color) {
-    if (mStyleColor == color)
+    if (!color.isValid() || mStyleColor == color)
         return;
     mStyleColor = color;
     if (mRaised)
@@ -209,66 +215,22 @@ void AnimatedLyricText::setStyleColor(const QColor& color) {
 }
 
 void AnimatedLyricText::geometryChange(const QRectF& newGeometry, const QRectF& oldGeometry) {
-    QQuickPaintedItem::geometryChange(newGeometry, oldGeometry);
+    QQuickItem::geometryChange(newGeometry, oldGeometry);
     if (!qFuzzyCompare(1.0 + newGeometry.width(), 1.0 + oldGeometry.width()))
         relayout();
 }
 
 void AnimatedLyricText::invalidateActiveWordCache() noexcept {
-    mSegmentCacheValid    = false;
-    mFillRangesCacheValid = false;
+    mSegmentCacheValid = false;
 }
 
-void AnimatedLyricText::ensureActiveWordCache(qsizetype activeWordIndex, int textLength, const QColor& effectiveActive) {
-    if (!mSegmentCacheValid || mCachedActiveWordIndex != activeWordIndex) {
-        const auto& activeWord = mTimeline.wordAt(activeWordIndex);
-        mCachedWordStart       = std::clamp(activeWord.charStart, 0, textLength);
-        mCachedWordEnd         = std::clamp(activeWord.charStart + activeWord.charLength, mCachedWordStart, textLength);
-        mCachedSegments.clear();
-        mCachedTotalWidth = 0.0;
+void AnimatedLyricText::ensureActiveWordCache(qsizetype activeWordIndex, int textLength) {
+    if (mSegmentCacheValid && mCachedActiveWordIndex == activeWordIndex)
+        return;
 
-        if (mCachedWordEnd > mCachedWordStart) {
-            const int lineCount = mLayout.lineCount();
-            for (int lineIndex = 0; lineIndex < lineCount; ++lineIndex) {
-                const QTextLine line      = mLayout.lineAt(lineIndex);
-                const int       lineStart = line.textStart();
-                const int       lineEnd   = lineStart + line.textLength();
-                if (lineEnd <= mCachedWordStart || lineStart >= mCachedWordEnd)
-                    continue;
-                const int   segmentStart = std::max(mCachedWordStart, lineStart);
-                const int   segmentEnd   = std::min(mCachedWordEnd, lineEnd);
-                const qreal leftCursor   = line.cursorToX(segmentStart);
-                const qreal rightCursor  = line.cursorToX(segmentEnd);
-                const qreal segmentWidth = std::abs(rightCursor - leftCursor);
-                if (segmentWidth <= 0.0)
-                    continue;
-                mCachedSegments.append({
-                    .leftX  = std::min(leftCursor, rightCursor),
-                    .width  = segmentWidth,
-                    .topY   = line.y(),
-                    .height = line.height(),
-                });
-                mCachedTotalWidth += segmentWidth;
-            }
-        }
-
-        mCachedActiveWordIndex = activeWordIndex;
-        mSegmentCacheValid     = true;
-        mFillRangesCacheValid  = false;
-    }
-
-    if (!mFillRangesCacheValid || mCachedFillColor != effectiveActive) {
-        mCachedFillRanges.clear();
-        if (mCachedWordEnd > mCachedWordStart) {
-            if (mCachedWordStart > 0)
-                mCachedFillRanges.append(makeRange(0, mCachedWordStart, Qt::transparent));
-            mCachedFillRanges.append(makeRange(mCachedWordStart, mCachedWordEnd - mCachedWordStart, effectiveActive));
-            if (mCachedWordEnd < textLength)
-                mCachedFillRanges.append(makeRange(mCachedWordEnd, textLength - mCachedWordEnd, Qt::transparent));
-        }
-        mCachedFillColor      = effectiveActive;
-        mFillRangesCacheValid = true;
-    }
+    vast::lyric_render::buildWordSegments(mLayout, mTimeline.wordAt(activeWordIndex), textLength, mCachedWordStart, mCachedWordEnd, mCachedTotalWidth, mCachedSegments);
+    mCachedActiveWordIndex = activeWordIndex;
+    mSegmentCacheValid     = true;
 }
 
 void AnimatedLyricText::rebuildTimeline() {
@@ -310,71 +272,54 @@ void AnimatedLyricText::relayout() {
     update();
 }
 
-void AnimatedLyricText::paint(QPainter* painter) {
-    if (mText.isEmpty() || painter == nullptr)
-        return;
-
-    painter->setRenderHint(QPainter::TextAntialiasing, true);
-
-    const int   textLen = static_cast<int>(mText.length());
-    const qreal yOffset = (mWrapMode == 0 && height() > mLayoutHeight) ? (height() - mLayoutHeight) * 0.5 : 0.0;
-
-    if (mRaised && mStyleColor.alpha() > 0) {
-        const QList<QTextLayout::FormatRange> shadowRanges{makeRange(0, textLen, mStyleColor)};
-        mLayout.draw(painter, QPointF(0.0, yOffset + 1.0), shadowRanges);
+QSGNode* AnimatedLyricText::updatePaintNode(QSGNode* oldNode, UpdatePaintNodeData* /*updatePaintNodeData*/) {
+    QQuickWindow* win = window();
+    if (mText.isEmpty() || win == nullptr || mLayout.lineCount() == 0) {
+        delete oldNode;
+        return nullptr;
     }
 
-    QList<QTextLayout::FormatRange> ranges;
-    if (!mSynced || mTimeline.isEmpty() || mHighlightMix <= 0.001) {
-        const QColor flatColor = (!mSynced && mActive && mHighlightMix > 0.001) ? ColorUtils::blendColors(mInactiveColor, mActiveColor, mHighlightMix) : mInactiveColor;
-        ranges.append(makeRange(0, textLen, flatColor));
-        mLayout.draw(painter, QPointF(0.0, yOffset), ranges);
-        return;
+    auto* rootNode = dynamic_cast<CAnimatedLyricSGNode*>(oldNode);
+    if (rootNode == nullptr) {
+        rootNode                     = new CAnimatedLyricSGNode();
+        rootNode->baseNode           = win->createTextNode();
+        rootNode->completedLinesNode = win->createTextNode();
+        rootNode->appendChildNode(rootNode->baseNode);
+        rootNode->appendChildNode(rootNode->completedLinesNode);
     }
 
-    const qsizetype activeIdx       = mTimeline.activeWordIndex();
-    const QColor    effectiveActive = (mHighlightMix >= 0.999) ? mActiveColor : ColorUtils::blendColors(mInactiveColor, mActiveColor, mHighlightMix);
+    const QColor safeActive      = mActiveColor.isValid() ? mActiveColor : QColor(Qt::white);
+    const QColor safeInactive    = mInactiveColor.isValid() ? mInactiveColor : QColor(Qt::gray);
+    const QColor safeStyle       = mStyleColor.isValid() ? mStyleColor : QColor(Qt::black);
+    const qreal  yOffset         = (mWrapMode == 0 && height() > mLayoutHeight) ? (height() - mLayoutHeight) * 0.5 : 0.0;
+    const QColor effectiveActive = (mHighlightMix >= 0.999) ? safeActive :
+        (mHighlightMix <= 0.001)                            ? safeInactive :
+                                                              ColorUtils::blendColors(safeInactive, safeActive, mHighlightMix);
 
-    if (activeIdx < 0) {
-        ranges.append(makeRange(0, textLen, mInactiveColor));
-        mLayout.draw(painter, QPointF(0.0, yOffset), ranges);
-        return;
+    rootNode->completedLinesNode->clear();
+    for (QSGTextNode* clippedText : std::as_const(rootNode->clippedTextNodes))
+        clippedText->clear();
+
+    if (!mSynced || !mActive || mTimeline.isEmpty() || mHighlightMix <= 0.001) {
+        vast::lyric_render::configureTextNode(rootNode->baseNode, effectiveActive, mRaised, safeStyle);
+        rootNode->baseNode->addTextLayout(QPointF(0.0, yOffset), &mLayout);
+        return rootNode;
     }
 
-    ensureActiveWordCache(activeIdx, textLen, effectiveActive);
-    const double progress  = mTimeline.activeWordProgress(mPositionMs);
-    const int    wordStart = mCachedWordStart;
-    const int    wordEnd   = mCachedWordEnd;
+    const qsizetype activeIdx = mTimeline.activeWordIndex();
+    vast::lyric_render::configureTextNode(rootNode->baseNode, safeInactive, mRaised, safeStyle);
+    rootNode->baseNode->addTextLayout(QPointF(0.0, yOffset), &mLayout);
 
-    if (progress >= 1.0) {
-        if (wordEnd > 0)
-            ranges.append(makeRange(0, wordEnd, effectiveActive));
-        if (wordEnd < textLen)
-            ranges.append(makeRange(wordEnd, textLen - wordEnd, mInactiveColor));
-        mLayout.draw(painter, QPointF(0.0, yOffset), ranges);
-        return;
-    }
+    if (activeIdx < 0)
+        return rootNode;
 
-    // Base pass: words before the active word are activeColor; active + later words are inactiveColor.
-    if (wordStart > 0)
-        ranges.append(makeRange(0, wordStart, effectiveActive));
-    if (wordStart < textLen)
-        ranges.append(makeRange(wordStart, textLen - wordStart, mInactiveColor));
-    mLayout.draw(painter, QPointF(0.0, yOffset), ranges);
+    const int textLen = static_cast<int>(mText.length());
+    ensureActiveWordCache(activeIdx, textLen);
+    const double progress = mTimeline.activeWordProgress(mPositionMs);
 
-    if (progress <= 0.0 || wordEnd <= wordStart || mCachedTotalWidth <= 0.0)
-        return;
+    vast::lyric_render::ensureClipNodePool(rootNode->clipNodes, rootNode->clippedTextNodes, mCachedSegments.size(), rootNode, win);
+    vast::lyric_render::populateActiveWordNodes(mLayout, yOffset, mCachedWordStart, mCachedTotalWidth, progress, mCachedSegments, effectiveActive, mRaised, safeStyle,
+                                                rootNode->completedLinesNode, rootNode->clipNodes, rootNode->clippedTextNodes);
 
-    // Left-to-right clipped fill across the active word inside [startTime, endTime].
-    qreal remainingFill = mCachedTotalWidth * progress;
-    for (const LineSegment& segment : std::as_const(mCachedSegments)) {
-        if (remainingFill <= 0.0)
-            break;
-        const qreal clipWidth = std::min(segment.width, remainingFill);
-        painter->save();
-        painter->setClipRect(QRectF(segment.leftX, yOffset + segment.topY, clipWidth, segment.height), Qt::IntersectClip);
-        mLayout.draw(painter, QPointF(0.0, yOffset), mCachedFillRanges);
-        painter->restore();
-        remainingFill -= clipWidth;
-    }
+    return rootNode;
 }
