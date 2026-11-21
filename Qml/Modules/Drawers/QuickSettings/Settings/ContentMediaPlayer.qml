@@ -21,9 +21,15 @@ import qs.Components.Tooltip
 Item {
     id: root
 
-    property var trackArtColors: TrackArt.colors
+    readonly property color accentColor: Configs.mediaPlayer.dynamicColorsCover ? trackArtColors.primary : Colours.m3Colors.m3Primary
+    readonly property color onSurfaceColor: Configs.mediaPlayer.dynamicColorsCover ? trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
+    readonly property color onSurfaceVariantColor: Configs.mediaPlayer.dynamicColorsCover ? trackArtColors.onSurfaceVariant : Colours.m3Colors.m3OnSurfaceVariant
+    readonly property color outlineColor: Configs.mediaPlayer.dynamicColorsCover ? trackArtColors.outline : Colours.m3Colors.m3Outline
+    readonly property color surfaceVariantColor: Configs.mediaPlayer.dynamicColorsCover ? trackArtColors.surfaceVariant : Colours.m3Colors.m3SurfaceVariant
 
-    function     cleanDesktopEntry(entry: string): string {
+    property var            trackArtColors: TrackArt.colors
+
+    function                cleanDesktopEntry(entry: string): string {
         if (!entry || entry === "No Player")
             return entry;
         const parts = entry.split(".");
@@ -31,7 +37,7 @@ Item {
         return name.charAt(0).toUpperCase() + name.slice(1);
     }
 
-    function     playerName(player: MprisPlayer): string {
+    function                playerName(player: MprisPlayer): string {
         if (!player)
             return "No Player";
         if (player.desktopEntry)
@@ -56,7 +62,7 @@ Item {
             id: playerTrackTitle
 
             Layout.fillWidth: true
-            color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
+            color: root.onSurfaceColor
             elide: Text.ElideRight
             font.pixelSize: Appearance.fonts.size.normal
             font.weight: Font.DemiBold
@@ -77,7 +83,7 @@ Item {
             StyledText {
                 id: playerArtistText
 
-                color: Configs.mediaPlayer.dynamicColorsCover ? Qt.alpha(root.trackArtColors.onSurface, 0.8) : Qt.alpha(Colours.m3Colors.m3OnSurface, 0.8)
+                color: Qt.alpha(root.onSurfaceColor, 0.8)
                 elide: Text.ElideRight
                 font.pixelSize: Appearance.fonts.size.small
                 font.weight: Font.DemiBold
@@ -95,7 +101,7 @@ Item {
             }
 
             StyledText {
-                color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
+                color: root.onSurfaceColor
                 font.pixelSize: Appearance.fonts.size.small
                 font.weight: Font.DemiBold
                 text: Players.active == null ? "0:00" : `${FormatTimeUtils.formatDuration(Players.boundedPosition(Players.active))} / ${FormatTimeUtils.formatDuration(Players.active?.length)}`
@@ -112,7 +118,7 @@ Item {
         Wavy {
             Layout.fillWidth: true
             active: GlobalStates.isQuickSettingsOpen
-            activeColor: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary
+            activeColor: root.accentColor
             enableWave: Players.active?.playbackState === MprisPlaybackState.Playing && !pressed
             implicitWidth: 28
             value: Players.active === null ? 0 : Players.active.length > 0 ? Players.boundedPosition(Players.active) / Players.active.length : 0
@@ -132,9 +138,9 @@ Item {
                 FloatingButton {
                     backgroundRadius: Appearance.rounding.normal
                     buttonEnabled: LyricsProvider.state === LyricsProvider.State.Ready || Configs.mediaPlayer.showLyrics
-                    color: Configs.mediaPlayer.showLyrics && LyricsProvider.state === LyricsProvider.State.Ready ? Qt.alpha(Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary, 0.16) : "transparent"
+                    color: Configs.mediaPlayer.showLyrics && LyricsProvider.state === LyricsProvider.State.Ready ? Qt.alpha(root.accentColor, 0.16) : "transparent"
                     disabledTooltipText: LyricsProvider.state === LyricsProvider.State.Loading ? qsTr("Loading lyrics…") : qsTr("Lyrics unavailable")
-                    icon.color: LyricsProvider.state === LyricsProvider.State.Ready || Configs.mediaPlayer.showLyrics ? (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary) : (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurfaceVariant : Colours.m3Colors.m3OnSurfaceVariant)
+                    icon.color: LyricsProvider.state === LyricsProvider.State.Ready || Configs.mediaPlayer.showLyrics ? root.accentColor : root.onSurfaceVariantColor
                     icon.name: "lyrics"
                     icon.size: Appearance.fonts.size.larger
                     implicitHeight: 24
@@ -151,8 +157,8 @@ Item {
                     buttonEnabled: Boolean(Players.active?.shuffleSupported)
                     color: "transparent"
                     disabledTooltipText: qsTr("Shuffle not supported by player")
-                    icon.color: Players.active?.shuffleSupported || Players.active?.shuffle ? (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary) : (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.outline : Colours.m3Colors.m3Outline)
-                    icon.name: Players.active?.shuffleSupported || Players.active?.shuffleSupported || Players.active?.shuffle ? "shuffle_on" : "shuffle"
+                    icon.color: Players.active?.shuffleSupported || Players.active?.shuffle ? root.accentColor : root.outlineColor
+                    icon.name: Players.active?.shuffleSupported || Players.active?.shuffle ? "shuffle_on" : "shuffle"
                     icon.size: Appearance.fonts.size.larger
                     implicitHeight: 24
                     implicitWidth: 24
@@ -166,7 +172,7 @@ Item {
                 FloatingButton {
                     backgroundRadius: Appearance.rounding.normal
                     color: "transparent"
-                    icon.color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary
+                    icon.color: root.accentColor
                     icon.name: "skip_previous"
                     icon.size: Appearance.fonts.size.extraLarge
                     implicitHeight: 32
@@ -178,7 +184,7 @@ Item {
                 FloatingButton {
                     backgroundRadius: Appearance.rounding.normal
                     color: "transparent"
-                    icon.color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
+                    icon.color: root.onSurfaceColor
                     icon.name: Players.active?.playbackState === MprisPlaybackState.Playing ? "pause_circle" : "play_circle"
                     icon.size: Appearance.fonts.size.extraLarge * 1.2
                     implicitHeight: 36
@@ -190,7 +196,7 @@ Item {
                 FloatingButton {
                     backgroundRadius: Appearance.rounding.normal
                     color: "transparent"
-                    icon.color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary
+                    icon.color: root.accentColor
                     icon.name: "skip_next"
                     icon.size: Appearance.fonts.size.extraLarge
                     implicitHeight: 32
@@ -204,7 +210,7 @@ Item {
                     buttonEnabled: Boolean(Players.active?.loopSupported)
                     color: "transparent"
                     disabledTooltipText: qsTr("Repeat not supported by player")
-                    icon.color: Players.active?.loopSupported || (Players.active?.loopState === MprisLoopState.Playlist || Players.active?.loopState === MprisLoopState.Track) ? (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary) : (Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.outline : Colours.m3Colors.m3Outline)
+                    icon.color: Players.active?.loopSupported || (Players.active?.loopState === MprisLoopState.Playlist || Players.active?.loopState === MprisLoopState.Track) ? root.accentColor : root.outlineColor
                     icon.name: Players.active?.loopState === MprisLoopState.Playlist ? "repeat_on" : Players.active?.loopState === MprisLoopState.Track ? "repeat_one_on" : "repeat"
                     implicitHeight: 24
                     implicitWidth: 24
@@ -262,7 +268,7 @@ Item {
 
                     StyledText {
                         anchors.verticalCenter: parent.verticalCenter
-                        color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
+                        color: root.onSurfaceColor
                         elide: Text.ElideRight
                         font.pixelSize: Appearance.fonts.size.large
                         maximumLineCount: 1
@@ -286,11 +292,10 @@ Item {
                         property color colorFrom
                         property color colorTo
                         property color target: {
-                            const accent = Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary;
                             if (Players.index === playerDelegate.index)
-                                return Qt.alpha(accent, 0.18);
+                                return Qt.alpha(root.accentColor, 0.18);
                             if (playerDelegate.highlighted)
-                                return Qt.alpha(accent, 0.08);
+                                return Qt.alpha(root.accentColor, 0.08);
                             return "transparent";
                         }
 
@@ -333,7 +338,7 @@ Item {
 
                         SimpleRipple {
                             anchors.fill: parent
-                            color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary
+                            color: root.accentColor
                             xClipRadius: itemBg.radius
                             yClipRadius: itemBg.radius
                         }
@@ -358,7 +363,7 @@ Item {
                         }
 
                         StyledText {
-                            color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
+                            color: root.onSurfaceColor
                             elide: Text.ElideRight
                             font.pixelSize: Appearance.fonts.size.normal
                             font.weight: Players.index === playerDelegate.index ? Font.Medium : Font.Normal
@@ -377,7 +382,7 @@ Item {
                     x: playerComboBox.width - width
                     y: playerComboBox.height + 4
                     background: StyledRect {
-                        color: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.surfaceVariant : Colours.m3Colors.m3SurfaceVariant
+                        color: root.surfaceVariantColor
                         radius: Appearance.rounding.large
 
                         Elevation {

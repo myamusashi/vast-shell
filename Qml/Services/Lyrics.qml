@@ -81,8 +81,12 @@ Singleton {
         const playbackRate     = player.rate > 0 ? player.rate : 1.0;
         const elapsedSeconds   = (Date.now() - root.syncedTimestampMilliseconds) / 1000 * playbackRate;
         const expectedPosition = root.syncedPositionSeconds + elapsedSeconds;
-        const jumpedBackward   = position + 0.2 < root.previousPositionSeconds;
-        const drifted          = Math.abs(position - expectedPosition) > root.driftToleranceSeconds;
+        const positionMoved    = Math.abs(position - root.previousPositionSeconds) >= 0.001;
+        // Skip unchanged ticks from players with coarse D-Bus updates unless stalled > 1.2s.
+        if (!positionMoved && Math.abs(position - expectedPosition) <= 1.2)
+            return;
+        const jumpedBackward = position + 0.2 < root.previousPositionSeconds;
+        const drifted        = Math.abs(position - expectedPosition) > root.driftToleranceSeconds;
         if (jumpedBackward || drifted) {
             root.syncPlayback();
             return;

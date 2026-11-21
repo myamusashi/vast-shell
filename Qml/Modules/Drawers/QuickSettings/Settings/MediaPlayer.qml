@@ -13,16 +13,19 @@ import qs.Widgets
 ColumnLayout {
     id: root
 
-    readonly property color accentColor: Configs.mediaPlayer.dynamicColorsCover ? trackArtColors.primary : Colours.m3Colors.m3Primary
+    readonly property color accentColor: Configs.mediaPlayer.dynamicColorsCover && trackArtColors.primary ? trackArtColors.primary : Colours.m3Colors.m3Primary
     readonly property bool  lyricsVisible: Players.active !== null && Configs.mediaPlayer.showLyrics && Lyrics.lines.length > 0
-    readonly property color surfaceTextColor: Configs.mediaPlayer.dynamicColorsCover ? trackArtColors.onSurface : Colours.m3Colors.m3OnSurface
 
     property var            trackArtColors: TrackArt.colors
 
-    Layout.fillHeight: lyricsVisible
+    Layout.fillHeight: Players.active !== null
     Layout.fillWidth: true
     spacing: Appearance.spacing.normal
     visible: Players.active !== null
+    onLyricsVisibleChanged: {
+        if (lyricsVisible)
+            Lyrics.syncPlayback();
+    }
 
     Item {
         Layout.fillWidth: true
@@ -68,42 +71,59 @@ ColumnLayout {
         }
     }
 
-    StyledRect {
-        id: lyricsCard
+    Item {
+        id: lyricsContainer
 
         Layout.fillHeight: true
         Layout.fillWidth: true
-        Layout.minimumHeight: 120
-        clip: true
-        color: Colours.m3Colors.m3SurfaceContainer
-        radius: Appearance.rounding.small
-        visible: root.lyricsVisible
 
-        Loader {
-            id: lyricsLoader
+        StyledRect {
+            id: lyricsCard
 
-            active: root.lyricsVisible
-            anchors.fill: parent
-            anchors.margins: Appearance.margin.normal
-            asynchronous: false
-            sourceComponent: LyricsView {
+            anchors {
+                left: parent.left
+                right: parent.right
+                top: parent.top
+            }
+
+            clip: true
+            color: Colours.m3Colors.m3SurfaceContainer
+            height: root.lyricsVisible ? parent.height : 0
+            opacity: root.lyricsVisible ? 1 : 0
+            radius: Appearance.rounding.small
+            visible: opacity > 0
+            Behavior on height {
+                NAnim {
+                    duration: Appearance.animations.durations.normal
+                    easing.bezierCurve: Appearance.animations.curves.emphasized
+                }
+            }
+            Behavior on opacity {
+                NAnim {
+                    duration: Appearance.animations.durations.small
+                }
+            }
+
+            LyricsView {
                 id: lyricsView
+
+                anchors {
+                    left: parent.left
+                    margins: Appearance.margin.normal
+                    right: parent.right
+                    top: parent.top
+                }
 
                 active: GlobalStates.isQuickSettingsOpen && root.lyricsVisible
                 activeColor: root.accentColor
                 activeFontSize: Appearance.fonts.size.large
+                height: Math.max(0, lyricsContainer.height - Appearance.margin.normal * 2)
                 horizontalAlignment: Text.AlignHCenter
-                inactiveColor: Qt.alpha(root.surfaceTextColor, 0.45)
+                inactiveColor: Colours.m3Colors.m3OnSurface
                 inactiveFontSize: Appearance.fonts.size.normal
                 raised: false
                 spacing: Appearance.spacing.small
-                Component.onCompleted: {
-                    Lyrics.syncPlayback();
-                    if (Lyrics.currentLineIndex < 0)
-                        lyricsView.listView.positionViewAtBeginning();
-                    else
-                        lyricsView.listView.positionViewAtIndex(Lyrics.currentLineIndex, ListView.Center);
-                }
+                Component.onCompleted: Lyrics.syncPlayback()
             }
         }
     }

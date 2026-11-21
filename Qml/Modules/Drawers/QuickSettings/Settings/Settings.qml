@@ -64,8 +64,8 @@ Item {
         }
 
         Item {
-            Layout.fillHeight: !mediaPlayer.lyricsVisible
-            visible: !mediaPlayer.lyricsVisible
+            Layout.fillHeight: !mediaPlayer.visible
+            visible: !mediaPlayer.visible
         }
     }
 
