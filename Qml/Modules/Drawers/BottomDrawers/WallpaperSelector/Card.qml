@@ -56,7 +56,7 @@ Item {
         Image {
             anchors.fill: parent
             asynchronous: true
-            cache: false
+            cache: true
             fillMode: Image.PreserveAspectCrop
             source: root.visible && !root.isVideo ? "file://" + root.modelData : ""
             sourceSize: Qt.size(200, 200)
@@ -68,7 +68,7 @@ Item {
 
             anchors.fill: parent
             asynchronous: true
-            cache: false
+            cache: true
             fillMode: Image.PreserveAspectCrop
             source: root.visible && root.thumbnailAvailability[root.modelData] ? "file://" + MediaKind.videoThumbnailPathFor(root.modelData) + "?v=" + root.controller.thumbnailVersion : ""
             sourceSize: Qt.size(320, 200)

@@ -351,16 +351,15 @@ Item {
                     sourceComponent: LauncherModule.Launcher {}
                 }
 
-                Loader {
-                    active: root.isWallpaperActive || (root.snappedPanelDepth > 0 && root.lastPanel === "wallpaper")
-                    asynchronous: true
+                Item {
                     enabled: root.isWallpaperActive
                     height: root.wallpaperDepth
-                    visible: active
+                    visible: root.isWallpaperActive
                     width: root.wallpaperLength
                     x: root.centeredScreenX(width) - root.x - panelClip.x
                     y: 0
-                    sourceComponent: WallpaperModule.WallpaperSelector {}
+
+                    WallpaperModule.WallpaperSelector {}
                 }
             }
         }
