@@ -139,15 +139,21 @@ Scope {
 
         activeAsync: root.showing || root.mapped
         component: PanelWindow {
+            id: panelWindow
+
+            BackgroundEffect.blurRegion: regionContent
+            HyprlandWindow.visibleMask: regionContent
             WlrLayershell.layer: WlrLayer.Top
+            WlrLayershell.namespace: LayerNamespaces.drawers
+            aboveWindows: false
             color: "transparent"
             exclusionMode: ExclusionMode.Ignore
             implicitHeight: root.maxBoardHeight
             margins.top: root.barBottom // qmllint disable
-            screen: root.monitor
-            HyprlandWindow.visibleMask: regionContent
-            BackgroundEffect.blurRegion: regionContent
             mask: regionContent
+            screen: root.monitor
+            Component.onCompleted: boardHost.armAnimations()
+            onWidthChanged: boardHost.armAnimations()
 
             Region {
                 id: regionContent
@@ -164,7 +170,26 @@ Scope {
             Item {
                 id: boardHost
 
+                readonly property real screenWidth: root.monitor ? root.monitor.width : panelWindow.width
+
+                property bool          animateX: false
+                property bool          openReady: false
+
+                // Defer arming until after initial layout/configure so Drawer starts at
+                // depth 0 and animates down on open without sliding x from 0.
+                function               armAnimations(): void {
+                    if (openReady || board.width <= 0 || panelWindow.width < screenWidth - 1)
+                        return;
+                    Qt.callLater(() => {
+                        if (panelWindow.width >= boardHost.screenWidth - 1 && root.mapped) {
+                            boardHost.openReady = true;
+                            boardHost.animateX  = true;
+                        }
+                    });
+                }
+
                 height: board.height
+                visible: panelWindow.width >= screenWidth - 1 && panelWindow.height > 0
                 width: board.width
 
                 // The bar window is anchored to the screen's top-left, so scene
@@ -172,6 +197,8 @@ Scope {
                 x: root.dotX - board.bodyInsetX
                 y: 0
                 Behavior on x {
+                    enabled: boardHost.animateX && root.mapped
+
                     NAnim {
                         duration: Appearance.animations.durations.expressiveDefaultSpatial
                         easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -192,14 +219,15 @@ Scope {
                     edge: Qt.TopEdge
                     filletRadius: 40
                     length: root.boardWidth
-                    // Latched to `showing`: board animates closed while `mapped` keeps
-                    // the surface alive until `hideTimer` finishes.
-                    open: root.showing
+                    // Armed after initial creation so the drawer unrolls from depth 0 on
+                    // open, and latched to `showing` so it animates closed while `mapped`
+                    // keeps the surface alive until `hideTimer` finishes.
+                    open: boardHost.openReady && root.showing
+                    onWidthChanged: boardHost.armAnimations()
 
                     Loader {
-                        active: root.showing || board.visible
+                        active: root.showing || root.mapped || board.visible
                         anchors.fill: parent
-                        asynchronous: true
                         sourceComponent: Item {
                             anchors.fill: parent
 

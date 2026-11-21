@@ -89,12 +89,16 @@ Scope {
             BackgroundEffect.blurRegion: regionContent
             HyprlandWindow.visibleMask: regionContent
             WlrLayershell.layer: WlrLayer.Top
+            WlrLayershell.namespace: LayerNamespaces.drawers
+            aboveWindows: false
             color: "transparent"
             exclusionMode: ExclusionMode.Ignore
             implicitHeight: root.maxBoardHeight
             margins.top: root.barBottom // qmllint disable
             mask: regionContent
             screen: root.monitor
+            Component.onCompleted: boardHost.armAnimations()
+            onWidthChanged: boardHost.armAnimations()
 
             Region {
                 id: regionContent
@@ -111,11 +115,32 @@ Scope {
             Item {
                 id: boardHost
 
+                readonly property real screenWidth: root.monitor ? root.monitor.width : panelWindow.width
+
+                property bool          animateX: false
+                property bool          openReady: false
+
+                // Defer arming until after initial layout/configure so Drawer starts at
+                // depth 0 and animates down on open without sliding x from 0.
+                function               armAnimations(): void {
+                    if (openReady || board.width <= 0 || panelWindow.width < screenWidth - 1)
+                        return;
+                    Qt.callLater(() => {
+                        if (panelWindow.width >= boardHost.screenWidth - 1 && root.mapped) {
+                            boardHost.openReady = true;
+                            boardHost.animateX  = true;
+                        }
+                    });
+                }
+
                 height: board.height
+                visible: panelWindow.width >= screenWidth - 1 && panelWindow.height > 0
                 width: board.width
                 x: Math.round(root.targetX - board.width / 2)
                 y: 0
                 Behavior on x {
+                    enabled: boardHost.animateX && root.mapped
+
                     NAnim {
                         duration: Appearance.animations.durations.expressiveDefaultSpatial
                         easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
@@ -134,13 +159,8 @@ Scope {
                     edge: Qt.TopEdge
                     filletRadius: 40
                     length: root.boardWidth
-                    open: root.showing
-                    Behavior on depth {
-                        NAnim {
-                            duration: Appearance.animations.durations.normal
-                            easing.bezierCurve: Appearance.animations.curves.emphasized
-                        }
-                    }
+                    open: boardHost.openReady && root.showing
+                    onWidthChanged: boardHost.armAnimations()
 
                     HoverHandler {
                         onHoveredChanged: {
@@ -156,179 +176,183 @@ Scope {
                     }
 
                     Loader {
-                        active: root.showing || board.visible
+                        active: root.showing || root.mapped || board.visible
                         anchors.fill: parent
-                        asynchronous: true
-                        sourceComponent: ColumnLayout {
-                            id: popupLayout
+                        sourceComponent: Item {
+                            height: root.boardHeight
+                            width: root.boardWidth
 
-                            spacing: Appearance.spacing.small
-                            Component.onCompleted: Lyrics.syncPlayback()
+                            ColumnLayout {
+                                id: popupLayout
 
-                            anchors {
-                                fill: parent
-                                margins: Appearance.margin.normal
-                            }
+                                spacing: Appearance.spacing.small
+                                Component.onCompleted: Lyrics.syncPlayback()
 
-                            RowLayout {
-                                Layout.fillWidth: true
-                                spacing: Appearance.spacing.normal
+                                anchors {
+                                    fill: parent
+                                    margins: Appearance.margin.normal
+                                }
 
-                                ClippingWrapperRectangle {
-                                    color: "transparent"
-                                    implicitHeight: 48
-                                    implicitWidth: 48
-                                    radius: Appearance.rounding.normal
+                                RowLayout {
+                                    Layout.fillWidth: true
+                                    spacing: Appearance.spacing.normal
 
-                                    Item {
+                                    ClippingWrapperRectangle {
+                                        color: "transparent"
                                         implicitHeight: 48
                                         implicitWidth: 48
+                                        radius: Appearance.rounding.normal
 
-                                        Icon {
-                                            anchors.centerIn: parent
+                                        Item {
+                                            implicitHeight: 48
+                                            implicitWidth: 48
+
+                                            Icon {
+                                                anchors.centerIn: parent
+                                                color: root.dynOnSurface
+                                                font.pixelSize: Appearance.fonts.size.extraLarge
+                                                icon: "music_note"
+                                                visible: TrackArt.cachedPath === ""
+                                            }
+
+                                            Image {
+                                                anchors.fill: parent
+                                                asynchronous: true
+                                                cache: false
+                                                fillMode: Image.PreserveAspectCrop
+                                                source: TrackArt.cachedPath.startsWith("/") ? "file://" + TrackArt.cachedPath : TrackArt.cachedPath
+                                                sourceSize: Qt.size(96, 96)
+                                                visible: TrackArt.cachedPath !== ""
+                                            }
+                                        }
+                                    }
+
+                                    ColumnLayout {
+                                        Layout.fillWidth: true
+                                        spacing: 0
+
+                                        StyledText {
+                                            Layout.fillWidth: true
                                             color: root.dynOnSurface
-                                            font.pixelSize: Appearance.fonts.size.extraLarge
-                                            icon: "music_note"
-                                            visible: TrackArt.cachedPath === ""
+                                            elide: Text.ElideRight
+                                            font.pixelSize: Appearance.fonts.size.normal
+                                            font.weight: Font.DemiBold
+                                            text: Players.active?.trackTitle ?? ""
                                         }
 
-                                        Image {
-                                            anchors.fill: parent
-                                            asynchronous: true
-                                            cache: false
-                                            fillMode: Image.PreserveAspectCrop
-                                            source: TrackArt.cachedPath.startsWith("/") ? "file://" + TrackArt.cachedPath : TrackArt.cachedPath
-                                            sourceSize: Qt.size(96, 96)
-                                            visible: TrackArt.cachedPath !== ""
+                                        StyledText {
+                                            Layout.fillWidth: true
+                                            color: root.dynOnSurfaceVariant
+                                            elide: Text.ElideRight
+                                            font.pixelSize: Appearance.fonts.size.small
+                                            text: Players.active?.trackArtist ?? ""
                                         }
                                     }
                                 }
 
-                                ColumnLayout {
+                                Wavy {
                                     Layout.fillWidth: true
-                                    spacing: 0
-
-                                    StyledText {
-                                        Layout.fillWidth: true
-                                        color: root.dynOnSurface
-                                        elide: Text.ElideRight
-                                        font.pixelSize: Appearance.fonts.size.normal
-                                        font.weight: Font.DemiBold
-                                        text: Players.active?.trackTitle ?? ""
-                                    }
-
-                                    StyledText {
-                                        Layout.fillWidth: true
-                                        color: root.dynOnSurfaceVariant
-                                        elide: Text.ElideRight
-                                        font.pixelSize: Appearance.fonts.size.small
-                                        text: Players.active?.trackArtist ?? ""
-                                    }
-                                }
-                            }
-
-                            Wavy {
-                                Layout.fillWidth: true
-                                active: root.showing
-                                activeColor: root.dynPrimary
-                                enableWave: Players.active?.playbackState === MprisPlaybackState.Playing
-                                implicitHeight: 24
-                                inactiveColor: root.dynSurfaceVariant
-                                value: Players.active === null ? 0 : Players.active.length > 0 ? Players.boundedPosition(Players.active) / Players.active.length : 0
-                                onMoved: Players.active ? Players.active.position = value * Players.active.length : {}
-
-                                FrameAnimation {
-                                    running: root.showing && Players.active?.playbackState === MprisPlaybackState.Playing
-                                    onTriggered: Players.active.positionChanged()
-                                }
-                            }
-
-                            LyricsView {
-                                Layout.fillWidth: true
-                                Layout.preferredHeight: 60
-                                active: root.showing && root.lyricsVisible
-                                activeColor: Colours.m3Colors.m3OnBackground
-                                activeFontSize: Appearance.fonts.size.normal
-                                horizontalAlignment: Text.AlignHCenter
-                                inactiveColor: Qt.alpha(Colours.m3Colors.m3OnBackground, 0.45)
-                                inactiveFontSize: Appearance.fonts.size.small
-                                raised: false
-                                spacing: 4
-                                visible: root.lyricsVisible
-                            }
-
-                            RowLayout {
-                                Layout.alignment: Qt.AlignCenter
-                                spacing: Appearance.spacing.small
-
-                                FloatingButton {
-                                    backgroundRadius: Appearance.rounding.normal
-                                    color: "transparent"
-                                    enabled: Players.active?.shuffleSupported ?? false
-                                    icon.color: Players.active?.shuffle ? root.dynPrimary : root.dynOutline
-                                    icon.name: Players.active?.shuffle ? "shuffle_on" : "shuffle"
+                                    active: root.showing
+                                    activeColor: root.dynPrimary
+                                    enableWave: Players.active?.playbackState === MprisPlaybackState.Playing
                                     implicitHeight: 24
-                                    implicitWidth: 24
-                                    onClicked: {
-                                        if (Players.active)
-                                            Players.active.shuffle = !Players.active.shuffle;
+                                    inactiveColor: root.dynSurfaceVariant
+                                    value: Players.active === null ? 0 : Players.active.length > 0 ? Players.boundedPosition(Players.active) / Players.active.length : 0
+                                    onMoved: Players.active ? Players.active.position = value * Players.active.length : {}
+
+                                    FrameAnimation {
+                                        running: root.showing && Players.active?.playbackState === MprisPlaybackState.Playing
+                                        onTriggered: Players.active.positionChanged()
                                     }
                                 }
 
-                                FloatingButton {
-                                    backgroundRadius: Appearance.rounding.normal
-                                    color: "transparent"
-                                    icon.color: root.dynOnSurface
-                                    icon.name: "skip_previous"
-                                    icon.size: Appearance.fonts.size.extraLarge
-                                    implicitHeight: 32
-                                    implicitWidth: 32
-                                    onClicked: Players.active?.previous()
+                                LyricsView {
+                                    Layout.fillWidth: true
+                                    Layout.preferredHeight: 60
+                                    active: root.showing && root.lyricsVisible
+                                    activeColor: Colours.m3Colors.m3OnBackground
+                                    activeFontSize: Appearance.fonts.size.normal
+                                    horizontalAlignment: Text.AlignHCenter
+                                    inactiveColor: Qt.alpha(Colours.m3Colors.m3OnBackground, 0.45)
+                                    inactiveFontSize: Appearance.fonts.size.small
+                                    raised: false
+                                    spacing: 4
+                                    visible: root.lyricsVisible
                                 }
 
-                                FloatingButton {
-                                    backgroundRadius: Appearance.rounding.normal
-                                    color: "transparent"
-                                    icon.color: root.dynOnSurface
-                                    icon.name: Players.active?.playbackState === MprisPlaybackState.Playing ? "pause_circle" : "play_circle"
-                                    icon.size: Appearance.fonts.size.extraLarge
-                                    implicitHeight: 32
-                                    implicitWidth: 32
-                                    onClicked: Players.active?.togglePlaying()
-                                }
+                                RowLayout {
+                                    Layout.alignment: Qt.AlignCenter
+                                    spacing: Appearance.spacing.small
 
-                                FloatingButton {
-                                    backgroundRadius: Appearance.rounding.normal
-                                    color: "transparent"
-                                    icon.color: root.dynOnSurface
-                                    icon.name: "skip_next"
-                                    icon.size: Appearance.fonts.size.extraLarge
-                                    implicitHeight: 32
-                                    implicitWidth: 32
-                                    onClicked: Players.active?.next()
-                                }
+                                    FloatingButton {
+                                        backgroundRadius: Appearance.rounding.normal
+                                        color: "transparent"
+                                        enabled: Players.active?.shuffleSupported ?? false
+                                        icon.color: Players.active?.shuffle ? root.dynPrimary : root.dynOutline
+                                        icon.name: Players.active?.shuffle ? "shuffle_on" : "shuffle"
+                                        implicitHeight: 24
+                                        implicitWidth: 24
+                                        onClicked: {
+                                            if (Players.active)
+                                                Players.active.shuffle = !Players.active.shuffle;
+                                        }
+                                    }
 
-                                FloatingButton {
-                                    backgroundRadius: Appearance.rounding.normal
-                                    color: "transparent"
-                                    enabled: Players.active?.loopSupported ?? false
-                                    icon.color: Players.active?.loopState !== MprisLoopState.None ? root.dynPrimary : root.dynOutline
-                                    icon.name: Players.active?.loopState === MprisLoopState.Playlist ? "repeat_on" : Players.active?.loopState === MprisLoopState.Track ? "repeat_one_on" : "repeat"
-                                    implicitHeight: 24
-                                    implicitWidth: 24
-                                    onClicked: {
-                                        if (!Players.active)
-                                            return;
-                                        switch (Players.active.loopState) {
-                                        case MprisLoopState.None:
-                                            Players.active.loopState = MprisLoopState.Playlist;
-                                            break;
-                                        case MprisLoopState.Playlist:
-                                            Players.active.loopState = MprisLoopState.Track;
-                                            break;
-                                        case MprisLoopState.Track:
-                                            Players.active.loopState = MprisLoopState.None;
-                                            break;
+                                    FloatingButton {
+                                        backgroundRadius: Appearance.rounding.normal
+                                        color: "transparent"
+                                        icon.color: root.dynOnSurface
+                                        icon.name: "skip_previous"
+                                        icon.size: Appearance.fonts.size.extraLarge
+                                        implicitHeight: 32
+                                        implicitWidth: 32
+                                        onClicked: Players.active?.previous()
+                                    }
+
+                                    FloatingButton {
+                                        backgroundRadius: Appearance.rounding.normal
+                                        color: "transparent"
+                                        icon.color: root.dynOnSurface
+                                        icon.name: Players.active?.playbackState === MprisPlaybackState.Playing ? "pause_circle" : "play_circle"
+                                        icon.size: Appearance.fonts.size.extraLarge
+                                        implicitHeight: 32
+                                        implicitWidth: 32
+                                        onClicked: Players.active?.togglePlaying()
+                                    }
+
+                                    FloatingButton {
+                                        backgroundRadius: Appearance.rounding.normal
+                                        color: "transparent"
+                                        icon.color: root.dynOnSurface
+                                        icon.name: "skip_next"
+                                        icon.size: Appearance.fonts.size.extraLarge
+                                        implicitHeight: 32
+                                        implicitWidth: 32
+                                        onClicked: Players.active?.next()
+                                    }
+
+                                    FloatingButton {
+                                        backgroundRadius: Appearance.rounding.normal
+                                        color: "transparent"
+                                        enabled: Players.active?.loopSupported ?? false
+                                        icon.color: Players.active?.loopState !== MprisLoopState.None ? root.dynPrimary : root.dynOutline
+                                        icon.name: Players.active?.loopState === MprisLoopState.Playlist ? "repeat_on" : Players.active?.loopState === MprisLoopState.Track ? "repeat_one_on" : "repeat"
+                                        implicitHeight: 24
+                                        implicitWidth: 24
+                                        onClicked: {
+                                            if (!Players.active)
+                                                return;
+                                            switch (Players.active.loopState) {
+                                            case MprisLoopState.None:
+                                                Players.active.loopState = MprisLoopState.Playlist;
+                                                break;
+                                            case MprisLoopState.Playlist:
+                                                Players.active.loopState = MprisLoopState.Track;
+                                                break;
+                                            case MprisLoopState.Track:
+                                                Players.active.loopState = MprisLoopState.None;
+                                                break;
+                                            }
                                         }
                                     }
                                 }
