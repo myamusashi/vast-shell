@@ -12,6 +12,7 @@ import qs.Services
 StyledRect {
     id: mprisRoot
 
+    readonly property int    activeLineIndex: Lyrics.currentLineIndex
     readonly property int    index: 0
     readonly property string liveLyric: {
         if (!Players.active || !Lyrics.synced || !Lyrics.lines)
@@ -21,13 +22,19 @@ StyledRect {
             return "";
         return (Lyrics.lines[idx]?.text ?? "").trim();
     }
+    readonly property bool   positionActive: visible && displayedLyric !== ""
+    readonly property real   positionMs: Lyrics.positionMs
 
     property string          displayedLyric: ""
 
     color: "transparent"
     implicitHeight: parent.height
     implicitWidth: rowButton.implicitWidth + (artistText.visible ? Appearance.spacing.small + artistText.width : 0)
-    Component.onCompleted: displayedLyric = liveLyric
+    Component.onCompleted: {
+        displayedLyric = liveLyric;
+        Lyrics.setPositionConsumerActive(mprisRoot, positionActive);
+    }
+    Component.onDestruction: Lyrics.setPositionConsumerActive(mprisRoot, false)
     onLiveLyricChanged: {
         if (liveLyric === displayedLyric)
             return;
@@ -46,6 +53,7 @@ StyledRect {
         displayedLyric        = liveLyric;
         lyricScrollAnim.restart();
     }
+    onPositionActiveChanged: Lyrics.setPositionConsumerActive(mprisRoot, positionActive)
 
     FontMetrics {
         id: lyricsMetrics
@@ -122,15 +130,20 @@ StyledRect {
             width: lyricsBox.width
         }
 
-        StyledText {
+        AnimatedLyricLabel {
             id: incomingLyric
 
-            color: Colours.m3Colors.m3OnBackground
+            active: true
+            activeColor: Colours.m3Colors.m3OnBackground
             font.pixelSize: Appearance.fonts.size.small
             height: lyricsBox.height
+            inactiveColor: Qt.alpha(Colours.m3Colors.m3OnBackground, 0.45)
+            positionMs: mprisRoot.positionMs
+            synced: Lyrics.synced
             text: mprisRoot.displayedLyric
-            verticalAlignment: Text.AlignVCenter
             width: lyricsBox.width
+            words: Lyrics.wordLines[mprisRoot.activeLineIndex]?.words ?? []
+            wrapMode: Text.NoWrap
             y: 0
         }
     }

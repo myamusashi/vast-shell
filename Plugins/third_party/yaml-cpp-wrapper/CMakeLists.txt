@@ -17,6 +17,7 @@ add_library(yaml-cpp STATIC
     ${yaml-cpp-contrib-sources}
 )
 add_library(yaml-cpp::yaml-cpp ALIAS yaml-cpp)
+set_target_properties(yaml-cpp PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 # SYSTEM so consumers' strict warning flags don't fire on vendored headers.
 target_include_directories(yaml-cpp SYSTEM PUBLIC "${YAML_CPP_ROOT}/include")

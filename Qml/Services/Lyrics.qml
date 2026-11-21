@@ -12,45 +12,57 @@ Singleton {
     id: root
 
     readonly property int  currentLineIndex: LyricsProvider.currentLineIndex
-    readonly property real currentWordDuration: LyricsProvider.currentWordDuration
-    readonly property int  currentWordIndex: LyricsProvider.currentWordIndex
+    readonly property real driftToleranceSeconds: 0.3
     readonly property var  lines: LyricsProvider.lines
-    readonly property int  state: LyricsProvider.state
+    readonly property bool playing: LyricsProvider.playing
+    readonly property real positionMs: internal.positionMs
+    readonly property int  positionRefreshIntervalMs: 250
     readonly property bool synced: LyricsProvider.synced
     readonly property var  wordLines: LyricsProvider.wordLines
-    readonly property bool wordSynced: LyricsProvider.wordSynced
 
-    property var           offsets: ({})
     property real          previousPositionSeconds: 0
     property real          syncedPositionSeconds: 0
     property real          syncedTimestampMilliseconds: 0
-    property bool          trackJustChanged: false
+
+    signal                 playbackSynced
+
+    function               currentPositionMs(): real {
+        return LyricsProvider.currentPositionMs();
+    }
 
     function               loadActiveTrack(): void {
-        const player = Players.active;
-        if (!player?.trackTitle) {
-            LyricsProvider.clear();
-            root.resetSyncTracking(0);
+        const player  = Players.active;
+        const nextKey = root.trackKeyFor(player);
+        if (!nextKey) {
+            if (internal.loadedTrackKey !== "") {
+                internal.loadedTrackKey = "";
+                internal.loadedPlayer   = null;
+                LyricsProvider.clear();
+                root.resetSyncTracking(0);
+            }
             return;
         }
+        if (nextKey === internal.loadedTrackKey) {
+            if (internal.loadedPlayer !== player) {
+                internal.loadedPlayer = player;
+                root.syncPlayback();
+            }
+            return;
+        }
+        internal.loadedTrackKey = nextKey;
+        internal.loadedPlayer   = player;
         LyricsProvider.fetch(player.trackTitle, player.trackArtist, player.length);
         root.syncPlayback();
+    }
+
+    function               refreshPosition(): void {
+        internal.positionMs = LyricsProvider.currentPositionMs();
     }
 
     function               resetSyncTracking(positionSeconds: real): void {
         root.previousPositionSeconds     = positionSeconds;
         root.syncedPositionSeconds       = positionSeconds;
         root.syncedTimestampMilliseconds = Date.now();
-    }
-
-    function               syncPlayback(): void {
-        const player = Players.active;
-        if (!player)
-            return;
-        const position     = Players.boundedPosition(player);
-        const playbackRate = player.rate > 0 ? player.rate : 1.0;
-        LyricsProvider.setPlayback(position, playbackRate, player.isPlaying);
-        root.resetSyncTracking(position);
     }
 
     // Detects unannounced seeks, drift, and loop restarts against the last anchored scheduler position.
@@ -70,7 +82,7 @@ Singleton {
         const elapsedSeconds   = (Date.now() - root.syncedTimestampMilliseconds) / 1000 * playbackRate;
         const expectedPosition = root.syncedPositionSeconds + elapsedSeconds;
         const jumpedBackward   = position + 0.2 < root.previousPositionSeconds;
-        const drifted          = Math.abs(position - expectedPosition) > 1.0;
+        const drifted          = Math.abs(position - expectedPosition) > root.driftToleranceSeconds;
         if (jumpedBackward || drifted) {
             root.syncPlayback();
             return;
@@ -78,10 +90,70 @@ Singleton {
         root.previousPositionSeconds = position;
     }
 
+    function               setPositionConsumerActive(consumer: var, active: bool): void {
+        const consumers = internal.activeConsumers;
+        const index     = consumers.indexOf(consumer);
+        if (active && index < 0) {
+            internal.activeConsumers = consumers.concat([consumer]);
+            if (consumers.length === 0)
+                root.refreshPosition();
+        } else if (!active && index >= 0) {
+            internal.activeConsumers = consumers.filter(item => item !== consumer);
+        }
+    }
+
+    function               syncPlayback(): void {
+        const player = Players.active;
+        if (!player)
+            return;
+        const position     = Players.boundedPosition(player);
+        const playbackRate = player.rate > 0 ? player.rate : 1.0;
+        LyricsProvider.setPlayback(position, playbackRate, player.isPlaying);
+        root.resetSyncTracking(position);
+    }
+
+    function               trackKeyFor(player: MprisPlayer): string {
+        if (!player?.trackTitle)
+            return "";
+        return `${player.trackTitle}\0${player.trackArtist ?? ""}\0${Math.round(player.length ?? 0)}`;
+    }
+
     Component.onCompleted: {
         if (!Players.active?.trackTitle)
             return;
         Qt.callLater(() => root.loadActiveTrack());
+    }
+
+    QtObject {
+        id: internal
+
+        property var         activeConsumers: []
+        property MprisPlayer loadedPlayer: null
+        property string      loadedTrackKey: ""
+        property real        positionMs: LyricsProvider.currentPositionMs()
+    }
+
+    FrameAnimation {
+        running: internal.activeConsumers.length > 0 && root.playing && root.synced
+        onTriggered: root.refreshPosition()
+    }
+
+    Connections {
+
+        function onCurrentLineIndexChanged() {
+            root.refreshPosition();
+        }
+
+        function onLinesChanged() {
+            root.refreshPosition();
+        }
+
+        function onPlaybackSynced() {
+            root.refreshPosition();
+            root.playbackSynced();
+        }
+
+        target: LyricsProvider
     }
 
     Connections {
@@ -95,18 +167,21 @@ Singleton {
 
     Connections {
 
-        // re-anchor so dead-reckoning stays accurate
-
         function onPlaybackStateChanged() {
             const player = Players.active;
             if (!player)
                 return;
             if (player.playbackState === MprisPlaybackState.Stopped) {
+                internal.loadedTrackKey = "";
+                internal.loadedPlayer   = null;
                 LyricsProvider.clear();
                 root.resetSyncTracking(0);
                 return;
             }
-            root.syncPlayback();
+            if (internal.loadedTrackKey === "" && player.trackTitle)
+                root.loadActiveTrack();
+            else
+                root.syncPlayback();
         }
 
         function onPositionChanged() {
@@ -117,7 +192,25 @@ Singleton {
             const player = Players.active;
             if (!player)
                 return;
+            const nextKey      = root.trackKeyFor(player);
             const playbackRate = player.rate > 0 ? player.rate : 1.0;
+            if (!nextKey) {
+                internal.loadedTrackKey = "";
+                internal.loadedPlayer   = null;
+                LyricsProvider.clear();
+                root.resetSyncTracking(0);
+                return;
+            }
+            if (nextKey === internal.loadedTrackKey && internal.loadedPlayer === player) {
+                const justLoaded = (Date.now() - root.syncedTimestampMilliseconds) < 500 && root.syncedPositionSeconds < 1.0;
+                if (!justLoaded) {
+                    LyricsProvider.setPlayback(0, playbackRate, player.isPlaying);
+                    root.resetSyncTracking(0);
+                }
+                return;
+            }
+            internal.loadedTrackKey = nextKey;
+            internal.loadedPlayer   = player;
             LyricsProvider.clear();
             LyricsProvider.setPlayback(0, playbackRate, player.isPlaying);
             root.resetSyncTracking(0);
@@ -132,10 +225,10 @@ Singleton {
     }
 
     Timer {
-        interval: 500
+        interval: root.positionRefreshIntervalMs
         repeat: true
-        running: Players.active?.isPlaying ?? false
-        onTriggered: root.resyncIfDrifted()
+        running: (Players.active?.isPlaying ?? false) && root.synced
+        onTriggered: Players.active.positionChanged()
     }
 
     Connections {

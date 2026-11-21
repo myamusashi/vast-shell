@@ -7,6 +7,7 @@
 #include <qnetworkaccessmanager.h>
 #include <qobject.h>
 #include <qqmlintegration.h>
+#include <qstring.h>
 #include <qtimer.h>
 #include <qtmetamacros.h>
 #include <qtypes.h>
@@ -28,8 +29,8 @@ class LyricsProvider : public QObject {
     Q_PROPERTY(int offsetMs READ offsetMs WRITE setOffsetMs NOTIFY offsetMsChanged)
 
     Q_PROPERTY(int currentLineIndex READ currentLineIndex NOTIFY currentLineIndexChanged)
-    Q_PROPERTY(int currentWordIndex READ currentWordIndex NOTIFY currentWordIndexChanged)
-    Q_PROPERTY(qint64 currentWordDuration READ currentWordDuration NOTIFY currentWordDurationChanged)
+    Q_PROPERTY(bool playing READ playing NOTIFY playingChanged)
+    Q_PROPERTY(double rate READ rate NOTIFY rateChanged)
 
   public:
     enum class State : uint8_t {
@@ -61,11 +62,11 @@ class LyricsProvider : public QObject {
     [[nodiscard]] int currentLineIndex() const {
         return mScheduler->currentLineIndex();
     }
-    [[nodiscard]] int currentWordIndex() const {
-        return mScheduler->currentWordIndex();
+    [[nodiscard]] bool playing() const {
+        return mScheduler->playing();
     }
-    [[nodiscard]] qint64 currentWordDuration() const {
-        return mScheduler->currentWordDuration();
+    [[nodiscard]] double rate() const {
+        return mScheduler->rate();
     }
     [[nodiscard]] int offsetMs() const {
         return mScheduler->offsetMs();
@@ -76,22 +77,25 @@ class LyricsProvider : public QObject {
     // positionSecs: current track position in seconds
     // rate:         playback rate (normally 1.0)
     // playing:      true if MprisPlaybackState.Playing
-    Q_INVOKABLE void setPlayback(double positionSecs, double rate, bool playing);
-    Q_INVOKABLE void fetch(const QString& title, const QString& artist, double durationSecs);
-    Q_INVOKABLE void clear();
+    Q_INVOKABLE void                 setPlayback(double positionSecs, double rate, bool playing);
+    Q_INVOKABLE void                 fetch(const QString& title, const QString& artist, double durationSecs);
+    Q_INVOKABLE void                 clear();
+    [[nodiscard]] Q_INVOKABLE qint64 currentPositionMs() const;
 
   Q_SIGNALS:
     void stateChanged();
     void lyricsChanged();
     void currentLineIndexChanged();
-    void currentWordIndexChanged();
-    void currentWordDurationChanged();
+    void playingChanged();
+    void rateChanged();
+    void playbackSynced();
     void offsetMsChanged();
 
   private:
     void                   setState(State s);
     void                   applyParseResult(const vast::LrcParser::Result& result);
-    [[nodiscard]] bool     tryLoadFromCache(const QString& cacheKey);
+    [[nodiscard]] bool     tryLoadFromCache(const QString& title, const QString& artist, double durationSecs, const QString& cacheKey);
+    void                   refreshInBackground(const QString& title, const QString& artist, double durationSecs, const QString& cacheKey);
 
     QNetworkAccessManager* mNam;
     vast::LyricsScheduler* mScheduler;
@@ -99,6 +103,8 @@ class LyricsProvider : public QObject {
     // Lyrics data
     QVariantList mLines;
     QVariantList mWordLines;
+    QString      mActiveCacheKey;
+    QString      mRefreshingCacheKey;
     State        mState      = State::Idle;
     bool         mSynced     = false;
     bool         mWordSynced = false;

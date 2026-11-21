@@ -1,6 +1,7 @@
 #pragma once
 
 #include <qbytearray.h>
+#include <qdatetime.h>
 #include <qjsondocument.h>
 #include <qstring.h>
 #include <optional>
@@ -15,6 +16,7 @@ namespace vast {
         struct CachedLyrics {
             QByteArray rawJson;
             double     durationSecs{0};
+            QDateTime  modifiedAt;
         };
 
         [[nodiscard]] static QString key(const QString& title, const QString& artist, double durationSecs);

@@ -36,6 +36,7 @@ namespace vast {
         return CachedLyrics{
             .rawJson      = QByteArray::fromBase64(rawB64),
             .durationSecs = envelope.value(QStringLiteral("duration")).toDouble(),
+            .modifiedAt   = f.fileTime(QFileDevice::FileModificationTime),
         };
     }
 

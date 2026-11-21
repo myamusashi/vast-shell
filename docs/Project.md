@@ -187,8 +187,10 @@ vast-shell/
 |---|---|---|
 | `material-color-utilities/` | git submodule | [material-foundation/material-color-utilities](https://github.com/material-foundation/material-color-utilities) |
 | `fzy/` | git submodule | [jhawthorn/fzy](https://github.com/jhawthorn/fzy) |
+| `yaml-cpp/` | git submodule | [jbeder/yaml-cpp](https://github.com/jbeder/yaml-cpp) |
 | `mcu/` | local CMake wrapper + `absl_shim` | builds the `material-color-utilities` submodule (upstream is Bazel-only) |
 | `fzy-wrapper/` | local CMake wrapper | builds the `fzy` submodule |
+| `yaml-cpp-wrapper/` | local CMake wrapper | builds the `yaml-cpp` submodule |
 
 ### Material color generation
 

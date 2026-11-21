@@ -92,6 +92,7 @@ void TestLyricsCache::saveThenLoadRoundTripsRawJsonAndDuration() {
     QVERIFY(loaded.has_value());
     QCOMPARE(loaded->rawJson, payload);
     QCOMPARE(loaded->durationSecs, 213.5);
+    QVERIFY(loaded->modifiedAt.isValid());
 }
 
 void TestLyricsCache::roundTripsNonAsciiPayloadsByteForByte() {

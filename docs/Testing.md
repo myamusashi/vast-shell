@@ -231,7 +231,7 @@ registration. `tst_search` links `vast-core` as well as `vast-search`.
 `ci-test.yml` holds both test jobs. `cpp-test` compiles the plugin C++ and runs ctest;
 `go-test` runs gofmt, vet, build and the Go suite in `vastctl`. They are separate jobs, not
 separate workflows, so a Go failure does not hide a ctest failure and both still run in
-parallel. The `material-color-utilities` and `fzy` submodules are checked out with
+parallel. The `material-color-utilities`, `fzy`, and `yaml-cpp` submodules are checked out with
 `--recursive`; the plugin does not configure without them.
 
 Every workflow enters the flake devShell via `nicknovitski/nix-develop` after

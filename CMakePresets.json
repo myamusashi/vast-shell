@@ -87,6 +87,7 @@
         "tst_lrcparser",
         "tst_lyricscache",
         "tst_lyricsscheduler",
+        "tst_lyricstimeline",
         "tst_keylock",
         "tst_colorutils",
         "tst_utilsfile",

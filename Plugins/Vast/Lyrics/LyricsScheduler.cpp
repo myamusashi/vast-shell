@@ -14,9 +14,9 @@
 namespace vast {
 
     LyricsScheduler::LyricsScheduler(QObject* parent) : QObject(parent) {
-        mWordTimer.setSingleShot(true);
-        mWordTimer.setTimerType(Qt::PreciseTimer);
-        connect(&mWordTimer, &QTimer::timeout, this, &LyricsScheduler::onWordTimer);
+        mLineTimer.setSingleShot(true);
+        mLineTimer.setTimerType(Qt::PreciseTimer);
+        connect(&mLineTimer, &QTimer::timeout, this, &LyricsScheduler::onLineTimer);
     }
 
     qint64 LyricsScheduler::currentPositionMs() const {
@@ -30,16 +30,24 @@ namespace vast {
     }
 
     void LyricsScheduler::setWordLines(const QVariantList& wordLines) {
-        mWordLines = wordLines;
-        rebuildBoundaries();
+        rebuildBoundaries(wordLines);
         reschedule();
     }
 
     void LyricsScheduler::setPlayback(double positionSecs, double rate, bool playing) {
+        const bool playingChangedFlag = (mPlaying != playing);
+        const bool rateChangedFlag    = !qFuzzyCompare(1.0 + mRate, 1.0 + rate);
+
         mAnchorMs   = static_cast<qint64>(positionSecs * 1000.0);
         mAnchorWall = QDateTime::currentMSecsSinceEpoch();
         mRate       = rate;
         mPlaying    = playing;
+
+        if (playingChangedFlag)
+            Q_EMIT playingChanged();
+        if (rateChangedFlag)
+            Q_EMIT rateChanged();
+
         reschedule();
     }
 
@@ -51,70 +59,49 @@ namespace vast {
     }
 
     void LyricsScheduler::reschedule() {
-        mWordTimer.stop();
+        mLineTimer.stop();
 
-        if (mBoundaries.isEmpty())
-            return;
+        if (!mBoundaries.isEmpty()) {
+            const qint64 posMs = currentPositionMs();
+            seekTo(posMs);
 
-        const qint64 posMs = currentPositionMs();
-        seekTo(posMs);
+            if (mPlaying)
+                scheduleNext();
+        }
 
-        if (mPlaying)
-            scheduleNext();
+        Q_EMIT playbackSynced();
     }
 
     void LyricsScheduler::reset() {
-        mWordTimer.stop();
+        mLineTimer.stop();
         mBoundaries.clear();
-        mWordLines.clear();
-        mBoundaryPos           = 0;
-        const bool lineChanged = (mCurLine != -1);
-        const bool wordChanged = (mCurWord != -1);
-        mCurLine               = -1;
-        mCurWord               = -1;
-        mCurWordDuration       = 0;
+        mBoundaryPos                  = 0;
+        const bool lineChanged        = (mCurLine != -1);
+        const bool playingChangedFlag = mPlaying;
+        const bool rateChangedFlag    = !qFuzzyCompare(1.0 + mRate, 2.0);
+        mCurLine                      = -1;
+        mAnchorMs                     = 0;
+        mAnchorWall                   = 0;
+        mPlaying                      = false;
+        mRate                         = 1.0;
         if (lineChanged)
             Q_EMIT currentLineIndexChanged();
-        if (wordChanged)
-            Q_EMIT currentWordIndexChanged();
+        if (playingChangedFlag)
+            Q_EMIT playingChanged();
+        if (rateChangedFlag)
+            Q_EMIT rateChanged();
+        Q_EMIT playbackSynced();
     }
 
     void LyricsScheduler::seekTo(qint64 posMs) {
-        auto            it    = std::ranges::upper_bound(mBoundaries, posMs, {}, &WordBoundary::timeMs);
-        const qsizetype found = (it != mBoundaries.begin()) ? std::distance(mBoundaries.begin(), std::prev(it)) : -1;
-
+        auto            it      = std::ranges::upper_bound(mBoundaries, posMs, {}, &LineBoundary::timeMs);
+        const qsizetype found   = (it != mBoundaries.begin()) ? std::distance(mBoundaries.begin(), std::prev(it)) : -1;
         const int       newLine = (found >= 0) ? mBoundaries.at(found).lineIndex : -1;
-        const int       newWord = (found >= 0) ? mBoundaries.at(found).wordIndex : -1;
 
-        bool            durationChanged = false;
-        qint64          newDuration     = 0;
-        if (newLine >= 0 && newWord >= 0 && newLine < mWordLines.size()) {
-            const auto wl    = mWordLines.at(newLine).toMap();
-            const auto words = wl.value(QStringLiteral("words")).toList();
-            if (newWord < words.size())
-                newDuration = words.at(newWord).toMap().value(QStringLiteral("duration")).toLongLong();
-        }
-
-        if (newDuration != mCurWordDuration) {
-            mCurWordDuration = newDuration;
-            durationChanged  = true;
-        }
-
-        const bool lineChanged = (newLine != mCurLine);
-        const bool wordChanged = (newWord != mCurWord);
-
-        if (lineChanged)
+        if (newLine != mCurLine) {
             mCurLine = newLine;
-        if (wordChanged)
-            mCurWord = newWord;
-
-        if (lineChanged)
             Q_EMIT currentLineIndexChanged();
-        if (wordChanged)
-            Q_EMIT currentWordIndexChanged();
-
-        if (durationChanged)
-            Q_EMIT currentWordDurationChanged();
+        }
 
         mBoundaryPos = found + 1;
     }
@@ -133,65 +120,40 @@ namespace vast {
         if (delayMs > 60'000)
             return;
 
-        mWordTimer.start(static_cast<int>(delayMs));
+        mLineTimer.start(static_cast<int>(delayMs));
     }
 
-    void LyricsScheduler::onWordTimer() {
+    void LyricsScheduler::onLineTimer() {
         if (!mPlaying)
             return;
 
-        const qint64 nowMs = currentPositionMs();
-
+        const qint64 nowMs       = currentPositionMs();
         bool         changedLine = false;
-        bool         changedWord = false;
+
         while (mBoundaryPos < mBoundaries.size() && mBoundaries.at(mBoundaryPos).timeMs <= nowMs) {
-            const auto b = mBoundaries.at(mBoundaryPos);
-            if (b.lineIndex != mCurLine) {
-                mCurLine    = b.lineIndex;
+            const auto boundary = mBoundaries.at(mBoundaryPos);
+            if (boundary.lineIndex != mCurLine) {
+                mCurLine    = boundary.lineIndex;
                 changedLine = true;
-            }
-            if (b.wordIndex != mCurWord) {
-                mCurWord    = b.wordIndex;
-                changedWord = true;
             }
             ++mBoundaryPos;
         }
 
         if (changedLine)
             Q_EMIT currentLineIndexChanged();
-        if (changedWord)
-            Q_EMIT currentWordIndexChanged();
-
-        if (changedLine || changedWord) {
-            qint64 newDuration = 0;
-            if (mCurLine >= 0 && mCurWord >= 0 && mCurLine < mWordLines.size()) {
-                const auto wl    = mWordLines.at(mCurLine).toMap();
-                const auto words = wl.value(QStringLiteral("words")).toList();
-                if (mCurWord < words.size())
-                    newDuration = words.at(mCurWord).toMap().value(QStringLiteral("duration")).toLongLong();
-            }
-            if (newDuration != mCurWordDuration) {
-                mCurWordDuration = newDuration;
-                Q_EMIT currentWordDurationChanged();
-            }
-        }
 
         scheduleNext();
     }
 
-    void LyricsScheduler::rebuildBoundaries() {
+    void LyricsScheduler::rebuildBoundaries(const QVariantList& wordLines) {
         mBoundaries.clear();
-        for (int li = 0; li < mWordLines.size(); ++li) {
-            const auto& wlEntry = mWordLines.at(li).toMap();
-            const auto  words   = wlEntry.value(QStringLiteral("words")).toList();
-            for (int wi = 0; wi < words.size(); ++wi) {
-                const auto   word = words.at(wi).toMap();
-                const qint64 t    = word.value(QStringLiteral("time")).toLongLong();
-                if (t < 0)
-                    continue;
-                mBoundaries.append({.timeMs = t, .lineIndex = li, .wordIndex = wi});
-            }
+        for (int lineIndex = 0; lineIndex < wordLines.size(); ++lineIndex) {
+            const auto   lineEntry = wordLines.at(lineIndex).toMap();
+            const qint64 timeMs    = lineEntry.value(QStringLiteral("time"), -1).toLongLong();
+            if (timeMs < 0)
+                continue;
+            mBoundaries.append({.timeMs = timeMs, .lineIndex = lineIndex});
         }
-        std::ranges::stable_sort(mBoundaries, {}, &WordBoundary::timeMs);
+        std::ranges::stable_sort(mBoundaries, {}, &LineBoundary::timeMs);
     }
 }

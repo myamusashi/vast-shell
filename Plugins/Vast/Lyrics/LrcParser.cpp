@@ -8,7 +8,88 @@
 #include <qstring.h>
 #include <qtypes.h>
 
+#include <yaml-cpp/yaml.h>
+
 #include <algorithm>
+#include <cmath>
+#include <optional>
+#include <string>
+
+namespace {
+    struct EnhancedWord {
+        QString               text;
+        qint64                startMs{0};
+        std::optional<qint64> endMs;
+        qsizetype             charStart{0};
+    };
+
+    struct LyricsfileWord {
+        QString               text;
+        qint64                startMs{0};
+        std::optional<qint64> endMs;
+    };
+
+    struct LyricsfileLine {
+        QString               text;
+        qint64                startMs{0};
+        std::optional<qint64> endMs;
+        QList<LyricsfileWord> words;
+    };
+
+    [[nodiscard]] bool isVowel(QChar character) {
+        static const QString vowels = QStringLiteral("aeiouyáéíóúàèìòùâêîôûäëïöüãõåæøœ");
+        return vowels.contains(character.toLower());
+    }
+
+    [[nodiscard]] int countSyllables(const QString& token) {
+        int  syllableCount    = 0;
+        bool previousWasVowel = false;
+        for (const QChar character : token) {
+            const bool currentIsVowel = isVowel(character);
+            if (currentIsVowel && !previousWasVowel)
+                ++syllableCount;
+            previousWasVowel = currentIsVowel;
+        }
+        return std::max(syllableCount, 1);
+    }
+
+    [[nodiscard]] double pauseWeightAfter(const QString& token) {
+        if (token.isEmpty())
+            return 0.0;
+        const QChar lastCharacter = token.back();
+        if (lastCharacter == u',' || lastCharacter == u';' || lastCharacter == u':')
+            return vast::LrcParser::FALLBACK_COMMA_PAUSE_WEIGHT;
+        if (lastCharacter == u'.' || lastCharacter == u'!' || lastCharacter == u'?' || lastCharacter == u'…')
+            return vast::LrcParser::FALLBACK_SENTENCE_PAUSE_WEIGHT;
+        return 0.0;
+    }
+
+    [[nodiscard]] QVariantMap makeWordEntry(const QString& text, qint64 startMs, qint64 endMs, qsizetype charStart) {
+        QVariantMap entry;
+        entry.insert(QStringLiteral("time"), startMs);
+        entry.insert(QStringLiteral("startTime"), startMs);
+        entry.insert(QStringLiteral("endTime"), endMs);
+        entry.insert(QStringLiteral("text"), text);
+        entry.insert(QStringLiteral("duration"), endMs - startMs);
+        entry.insert(QStringLiteral("charStart"), charStart);
+        entry.insert(QStringLiteral("charLength"), text.length());
+        return entry;
+    }
+
+    [[nodiscard]] std::optional<qint64> readMilliseconds(const YAML::Node& node, const char* key) {
+        const YAML::Node value = node[key];
+        if (!value.IsDefined() || !value.IsScalar())
+            return std::nullopt;
+        return value.as<qint64>();
+    }
+
+    [[nodiscard]] QString readText(const YAML::Node& node, const char* key) {
+        const YAML::Node value = node[key];
+        if (!value.IsDefined() || !value.IsScalar())
+            return {};
+        return QString::fromStdString(value.as<std::string>());
+    }
+} // namespace
 
 namespace vast {
 
@@ -38,63 +119,85 @@ namespace vast {
         }
         if (raw.isEmpty())
             return {};
-        Result     result;
-        const auto totalMs = static_cast<qint64>(totalDurationSecs * 1000.0);
+        Result              result;
+        const auto          totalMs = static_cast<qint64>(totalDurationSecs * 1000.0);
+        QList<EnhancedWord> enhancedWords;
 
         for (int i = 0; i < raw.size(); ++i) {
             const qint64  lineStart = raw.at(i).timeMs;
             const QString content   = raw.at(i).content;
-            const qint64  lineEnd   = (i + 1 < raw.size()) ? raw.at(i + 1).timeMs : qMax(lineStart + 5000, totalMs);
+            const qint64  lineEnd   = (i + 1 < raw.size()) ? raw.at(i + 1).timeMs : qMax(lineStart + LAST_LINE_TAIL_MS, totalMs);
             if (content.isEmpty())
                 continue;
 
-            const qsizetype caretIdx  = content.indexOf('^');
-            const QString   srcText   = (caretIdx >= 0) ? content.left(caretIdx).trimmed() : content;
-            const QString   transText = (caretIdx >= 0) ? content.mid(caretIdx + 1).trimmed() : QString();
+            static const QRegularExpression stripTagRe(QStringLiteral(R"(<[^>]+>)"));
+            const qsizetype                 caretIdx  = content.indexOf('^');
+            const QString                   srcText   = (caretIdx >= 0) ? content.left(caretIdx).trimmed() : content;
+            const QString                   transText = (caretIdx >= 0) ? content.mid(caretIdx + 1).trimmed() : QString();
+            QString                         cleanText = srcText;
+            cleanText.remove(stripTagRe);
+            cleanText = cleanText.trimmed();
 
-            QVariantMap     lineEntry;
+            QVariantMap lineEntry;
             lineEntry.insert(QStringLiteral("time"), lineStart);
-            lineEntry.insert(QStringLiteral("text"), srcText);
+            lineEntry.insert(QStringLiteral("text"), cleanText);
             lineEntry.insert(QStringLiteral("translation"), transText);
-            result.lines.append(lineEntry);
 
             QVariantList words;
             auto         wit = wordRe.globalMatch(srcText);
             if (wit.hasNext()) {
                 result.wordSynced = true;
+                enhancedWords.clear();
+                qsizetype searchPos = 0;
                 while (wit.hasNext()) {
-                    auto          wm   = wit.next();
-                    const QString text = wm.captured(4).trimmed();
-                    if (text.isEmpty())
+                    auto          wm      = wit.next();
+                    const qint64  tagTime = parseTimestamp(wm.captured(1), wm.captured(2), wm.captured(3));
+                    const QString text    = wm.captured(4).trimmed();
+                    if (text.isEmpty()) {
+                        // Empty-text tags mark the explicit end time of the preceding word.
+                        if (!enhancedWords.isEmpty() && !enhancedWords.last().endMs.has_value())
+                            enhancedWords.last().endMs = tagTime;
                         continue;
-                    QVariantMap w;
-                    w.insert(QStringLiteral("time"), parseTimestamp(wm.captured(1), wm.captured(2), wm.captured(3)));
-                    w.insert(QStringLiteral("text"), text);
-                    words.append(w);
-                }
-                for (int j = 0; j < words.size(); ++j) {
-                    QVariantMap  w     = words.at(j).toMap();
-                    qint64 const t     = w.value(QStringLiteral("time")).toLongLong();
-                    qint64       nextT = lineEnd;
-                    if (j + 1 < words.size()) {
-                        nextT = words.at(j + 1).toMap().value(QStringLiteral("time")).toLongLong();
-                    } else {
-                        qint64 const maxLastWord = 1500;
-                        if (nextT - t > maxLastWord)
-                            nextT = t + maxLastWord;
                     }
-                    w.insert(QStringLiteral("duration"), qMax<qint64>(0, nextT - t));
-                    words.replace(j, w);
+                    const qsizetype found     = cleanText.indexOf(text, searchPos);
+                    const qsizetype charStart = (found >= 0) ? found : searchPos;
+                    searchPos                 = charStart + text.length();
+
+                    enhancedWords.append({
+                        .text      = text,
+                        .startMs   = tagTime,
+                        .endMs     = std::nullopt,
+                        .charStart = charStart,
+                    });
+                }
+                words.reserve(enhancedWords.size());
+                for (qsizetype wordIndex = 0; wordIndex < enhancedWords.size(); ++wordIndex) {
+                    const EnhancedWord& word      = enhancedWords.at(wordIndex);
+                    const qint64        startTime = word.startMs;
+                    qint64              rawEnd    = lineEnd;
+                    qint64              maxEnd    = qMax(startTime, lineEnd);
+                    if (wordIndex + 1 < enhancedWords.size()) {
+                        const qint64 nextStart = enhancedWords.at(wordIndex + 1).startMs;
+                        maxEnd                 = qMax(startTime, nextStart);
+                        rawEnd                 = word.endMs.value_or(nextStart);
+                    } else if (word.endMs.has_value()) {
+                        rawEnd = *word.endMs;
+                    } else {
+                        rawEnd = qMin(lineEnd, startTime + MAX_LAST_WORD_DURATION_MS);
+                    }
+                    const qint64 endTime = std::clamp(rawEnd, startTime, maxEnd);
+                    words.append(makeWordEntry(word.text, startTime, endTime, word.charStart));
                 }
             } else {
-                static const QRegularExpression rx(QStringLiteral(R"(<[^>]+>)"));
-                QString                         plain = srcText;
-                plain.remove(rx);
-                words = interpolateWords(plain.trimmed(), lineStart, lineEnd);
+                words = interpolateWords(cleanText, lineStart, lineEnd);
             }
+
+            lineEntry.insert(QStringLiteral("words"), words);
+            result.lines.append(lineEntry);
 
             QVariantMap wlEntry;
             wlEntry.insert(QStringLiteral("time"), lineStart);
+            wlEntry.insert(QStringLiteral("endTime"), lineEnd);
             wlEntry.insert(QStringLiteral("words"), words);
             result.wordLines.append(wlEntry);
         }
@@ -102,6 +205,103 @@ namespace vast {
         result.synced = true;
         return result;
     }
+
+    LrcParser::Result LrcParser::parseLyricsfile(const QString& yamlText, double totalDurationSecs) {
+        QList<LyricsfileLine> rawLines;
+        try {
+            const YAML::Node root = YAML::Load(yamlText.toStdString());
+            if (!root.IsDefined() || !root.IsMap())
+                return {};
+            const YAML::Node linesNode = root["lines"];
+            if (!linesNode.IsDefined() || !linesNode.IsSequence())
+                return {};
+
+            for (const YAML::Node& lineNode : linesNode) {
+                if (!lineNode.IsDefined() || !lineNode.IsMap())
+                    continue;
+                LyricsfileLine rawLine;
+                rawLine.text                            = readText(lineNode, "text").trimmed();
+                const std::optional<qint64> lineStartMs = readMilliseconds(lineNode, "start_ms");
+                if (!lineStartMs.has_value())
+                    continue;
+                rawLine.startMs = *lineStartMs;
+                rawLine.endMs   = readMilliseconds(lineNode, "end_ms");
+
+                const YAML::Node wordsNode = lineNode["words"];
+                if (wordsNode.IsDefined() && wordsNode.IsSequence()) {
+                    for (const YAML::Node& wordNode : wordsNode) {
+                        if (!wordNode.IsDefined() || !wordNode.IsMap())
+                            continue;
+                        const std::optional<qint64> wordStartMs = readMilliseconds(wordNode, "start_ms");
+                        if (!wordStartMs.has_value())
+                            continue;
+                        rawLine.words.append({.text = readText(wordNode, "text"), .startMs = *wordStartMs, .endMs = readMilliseconds(wordNode, "end_ms")});
+                    }
+                }
+                rawLines.append(rawLine);
+            }
+        } catch (const YAML::Exception&) { return {}; }
+
+        Result     result;
+        const auto totalMs = static_cast<qint64>(totalDurationSecs * 1000.0);
+
+        for (qsizetype lineIndex = 0; lineIndex < rawLines.size(); ++lineIndex) {
+            const LyricsfileLine& rawLine = rawLines.at(lineIndex);
+            if (rawLine.text.isEmpty())
+                continue;
+
+            const bool   hasExplicitLineEnd = rawLine.endMs.has_value();
+            const qint64 nextLineStartMs    = (lineIndex + 1 < rawLines.size()) ? rawLines.at(lineIndex + 1).startMs : qMax(rawLine.startMs + LAST_LINE_TAIL_MS, totalMs);
+            const qint64 lineEndMs          = qMax(rawLine.startMs, rawLine.endMs.value_or(nextLineStartMs));
+
+            QVariantList words;
+            if (rawLine.words.isEmpty()) {
+                words = interpolateWords(rawLine.text, rawLine.startMs, lineEndMs);
+            } else {
+                result.wordSynced   = true;
+                qsizetype searchPos = 0;
+                for (qsizetype wordIndex = 0; wordIndex < rawLine.words.size(); ++wordIndex) {
+                    const LyricsfileWord& rawWord = rawLine.words.at(wordIndex);
+                    const QString         text    = rawWord.text.trimmed();
+                    if (text.isEmpty())
+                        continue;
+
+                    const qsizetype found     = rawLine.text.indexOf(text, searchPos);
+                    const qsizetype charStart = (found >= 0) ? found : searchPos;
+                    searchPos                 = charStart + text.length();
+
+                    const bool   isLastWord  = (wordIndex + 1 == rawLine.words.size());
+                    const qint64 nextStartMs = isLastWord ? lineEndMs : rawLine.words.at(wordIndex + 1).startMs;
+                    const qint64 maxEndMs    = qMax(rawWord.startMs, nextStartMs);
+                    qint64       rawEndMs    = nextStartMs;
+                    if (rawWord.endMs.has_value())
+                        rawEndMs = *rawWord.endMs;
+                    else if (isLastWord && !hasExplicitLineEnd)
+                        rawEndMs = rawWord.startMs + MAX_LAST_WORD_DURATION_MS;
+                    const qint64 endMs = std::clamp(rawEndMs, rawWord.startMs, maxEndMs);
+
+                    words.append(makeWordEntry(text, rawWord.startMs, endMs, charStart));
+                }
+            }
+
+            QVariantMap lineEntry;
+            lineEntry.insert(QStringLiteral("time"), rawLine.startMs);
+            lineEntry.insert(QStringLiteral("text"), rawLine.text);
+            lineEntry.insert(QStringLiteral("translation"), QString());
+            lineEntry.insert(QStringLiteral("words"), words);
+            result.lines.append(lineEntry);
+
+            QVariantMap wordLineEntry;
+            wordLineEntry.insert(QStringLiteral("time"), rawLine.startMs);
+            wordLineEntry.insert(QStringLiteral("endTime"), lineEndMs);
+            wordLineEntry.insert(QStringLiteral("words"), words);
+            result.wordLines.append(wordLineEntry);
+        }
+
+        result.synced = !result.lines.isEmpty();
+        return result;
+    }
+
     LrcParser::Result LrcParser::parsePlain(const QString& plain) {
         Result               result;
 
@@ -120,20 +320,23 @@ namespace vast {
             lineEntry.insert(QStringLiteral("time"), -1);
             lineEntry.insert(QStringLiteral("text"), srcText);
             lineEntry.insert(QStringLiteral("translation"), transText);
-            result.lines.append(lineEntry);
 
             words.clear();
             const QList<QString> srcTextList = srcText.split(' ', Qt::SkipEmptyParts);
             words.reserve(srcTextList.size());
+            qsizetype searchPos = 0;
             for (const QString& word : srcTextList) {
-                QVariantMap w;
-                w.insert(QStringLiteral("time"), -1);
-                w.insert(QStringLiteral("text"), word);
-                w.insert(QStringLiteral("duration"), 0);
-                words.append(w);
+                const qsizetype found     = srcText.indexOf(word, searchPos);
+                const qsizetype charStart = (found >= 0) ? found : searchPos;
+                searchPos                 = charStart + word.length();
+                words.append(makeWordEntry(word, -1, -1, charStart));
             }
+            lineEntry.insert(QStringLiteral("words"), words);
+            result.lines.append(lineEntry);
+
             QVariantMap wlEntry;
             wlEntry.insert(QStringLiteral("time"), -1);
+            wlEntry.insert(QStringLiteral("endTime"), -1);
             wlEntry.insert(QStringLiteral("words"), words);
             result.wordLines.append(wlEntry);
         }
@@ -146,29 +349,41 @@ namespace vast {
         if (tokens.isEmpty())
             return {};
 
-        qint64 totalLen = 0;
-        for (const QString& t : tokens) {
-            totalLen += t.length();
+        QList<double> spokenWeights;
+        QList<double> pauseWeights;
+        spokenWeights.reserve(tokens.size());
+        pauseWeights.reserve(tokens.size());
+        double totalWeight    = 0.0;
+        qint64 totalSyllables = 0;
+        for (qsizetype index = 0; index < tokens.size(); ++index) {
+            const int    syllables   = countSyllables(tokens.at(index));
+            const bool   isLastToken = (index + 1 == tokens.size());
+            const double pauseWeight = isLastToken ? 0.0 : pauseWeightAfter(tokens.at(index));
+            spokenWeights.append(syllables);
+            pauseWeights.append(pauseWeight);
+            totalWeight += syllables + pauseWeight;
+            totalSyllables += syllables;
         }
 
-        qint64       durationGap = lineEndMs - lineStartMs;
-        const qint64 maxDuration = tokens.size() * 800;
-        durationGap              = std::min(durationGap, maxDuration);
-        const auto   totalWeight = static_cast<double>(totalLen + tokens.size());
+        const qint64 availableMs           = qMax<qint64>(0, lineEndMs - lineStartMs);
+        const qint64 maxBudgetMs           = qMax<qint64>(tokens.size() * FALLBACK_MAX_MS_PER_WORD, totalSyllables * FALLBACK_MAX_MS_PER_SYLLABLE);
+        const qint64 budgetMs              = std::min(static_cast<qint64>(static_cast<double>(availableMs) * FALLBACK_LINE_FILL_RATIO), maxBudgetMs);
+        const double millisecondsPerWeight = static_cast<double>(budgetMs) / totalWeight;
 
         QVariantList words;
         words.reserve(tokens.size());
-        qint64 currentMs = lineStartMs;
-        for (const QString& t : tokens) {
-            const double fraction  = static_cast<double>(t.length() + 1) / totalWeight;
-            const auto   wDuration = static_cast<qint64>(static_cast<double>(durationGap) * fraction);
+        double    cursorWeight = 0.0;
+        qsizetype searchPos    = 0;
+        for (qsizetype index = 0; index < tokens.size(); ++index) {
+            const QString&  token     = tokens.at(index);
+            const qint64    startMs   = lineStartMs + std::llround(cursorWeight * millisecondsPerWeight);
+            const qint64    endMs     = lineStartMs + std::llround((cursorWeight + spokenWeights.at(index)) * millisecondsPerWeight);
+            const qsizetype found     = text.indexOf(token, searchPos);
+            const qsizetype charStart = (found >= 0) ? found : searchPos;
+            searchPos                 = charStart + token.length();
 
-            QVariantMap  w;
-            w.insert(QStringLiteral("time"), currentMs);
-            w.insert(QStringLiteral("text"), t);
-            w.insert(QStringLiteral("duration"), wDuration);
-            words.append(w);
-            currentMs += wDuration;
+            words.append(makeWordEntry(token, startMs, endMs, charStart));
+            cursorWeight += spokenWeights.at(index) + pauseWeights.at(index);
         }
         return words;
     }

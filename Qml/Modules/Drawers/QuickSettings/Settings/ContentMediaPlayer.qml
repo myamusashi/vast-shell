@@ -283,10 +283,11 @@ RowLayout {
 
                 Layout.alignment: Qt.AlignRight
                 Layout.rightMargin: Appearance.margin.small
-                activeColor: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.primary : Colours.m3Colors.m3Primary
+                active: GlobalStates.isQuickSettingsOpen && Configs.mediaPlayer.showLyrics
+                activeColor: Colours.m3Colors.m3OnBackground
                 implicitHeight: parent.height
                 implicitWidth: parent.width * 0.4
-                inactiveColor: Configs.mediaPlayer.dynamicColorsCover ? root.trackArtColors.tertiary : Colours.m3Colors.m3Tertiary
+                inactiveColor: Qt.alpha(Colours.m3Colors.m3OnBackground, 0.45)
             }
         }
     }
@@ -683,9 +684,6 @@ RowLayout {
                     }
                     onActivated: index => {
                         Players.manualIndex = index;
-                        const player        = Players.players[index];
-                        if (player)
-                            LyricsProvider.fetch(player.trackTitle, player.trackArtist, player.length);
                     }
                 }
             }

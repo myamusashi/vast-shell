@@ -5,7 +5,6 @@ import QtQuick.Effects
 import QtQuick.Layouts
 import Quickshell.Services.Mpris
 import Quickshell.Widgets
-import Vast.Lyrics
 
 import qs.Core.Configs
 import qs.Core.States
@@ -13,6 +12,7 @@ import qs.Core.Utils
 import qs.Components.Base
 import qs.Components.Button
 import qs.Services
+import qs.Widgets
 
 StyledRect {
     id: mediaPlayerRect
@@ -176,6 +176,10 @@ StyledRect {
         radius: Appearance.rounding.normal
         scale: mediaHover.hovered || popupHovered ? 1 : 0.92
         visible: opacity > 0
+        onVisibleChanged: {
+            if (visible)
+                Lyrics.syncPlayback();
+        }
         Behavior on opacity {
             NAnim {
                 duration: Appearance.animations.durations.normal
@@ -227,13 +231,7 @@ StyledRect {
             id: popupLayout
 
             spacing: Appearance.spacing.small
-            Component.onCompleted: {
-                const p = Players.active;
-                if (!p?.trackTitle)
-                    return;
-                LyricsProvider.fetch(p.trackTitle, p.trackArtist, p.length);
-                LyricsProvider.setPlayback(p.position, p.rate, p.isPlaying);
-            }
+            Component.onCompleted: Lyrics.syncPlayback()
 
             anchors {
                 fill: parent
@@ -297,63 +295,18 @@ StyledRect {
                 }
             }
 
-            Item {
+            LyricsView {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 80
-                clip: true
+                active: (mediaHover.hovered || mediaPopup.popupHovered) && mediaPopup.visible
+                activeColor: Colours.m3Colors.m3OnBackground
+                activeFontSize: Appearance.fonts.size.normal
+                horizontalAlignment: Text.AlignHCenter
+                inactiveColor: Qt.alpha(Colours.m3Colors.m3OnBackground, 0.45)
+                inactiveFontSize: Appearance.fonts.size.small
+                raised: false
+                spacing: 4
                 visible: Lyrics.lines.length > 0
-
-                ListView {
-                    id: lyricsListView
-
-                    anchors.fill: parent
-                    currentIndex: LyricsProvider.currentLineIndex
-                    model: Lyrics.lines
-                    spacing: 4
-                    delegate: Item {
-                        id: lyricDelegate
-
-                        required property int  index
-                        required property var  modelData
-
-                        readonly property bool isActiveLine: index === LyricsProvider.currentLineIndex
-
-                        implicitHeight: lineText.implicitHeight
-                        opacity: isActiveLine ? 1.0 : 0.5
-                        scale: isActiveLine ? 1.0 : 0.9
-                        width: lyricsListView.width
-                        Behavior on opacity {
-                            NAnim {
-                                duration: 250
-                                easing.bezierCurve: Appearance.animations.curves.emphasized
-                            }
-                        }
-                        Behavior on scale {
-                            NAnim {
-                                duration: 250
-                                easing.bezierCurve: Appearance.animations.curves.emphasized
-                            }
-                        }
-
-                        StyledText {
-                            id: lineText
-
-                            color: lyricDelegate.isActiveLine ? mediaPlayerRect.dynPrimary : mediaPlayerRect.dynOnSurfaceVariant
-                            elide: Text.ElideNone
-                            font.pixelSize: Appearance.fonts.size.normal
-                            horizontalAlignment: Text.AlignHCenter
-                            text: lyricDelegate.modelData.text
-                            width: lyricsListView.width
-                            wrapMode: Text.Wrap
-                        }
-                    }
-                    onCurrentIndexChanged: {
-                        if (currentIndex < 0)
-                            positionViewAtBeginning();
-                        else
-                            positionViewAtIndex(currentIndex, ListView.Center);
-                    }
-                }
             }
 
             RowLayout {
@@ -431,29 +384,6 @@ StyledRect {
                         }
                     }
                 }
-            }
-
-            Connections {
-
-                function onPositionChanged() {
-                    if (mediaHover.hovered || mediaPopup.popupHovered) {
-                        const p = Players.active;
-                        if (!p)
-                            return;
-                        LyricsProvider.setPlayback(p.position, p.rate, p.isPlaying);
-                    }
-                }
-
-                function onPostTrackChanged() {
-                    const p = Players.active;
-                    if (!p)
-                        return;
-                    LyricsProvider.clear();
-                    LyricsProvider.setPlayback(0, p.rate, p.isPlaying);
-                    LyricsProvider.fetch(p.trackTitle, p.trackArtist, p.length);
-                }
-
-                target: Players.active
             }
         }
     }

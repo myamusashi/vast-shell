@@ -43,7 +43,7 @@ class TestLyricsScheduler : public QObject {
   private Q_SLOTS:
     void init();
 
-    void freshSchedulerHasNoCurrentPosition();
+    void freshSchedulerHasNoCurrentLine();
     void defaultOffsetIs150Ms();
     void setOffsetMsStoresTheValue();
     void settingTheSameOffsetIsANoOp();
@@ -51,23 +51,23 @@ class TestLyricsScheduler : public QObject {
     void pausedAndPlayingResolveTheSameCurrentLine();
     void aPositionBeforeTheFirstBoundaryHasNoLine();
     void aPositionExactlyOnABoundarySelectsIt();
-    void aPositionAfterTheLastBoundarySelectsTheLastWord();
-    void advancesLineAndWordTogetherAcrossBoundaries();
-    void exposesTheDurationOfTheCurrentWord();
-    void emitsCurrentIndexChangedOnlyWhenTheIndexMoves();
-    void emitsCurrentWordDurationChangedOnlyWhenTheDurationChanges();
+    void aPositionAfterTheLastBoundarySelectsTheLastLine();
+    void advancesLineAcrossBoundaries();
+    void seeksBackwardAcrossLines();
+    void emitsCurrentLineIndexChangedOnlyWhenTheLineMoves();
 
     void wordLinesWithNegativeTimesProduceNoBoundaries();
     void emptyWordLinesLeaveNoCurrentLine();
-    void outOfOrderWordTimesAreSortedByTime();
-    void duplicateWordTimesDoNotCrashAndSelectOneOfThem();
+    void outOfOrderLineTimesAreSortedByTime();
+    void duplicateLineTimesDoNotCrashAndSelectOneOfThem();
 
-    void resetClearsTheIndicesAndSignals();
+    void resetClearsTheIndexAndSignals();
     void resetStopsTheTimerSoLaterPlaybackDoesNotReindex();
     void acceptsWordLinesStraightFromLrcParser();
 
     void playingAdvancesTheIndexOverWallClockTime();
     void aHigherRateReachesTheSameIndexSooner();
+    void exposesPlayingRatePositionAndPlaybackSyncedSignal();
 
   private:
     vast::LyricsScheduler mScheduler;
@@ -77,10 +77,8 @@ void TestLyricsScheduler::init() {
     mScheduler.reset();
 }
 
-void TestLyricsScheduler::freshSchedulerHasNoCurrentPosition() {
+void TestLyricsScheduler::freshSchedulerHasNoCurrentLine() {
     QCOMPARE(mScheduler.currentLineIndex(), -1);
-    QCOMPARE(mScheduler.currentWordIndex(), -1);
-    QCOMPARE(mScheduler.currentWordDuration(), 0ll);
 }
 
 void TestLyricsScheduler::defaultOffsetIs150Ms() {
@@ -98,11 +96,9 @@ void TestLyricsScheduler::settingTheSameOffsetIsANoOp() {
     mScheduler.setOffsetMs(150);
 
     QSignalSpy lineSpy(&mScheduler, &vast::LyricsScheduler::currentLineIndexChanged);
-    QSignalSpy wordSpy(&mScheduler, &vast::LyricsScheduler::currentWordIndexChanged);
     mScheduler.setOffsetMs(150);
 
     QCOMPARE(lineSpy.count(), 0);
-    QCOMPARE(wordSpy.count(), 0);
 }
 
 void TestLyricsScheduler::pausedAndPlayingResolveTheSameCurrentLine() {
@@ -119,7 +115,6 @@ void TestLyricsScheduler::pausedAndPlayingResolveTheSameCurrentLine() {
 
     QCOMPARE(paused.offsetMs(), playing.offsetMs());
     QCOMPARE(paused.currentLineIndex(), playing.currentLineIndex());
-    QCOMPARE(paused.currentWordIndex(), playing.currentWordIndex());
     // 10000 + 150 = 10150, which is at or past the 10100 boundary.
     QCOMPARE(paused.currentLineIndex(), 0);
 }
@@ -130,29 +125,32 @@ void TestLyricsScheduler::aPositionBeforeTheFirstBoundaryHasNoLine() {
     mScheduler.setPlayback(5.0, 1.0, false);
 
     QCOMPARE(mScheduler.currentLineIndex(), -1);
-    QCOMPARE(mScheduler.currentWordIndex(), -1);
 }
 
 void TestLyricsScheduler::aPositionExactlyOnABoundarySelectsIt() {
     // a position on a boundary selects it.
-    mScheduler.setWordLines({wordLine(10000, {word(10000, 500), word(10500, 500)})});
+    mScheduler.setWordLines({
+        wordLine(10000, {word(10000, 500)}),
+        wordLine(10500, {word(10500, 500)}),
+    });
     mScheduler.setOffsetMs(0);
     mScheduler.setPlayback(10.5, 1.0, false);
 
-    QCOMPARE(mScheduler.currentLineIndex(), 0);
-    QCOMPARE(mScheduler.currentWordIndex(), 1);
+    QCOMPARE(mScheduler.currentLineIndex(), 1);
 }
 
-void TestLyricsScheduler::aPositionAfterTheLastBoundarySelectsTheLastWord() {
-    mScheduler.setWordLines({wordLine(10000, {word(10000, 500), word(10500, 500)})});
+void TestLyricsScheduler::aPositionAfterTheLastBoundarySelectsTheLastLine() {
+    mScheduler.setWordLines({
+        wordLine(10000, {word(10000, 500)}),
+        wordLine(10500, {word(10500, 500)}),
+    });
     mScheduler.setOffsetMs(0);
     mScheduler.setPlayback(99.0, 1.0, false);
 
-    QCOMPARE(mScheduler.currentLineIndex(), 0);
-    QCOMPARE(mScheduler.currentWordIndex(), 1);
+    QCOMPARE(mScheduler.currentLineIndex(), 1);
 }
 
-void TestLyricsScheduler::advancesLineAndWordTogetherAcrossBoundaries() {
+void TestLyricsScheduler::advancesLineAcrossBoundaries() {
     mScheduler.setWordLines({
         wordLine(10000, {word(10000, 500), word(10500, 500)}),
         wordLine(11000, {word(11000, 500), word(11500, 500)}),
@@ -161,74 +159,71 @@ void TestLyricsScheduler::advancesLineAndWordTogetherAcrossBoundaries() {
 
     mScheduler.setPlayback(5.0, 1.0, false);
     QCOMPARE(mScheduler.currentLineIndex(), -1);
-    QCOMPARE(mScheduler.currentWordIndex(), -1);
 
     mScheduler.setPlayback(10.0, 1.0, false);
     QCOMPARE(mScheduler.currentLineIndex(), 0);
-    QCOMPARE(mScheduler.currentWordIndex(), 0);
 
     mScheduler.setPlayback(10.5, 1.0, false);
     QCOMPARE(mScheduler.currentLineIndex(), 0);
-    QCOMPARE(mScheduler.currentWordIndex(), 1);
 
     mScheduler.setPlayback(11.0, 1.0, false);
     QCOMPARE(mScheduler.currentLineIndex(), 1);
-    QCOMPARE(mScheduler.currentWordIndex(), 0);
 }
 
-void TestLyricsScheduler::exposesTheDurationOfTheCurrentWord() {
-    mScheduler.setWordLines({wordLine(10000, {word(10000, 750), word(11000, 250)})});
+void TestLyricsScheduler::seeksBackwardAcrossLines() {
+    mScheduler.setWordLines({
+        wordLine(1000, {word(1000, 500)}),
+        wordLine(3000, {word(3000, 500)}),
+        wordLine(6000, {word(6000, 500)}),
+    });
     mScheduler.setOffsetMs(0);
-    mScheduler.setPlayback(10.0, 1.0, false);
 
-    QCOMPARE(mScheduler.currentWordDuration(), 750ll);
+    mScheduler.setPlayback(6.5, 1.0, false);
+    QCOMPARE(mScheduler.currentLineIndex(), 2);
 
-    mScheduler.setPlayback(11.0, 1.0, false);
-    QCOMPARE(mScheduler.currentWordDuration(), 250ll);
+    QSignalSpy lineSpy(&mScheduler, &vast::LyricsScheduler::currentLineIndexChanged);
+
+    mScheduler.setPlayback(3.2, 1.0, false);
+    QCOMPARE(mScheduler.currentLineIndex(), 1);
+    QCOMPARE(lineSpy.count(), 1);
+
+    mScheduler.setPlayback(1.2, 1.0, false);
+    QCOMPARE(mScheduler.currentLineIndex(), 0);
+    QCOMPARE(lineSpy.count(), 2);
+
+    mScheduler.setPlayback(0.5, 1.0, false);
+    QCOMPARE(mScheduler.currentLineIndex(), -1);
+    QCOMPARE(lineSpy.count(), 3);
 }
 
-void TestLyricsScheduler::emitsCurrentIndexChangedOnlyWhenTheIndexMoves() {
-    mScheduler.setWordLines({wordLine(10000, {word(10000, 500), word(10500, 500)})});
+void TestLyricsScheduler::emitsCurrentLineIndexChangedOnlyWhenTheLineMoves() {
+    mScheduler.setWordLines({
+        wordLine(10000, {word(10000, 500), word(10500, 500)}),
+        wordLine(11000, {word(11000, 500)}),
+    });
     mScheduler.setOffsetMs(0);
     mScheduler.setPlayback(10.0, 1.0, false);
-    QCOMPARE(mScheduler.currentWordIndex(), 0);
+    QCOMPARE(mScheduler.currentLineIndex(), 0);
 
-    QSignalSpy spy(&mScheduler, &vast::LyricsScheduler::currentWordIndexChanged);
+    QSignalSpy spy(&mScheduler, &vast::LyricsScheduler::currentLineIndexChanged);
 
-    // Still within the first word's slot, so nothing moves and nothing is emitted.
-    mScheduler.setPlayback(10.2, 1.0, false);
+    // Still within the first line (even across word boundaries), so nothing is emitted.
+    mScheduler.setPlayback(10.5, 1.0, false);
     QCOMPARE(spy.count(), 0);
 
-    mScheduler.setPlayback(10.5, 1.0, false);
-    QCOMPARE(mScheduler.currentWordIndex(), 1);
+    mScheduler.setPlayback(11.0, 1.0, false);
+    QCOMPARE(mScheduler.currentLineIndex(), 1);
     QCOMPARE(spy.count(), 1);
 }
 
-void TestLyricsScheduler::emitsCurrentWordDurationChangedOnlyWhenTheDurationChanges() {
-    mScheduler.setWordLines({wordLine(10000, {word(10000, 500), word(11000, 500)})});
-    mScheduler.setOffsetMs(0);
-    mScheduler.setPlayback(10.0, 1.0, false);
-
-    QSignalSpy spy(&mScheduler, &vast::LyricsScheduler::currentWordDurationChanged);
-
-    mScheduler.setPlayback(10.2, 1.0, false);
-    QCOMPARE(spy.count(), 0); // same word, same duration
-
-    mScheduler.setPlayback(11.0, 1.0, false);
-    // Duration happens to be equal here, so this only asserts the index moved.
-    QCOMPARE(mScheduler.currentWordIndex(), 1);
-}
-
 void TestLyricsScheduler::wordLinesWithNegativeTimesProduceNoBoundaries() {
-    // rebuildBoundaries skips words with time < 0, so unsynced lyrics never highlight.
+    // rebuildBoundaries skips lines with time < 0, so unsynced lyrics never highlight.
     mScheduler.setWordLines(plainWordLines({QStringLiteral("a"), QStringLiteral("b")}));
     mScheduler.setOffsetMs(0);
     mScheduler.setPlayback(0.0, 1.0, false);
     mScheduler.setPlayback(600.0, 1.0, false);
 
     QCOMPARE(mScheduler.currentLineIndex(), -1);
-    QCOMPARE(mScheduler.currentWordIndex(), -1);
-    QCOMPARE(mScheduler.currentWordDuration(), 0ll);
 }
 
 void TestLyricsScheduler::emptyWordLinesLeaveNoCurrentLine() {
@@ -239,7 +234,7 @@ void TestLyricsScheduler::emptyWordLinesLeaveNoCurrentLine() {
     QCOMPARE(mScheduler.currentLineIndex(), -1);
 }
 
-void TestLyricsScheduler::outOfOrderWordTimesAreSortedByTime() {
+void TestLyricsScheduler::outOfOrderLineTimesAreSortedByTime() {
     mScheduler.setWordLines({
         wordLine(5000, {word(5000, 100, QStringLiteral("late"))}),
         wordLine(1000, {word(1000, 100, QStringLiteral("early"))}),
@@ -248,36 +243,33 @@ void TestLyricsScheduler::outOfOrderWordTimesAreSortedByTime() {
     mScheduler.setOffsetMs(0);
     mScheduler.setPlayback(3.5, 1.0, false);
 
-    // 3500 lands on the 3000 word.
+    // 3500 lands on the 3000 line.
     QCOMPARE(mScheduler.currentLineIndex(), 2);
-    QCOMPARE(mScheduler.currentWordIndex(), 0);
 }
 
-void TestLyricsScheduler::duplicateWordTimesDoNotCrashAndSelectOneOfThem() {
-    mScheduler.setWordLines({wordLine(10000, {word(10000, 100, QStringLiteral("a")), word(10000, 200, QStringLiteral("b"))})});
+void TestLyricsScheduler::duplicateLineTimesDoNotCrashAndSelectOneOfThem() {
+    mScheduler.setWordLines({
+        wordLine(10000, {word(10000, 100, QStringLiteral("a"))}),
+        wordLine(10000, {word(10000, 200, QStringLiteral("b"))}),
+    });
     mScheduler.setOffsetMs(0);
     mScheduler.setPlayback(10.0, 1.0, false);
 
-    // The tie-break is whatever upper_bound yields, so accept either index
-    // rather than pinning one that is not part of the contract.
-    const int word = mScheduler.currentWordIndex();
-    QVERIFY(word == 0 || word == 1);
-    QCOMPARE(mScheduler.currentLineIndex(), 0);
+    const int line = mScheduler.currentLineIndex();
+    QVERIFY(line == 0 || line == 1);
 }
 
-void TestLyricsScheduler::resetClearsTheIndicesAndSignals() {
+void TestLyricsScheduler::resetClearsTheIndexAndSignals() {
     mScheduler.setWordLines({wordLine(10000, {word(10000, 500)})});
     mScheduler.setOffsetMs(0);
     mScheduler.setPlayback(10.0, 1.0, false);
     QCOMPARE(mScheduler.currentLineIndex(), 0);
 
-    QSignalSpy spy(&mScheduler, &vast::LyricsScheduler::currentWordIndexChanged);
+    QSignalSpy spy(&mScheduler, &vast::LyricsScheduler::currentLineIndexChanged);
     mScheduler.reset();
 
     QCOMPARE(spy.count(), 1);
     QCOMPARE(mScheduler.currentLineIndex(), -1);
-    QCOMPARE(mScheduler.currentWordIndex(), -1);
-    QCOMPARE(mScheduler.currentWordDuration(), 0ll);
 }
 
 void TestLyricsScheduler::resetStopsTheTimerSoLaterPlaybackDoesNotReindex() {
@@ -325,6 +317,36 @@ void TestLyricsScheduler::aHigherRateReachesTheSameIndexSooner() {
     mScheduler.setPlayback(0.0, 4.0, true);
 
     QTRY_VERIFY_WITH_TIMEOUT(mScheduler.currentLineIndex() == 0, 10000);
+}
+
+void TestLyricsScheduler::exposesPlayingRatePositionAndPlaybackSyncedSignal() {
+    mScheduler.setWordLines({wordLine(1000, {word(1000, 500)})});
+    mScheduler.setOffsetMs(150);
+
+    QSignalSpy playingSpy(&mScheduler, &vast::LyricsScheduler::playingChanged);
+    QSignalSpy rateSpy(&mScheduler, &vast::LyricsScheduler::rateChanged);
+    QSignalSpy syncedSpy(&mScheduler, &vast::LyricsScheduler::playbackSynced);
+
+    mScheduler.setPlayback(1.0, 1.5, true);
+    QCOMPARE(mScheduler.playing(), true);
+    QCOMPARE(mScheduler.rate(), 1.5);
+    QCOMPARE(playingSpy.count(), 1);
+    QCOMPARE(rateSpy.count(), 1);
+    QCOMPARE(syncedSpy.count(), 1);
+    QVERIFY(mScheduler.currentPositionMs() >= 1150);
+
+    mScheduler.setPlayback(2.0, 1.5, false);
+    QCOMPARE(mScheduler.playing(), false);
+    QCOMPARE(mScheduler.currentPositionMs(), 2150ll);
+    QCOMPARE(playingSpy.count(), 2);
+    QCOMPARE(rateSpy.count(), 1);
+    QCOMPARE(syncedSpy.count(), 2);
+
+    mScheduler.reset();
+    QCOMPARE(mScheduler.playing(), false);
+    QCOMPARE(mScheduler.rate(), 1.0);
+    QCOMPARE(rateSpy.count(), 2);
+    QCOMPARE(syncedSpy.count(), 3);
 }
 
 QTEST_GUILESS_MAIN(TestLyricsScheduler)
