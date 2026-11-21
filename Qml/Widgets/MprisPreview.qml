@@ -182,6 +182,47 @@ Scope {
                             height: root.boardHeight
                             width: root.boardWidth
 
+                            ClippingRectangle {
+                                anchors.fill: parent
+                                bottomLeftRadius: board.cornerRadius
+                                bottomRightRadius: board.cornerRadius
+                                color: "transparent"
+                                topLeftRadius: 0
+                                topRightRadius: 0
+                                visible: TrackArt.cachedPath !== ""
+
+                                Image {
+                                    anchors.fill: parent
+                                    asynchronous: true
+                                    cache: false
+                                    fillMode: Image.PreserveAspectCrop
+                                    source: TrackArt.cachedPath.startsWith("/") ? "file://" + TrackArt.cachedPath : TrackArt.cachedPath
+                                    sourceSize: Qt.size(360, 280)
+                                }
+
+                                Rectangle {
+                                    anchors.fill: parent
+                                    color: GlobalStates.drawerColors
+                                    opacity: 0.7
+                                }
+
+                                Rectangle {
+                                    anchors.fill: parent
+                                    gradient: Gradient {
+
+                                        GradientStop {
+                                            color: GlobalStates.drawerColors
+                                            position: 0.0
+                                        }
+
+                                        GradientStop {
+                                            color: "transparent"
+                                            position: 0.55
+                                        }
+                                    }
+                                }
+                            }
+
                             ColumnLayout {
                                 id: popupLayout
 
