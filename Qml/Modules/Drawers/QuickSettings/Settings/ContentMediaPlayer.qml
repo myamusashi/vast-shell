@@ -250,30 +250,28 @@ Item {
                 currentIndex: Players.index
                 model: Players.players
                 textRole: "desktopMenu"
-                background: StyledRect {
-                    color: "transparent"
-                    implicitHeight: 28
-                    implicitWidth: 140
-                }
+                background: null
+                indicator: null
                 contentItem: Row {
-                    leftPadding: Appearance.padding.normal
+
+                    anchors {
+                        right: parent.right
+                        verticalCenter: parent.verticalCenter
+                    }
+
                     spacing: Appearance.spacing.small
 
                     IconImage {
-                        anchors.verticalCenter: parent.verticalCenter
-                        implicitHeight: 20
-                        implicitWidth: 20
+                        implicitSize: 20
                         source: IconUtils.iconForPlayer(Players.active)
                     }
 
                     StyledText {
-                        anchors.verticalCenter: parent.verticalCenter
                         color: root.onSurfaceColor
                         elide: Text.ElideRight
                         font.pixelSize: Appearance.fonts.size.large
                         maximumLineCount: 1
                         text: root.playerName(Players.active)
-                        width: 100
                     }
                 }
                 delegate: ItemDelegate {
@@ -357,8 +355,7 @@ Item {
 
                         IconImage {
                             anchors.verticalCenter: parent.verticalCenter
-                            implicitHeight: 20
-                            implicitWidth: 20
+                            implicitSize: 20
                             source: IconUtils.iconForPlayer(playerDelegate.modelData)
                         }
 
@@ -436,9 +433,7 @@ Item {
                         }
                     }
                 }
-                onActivated: index => {
-                    Players.manualIndex = index;
-                }
+                onActivated: index => Players.manualIndex = index
             }
         }
     }
