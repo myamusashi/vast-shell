@@ -48,6 +48,7 @@ WrapperItem {
                 anchors.centerIn: parent
                 spacing: Appearance.spacing.small
                 implicitHeight: parent.height
+                monitor: root.border.window
             }
 
             Right {

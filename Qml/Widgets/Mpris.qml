@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Quickshell
 import Quickshell.Services.Mpris
 
 import qs.Components.Base
@@ -12,9 +13,11 @@ import qs.Services
 StyledRect {
     id: mprisRoot
 
-    readonly property int    activeLineIndex: Lyrics.currentLineIndex
-    readonly property int    index: 0
-    readonly property string liveLyric: {
+    required property ShellScreen monitor
+
+    readonly property int         activeLineIndex: Lyrics.currentLineIndex
+    readonly property int         index: 0
+    readonly property string      liveLyric: {
         if (!Players.active || !Lyrics.synced || !Lyrics.lines)
             return "";
         const idx = Lyrics.currentLineIndex;
@@ -22,10 +25,12 @@ StyledRect {
             return "";
         return (Lyrics.lines[idx]?.text ?? "").trim();
     }
-    readonly property bool   positionActive: visible && displayedLyric !== ""
-    readonly property real   positionMs: Lyrics.positionMs
+    readonly property bool        positionActive: visible && displayedLyric !== ""
+    readonly property real        positionMs: Lyrics.positionMs
 
-    property string          displayedLyric: ""
+    property string               displayedLyric: ""
+    property real                 previewTargetX: 0
+    property bool                 triggerHovered: false
 
     color: "transparent"
     implicitHeight: parent.height
@@ -54,6 +59,28 @@ StyledRect {
         lyricScrollAnim.restart();
     }
     onPositionActiveChanged: Lyrics.setPositionConsumerActive(mprisRoot, positionActive)
+    onWidthChanged: {
+        if (mprisRoot.triggerHovered)
+            mprisRoot.previewTargetX = mprisRoot.mapToItem(null, mprisRoot.width / 2, 0).x; // qmllint disable
+    }
+    onXChanged: {
+        if (mprisRoot.triggerHovered)
+            mprisRoot.previewTargetX = mprisRoot.mapToItem(null, mprisRoot.width / 2, 0).x; // qmllint disable
+    }
+
+    HoverHandler {
+        onHoveredChanged: {
+            if (hovered)
+                mprisRoot.previewTargetX = mprisRoot.mapToItem(null, mprisRoot.width / 2, 0).x; // qmllint disable
+            mprisRoot.triggerHovered = hovered;
+        }
+    }
+
+    MprisPreview {
+        monitor: mprisRoot.monitor
+        targetX: mprisRoot.previewTargetX
+        triggerHovered: mprisRoot.triggerHovered
+    }
 
     FontMetrics {
         id: lyricsMetrics
