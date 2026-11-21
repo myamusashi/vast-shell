@@ -64,8 +64,9 @@ install_system_packages() {
 update_submodules() {
 	local -r fzy_marker="$PROJECT_ROOT/Plugins/third_party/fzy/src/match.c"
 	local -r mcu_marker="$PROJECT_ROOT/Plugins/third_party/material-color-utilities/cpp"
+	local -r yaml_cpp_marker="$PROJECT_ROOT/Plugins/third_party/yaml-cpp/include/yaml-cpp/yaml.h"
 
-	[[ -f $fzy_marker && -d $mcu_marker ]] && {
+	[[ -f $fzy_marker && -d $mcu_marker && -f $yaml_cpp_marker ]] && {
 		log "Git submodules already initialized"
 		return 0
 	}

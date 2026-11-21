@@ -4,3 +4,6 @@
 [submodule "Plugins/third_party/fzy"]
 	path = Plugins/third_party/fzy
 	url = https://github.com/jhawthorn/fzy.git
+[submodule "Plugins/third_party/yaml-cpp"]
+	path = Plugins/third_party/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp

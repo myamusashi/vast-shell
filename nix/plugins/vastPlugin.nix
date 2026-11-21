@@ -26,6 +26,13 @@
         rev = "v1.1";
         hash = "sha256-ZGAt8rW21WFGuf/nE44ZrL68L/RmTYCBzuXWhidqJB8=";
     };
+
+    yaml-cpp = fetchFromGitHub {
+        owner = "jbeder";
+        repo = "yaml-cpp";
+        rev = "1e0876c671268661deb2628040e3959e1e9d6e69";
+        hash = "sha256-w97WO3wIR7jvYY7/zCcdVkKNsP0QiU18Rtd/J8ZoH2M=";
+    };
 in
     clangStdenv.mkDerivation {
         pname = "vast-plugin";
@@ -33,9 +40,10 @@ in
         src = ../..;
 
         postPatch = ''
-            mkdir -p Plugins/third_party/{material-color-utilities,fzy}
+            mkdir -p Plugins/third_party/{material-color-utilities,fzy,yaml-cpp}
             cp -r --no-preserve=mode ${material-color-utilities}/. Plugins/third_party/material-color-utilities/
             cp -r --no-preserve=mode ${fzy}/. Plugins/third_party/fzy/
+            cp -r --no-preserve=mode ${yaml-cpp}/. Plugins/third_party/yaml-cpp/
         '';
 
         nativeBuildInputs = [

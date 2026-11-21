@@ -100,9 +100,8 @@ include(Plugins/cmake/qml-module.cmake)
 
 add_subdirectory(Plugins/third_party/mcu)
 add_subdirectory(Plugins/third_party/fzy-wrapper)
+add_subdirectory(Plugins/third_party/yaml-cpp-wrapper)
 add_subdirectory(Plugins/Vast)
 
-# After all targets: add_dependencies() on pchsets / generated-code libs only
-# resolves for targets defined above, so these includes must stay last.
 include(Plugins/cmake/clazy-lint.cmake)
 include(Plugins/cmake/tidy-lint.cmake)
