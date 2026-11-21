@@ -59,10 +59,13 @@ Item {
             }
         }
 
-        MediaPlayer {}
+        MediaPlayer {
+            id: mediaPlayer
+        }
 
         Item {
-            Layout.fillHeight: true
+            Layout.fillHeight: !mediaPlayer.lyricsVisible
+            visible: !mediaPlayer.lyricsVisible
         }
     }
 
