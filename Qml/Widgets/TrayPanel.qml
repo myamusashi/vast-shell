@@ -32,6 +32,8 @@ LazyLoader {
         color: "transparent"
         exclusionMode: ExclusionMode.Ignore
         screen: root.screen
+        Component.onCompleted: menuHost.armXAnimation()
+        onWidthChanged: menuHost.armXAnimation()
         mask: Region {
             item: root.trayRoot.menuMapped ? menuSurface : null
         }
@@ -50,15 +52,29 @@ LazyLoader {
         Item {
             id: menuHost
 
-            readonly property real maxX: panelWindow.width - menuSurface.width - root.trayRoot.shadowPadding
-            readonly property real maxY: panelWindow.height - menuSurface.height - root.trayRoot.shadowPadding
+            readonly property real maxX: screenWidth - menuSurface.width - root.trayRoot.shadowPadding
+            readonly property real maxY: screenHeight - menuSurface.height - root.trayRoot.shadowPadding
+            readonly property real screenHeight: root.screen ? root.screen.height : panelWindow.height
+            readonly property real screenWidth: root.screen ? root.screen.width - (Configs.generals.enableOuterBorder ? Configs.generals.outerBorderSize : 0) : panelWindow.width
+
+            property bool          animateX: false
+
+            function               armXAnimation(): void {
+                if (animateX || menuSurface.width <= 0 || panelWindow.width < screenWidth - 1)
+                    return;
+                Qt.callLater(() => {
+                    if (panelWindow.width >= menuHost.screenWidth - 1 && root.trayRoot.menuMapped)
+                        menuHost.animateX = true;
+                });
+            }
 
             height: menuSurface.height + root.trayRoot.shadowPadding * 2
+            visible: panelWindow.width >= screenWidth - 1 && panelWindow.height > 0
             width: menuSurface.width + root.trayRoot.shadowPadding * 2
             x: Math.max(root.trayRoot.shadowPadding, Math.min(root.trayRoot.menuX - root.trayRoot.shadowPadding - menuSurface.bodyInsetX, maxX))
             y: Math.min(root.trayRoot.barBottom - root.trayRoot.shadowPadding, maxY)
             Behavior on x {
-                enabled: root.trayRoot.menuMapped
+                enabled: menuHost.animateX && root.trayRoot.menuMapped
 
                 NAnim {
                     duration: Appearance.animations.durations.expressiveDefaultSpatial
