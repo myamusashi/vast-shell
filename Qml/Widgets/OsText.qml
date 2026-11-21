@@ -11,24 +11,22 @@ StyledRect {
     id: root
 
     color: "transparent"
-    implicitHeight: 22
-    implicitWidth: osIcon.implicitWidth + Appearance.padding.small * 2
-    radius: 6
+    implicitHeight: osIcon.contentHeight
+    implicitWidth: osIcon.contentWidth
+    radius: Appearance.rounding.small
 
     Icon {
         id: osIcon
 
         anchors.centerIn: parent
         color: Colours.m3Colors.m3Primary
-        font.pixelSize: Appearance.fonts.size.large
+        font.pixelSize: Appearance.fonts.size.larger * 1.3
         icon: Distro.icon(SystemUsage.osId, SystemUsage.osIdLike)
         type: Icon.Nerd
     }
 
-    MArea {
+    MouseArea {
         anchors.fill: parent
-        cursorShape: Qt.PointingHandCursor
-        layerRadius: 6
         onClicked: GlobalStates.isSettingsOpen = true
     }
 

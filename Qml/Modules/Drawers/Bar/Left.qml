@@ -11,6 +11,7 @@ RowLayout {
 
     OsText {
         Layout.alignment: Qt.AlignVCenter
+        Layout.rightMargin: 6
     }
 
     Workspaces {
