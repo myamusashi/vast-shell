@@ -65,6 +65,7 @@ Singleton {
             "format_color_fill": "palette",
             "genres": "vinyl-record",
             "graphic_eq": "equalizer",
+            "grid_view": "grid-four",
             "hd": "film-reel",
             "history": "clock-counter-clockwise",
             "home": "house",

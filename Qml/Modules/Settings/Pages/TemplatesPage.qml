@@ -240,6 +240,8 @@ SettingsPageBase {
         ExtendedFloatingButton {
             icon.name: "add"
             text: qsTr("Add Template")
+            textColor: Colours.m3Colors.m3OnSurface
+            color: Colours.m3Colors.m3SecondaryContainer
             onClicked: {
                 root.addTemplate();
                 root.revealItem(templateRepeater, templateRepeater.count - 1);
@@ -249,6 +251,8 @@ SettingsPageBase {
             enabled: !TemplateServices.renderRunning
             icon.name: "refresh"
             text: qsTr("Render Now")
+            textColor: Colours.m3Colors.m3OnSurface
+            color: Colours.m3Colors.m3SecondaryContainer
             onClicked: TemplateServices.render()
         }
     ]

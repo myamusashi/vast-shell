@@ -56,6 +56,8 @@ SettingsPageBase {
             ExtendedFloatingButton {
                 icon.name: "image"
                 text: qsTr("Upload static")
+                textColor: Colours.m3Colors.m3OnSecondaryContainer
+                color: Colours.m3Colors.m3SecondaryContainer
                 onClicked: {
                     page.videoUploadMode = false;
                     wallpaperDialog.openFileDialog();
@@ -65,6 +67,8 @@ SettingsPageBase {
             ExtendedFloatingButton {
                 icon.name: "video_file"
                 text: qsTr("Upload video")
+                textColor: Colours.m3Colors.m3OnSecondaryContainer
+                color: Colours.m3Colors.m3SecondaryContainer
                 onClicked: {
                     page.videoUploadMode = true;
                     wallpaperDialog.openFileDialog();

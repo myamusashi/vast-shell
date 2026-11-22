@@ -53,22 +53,12 @@ SettingsPageBase {
             description: qsTr("Visual style for the playback progress slider.")
             label: qsTr("Slider type:")
 
-            SplitButton {
-                readonly property int selectedIndex: model.findIndex(entry => entry.display === Configs.mediaPlayer.sliderType)
+            ConnectedButtonGroup {
+                readonly property int selectedIndex: model.findIndex(entry => entry === Configs.mediaPlayer.sliderType)
 
                 currentIndex: selectedIndex
-                icon.name: "sliders"
-                model: [
-                    {
-                        display: "Wavy"
-                    },
-                    {
-                        display: "WaveForm"
-                    }
-                ]
-                text: model[selectedIndex]?.display ?? Configs.mediaPlayer.sliderType
-                textRole: "display"
-                onMenuItemActivated: index => Configs.mediaPlayer.sliderType = model[index].display
+                model: ["Wavy", "WaveForm"]
+                onClicked: index => Configs.mediaPlayer.sliderType = model[index]
             }
         }
     }

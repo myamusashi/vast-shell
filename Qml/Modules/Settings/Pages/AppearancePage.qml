@@ -205,18 +205,18 @@ Item {
                     RowLayout {
                         spacing: Appearance.spacing.smaller
 
-                        SplitButton {
+                        ConnectedButtonGroup {
                             readonly property int selectedIndex: model.findIndex(entry => entry.id === IconFonts.type)
 
+                            Layout.alignment: Qt.AlignHCenter
                             currentIndex: selectedIndex
-                            icon.name: "apps"
-                            model: IconFonts.availableSets.map(set => ({
-                                        "display": set.display,
-                                        "id": set.id
-                                    }))
-                            text: model[selectedIndex]?.display ?? IconFonts.type
-                            textRole: "display"
-                            onMenuItemActivated: index => Appearance.icons.type = model[index]?.id ?? Appearance.icons.type
+                            model: IconFonts.availableSets.map(entry => {
+                                return {
+                                    id: entry.id,
+                                    label: entry.display
+                                };
+                            })
+                            onClicked: index => Appearance.icons.type = model[index]?.id ?? Appearance.icons.type
                         }
 
                         FloatingButton {
