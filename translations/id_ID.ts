@@ -1525,93 +1525,82 @@
 <context>
     <name>ContentMediaPlayer</name>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="195"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="148"/>
         <source>Hide lyrics</source>
         <translation>Sembunyikan lirik</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="203"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="403"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="159"/>
         <source>Shuffle not supported by player</source>
         <translation>Acak tidak didukung oleh pemutar</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="209"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="409"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="165"/>
         <source>Disable shuffle</source>
         <translation>Matikan acak</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="209"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="409"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="165"/>
         <source>Enable shuffle</source>
         <translation>Aktifkan acak</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="224"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="424"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="180"/>
         <source>Previous track</source>
         <translation>Lagu sebelumnya</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="236"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="436"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="192"/>
         <source>Pause</source>
         <translation>Dijeda</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="236"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="436"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="192"/>
         <source>Play</source>
         <translation>Mulai</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="248"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="448"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="204"/>
         <source>Next track</source>
         <translation>Lagu berikutnya</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="256"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="456"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="212"/>
         <source>Repeat not supported by player</source>
         <translation>Ulangi tidak didukung oleh pemutar</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="261"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="461"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="217"/>
         <source>Repeat: Playlist</source>
         <translation>Ulangi: Daftar putar</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="261"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="461"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="217"/>
         <source>Repeat: Track</source>
         <translation>Ulangi: Lagu</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="261"/>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="461"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="217"/>
         <source>Repeat: Off</source>
         <translation>Ulangi: Mati</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="386"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="142"/>
         <source>Loading lyrics…</source>
         <translation>Memuat lirik…</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="386"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="142"/>
         <source>Lyrics unavailable</source>
         <translation>Lirik tidak tersedia</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="392"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="148"/>
         <source>Show lyrics</source>
         <translation>Tampilkan lirik</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="486"/>
+        <location filename="../Qml/Modules/Drawers/QuickSettings/Settings/ContentMediaPlayer.qml" line="242"/>
         <source>Switch player (%1)</source>
         <translation>Ganti pemutar (%1)</translation>
     </message>
@@ -2717,22 +2706,22 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Unggal statis</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="67"/>
+        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="69"/>
         <source>Upload video</source>
         <translation>Unggah vidio</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="89"/>
+        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="93"/>
         <source>Preview:</source>
         <translation>Pratinjau:</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="88"/>
+        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="92"/>
         <source>Live preview of the current greeter wallpaper.</source>
         <translation>Pratinjau langsung dari wallpaper halaman sambutan saat ini.</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="126"/>
+        <location filename="../Qml/Modules/Settings/Pages/GreeterPage.qml" line="130"/>
         <source>Preview not available yet</source>
         <translation>Pratinjau belum tersedia</translation>
     </message>
@@ -6160,27 +6149,27 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>Mpris</name>
     <message>
-        <location filename="../Qml/Widgets/Mpris.qml" line="151"/>
+        <location filename="../Qml/Widgets/Mpris.qml" line="191"/>
         <source>Previous track</source>
         <translation>Lagu sebelumnya</translation>
     </message>
     <message>
-        <location filename="../Qml/Widgets/Mpris.qml" line="155"/>
+        <location filename="../Qml/Widgets/Mpris.qml" line="195"/>
         <source>No active media player</source>
         <translation>Tidak ada pemutar media aktif</translation>
     </message>
     <message>
-        <location filename="../Qml/Widgets/Mpris.qml" line="155"/>
+        <location filename="../Qml/Widgets/Mpris.qml" line="195"/>
         <source>Pause</source>
         <translation>Dijeda</translation>
     </message>
     <message>
-        <location filename="../Qml/Widgets/Mpris.qml" line="155"/>
+        <location filename="../Qml/Widgets/Mpris.qml" line="195"/>
         <source>Play</source>
         <translation>Putar</translation>
     </message>
     <message>
-        <location filename="../Qml/Widgets/Mpris.qml" line="159"/>
+        <location filename="../Qml/Widgets/Mpris.qml" line="199"/>
         <source>Next track</source>
         <translation>Lagu berikutnya</translation>
     </message>
@@ -6270,7 +6259,9 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <message numerus="yes">
         <location filename="../Qml/Widgets/NotificationDots.qml" line="60"/>
         <source>Do Not Disturb · %n notification(s)</source>
-        <translation><numerusform>Jangan Ganggu · %n notifikasi</numerusform></translation>
+        <translation>
+            <numerusform>Jangan Ganggu · %n notifikasi</numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../Qml/Widgets/NotificationDots.qml" line="60"/>
@@ -6280,7 +6271,9 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <message numerus="yes">
         <location filename="../Qml/Widgets/NotificationDots.qml" line="62"/>
         <source>%n notification(s)</source>
-        <translation><numerusform>%n notifikasi</numerusform></translation>
+        <translation>
+            <numerusform>%n notifikasi</numerusform>
+        </translation>
     </message>
     <message>
         <location filename="../Qml/Widgets/NotificationDots.qml" line="63"/>
@@ -6409,12 +6402,12 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
 <context>
     <name>OsText</name>
     <message>
-        <location filename="../Qml/Widgets/OsText.qml" line="37"/>
+        <location filename="../Qml/Widgets/OsText.qml" line="35"/>
         <source>%1 · Settings</source>
         <translation>%1 · Pengaturan</translation>
     </message>
     <message>
-        <location filename="../Qml/Widgets/OsText.qml" line="37"/>
+        <location filename="../Qml/Widgets/OsText.qml" line="35"/>
         <source>Settings</source>
         <translation>Pengaturan</translation>
     </message>
@@ -7789,7 +7782,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
     <message>
         <location filename="../Qml/Modules/Settings/Settings.qml" line="165"/>
         <source>Greeter</source>
-        <translation>Layar Sambutan</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../Qml/Modules/Settings/Settings.qml" line="99"/>
@@ -8165,7 +8158,7 @@ Hembusan kencang dapat mencabut pohon, merusak bangunan, dan membuat berkendara 
         <translation>Tambah Templat</translation>
     </message>
     <message>
-        <location filename="../Qml/Modules/Settings/Pages/TemplatesPage.qml" line="251"/>
+        <location filename="../Qml/Modules/Settings/Pages/TemplatesPage.qml" line="253"/>
         <source>Render Now</source>
         <translation>Render Sekarang</translation>
     </message>
