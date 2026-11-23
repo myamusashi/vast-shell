@@ -1,5 +1,6 @@
 #pragma once
 
+#include <qelapsedtimer.h>
 #include <qlist.h>
 #include <qobject.h>
 #include <qtimer.h>
@@ -57,7 +58,7 @@ namespace vast {
         };
 
         void                seekTo(qint64 posMs);
-        void                scheduleNext();
+        void                scheduleNext(qint64 nowMs);
         void                onLineTimer();
         void                rebuildBoundaries(const QVariantList& wordLines);
         void                reschedule(); // stop timer, seek, schedule — shared by setPlayback/setOffsetMs
@@ -66,10 +67,10 @@ namespace vast {
         qsizetype           mBoundaryPos{0};
 
         int                 mCurLine{-1};
-        int                 mOffsetMs{150};
+        int                 mOffsetMs{0};
 
         qint64              mAnchorMs{0};
-        qint64              mAnchorWall{0};
+        QElapsedTimer       mAnchorClock;
         double              mRate{1.0};
         bool                mPlaying{false};
 

@@ -40,6 +40,17 @@ target_link_libraries(tst_lyricsscheduler PRIVATE
     vast-lyrics
 )
 
+add_executable(tst_lyricsselector
+    tst_lyricsselector.cpp
+)
+
+target_link_libraries(tst_lyricsselector PRIVATE
+    Qt6::Core
+    Qt6::Qml
+    Qt6::Test
+    vast-lyrics
+)
+
 add_executable(tst_lyricstimeline
     tst_lyricstimeline.cpp
 )
@@ -52,7 +63,7 @@ target_link_libraries(tst_lyricstimeline PRIVATE
     vast-lyrics
 )
 
-foreach(target IN ITEMS tst_lrcparser tst_lyricscache tst_lyricsscheduler tst_lyricstimeline)
+foreach(target IN ITEMS tst_lrcparser tst_lyricscache tst_lyricsscheduler tst_lyricsselector tst_lyricstimeline)
     vast_pch(${target})
     add_test(NAME ${target} COMMAND ${target} ${VAST_TEST_ARGS})
 endforeach()

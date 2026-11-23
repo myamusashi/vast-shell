@@ -3,10 +3,12 @@
 #include "LrcParser.hpp"
 #include "LyricsCache.hpp"
 #include "LyricsScheduler.hpp"
+#include "LyricsSelector.hpp"
 
 #include <qcontainerfwd.h>
 #include <qdatetime.h>
 #include <qhashfunctions.h>
+#include <qjsonarray.h>
 #include <qjsondocument.h>
 #include <qjsonobject.h>
 #include <qnetworkaccessmanager.h>
@@ -17,35 +19,27 @@
 #include <qtmetamacros.h>
 #include <qurl.h>
 #include <qurlquery.h>
-
 #include <qvariant.h>
 
-#include <optional>
-
 namespace {
-    constexpr qint64                                     CACHE_REFRESH_DAYS    = 7;
-    constexpr qint64                                     CACHE_REFRESH_SECONDS = CACHE_REFRESH_DAYS * 24 * 60 * 60;
+    constexpr qint64              CACHE_REFRESH_DAYS    = 7;
+    constexpr qint64              CACHE_REFRESH_SECONDS = CACHE_REFRESH_DAYS * 24 * 60 * 60;
 
-    [[nodiscard]] std::optional<vast::LrcParser::Result> parseLyricsPayload(const QJsonObject& payload, double durationSecs) {
-        const QString lyricsfile = payload.value(QStringLiteral("lyricsfile")).toString();
-        if (!lyricsfile.isEmpty()) {
-            auto wordSyncedResult = vast::LrcParser::parseLyricsfile(lyricsfile, durationSecs);
-            if (wordSyncedResult.synced)
-                return wordSyncedResult;
-        }
+    [[nodiscard]] QNetworkRequest buildLrclibSearchRequest(const QString& title, const QString& artist) {
+        QUrl      url(QStringLiteral("https://lrclib.net/api/search"));
+        QUrlQuery query;
+        if (!title.isEmpty())
+            query.addQueryItem(QStringLiteral("track_name"), title);
+        if (!artist.isEmpty())
+            query.addQueryItem(QStringLiteral("artist_name"), artist);
+        url.setQuery(query);
 
-        const QString syncedLyrics = payload.value(QStringLiteral("syncedLyrics")).toString();
-        if (!syncedLyrics.isEmpty())
-            return vast::LrcParser::parseLrc(syncedLyrics, durationSecs);
-
-        const QString plainLyrics = payload.value(QStringLiteral("plainLyrics")).toString();
-        if (!plainLyrics.isEmpty())
-            return vast::LrcParser::parsePlain(plainLyrics);
-
-        return std::nullopt;
+        QNetworkRequest request(url);
+        request.setHeader(QNetworkRequest::UserAgentHeader, "Vast Shell/1.0");
+        return request;
     }
 
-    [[nodiscard]] QNetworkRequest buildLrclibRequest(const QString& title, const QString& artist, double durationSecs) {
+    [[nodiscard]] QNetworkRequest buildLrclibGetRequest(const QString& title, const QString& artist, double durationSecs) {
         QUrl      url(QStringLiteral("https://lrclib.net/api/get"));
         QUrlQuery query;
         query.addQueryItem(QStringLiteral("track_name"), title);
@@ -94,12 +88,51 @@ void LyricsProvider::fetch(const QString& title, const QString& artist, double d
         return;
 
     setState(State::Loading);
+    fetchFromSearch(title, artist, durationSecs, key);
+}
 
-    auto* reply = mNam->get(buildLrclibRequest(title, artist, durationSecs));
-    connect(reply, &QNetworkReply::finished, this, [this, reply, key, durationSecs] {
+void LyricsProvider::fetchFromSearch(const QString& title, const QString& artist, double durationSecs, const QString& cacheKey) {
+    auto* reply = mNam->get(buildLrclibSearchRequest(title, artist));
+    connect(reply, &QNetworkReply::finished, this, [this, reply, title, artist, durationSecs, cacheKey] {
         reply->deleteLater();
-        if (mActiveCacheKey != key)
+        if (mActiveCacheKey != cacheKey)
             return;
+
+        const int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        if (reply->error() != QNetworkReply::NoError) {
+            if (statusCode >= 400 && statusCode < 500) {
+                fetchFromGet(title, artist, durationSecs, cacheKey);
+                return;
+            }
+            setState(State::Error);
+            return;
+        }
+
+        const QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+        if (doc.isArray()) {
+            if (const auto selected = vast::LyricsSelector::selectBestCandidate(doc.array(), title, artist, durationSecs)) {
+                applyParseResult(selected->parsed);
+                vast::LyricsCache::save(cacheKey, QJsonDocument(selected->rawObject).toJson(QJsonDocument::Compact), durationSecs);
+                return;
+            }
+        }
+
+        fetchFromGet(title, artist, durationSecs, cacheKey);
+    });
+}
+
+void LyricsProvider::fetchFromGet(const QString& title, const QString& artist, double durationSecs, const QString& cacheKey) {
+    auto* reply = mNam->get(buildLrclibGetRequest(title, artist, durationSecs));
+    connect(reply, &QNetworkReply::finished, this, [this, reply, cacheKey, durationSecs] {
+        reply->deleteLater();
+        if (mActiveCacheKey != cacheKey)
+            return;
+
+        const int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+        if (statusCode == 404) {
+            setState(State::NotFound);
+            return;
+        }
 
         if (reply->error() != QNetworkReply::NoError) {
             setState(State::Error);
@@ -114,9 +147,9 @@ void LyricsProvider::fetch(const QString& title, const QString& artist, double d
             return;
         }
 
-        if (const auto parsed = parseLyricsPayload(json, durationSecs)) {
+        if (const auto parsed = vast::LyricsSelector::parsePayload(json, durationSecs)) {
             applyParseResult(*parsed);
-            vast::LyricsCache::save(key, data, durationSecs);
+            vast::LyricsCache::save(cacheKey, data, durationSecs);
             return;
         }
 
@@ -160,17 +193,14 @@ bool LyricsProvider::tryLoadFromCache(const QString& title, const QString& artis
         return false;
 
     const auto json   = QJsonDocument::fromJson(cached->rawJson).object();
-    const auto parsed = parseLyricsPayload(json, cached->durationSecs);
+    const auto parsed = vast::LyricsSelector::parsePayload(json, cached->durationSecs);
     if (!parsed)
         return false;
 
     applyParseResult(*parsed);
 
-    const bool hasLyricsfile  = !json.value(QStringLiteral("lyricsfile")).toString().trimmed().isEmpty();
-    const bool hasOtherLyrics = !json.value(QStringLiteral("syncedLyrics")).toString().isEmpty() || !json.value(QStringLiteral("plainLyrics")).toString().isEmpty();
-    const bool isExpired      = cached->modifiedAt.isValid() && cached->modifiedAt.secsTo(QDateTime::currentDateTimeUtc()) >= CACHE_REFRESH_SECONDS;
-
-    if (!hasLyricsfile && hasOtherLyrics && isExpired)
+    const bool isExpired = cached->modifiedAt.isValid() && cached->modifiedAt.secsTo(QDateTime::currentDateTimeUtc()) >= CACHE_REFRESH_SECONDS;
+    if (!parsed->wordSynced && isExpired)
         refreshInBackground(title, artist, durationSecs, cacheKey);
 
     return true;
@@ -181,8 +211,8 @@ void LyricsProvider::refreshInBackground(const QString& title, const QString& ar
         return;
     mRefreshingCacheKey = cacheKey;
 
-    auto* reply = mNam->get(buildLrclibRequest(title, artist, durationSecs));
-    connect(reply, &QNetworkReply::finished, this, [this, reply, cacheKey, durationSecs] {
+    auto* reply = mNam->get(buildLrclibSearchRequest(title, artist));
+    connect(reply, &QNetworkReply::finished, this, [this, reply, title, artist, cacheKey, durationSecs] {
         reply->deleteLater();
         if (mRefreshingCacheKey == cacheKey)
             mRefreshingCacheKey.clear();
@@ -191,24 +221,14 @@ void LyricsProvider::refreshInBackground(const QString& title, const QString& ar
         if (reply->error() != QNetworkReply::NoError || statusCode == 429)
             return;
 
-        const QByteArray data = reply->readAll();
-        const auto       json = QJsonDocument::fromJson(data).object();
-        if (json.isEmpty() || json.contains(QStringLiteral("code")))
+        const QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
+        if (!doc.isArray())
             return;
 
-        const QString lyricsfile = json.value(QStringLiteral("lyricsfile")).toString();
-        if (!lyricsfile.trimmed().isEmpty()) {
-            const auto wordSyncedResult = vast::LrcParser::parseLyricsfile(lyricsfile, durationSecs);
-            if (wordSyncedResult.synced) {
-                vast::LyricsCache::save(cacheKey, data, durationSecs);
-                if (mActiveCacheKey == cacheKey)
-                    applyParseResult(wordSyncedResult);
-                return;
-            }
+        if (const auto selected = vast::LyricsSelector::selectBestCandidate(doc.array(), title, artist, durationSecs)) {
+            vast::LyricsCache::save(cacheKey, QJsonDocument(selected->rawObject).toJson(QJsonDocument::Compact), durationSecs);
+            if (selected->parsed.wordSynced && mActiveCacheKey == cacheKey)
+                applyParseResult(selected->parsed);
         }
-
-        // Touch the cache mtime when the server still returns valid non-word-synced lyrics.
-        if (parseLyricsPayload(json, durationSecs).has_value())
-            vast::LyricsCache::save(cacheKey, data, durationSecs);
     });
 }

@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Services.Mpris
 import Vast.Lyrics
 
+import qs.Core.Configs
 import qs.Core.States
 import qs.Services
 
@@ -12,11 +13,11 @@ Singleton {
     id: root
 
     readonly property int  currentLineIndex: LyricsProvider.currentLineIndex
-    readonly property real driftToleranceSeconds: 0.3
+    readonly property real driftToleranceSeconds: 0.06
     readonly property var  lines: LyricsProvider.lines
     readonly property bool playing: LyricsProvider.playing
     readonly property real positionMs: internal.positionMs
-    readonly property int  positionRefreshIntervalMs: 250
+    readonly property int  positionRefreshIntervalMs: 100
     readonly property bool synced: LyricsProvider.synced
     readonly property var  wordLines: LyricsProvider.wordLines
 
@@ -65,22 +66,20 @@ Singleton {
         root.syncedTimestampMilliseconds = Date.now();
     }
 
-    // Detects unannounced seeks, drift, and loop restarts against the last anchored scheduler position.
+    // Detects unannounced seeks, drift, and loop restarts against the scheduler's monotonic position.
     function               resyncIfDrifted(): void {
         const player = Players.active;
         if (!player?.trackTitle)
             return;
         const position = Players.boundedPosition(player);
         if (!player.isPlaying) {
-            if (Math.abs(position - root.syncedPositionSeconds) > 0.1)
+            if (Math.abs(position - root.syncedPositionSeconds) > 0.05)
                 root.syncPlayback();
             else
                 root.previousPositionSeconds = position;
             return;
         }
-        const playbackRate     = player.rate > 0 ? player.rate : 1.0;
-        const elapsedSeconds   = (Date.now() - root.syncedTimestampMilliseconds) / 1000 * playbackRate;
-        const expectedPosition = root.syncedPositionSeconds + elapsedSeconds;
+        const expectedPosition = (LyricsProvider.currentPositionMs() - LyricsProvider.offsetMs) / 1000.0;
         const positionMoved    = Math.abs(position - root.previousPositionSeconds) >= 0.001;
         // Skip unchanged ticks from players with coarse D-Bus updates unless stalled > 1.2s.
         if (!positionMoved && Math.abs(position - expectedPosition) <= 1.2)
@@ -137,6 +136,12 @@ Singleton {
         property real        positionMs: LyricsProvider.currentPositionMs()
     }
 
+    Binding {
+        property: "offsetMs"
+        target: LyricsProvider
+        value: Configs.mediaPlayer.lyricsOffsetMs
+    }
+
     FrameAnimation {
         running: internal.activeConsumers.length > 0 && root.playing && root.synced
         onTriggered: root.refreshPosition()
@@ -148,7 +153,15 @@ Singleton {
             root.refreshPosition();
         }
 
-        function onLinesChanged() {
+        function onLyricsChanged() {
+            const justLoaded = (Date.now() - root.syncedTimestampMilliseconds) < 500 && root.syncedPositionSeconds < 1.0;
+            if (LyricsProvider.synced && !justLoaded)
+                root.syncPlayback();
+            else
+                root.refreshPosition();
+        }
+
+        function onOffsetMsChanged() {
             root.refreshPosition();
         }
 

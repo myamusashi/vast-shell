@@ -95,6 +95,8 @@ class LyricsProvider : public QObject {
     void                   setState(State s);
     void                   applyParseResult(const vast::LrcParser::Result& result);
     [[nodiscard]] bool     tryLoadFromCache(const QString& title, const QString& artist, double durationSecs, const QString& cacheKey);
+    void                   fetchFromSearch(const QString& title, const QString& artist, double durationSecs, const QString& cacheKey);
+    void                   fetchFromGet(const QString& title, const QString& artist, double durationSecs, const QString& cacheKey);
     void                   refreshInBackground(const QString& title, const QString& artist, double durationSecs, const QString& cacheKey);
 
     QNetworkAccessManager* mNam;

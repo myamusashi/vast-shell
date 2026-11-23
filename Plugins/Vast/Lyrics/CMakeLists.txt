@@ -9,6 +9,8 @@ vast_module(vast-lyrics
         LyricsCache.cpp
         LyricsScheduler.hpp
         LyricsScheduler.cpp
+        LyricsSelector.hpp
+        LyricsSelector.cpp
         LyricsTimeline.hpp
         LyricsTimeline.cpp
         LyricRenderUtils.hpp

@@ -26,6 +26,21 @@ SettingsPageBase {
         }
 
         SettingRow {
+            description: qsTr("Shift lyric timing in milliseconds (positive shows lyrics earlier, negative delays them).")
+            label: qsTr("Lyrics timing offset (%1 ms):").arg(Configs.mediaPlayer.lyricsOffsetMs)
+
+            StyledSlide {
+                Layout.preferredWidth: 200
+                from: -1000
+                popupValueFormat: v => `${Math.round(v)} ms`
+                stepSize: 10
+                to: 1000
+                value: Configs.mediaPlayer.lyricsOffsetMs
+                onMoved: Configs.mediaPlayer.lyricsOffsetMs = Math.round(value)
+            }
+        }
+
+        SettingRow {
             description: qsTr("Tint the player with colors extracted from the album cover.")
             label: qsTr("Enable dynamic colors from cover art:")
 

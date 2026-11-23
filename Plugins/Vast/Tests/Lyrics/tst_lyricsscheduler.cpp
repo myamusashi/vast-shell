@@ -1,3 +1,4 @@
+#include <qelapsedtimer.h>
 #include <qlist.h>
 #include <qsignalspy.h>
 #include <qstring.h>
@@ -44,7 +45,7 @@ class TestLyricsScheduler : public QObject {
     void init();
 
     void freshSchedulerHasNoCurrentLine();
-    void defaultOffsetIs150Ms();
+    void defaultOffsetIsZeroMs();
     void setOffsetMsStoresTheValue();
     void settingTheSameOffsetIsANoOp();
 
@@ -67,6 +68,9 @@ class TestLyricsScheduler : public QObject {
 
     void playingAdvancesTheIndexOverWallClockTime();
     void aHigherRateReachesTheSameIndexSooner();
+    void longGapBeyondSixtySecondsMediaTimeStillSchedules();
+    void nonPositiveRateFallsBackToUnity();
+    void setPlaybackRoundsFractionalMilliseconds();
     void exposesPlayingRatePositionAndPlaybackSyncedSignal();
 
   private:
@@ -81,8 +85,8 @@ void TestLyricsScheduler::freshSchedulerHasNoCurrentLine() {
     QCOMPARE(mScheduler.currentLineIndex(), -1);
 }
 
-void TestLyricsScheduler::defaultOffsetIs150Ms() {
-    QCOMPARE(mScheduler.offsetMs(), 150);
+void TestLyricsScheduler::defaultOffsetIsZeroMs() {
+    QCOMPARE(mScheduler.offsetMs(), 0);
 }
 
 void TestLyricsScheduler::setOffsetMsStoresTheValue() {
@@ -102,14 +106,16 @@ void TestLyricsScheduler::settingTheSameOffsetIsANoOp() {
 }
 
 void TestLyricsScheduler::pausedAndPlayingResolveTheSameCurrentLine() {
-    // Paused and playing must resolve the same line at the same position.
+    // Paused and playing must resolve the same line at the same position with an offset applied.
     const QVariantList    lines{wordLine(10100, {word(10100, 500)})};
 
     vast::LyricsScheduler paused;
+    paused.setOffsetMs(150);
     paused.setWordLines(lines);
     paused.setPlayback(10.0, 1.0, false);
 
     vast::LyricsScheduler playing;
+    playing.setOffsetMs(150);
     playing.setWordLines(lines);
     playing.setPlayback(10.0, 1.0, true);
 
@@ -314,9 +320,38 @@ void TestLyricsScheduler::playingAdvancesTheIndexOverWallClockTime() {
 void TestLyricsScheduler::aHigherRateReachesTheSameIndexSooner() {
     mScheduler.setWordLines({wordLine(1200, {word(1200, 100)})});
     mScheduler.setOffsetMs(0);
+
+    QElapsedTimer wall;
+    wall.start();
     mScheduler.setPlayback(0.0, 4.0, true);
 
-    QTRY_VERIFY_WITH_TIMEOUT(mScheduler.currentLineIndex() == 0, 10000);
+    // At 4x rate, a 1200 ms media boundary must fire around ~300 ms wall time (well before 1200 ms).
+    QTRY_VERIFY_WITH_TIMEOUT(mScheduler.currentLineIndex() == 0, 900);
+    QVERIFY2(wall.elapsed() < 900, "Line timer did not scale delay by playback rate");
+}
+
+void TestLyricsScheduler::longGapBeyondSixtySecondsMediaTimeStillSchedules() {
+    mScheduler.setWordLines({wordLine(65000, {word(65000, 100)})});
+    mScheduler.setOffsetMs(0);
+    // At 250x rate, a 65000 ms media gap is ~260 ms wall time; must not be dropped by a 60 s cap.
+    mScheduler.setPlayback(0.0, 250.0, true);
+
+    QTRY_VERIFY_WITH_TIMEOUT(mScheduler.currentLineIndex() == 0, 2000);
+}
+
+void TestLyricsScheduler::nonPositiveRateFallsBackToUnity() {
+    mScheduler.setOffsetMs(0);
+    mScheduler.setPlayback(5.0, 0.0, false);
+    QCOMPARE(mScheduler.rate(), 1.0);
+
+    mScheduler.setPlayback(5.0, -2.0, false);
+    QCOMPARE(mScheduler.rate(), 1.0);
+}
+
+void TestLyricsScheduler::setPlaybackRoundsFractionalMilliseconds() {
+    mScheduler.setOffsetMs(0);
+    mScheduler.setPlayback(1.2349, 1.0, false);
+    QCOMPARE(mScheduler.currentPositionMs(), 1235ll);
 }
 
 void TestLyricsScheduler::exposesPlayingRatePositionAndPlaybackSyncedSignal() {

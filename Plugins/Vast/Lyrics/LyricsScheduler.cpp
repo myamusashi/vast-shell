@@ -1,8 +1,9 @@
 #include "LyricsScheduler.hpp"
 
 #include <qcontainerfwd.h>
-#include <qdatetime.h>
+#include <qelapsedtimer.h>
 #include <qnamespace.h>
+#include <qnumeric.h>
 #include <qobject.h>
 #include <qtmetamacros.h>
 #include <qtypes.h>
@@ -10,6 +11,11 @@
 #include <algorithm>
 #include <cmath>
 #include <iterator>
+
+namespace {
+    // Re-arm long instrumental waits in chunks so gaps over 60 s never stall scheduling.
+    constexpr qint64 MAX_TIMER_CHUNK_MS = 60'000;
+} // namespace
 
 namespace vast {
 
@@ -21,11 +27,10 @@ namespace vast {
 
     qint64 LyricsScheduler::currentPositionMs() const {
         // The offset applies while paused too, so both paths resolve alike.
-        if (!mPlaying)
+        if (!mPlaying || !mAnchorClock.isValid())
             return mAnchorMs + mOffsetMs;
-        const qint64 wallNow       = QDateTime::currentMSecsSinceEpoch();
-        const auto   elapsed       = static_cast<double>(wallNow - mAnchorWall);
-        const auto   scaledElapsed = static_cast<qint64>(std::llround(elapsed * mRate));
+        const auto elapsedMs     = static_cast<double>(mAnchorClock.nsecsElapsed()) * 1e-6;
+        const auto scaledElapsed = static_cast<qint64>(std::llround(elapsedMs * mRate));
         return mAnchorMs + scaledElapsed + mOffsetMs;
     }
 
@@ -35,13 +40,14 @@ namespace vast {
     }
 
     void LyricsScheduler::setPlayback(double positionSecs, double rate, bool playing) {
-        const bool playingChangedFlag = (mPlaying != playing);
-        const bool rateChangedFlag    = !qFuzzyCompare(1.0 + mRate, 1.0 + rate);
+        const double effectiveRate      = (rate > 0.0 && std::isfinite(rate)) ? rate : 1.0;
+        const bool   playingChangedFlag = (mPlaying != playing);
+        const bool   rateChangedFlag    = !qFuzzyCompare(1.0 + mRate, 1.0 + effectiveRate);
 
-        mAnchorMs   = static_cast<qint64>(positionSecs * 1000.0);
-        mAnchorWall = QDateTime::currentMSecsSinceEpoch();
-        mRate       = rate;
-        mPlaying    = playing;
+        mAnchorMs = static_cast<qint64>(std::llround(positionSecs * 1000.0));
+        mAnchorClock.start();
+        mRate    = effectiveRate;
+        mPlaying = playing;
 
         if (playingChangedFlag)
             Q_EMIT playingChanged();
@@ -66,7 +72,7 @@ namespace vast {
             seekTo(posMs);
 
             if (mPlaying)
-                scheduleNext();
+                scheduleNext(posMs);
         }
 
         Q_EMIT playbackSynced();
@@ -81,9 +87,9 @@ namespace vast {
         const bool rateChangedFlag    = !qFuzzyCompare(1.0 + mRate, 2.0);
         mCurLine                      = -1;
         mAnchorMs                     = 0;
-        mAnchorWall                   = 0;
-        mPlaying                      = false;
-        mRate                         = 1.0;
+        mAnchorClock.invalidate();
+        mPlaying = false;
+        mRate    = 1.0;
         if (lineChanged)
             Q_EMIT currentLineIndexChanged();
         if (playingChangedFlag)
@@ -106,21 +112,15 @@ namespace vast {
         mBoundaryPos = found + 1;
     }
 
-    void LyricsScheduler::scheduleNext() {
-        const qint64 nowMs = currentPositionMs();
-
-        while (mBoundaryPos < mBoundaries.size() && mBoundaries.at(mBoundaryPos).timeMs <= nowMs) {
-            ++mBoundaryPos;
-        }
-
+    void LyricsScheduler::scheduleNext(qint64 nowMs) {
         if (mBoundaryPos >= mBoundaries.size())
             return;
 
-        const qint64 delayMs = mBoundaries.at(mBoundaryPos).timeMs - nowMs;
-        if (delayMs > 60'000)
-            return;
+        const qint64 mediaDelayMs = mBoundaries.at(mBoundaryPos).timeMs - nowMs;
+        const qint64 wallDelayMs  = std::max<qint64>(1, static_cast<qint64>(std::ceil(static_cast<double>(mediaDelayMs) / mRate)));
+        const int    timerDelayMs = static_cast<int>(std::min<qint64>(wallDelayMs, MAX_TIMER_CHUNK_MS));
 
-        mLineTimer.start(static_cast<int>(delayMs));
+        mLineTimer.start(timerDelayMs);
     }
 
     void LyricsScheduler::onLineTimer() {
@@ -142,7 +142,7 @@ namespace vast {
         if (changedLine)
             Q_EMIT currentLineIndexChanged();
 
-        scheduleNext();
+        scheduleNext(nowMs);
     }
 
     void LyricsScheduler::rebuildBoundaries(const QVariantList& wordLines) {
