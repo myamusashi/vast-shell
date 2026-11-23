@@ -2,177 +2,14 @@
 
 [Back to README](../README.md)
 
-## Where the file lives
+vast-shell reads `~/.config/vast-shell/configurations.json`.
 
+Every key has a built-in default, so the file is optional. To start from the shipped defaults:
 
-| Path | Value |
-|---|---|
-| `shellDir` | `<configDir>/vast-shell` |
-| **config file** | **`<shellDir>/configurations.json`** |
-
-Normally that resolves to `~/.config/vast-shell/configurations.json`.
-
-The file is watched: edits made from the Settings UI are written back, and edits made on disk are picked up live.
-
-## Setup
-
-To start from the shipped defaults instead:
-
-```bash
+```sh
 mkdir -p ~/.config/vast-shell
 cp /path/to/vast-shell/Data/configurations.json ~/.config/vast-shell/
 ```
-
-You generally do **not** need to copy the color files, the Material palette is generated at runtime. Copy `Data/colors.json` only if you want to pin a static palette.
-
----
-
-## Structure
-
-<details>
-<summary>Full structure (code defaults)</summary>
-
-```json
-{
-  "appearance": {
-    "animations": {
-      "curves": {},
-      "durations": { "scale": 1 }
-    },
-    "fonts": {
-      "family": {
-        "material": "Material Symbols Rounded",
-        "mono": "monospace",
-        "nerd": "",
-        "sans": "sans-serif"
-      },
-      "size": { "scale": 1.0 }
-    },
-    "icons": {
-      "materialFontPath": "",
-      "phosphorFontPath": "",
-      "type": "material"
-    },
-    "margin":  { "small": 5, "smaller": 7, "normal": 10, "larger": 12, "large": 15 },
-    "padding": { "small": 5, "smaller": 7, "normal": 10, "larger": 12, "large": 15 },
-    "rounding": { "small": 12, "normal": 17, "large": 25, "full": 1000 },
-    "spacing":  { "small": 7, "smaller": 10, "normal": 12, "larger": 15, "large": 20 }
-  },
-  "audio": {
-    "defaultSinkName": "",
-    "sinkProfiles": {},
-    "showPeakLevels": true
-  },
-  "bar": {
-    "alwaysOpenBar": true,
-    "barHeight": 40,
-    "compact": false,
-    "visibleWorkspace": 5,
-    "workspacesIndicator": "dot"
-  },
-  "captureScreenVideo": {
-    "maxFps": 60,
-    "bitrate": "5 MB",
-    "videoCodec": "",
-    "audioCodec": "",
-    "lowPower": "auto",
-    "showCursor": true,
-    "historyMode": false
-  },
-  "clipboard": {
-    "enabled": false,
-    "enablePreview": false,
-    "enableVimKeybinds": false,
-    "keepOpenAfterCopy": false,
-    "listEntries": 15,
-    "maxEntries": 300,
-    "showTruncatedText": true,
-    "width": 300,
-    "height": 400,
-    "preview": { "sourceWidth": 300, "sourceHeight": 300 }
-  },
-  "colors": {
-    "isDarkMode": true,
-    "useStaticColors": false,
-    "staticColorsPath": "~/.config/vast-shell/colors.json",
-    "scheme": "tonal-spot"
-  },
-  "generals": {
-    "alpha": 1.0,
-    "transparent": false,
-    "enableOuterBorder": false,
-    "outerBorderSize": 10,
-    "coverBlurRadius": 16,
-    "chargingGlowSpread": 10,
-    "followFocusMonitor": true,
-    "showHolidays": true,
-    "apps": {
-      "audio": "pavucontrol-qt",
-      "fileExplorer": "pcmanfm-qt",
-      "imageViewer": "lximage-qt",
-      "playback": "mpv",
-      "terminal": "foot",
-      "videoViewer": "mpv"
-    }
-  },
-  "idle": {
-    "enabled": true,
-    "timeouts": [
-      { "timeoutMonitor": 60, "on-timeout": "", "on-resume": "" }
-    ]
-  },
-  "kdeConnect": {
-    "pollingEnabled": true,
-    "pollInterval": 15000
-  },
-  "language": { "language": "id_ID" },
-  "lockscreen": {
-    "blurRadius": 48,
-    "blurWindowsEnabled": false
-  },
-  "mediaPlayer": {
-    "dynamicColorsCover": true,
-    "showLyrics": false,
-    "sliderType": "Wavy"
-  },
-  "notification": {
-    "maximumNotification": 100,
-    "maximumNotificationAge": 604800000
-  },
-  "privacy": {
-    "enablePrivacyIndicator": false,
-    "enablePrivacyIcon": true,
-    "enablePrivacyIndicatorOnDynamicIsland": true,
-    "blockPrivacyListNodesName": {}
-  },
-  "search": {
-    "maxDepth": 3,
-    "fileDirs": []
-  },
-  "wallpaper": {
-    "enabledWallpaper": true,
-    "wallpaperDir": "~/Pictures/wallpapers",
-    "transition": "random",
-    "transitionDuration": 300,
-    "transitionLowPerfMode": false,
-    "visibleWallpaper": 3,
-    "livePreview": true
-  },
-  "weather": {
-    "enableQuickSummary": false,
-    "latitude": "-6.7676",
-    "longitude": "676.7677",
-    "astronomyApiKey": "",
-    "reloadTime": 180
-  }
-}
-```
-
-`appearance.animations.curves`, `appearance.animations.durations.*` (except `scale`), `appearance.fonts.size.*` (except `scale`), `clipboard.preview.sourceSize*` are **derived** `readonly` properties — set them through the other keys, not directly.
-
-</details>
-
----
 
 ## Reference
 
@@ -180,186 +17,117 @@ You generally do **not** need to copy the color files, the Material palette is g
 
 | Key | Default | Description |
 |---|---|---|
-| `animations.durations.scale` | `1` | Global multiplier for all derived animation durations (200–1000 ms). |
-| `animations.durations.*` | derived | `small` 200, `normal` 300, `expressiveFastSpatial` 350, `emphasizedDecel` 400, `emphasized` 500, `expressiveDefaultSpatial` 500, `large` 600, `expressiveEffects` 200, `emphasizedAccel` 200, `extraLarge` 1000 — each × `scale`. |
-| `animations.curves.*` | derived | Material 3 easing curves: `standard`, `standardAccel`, `standardDecel`, `emphasized`, `emphasizedAccel`, `emphasizedDecel`, `expressiveDefaultSpatial`, `expressiveFastSpatial`, `expressiveEffects`. |
-| `fonts.family.material` | `"Material Symbols Rounded"` | Fallback family while the bundled Material Symbols font is loading. Not exposed in the Appearance UI; set it here if you use a custom system family. |
+| `animations.durations.scale` | `1` | Multiplier for all animation durations. |
+| `fonts.family.material` | `"Material Symbols Rounded"` | Fallback family while the bundled Material Symbols font loads. Not in the Settings UI. |
 | `fonts.family.mono` | `"monospace"` | Monospace face. |
-| `fonts.family.nerd` | `""` | Nerd Font face; empty falls back to the system sans. |
+| `fonts.family.nerd` | `""` | Nerd Font face. Empty falls back to the system sans. |
 | `fonts.family.sans` | `"sans-serif"` | UI face. |
-| `fonts.size.scale` | `1.0` | Global font size multiplier (derived sizes 12/13/14/16/18/30 × `scale`). |
-| `icons.type` | `"material"` | Icon set: `material` (Material Symbols) or `phosphor` (Phosphor, bundled in `Assets/fonts/phosphor`). |
-| `icons.materialFontPath` | `""` | Optional Material Symbols TTF; empty uses the bundled `Assets/fonts/material/MaterialSymbolsRounded.ttf`. |
-| `icons.phosphorFontPath` | `""` | Optional Phosphor TTF; empty uses the bundled `Assets/fonts/phosphor/Phosphor.ttf`. |
-| `margin` | 5/7/10/12/15 | `small`…`large` outer spacing in px. |
-| `padding` | 5/7/10/12/15 | `small`…`large` inner spacing in px. |
-| `rounding` | 12/17/25/1000 | `small`/`normal`/`large`/`full` corner radius in px. |
-| `spacing` | 7/10/12/15/20 | `small`…`large` gaps in px. |
+| `fonts.size.scale` | `1.0` | Multiplier for all font sizes. |
+| `icons.type` | `"material"` | `material` or `phosphor`. |
+| `icons.materialFontPath` | `""` | Custom Material Symbols TTF. Empty uses the bundled font. |
+| `icons.phosphorFontPath` | `""` | Custom Phosphor TTF. Empty uses the bundled font. |
+| `margin` | `5` / `7` / `10` / `12` / `15` | Outer spacing in px (`small` to `large`). |
+| `padding` | `5` / `7` / `10` / `12` / `15` | Inner spacing in px (`small` to `large`). |
+| `rounding` | `12` / `17` / `25` / `1000` | Corner radius in px (`small`, `normal`, `large`, `full`). |
+| `spacing` | `7` / `10` / `12` / `15` / `20` | Gaps in px (`small` to `large`). |
 
-Icon fonts are registered lazily with QtQuick's `FontLoader`: only the selected set is ever read from disk, and switching the `SplitButton` swaps the family without a restart. **Settings → Appearance → Icons** has a **Reload** button that re-registers the active font from disk. When `icons.type` is `phosphor`, Material ligature names are translated through `Qml/Core/Utils/IconMap.qml` (152 names); unmapped names pass through unchanged, so the shell never renders a name as literal text.
+Animation durations, easing curves and font sizes are derived from their `scale` keys and are read-only.
 
-### Bar
-
-| Key | Default | Description |
-|---|---|---|
-| `alwaysOpenBar` | `true` | Keep the bar always visible. |
-| `barHeight` | `40` | Bar height in pixels. |
-| `compact` | `false` | Enable compact bar mode. |
-| `visibleWorkspace` | `5` | Number of workspaces shown. |
-| `workspacesIndicator` | `"dot"` | `dot` (flat indicator) or `interactive` (pill shape with toplevel icon and hover preview). |
-
-### Colors
-
-| Key | Default | Description |
-|---|---|---|
-| `isDarkMode` | `true` | Generate the dark palette instead of the light one. |
-| `scheme` | `"tonal-spot"` | Material scheme: `vibrant`, `tonal-spot`, `expressive`, `monochrome`, `rainbow`, `fruit-salad`, `neutral`, `fidelity`, `content`. |
-| `useStaticColors` | `false` | Use a fixed palette instead of the generated one. |
-| `staticColorsPath` | `<shellDir>/colors.json` | Path to the static palette file. |
-
-> [!NOTE]
-> `colors.toDarkColor` and `colors.toWhiteColor` still appear in `Data/configurations.json` but are **dead keys** — no code reads them. Generated palettes are never written to disk. Safe to delete.
-
-### Color templates
-
-
-| Path | Value |
-|---|---|
-| **template list** | **`<shellDir>/templates.json`** |
-
-
-```json
-{
-  "templates": [
-    {
-      "name": "hyprland",
-      "input": "~/.config/hypr/colors.conf.tmpl",
-      "output_path": "",
-      "post_hook": "hyprctl reload",
-      "enabled": true
-    }
-  ]
-}
-```
-
-| Key | Default | Description |
-|---|---|---|
-| `name` | `""` | The name `vastctl color render --template` selects. |
-| `input` | `""` | The template file. `~` and environment variables are expanded. |
-| `output_path` | `""` | The rendered file. Empty means next to the template. |
-| `post_hook` | `""` | Command that runs after the file was written. |
-| `enabled` | `true` | A disabled template is skipped by a render of all templates. |
-
-See [Usage](Usage.md#color-templates) for the placeholder syntax and the naming rules.
-
-### Generals
-
-| Key | Default | Description |
-|---|---|---|
-| `alpha` | `1.0` | Global transparency level for shell surfaces. |
-| `transparent` | `false` | Enable transparency. |
-| `enableOuterBorder` | `false` | Draw a border around the shell layout. |
-| `outerBorderSize` | `10` | Outer border thickness in pixels. |
-| `coverBlurRadius` | `16` | Blur radius applied to media cover art. |
-| `chargingGlowSpread` | `10` | Glow spread radius when the device is charging. |
-| `followFocusMonitor` | `true` | Track the focused monitor for the bar and drawers. |
-| `showHolidays` | `true` | Show public holidays in the calendar drawer. |
-| `apps.terminal` | `"foot"` | Default terminal. |
-| `apps.fileExplorer` | `"pcmanfm-qt"` | Default file manager. |
-| `apps.imageViewer` | `"lximage-qt"` | Default image viewer. |
-| `apps.videoViewer` | `"mpv"` | Default video player. |
-| `apps.playback` | `"mpv"` | Default media player. |
-| `apps.audio` | `"pavucontrol-qt"` | Default mixer. |
-| `battery.criticalLevel` | `3` | Battery percentage that triggers the critical notification. |
-| `battery.warnLevels` | see above | Threshold list; each entry has `level`, `title`, `message` (rich text) and `icon`. |
+Switching `icons.type` applies without a restart. **Settings → Appearance → Icons → Reload** re-reads the active font from disk.
 
 ### Audio
 
 | Key | Default | Description |
 |---|---|---|
 | `defaultSinkName` | `""` | Sink restored as default on startup. |
-| `sinkProfiles` | `{}` | Per-sink volume/mute profiles. |
-| `showPeakLevels` | `true` | Live input and output level meters in the volume page. |
+| `sinkProfiles` | `{}` | Per-sink volume and mute profiles. |
+| `showPeakLevels` | `true` | Show live level meters on the volume page. |
 
-> [!NOTE]
-> Quickshell has this error:
->
-> ```txt
-> ERROR quickshell.service.pipewire.peak: PwNode(0x73f807e5a400, id=46/bound) is missing channels present in capture stream. Node channels: QList(qs::service::pipewire::PwAudioChannel::Mono) Stream channels: QList(qs::service::pipewire::PwAudioChannel::FrontLeft, qs::service::pipewire::PwAudioChannel::FrontRight)
-> ```
->
-> Wait until the issue is fixed.
-
-### Media Player
+### Bar
 
 | Key | Default | Description |
 |---|---|---|
-| `showLyrics` | `false` | Auto-fetch and display synced lyrics. |
-| `dynamicColorsCover` | `true` | Adapt UI colors from the current track's cover art. |
-| `sliderType` | `"Wavy"` | Progress bar style (`Wavy` or `WaveForm`). |
-
-### Notification
-
-| Key | Default | Description |
-|---|---|---|
-| `maximumNotification` | `100` | Maximum number of retained notifications. |
-| `maximumNotificationAge` | `604800000` | Maximum notification age in milliseconds (7 days). |
-
-### Clipboard
-
-| Key | Default | Description |
-|---|---|---|
-| `enabled` | `false` | Enable the clipboard manager daemon. |
-| `enablePreview` | `false` | Show an image/text preview pane. |
-| `enableVimKeybinds` | `false` | Enable Vim-style navigation and visual-mode selection. |
-| `keepOpenAfterCopy` | `false` | Keep the drawer open after copying an entry. |
-| `listEntries` | `15` | Entries rendered per page. |
-| `maxEntries` | `300` | Maximum retained entries. |
-| `width` / `height` | `300` / `400` | Drawer size in pixels. |
-| `preview.sourceWidth` / `sourceHeight` | `300` / `300` | Source resolution used for the cached preview thumbnail. |
-| `showTruncatedText` | `true` | Show a notice at the bottom of the preview when text is truncated. |
+| `alwaysOpenBar` | `true` | Keep the bar always visible. |
+| `barHeight` | `40` | Bar height in px. |
+| `compact` | `false` | Use the compact bar. |
+| `visibleWorkspace` | `5` | Number of workspaces shown. |
+| `workspacesIndicator` | `"dot"` | `dot` (flat) or `interactive` (pill with window icon and hover preview). |
 
 ### Capture Screen Video
 
 | Key | Default | Description |
 |---|---|---|
-| `maxFps` | `60` | Target frame rate (UI offers 30/60/120). |
-| `bitrate` | `"5 MB"` | Output bitrate (UI offers 1/5/10/20 MB). |
-| `videoCodec` | `""` | `""` (encoder default), `avc`, `hevc`, `vp8`, `vp9`, `av1`. |
-| `audioCodec` | `""` | `""` (encoder default), `aac`, `mp3`, `flac`, `opus`. |
-| `lowPower` | `"auto"` | `auto`, `on`, `off` — trades quality for battery. |
+| `maxFps` | `60` | Target frame rate. The UI offers 30, 60 and 120. |
+| `bitrate` | `"5 MB"` | Output bitrate. The UI offers 1, 5, 10 and 20 MB. |
+| `videoCodec` | `""` | Empty (encoder default), `avc`, `hevc`, `vp8`, `vp9` or `av1`. |
+| `audioCodec` | `""` | Empty (encoder default), `aac`, `mp3`, `flac` or `opus`. |
+| `lowPower` | `"auto"` | `auto`, `on` or `off`. Trades quality for battery. |
 | `showCursor` | `true` | Draw the pointer into the recording. |
 | `historyMode` | `false` | Write captures straight to the history buffer. |
 
-### Wallpaper
+### Clipboard
 
 | Key | Default | Description |
 |---|---|---|
-| `enabledWallpaper` | `true` | Draw the wallpaper. |
-| `wallpaperDir` | `~/Pictures/wallpapers` | Directory to source wallpapers from. |
-| `transition` | `"random"` | `none`, `random`, `fade`, `wipedown`, `circle`, `dissolve`, `splitH`, `slideup`, `pixelate`, `diagonal`, `box`, `roll`, `hexTile`. `random` picks a fresh one per change. |
-| `transitionDuration` | `300` | Transition duration in ms (slider 100–2000). |
-| `transitionLowPerfMode` | `false` | Swap transitions for instant cuts. |
-| `visibleWallpaper` | `3` | Wallpapers shown in the picker. |
-| `livePreview` | `true` | Generate a palette from the wallpaper as soon as it loads. |
+| `enabled` | `false` | Enable the clipboard manager. |
+| `enablePreview` | `false` | Show a preview pane for images and text. |
+| `enableVimKeybinds` | `false` | Vim-style navigation and visual-mode selection. |
+| `keepOpenAfterCopy` | `false` | Keep the drawer open after copying. |
+| `listEntries` | `15` | Entries shown per page. |
+| `maxEntries` | `300` | Maximum entries kept. |
+| `showTruncatedText` | `true` | Show a notice when previewed text is truncated. |
+| `width` / `height` | `300` / `400` | Drawer size in px. |
+| `preview.sourceWidth` / `sourceHeight` | `300` / `300` | Resolution of the cached preview thumbnail. |
 
-
-### Weather
-
-| Key | Default | Description |
-|---|---|---|
-| `latitude` / `longitude` | `"-6.767676"` / `"6767.7676"` | Your location. |
-| `reloadTime` | `180` | Refresh interval, in **seconds** (`Weather.qml` multiplies by 1000). |
-| `enableQuickSummary` | `false` | Show a compact weather summary in the bar. |
-| `astronomyApiKey` | `""` | Key for the sunrise/sunset and moon-phase provider. |
-
-
-### KDE Connect
+### Colors
 
 | Key | Default | Description |
 |---|---|---|
-| `pollingEnabled` | `true` | Enable periodic device discovery. |
-| `pollInterval` | `15000` | Poll interval in milliseconds. |
+| `isDarkMode` | `true` | Use the dark palette instead of the light one. |
+| `scheme` | `"tonal-spot"` | `vibrant`, `tonal-spot`, `expressive`, `monochrome`, `rainbow`, `fruit-salad`, `neutral`, `fidelity` or `content`. |
+| `useStaticColors` | `false` | Use a fixed palette instead of generating one. |
+| `staticColorsPath` | `~/.config/vast-shell/colors.json` | Static palette file. |
+
+Preview a palette without changing the running theme:
+
+```sh
+vastctl color generate ~/Pictures/wallpapers/foo.png --mode dark --scheme tonal-spot
+```
+
+#### Color templates
+
+Templates are listed in `~/.config/vast-shell/templates.json`. Each entry has these keys:
+
+| Key | Default | Description |
+|---|---|---|
+| `name` | `""` | Name selected by `vastctl color render --template`. |
+| `input` | `""` | Template file. `~` and environment variables are expanded. |
+| `output_path` | `""` | Rendered file. Empty means next to the template. |
+| `post_hook` | `""` | Command run after the file is written. |
+| `enabled` | `true` | A disabled template is skipped when rendering all templates. |
+
+Placeholder syntax is described in [Usage](Usage.md#color-templates).
+
+### Generals
+
+| Key | Default | Description |
+|---|---|---|
+| `alpha` | `1.0` | Global transparency of shell surfaces. |
+| `transparent` | `false` | Enable transparency. |
+| `enableOuterBorder` | `false` | Draw a border around the shell layout. |
+| `outerBorderSize` | `10` | Border thickness in px. |
+| `coverBlurRadius` | `16` | Blur radius for media cover art. |
+| `chargingGlowSpread` | `10` | Glow spread while charging. |
+| `followFocusMonitor` | `true` | Show the bar and drawers on the focused monitor. |
+| `showHolidays` | `true` | Show public holidays in the calendar. |
+| `apps.terminal` | `"foot"` | Terminal. |
+| `apps.fileExplorer` | `"pcmanfm-qt"` | File manager. |
+| `apps.imageViewer` | `"lximage-qt"` | Image viewer. |
+| `apps.videoViewer` | `"mpv"` | Video player. |
+| `apps.playback` | `"mpv"` | Media player. |
+| `apps.audio` | `"pavucontrol-qt"` | Audio mixer. |
+| `battery.criticalLevel` | `3` | Battery percentage that triggers the critical notification. |
+| `battery.warnLevels` | | List of thresholds. Each has `level`, `title`, `message` (rich text) and `icon`. |
 
 ### Idle
 
@@ -367,8 +135,8 @@ See [Usage](Usage.md#color-templates) for the placeholder syntax and the naming 
 |---|---|---|
 | `enabled` | `true` | Run the idle monitors. |
 | `timeouts[].timeoutMonitor` | `60` | Idle seconds before the action fires. |
-| `timeouts[]."on-timeout"` | `""` | Shell command run on timeout. |
-| `timeouts[]."on-resume"` | `""` | Shell command run when activity resumes. |
+| `timeouts[]."on-timeout"` | `""` | Command run on timeout. |
+| `timeouts[]."on-resume"` | `""` | Command run when activity resumes. |
 
 ```json
 "timeouts": [
@@ -376,105 +144,74 @@ See [Usage](Usage.md#color-templates) for the placeholder syntax and the naming 
 ]
 ```
 
-### Search
+### KDE Connect
 
 | Key | Default | Description |
 |---|---|---|
-| `maxDepth` | `3` | How deep to walk directory trees in the file dialog. |
-| `fileDirs` | `[]` | Pinned search roots; empty falls back to the dialog's current directory. |
-
-### Privacy
-
-| Key | Default | Description |
-|---|---|---|
-| `enablePrivacyIndicator` | `false` | Show the privacy indicator at all. |
-| `enablePrivacyIcon` | `true` | Show the privacy icon in the bar. |
-| `enablePrivacyIndicatorOnDynamicIsland` | `true` | Also surface privacy state on the dynamic island. |
-| `blockPrivacyListNodesName` | `{}` | Per-app blocked node names. |
+| `pollingEnabled` | `true` | Discover devices periodically. |
+| `pollInterval` | `15000` | Poll interval in ms. |
 
 ### Language
 
 | Key | Default | Description |
 |---|---|---|
-| `language` | `"id_ID"` | Locale for the Qt translation catalogue. See [Translations](Translations.md). |
+| `language` | `"id_ID"` | Locale of the translation catalogue. See [Translations](Translations.md). |
 
 ### Lockscreen
 
 | Key | Default | Description |
 |---|---|---|
-| `blurWindowsEnabled` | `false` | Render active-workspace windows on each monitor blurred behind the lock screen. |
-| `blurRadius` | `48` | Blur radius applied to captured windows on the lock screen. |
+| `blurWindowsEnabled` | `false` | Show blurred windows of the active workspace behind the lock screen. |
+| `blurRadius` | `48` | Blur radius for those windows. |
 
----
+### Media Player
 
-## Material Colors
+| Key | Default | Description |
+|---|---|---|
+| `showLyrics` | `false` | Fetch and show synced lyrics. |
+| `dynamicColorsCover` | `true` | Take UI colors from the current cover art. |
+| `sliderType` | `"Wavy"` | Progress bar style: `Wavy` or `WaveForm`. |
 
-Generate a palette for any image without touching the running theme:
+### Notification
 
-```sh
-vastctl color generate ~/Pictures/wallpapers/foo.png --mode dark --scheme tonal-spot
-```
+| Key | Default | Description |
+|---|---|---|
+| `maximumNotification` | `100` | Maximum notifications kept. |
+| `maximumNotificationAge` | `604800000` | Maximum age in ms (7 days). |
 
-<details>
-<summary>Example generated color scheme (dark)</summary>
+### Privacy
 
-```json
-{
-  "colors": {
-    "background": "#171217",
-    "error": "#ffb4ab",
-    "errorContainer": "#93000a",
-    "inverseOnSurface": "#342f34",
-    "inversePrimary": "#7a4f80",
-    "inverseSurface": "#eadfe6",
-    "onBackground": "#eadfe6",
-    "onError": "#690005",
-    "onErrorContainer": "#ffdad6",
-    "onPrimary": "#48204f",
-    "onPrimaryContainer": "#fed6ff",
-    "onPrimaryFixed": "#300939",
-    "onPrimaryFixedVariant": "#603767",
-    "onSecondary": "#3b2b3c",
-    "onSecondaryContainer": "#f4dbf2",
-    "onSecondaryFixed": "#251726",
-    "onSecondaryFixedVariant": "#524153",
-    "onSurface": "#eadfe6",
-    "onSurfaceVariant": "#cfc3cd",
-    "onTertiary": "#4c2520",
-    "onTertiaryContainer": "#ffdad5",
-    "onTertiaryFixed": "#33110d",
-    "onTertiaryFixedVariant": "#673b35",
-    "outline": "#988d97",
-    "outlineVariant": "#4d444c",
-    "primary": "#eab5ee",
-    "primaryContainer": "#603767",
-    "primaryFixed": "#fed6ff",
-    "primaryFixedDim": "#eab5ee",
-    "scrim": "#000000",
-    "secondary": "#d7bfd5",
-    "secondaryContainer": "#524153",
-    "secondaryFixed": "#f4dbf2",
-    "secondaryFixedDim": "#d7bfd5",
-    "shadow": "#000000",
-    "sourceColor": "#ce8fd6",
-    "surface": "#171217",
-    "surfaceBright": "#3d373d",
-    "surfaceContainer": "#231e23",
-    "surfaceContainerHigh": "#2e282d",
-    "surfaceContainerHighest": "#393338",
-    "surfaceContainerLow": "#1f1a1f",
-    "surfaceContainerLowest": "#110d11",
-    "surfaceDim": "#171217",
-    "surfaceTint": "#eab5ee",
-    "surfaceVariant": "#4d444c",
-    "tertiary": "#f5b8af",
-    "tertiaryContainer": "#673b35",
-    "success": "#7ddb8f",
-    "onSuccess": "#00391a",
-    "successContainer": "#005227",
-    "onSuccessContainer": "#99f8b2"
-  }
-}
-```
+| Key | Default | Description |
+|---|---|---|
+| `enablePrivacyIndicator` | `false` | Enable the privacy indicator. |
+| `enablePrivacyIcon` | `true` | Show the privacy icon in the bar. |
+| `enablePrivacyIndicatorOnDynamicIsland` | `true` | Also show privacy state on the dynamic island. |
+| `blockPrivacyListNodesName` | `{}` | Per-app node names to hide. |
 
-</details>
+### Search
+
+| Key | Default | Description |
+|---|---|---|
+| `maxDepth` | `3` | Directory depth searched in the file dialog. |
+| `fileDirs` | `[]` | Pinned search roots. Empty uses the dialog's current directory. |
+
+### Wallpaper
+
+| Key | Default | Description |
+|---|---|---|
+| `enabledWallpaper` | `true` | Draw the wallpaper. |
+| `wallpaperDir` | `~/Pictures/wallpapers` | Wallpaper directory. |
+| `transition` | `"random"` | `none`, `random`, `fade`, `wipedown`, `circle`, `dissolve`, `splitH`, `slideup`, `pixelate`, `diagonal`, `box`, `roll` or `hexTile`. `random` picks a new one per change. |
+| `transitionDuration` | `300` | Transition length in ms. |
+| `transitionLowPerfMode` | `false` | Use instant cuts instead of transitions. |
+| `visibleWallpaper` | `3` | Wallpapers shown in the picker. |
+| `livePreview` | `true` | Generate a palette as soon as a wallpaper loads. |
+
+### Weather
+
+| Key | Default | Description |
+|---|---|---|
+| `latitude` / `longitude` | | Your location in decimal degrees, as strings. |
+| `reloadTime` | `180` | Refresh interval in **seconds**. |
+| `enableQuickSummary` | `false` | Show a compact summary in the bar. |
+| `astronomyApiKey` | `""` | API key for the sunrise, sunset and moon-phase provider. |

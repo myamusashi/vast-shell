@@ -2,41 +2,24 @@
 
 [Back to README](../README.md)
 
-Vast-shell uses Qt's built-in translation system. Translation files live in `translations/`:
+vast-shell uses Qt's translation system. Files are in `translations/`:
 
-- `.ts` — source file (XML, human-editable)
-- `.qm` — compiled binary used at runtime (do not edit directly)
+- `.ts`: the editable source (XML).
+- `.qm`: the compiled file used at runtime. Do not edit it.
 
 | Locale | Language |
 |---|---|
-| `en_US` | English (source/identity locale) |
+| `en_US` | English (source and fallback) |
 | `id_ID` | Indonesian |
-`en_US` is also the fallback: `TranslationManager` initialises to it, and a locale with no `.qm` on disk falls back to untranslated source strings.
 
-> [!NOTE]
-> `lupdate` and `lrelease` are provided by `qt6-tools` (Arch), `qt6-tools-dev-tools` (Debian/Ubuntu), or `qt6.qttools` (NixOS).
+A locale without a `.qm` file falls back to the untranslated source strings.
 
-## Qt Linguist
+## Add or update a translation
 
-The recommended way to translate vast-shell is with **Qt Linguist**, a GUI editor that ships with `qt6-tools`. It shows every string in context, tracks translation progress, and warns about missing or outdated entries.
+`lupdate` and `lrelease` come from `qt6-tools` (Arch), `qt6-tools-dev-tools` (Debian/Ubuntu) or `qt6.qttools` (NixOS).
 
-<img src="https://github.com/user-attachments/assets/c5569311-99a3-4f99-9709-464ceda68495" width="720" alt="Qt Linguist"/>
-
-| Feature | Supported |
-|---|---|
-| Visual side-by-side editing | Yes |
-| Progress tracker per file | Yes |
-| Marks unfinished and obsolete strings | Yes |
-| Built-in phrase book and search | Yes |
-
-```bash
-linguist translations/your_locale.ts
-```
-
-## Adding a new language
-
-```bash
-# 1. Generate the .ts file
+```sh
+# 1. Create the .ts file, or sync new strings into an existing one
 lupdate $(find Qml -name "*.qml") -ts translations/your_locale.ts
 
 # 2. Translate in Qt Linguist (or edit the XML by hand)
@@ -46,22 +29,11 @@ linguist translations/your_locale.ts
 lrelease translations/your_locale.ts
 ```
 
-Replace `your_locale` with a standard locale code, e.g. `fr_FR`, `ja_JP`, `de_DE`.
+Replace `your_locale` with a locale code such as `fr_FR`, `ja_JP` or `de_DE`. Syncing never overwrites existing translations.
 
-## Updating an existing translation
+Qt Linguist shows each string in context, tracks progress and marks unfinished or obsolete entries.
 
-```bash
-# Sync new strings without overwriting existing translations
-lupdate $(find Qml -name "*.qml") -ts translations/your_locale.ts
+## Build integration
 
-# Open in Linguist, finish unfinished entries, then recompile
-lrelease translations/your_locale.ts
-```
-
-**NixOS:** Translations are compiled automatically during the build phase — no manual steps needed.
-
-**Arch Linux:** `archInstall.sh` compiles translations automatically. To recompile manually:
-
-```bash
-/usr/lib/qt6/bin/lrelease translations/*.ts
-```
+- **NixOS:** translations are compiled during the build.
+- **Arch Linux:** `archInstall.sh` compiles them. To recompile by hand: `/usr/lib/qt6/bin/lrelease translations/*.ts`
