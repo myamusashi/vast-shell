@@ -65,8 +65,12 @@ Loader {
         if (layout === null)
             return;
         if (layout instanceof MaterialTextField) {
-            if (!layout.activeFocus) // qmllint disable missing-property
-                layout.text = displayValue === null || displayValue === undefined ? "" : String(displayValue); // qmllint disable missing-property
+            if (!layout.activeFocus) { // qmllint disable missing-property
+                let nextText = "";
+                if (displayValue !== null && displayValue !== undefined)
+                    nextText = String(displayValue);
+                layout.text = nextText; // qmllint disable missing-property
+            }
             return;
         }
         const fields = layout.children.filter(child => child instanceof MaterialTextField); // qmllint disable missing-property
@@ -93,7 +97,9 @@ Loader {
     }
     onItemChanged: writeEditorText(value)
     onValueChanged: writeEditorText(value)
-    component EditorField: MaterialTextField {}
+    component EditorField: MaterialTextField {
+        compact: true
+    }
 
     Component {
         id: emptyEditor

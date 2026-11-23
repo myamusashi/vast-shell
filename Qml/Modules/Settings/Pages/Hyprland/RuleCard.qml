@@ -7,6 +7,7 @@ import qs.Components.Base
 import qs.Components.Button
 import qs.Components.Tooltip
 import qs.Core.Configs
+import qs.Core.Utils
 import qs.Services
 
 Rectangle {
@@ -15,41 +16,72 @@ Rectangle {
     required property int    index
     required property string modelData
 
-    readonly property var    availableEffectList: root.schema.effects.filter(effect => root.effects[effect.key] === undefined)
-    readonly property var    availableMatchList: root.schema.matchProps.filter(prop => root.match[prop.key] === undefined)
-    readonly property var    effectLeftKeys: root.effectSplit ? root.effectKeys.slice(0, Math.ceil(root.effectKeys.length / 2)) : root.effectKeys
-    readonly property var    effectRightKeys: root.effectSplit ? root.effectKeys.slice(Math.ceil(root.effectKeys.length / 2)) : []
-    readonly property var    effects: root.rule !== null && typeof root.rule.effects === "object" && root.rule.effects !== null ? root.rule.effects : {}
-    readonly property bool   effectSplit: root.effectKeys.length >= 3
+    readonly property var    allEffectSummaries: root.effectKeys.map(key => root.formatChipText(key, root.effects[key], root.schema.effectByKey(key)))
+    readonly property var    allMatchSummaries: root.matchKeys.map(key => root.formatChipText(key, root.match[key], root.schema.matchPropByKey(key)))
+    readonly property string customName: typeof root.rule?.name === "string" ? root.rule.name.trim() : ""
+    readonly property var    effects: {
+        if (root.rule !== null && typeof root.rule.effects === "object" && root.rule.effects !== null)
+            return root.rule.effects;
+        return ({});
+    }
+    readonly property string headlineText: {
+        if (root.customName !== "")
+            return root.customName;
+        if (root.allMatchSummaries.length > 0)
+            return root.allMatchSummaries[0];
+        return qsTr("Untitled rule");
+    }
     readonly property bool   invalid: root.ruleProblems.length > 0
-    readonly property var    match: root.rule !== null && typeof root.rule.match === "object" && root.rule.match !== null ? root.rule.match : {}
-    readonly property var    matchLeftKeys: root.matchSplit ? root.matchKeys.slice(0, Math.ceil(root.matchKeys.length / 2)) : root.matchKeys
-    readonly property var    matchRightKeys: root.matchSplit ? root.matchKeys.slice(Math.ceil(root.matchKeys.length / 2)) : []
-    readonly property bool   matchSplit: root.matchKeys.length >= 3
+    readonly property var    match: {
+        if (root.rule !== null && typeof root.rule.match === "object" && root.rule.match !== null)
+            return root.rule.match;
+        return ({});
+    }
+    readonly property int    maxEffectChips: 4
+    readonly property int    maxMatchChips: 3
+    readonly property string overflowEffectTooltip: root.allEffectSummaries.slice(root.maxEffectChips).join("\n")
+    readonly property string overflowMatchTooltip: root.allMatchSummaries.slice(root.maxMatchChips).join("\n")
     readonly property var    rule: root.services.ruleById(root.modelData)
+    readonly property bool   ruleEnabled: root.rule?.enabled ?? true
     readonly property var    ruleProblems: root.services.problems[root.modelData] ?? []
+    readonly property var    visibleEffectChips: root.allEffectSummaries.slice(0, root.maxEffectChips)
+    readonly property var    visibleMatchChips: root.allMatchSummaries.slice(0, root.maxMatchChips)
 
     property string          effectKeyCache: ""
     property var             effectKeys: []
+    property bool            expanded: false
     property string          matchKeyCache: ""
     property var             matchKeys: []
-    property int             ruleCount
+    property bool            reorderAllowed: true
+    property int             ruleCount: 0
+    property int             ruleOrderIndex: 0
     property var             schema
     property var             services
 
-    function                 availableEffects(): var {
-        return root.availableEffectList;
+    signal                   deleted(string ruleId)
+    signal                   duplicated(string newRuleId)
+    signal                   expandToggled
+
+    function                 formatChipText(key: string, value: var, descriptor: var): string {
+        const label = root.schema.labelFromKey(key);
+        if (descriptor && descriptor.type === "bool")
+            return value === true ? label : `!${label}`;
+        const formatted = root.formatValue(descriptor, value);
+        return formatted !== "" ? `${label}: ${formatted}` : `${label}: ${qsTr("(empty)")}`;
     }
 
-    function                 availableMatchProps(): var {
-        return root.availableMatchList;
-    }
-
-    function                 effectSectionHint(): string {
-        const parts = [qsTr("Static effects apply once when the window opens; dynamic ones are re-applied when a matched property changes.")];
-        if (root.schema.expressionHint !== "")
-            parts.push(root.schema.expressionHint);
-        return parts.join(" ");
+    function                 formatValue(descriptor: var, value: var): string {
+        if (descriptor && descriptor.type === "exprVec2")
+            return Array.isArray(value) ? `${value[0] ?? ""} × ${value[1] ?? ""}` : String(value ?? "");
+        if (descriptor && descriptor.type === "enum") {
+            if (value === "" || value === null || value === undefined)
+                return qsTr("Default");
+            const values = descriptor.values ?? [];
+            const labels = descriptor.labels ?? [];
+            const found  = values.indexOf(value);
+            return found >= 0 && found < labels.length ? String(labels[found]) : String(value);
+        }
+        return value === null || value === undefined ? "" : String(value);
     }
 
     function                 refreshEffectKeys(): void {
@@ -70,321 +102,295 @@ Rectangle {
         root.matchKeys     = keys;
     }
 
+    Layout.fillWidth: true
+    border.color: {
+        if (root.invalid)
+            return Colours.m3Colors.m3Error;
+        if (root.expanded)
+            return Colours.m3Colors.m3Primary;
+        return Qt.alpha(Colours.m3Colors.m3OutlineVariant, 0.55);
+    }
+    border.width: root.invalid ? 2 : 1
+    color: Colours.m3Colors.m3SurfaceContainer
+    implicitHeight: cardLayout.implicitHeight + (Appearance.margin.normal * 2)
+    radius: Appearance.rounding.normal
     Component.onCompleted: {
         root.refreshMatchKeys();
         root.refreshEffectKeys();
     }
     onEffectsChanged: root.refreshEffectKeys()
     onMatchChanged: root.refreshMatchKeys()
-    onRuleChanged: {
-        if (!nameField.activeFocus)
-            nameField.text = root.rule?.name ?? "";
-    }
-    Layout.fillWidth: true
-    color: Colours.m3Colors.m3SurfaceContainerLow
-    implicitHeight: cardLayout.implicitHeight + (Appearance.margin.large * 2)
-    radius: Appearance.rounding.large
-
-    Elevation {
-        anchors.fill: parent
-        level: 1
-        radius: root.radius
-        z: -1
-    }
-
-    Rectangle {
-        anchors.fill: parent
-        border.color: Colours.m3Colors.m3Error
-        border.width: 2
-        color: "transparent"
-        radius: root.radius
-        visible: root.invalid
-    }
 
     ColumnLayout {
         id: cardLayout
 
-        spacing: Appearance.spacing.normal
-
         anchors {
             left: parent.left
-            margins: Appearance.margin.large
+            margins: Appearance.margin.normal
             right: parent.right
             top: parent.top
         }
+
+        spacing: Appearance.spacing.small
 
         RowLayout {
             Layout.fillWidth: true
             spacing: Appearance.spacing.small
 
+            RuleSummaryChip {
+                Layout.alignment: Qt.AlignVCenter
+                backgroundColor: Colours.m3Colors.m3SurfaceContainerHighest
+                contentColor: Colours.m3Colors.m3OnSurfaceVariant
+                maximumWidth: 64
+                monospace: true
+                text: `#${root.ruleOrderIndex + 1}`
+                tooltipText: qsTr("Rule #%1 — rules apply top to bottom, last match wins").arg(root.ruleOrderIndex + 1)
+            }
+
             StyledSwitch {
                 id: ruleEnabledSwitch
 
                 Layout.alignment: Qt.AlignVCenter
-                checked: root.rule?.enabled ?? true
+                checked: root.ruleEnabled
                 onToggled: root.services.setRuleField(root.modelData, "enabled", checked)
 
                 Tooltip {
                     anchorItem: ruleEnabledSwitch
-                    text: (root.rule?.enabled ?? true) ? qsTr("Disable rule") : qsTr("Enable rule")
+                    text: root.ruleEnabled ? qsTr("Disable rule") : qsTr("Enable rule")
                 }
             }
 
-            MaterialTextField {
-                id: nameField
+            Item {
+                id: headerClickArea
 
+                Layout.alignment: Qt.AlignVCenter
                 Layout.fillWidth: true
-                Layout.maximumWidth: 320
-                placeholderText: qsTr("Unique name (optional)")
-                onAccepted: root.services.setRuleField(root.modelData, "name", text)
-                onActiveFocusChanged: {
-                    if (!activeFocus)
-                        root.services.setRuleField(root.modelData, "name", text);
+                implicitHeight: Math.max(32, headerSummaryRow.implicitHeight)
+
+                RowLayout {
+                    id: headerSummaryRow
+
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        verticalCenter: parent.verticalCenter
+                    }
+
+                    opacity: root.ruleEnabled ? 1.0 : 0.58
+                    spacing: Appearance.spacing.small
+
+                    StyledText {
+                        readonly property bool untitled: root.customName === "" && root.allMatchSummaries.length === 0
+
+                        Layout.fillWidth: true
+                        color: untitled ? Colours.m3Colors.m3OnSurfaceVariant : Colours.m3Colors.m3OnSurface
+                        elide: Text.ElideRight
+                        font.italic: untitled
+                        font.pixelSize: Appearance.fonts.size.normal
+                        font.weight: Font.DemiBold
+                        maximumLineCount: 1
+                        text: root.headlineText
+                    }
+
+                    RuleSummaryChip {
+                        Layout.alignment: Qt.AlignVCenter
+                        backgroundColor: Colours.m3Colors.m3SurfaceContainerHighest
+                        contentColor: Colours.m3Colors.m3OnSurfaceVariant
+                        text: qsTr("Disabled")
+                        visible: !root.ruleEnabled && !root.expanded
+                    }
+
+                    RuleSummaryChip {
+                        Layout.alignment: Qt.AlignVCenter
+                        backgroundColor: Colours.m3Colors.m3ErrorContainer
+                        contentColor: Colours.m3Colors.m3OnErrorContainer
+                        iconName: "error"
+                        text: root.ruleProblems.length === 1 ? qsTr("1 issue") : qsTr("%1 issues").arg(root.ruleProblems.length)
+                        tooltipText: root.ruleProblems.join("\n")
+                        visible: root.invalid && !root.expanded
+                    }
+                }
+
+                HoverHandler {
+                    cursorShape: Qt.PointingHandCursor
+                }
+
+                TapHandler {
+                    onTapped: root.expandToggled()
                 }
             }
 
             FloatingButton {
                 Layout.alignment: Qt.AlignVCenter
-                buttonEnabled: root.index > 0
-                disabledTooltipText: qsTr("Already at top")
-                size: "small"
+                buttonEnabled: root.reorderAllowed && root.ruleOrderIndex > 0
+                color: "transparent"
+                disabledTooltipText: root.reorderAllowed ? qsTr("Already at top") : qsTr("Clear filter to reorder rules")
                 icon.color: Colours.m3Colors.m3OnSurfaceVariant
                 icon.name: "keyboard_arrow_up"
+                size: "small"
                 tooltipText: qsTr("Move rule up")
                 onClicked: root.services.moveRule(root.modelData, -1)
             }
 
             FloatingButton {
                 Layout.alignment: Qt.AlignVCenter
-                buttonEnabled: root.index < root.ruleCount - 1
-                disabledTooltipText: qsTr("Already at bottom")
-                size: "small"
+                buttonEnabled: root.reorderAllowed && root.ruleOrderIndex < root.ruleCount - 1
+                color: "transparent"
+                disabledTooltipText: root.reorderAllowed ? qsTr("Already at bottom") : qsTr("Clear filter to reorder rules")
                 icon.color: Colours.m3Colors.m3OnSurfaceVariant
                 icon.name: "keyboard_arrow_down"
+                size: "small"
                 tooltipText: qsTr("Move rule down")
                 onClicked: root.services.moveRule(root.modelData, 1)
             }
 
             FloatingButton {
                 Layout.alignment: Qt.AlignVCenter
-                size: "small"
+                color: "transparent"
                 icon.color: Colours.m3Colors.m3OnSurfaceVariant
                 icon.name: "content_copy"
+                size: "small"
                 tooltipText: qsTr("Duplicate rule")
-                onClicked: root.services.duplicateRule(root.modelData)
+                onClicked: {
+                    const createdId = root.services.duplicateRule(root.modelData);
+                    if (createdId !== "")
+                        root.duplicated(createdId);
+                }
             }
 
             FloatingButton {
                 Layout.alignment: Qt.AlignVCenter
-                size: "small"
+                color: "transparent"
                 icon.color: Colours.m3Colors.m3Error
                 icon.name: "delete"
+                size: "small"
                 tooltipText: qsTr("Delete rule")
-                onClicked: root.services.deleteRule(root.modelData)
-            }
-        }
-
-        StyledText {
-            Layout.fillWidth: true
-            color: Colours.m3Colors.m3Error
-            font.pixelSize: Appearance.fonts.size.small
-            text: root.ruleProblems.join(" ")
-            visible: root.invalid
-            wrapMode: Text.Wrap
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: Appearance.spacing.small
-
-            StyledText {
-                color: Colours.m3Colors.m3Primary
-                font.pixelSize: Appearance.fonts.size.large
-                font.weight: Font.DemiBold
-                text: qsTr("Match")
-            }
-
-            Item {
-                Layout.fillWidth: true
-            }
-
-            RulePickerField {
-                id: addPropField
-
-                visible: root.availableMatchList.length > 0
-                placeholderText: qsTr("Add property")
-                items: root.availableMatchList.map(prop => {
-                    const label = root.schema.labelFromKey(prop.key);
-                    return {
-                        item: prop,
-                        searchText: prop.key + " " + label,
-                        text: label
-                    };
-                })
-                onItemActivated: prop => root.services.setMatchProp(root.modelData, prop.key, prop.default)
-            }
-        }
-
-        StyledText {
-            Layout.fillWidth: true
-            color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.5)
-            font.pixelSize: Appearance.fonts.size.small
-            text: qsTr("Every property must match. Regular expressions must match the whole value; prefix with negative: to invert, e.g. ^(kitty)$.")
-            wrapMode: Text.Wrap
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: Appearance.spacing.normal
-
-            ColumnLayout {
-                Layout.alignment: Qt.AlignTop
-                Layout.fillWidth: true
-                spacing: Appearance.spacing.normal
-
-                Repeater {
-                    model: root.matchLeftKeys
-                    delegate: RuleValueRow {
-                        id: matchRow
-
-                        required property string modelData
-
-                        readonly property var    propDescriptor: root.schema.matchPropByKey(matchRow.modelData)
-
-                        Layout.fillWidth: true
-                        currentValue: root.match[matchRow.modelData]
-                        descriptor: matchRow.propDescriptor
-                        label: root.schema.labelFromKey(matchRow.modelData)
-                        pickValues: root.services.matchPickValues(matchRow.propDescriptor)
-                        onPickRequested: root.services.refreshMatchPicks()
-                        onRemoved: root.services.removeMatchProp(root.modelData, matchRow.modelData)
-                        onValueChanged: value => root.services.setMatchProp(root.modelData, matchRow.modelData, value)
-                    }
+                onClicked: {
+                    root.deleted(root.modelData);
+                    root.services.deleteRule(root.modelData);
                 }
             }
 
-            ColumnLayout {
-                Layout.alignment: Qt.AlignTop
-                Layout.fillWidth: true
-                spacing: Appearance.spacing.normal
-                visible: root.matchSplit
-
-                Repeater {
-                    model: root.matchRightKeys
-                    delegate: RuleValueRow {
-                        id: matchRowRight
-
-                        required property string modelData
-
-                        readonly property var    propDescriptor: root.schema.matchPropByKey(matchRowRight.modelData)
-
-                        Layout.fillWidth: true
-                        currentValue: root.match[matchRowRight.modelData]
-                        descriptor: matchRowRight.propDescriptor
-                        label: root.schema.labelFromKey(matchRowRight.modelData)
-                        pickValues: root.services.matchPickValues(matchRowRight.propDescriptor)
-                        onPickRequested: root.services.refreshMatchPicks()
-                        onRemoved: root.services.removeMatchProp(root.modelData, matchRowRight.modelData)
-                        onValueChanged: value => root.services.setMatchProp(root.modelData, matchRowRight.modelData, value)
-                    }
-                }
+            FloatingButton {
+                Layout.alignment: Qt.AlignVCenter
+                color: root.expanded ? Colours.m3Colors.m3PrimaryContainer : "transparent"
+                icon.color: root.expanded ? Colours.m3Colors.m3OnPrimaryContainer : Colours.m3Colors.m3OnSurfaceVariant
+                icon.name: root.expanded ? "expand_less" : "expand_more"
+                size: "small"
+                tooltipText: root.expanded ? qsTr("Collapse rule") : qsTr("Expand rule")
+                onClicked: root.expandToggled()
             }
         }
 
-        RowLayout {
+        Item {
+            id: summaryChipStrip
+
             Layout.fillWidth: true
-            spacing: Appearance.spacing.small
+            implicitHeight: summaryFlow.implicitHeight
+            visible: !root.expanded
 
-            StyledText {
-                color: Colours.m3Colors.m3Primary
-                font.pixelSize: Appearance.fonts.size.large
-                font.weight: Font.DemiBold
-                text: qsTr("Effects")
-            }
+            Flow {
+                id: summaryFlow
 
-            Item {
-                Layout.fillWidth: true
-            }
+                opacity: root.ruleEnabled ? 1.0 : 0.58
+                spacing: Appearance.spacing.small
+                width: parent.width
 
-            RulePickerField {
-                id: addEffectField
-
-                visible: root.availableEffectList.length > 0
-                placeholderText: qsTr("Add effect")
-                showScrollBar: true
-                items: root.availableEffectList.map(effect => {
-                    const label = root.schema.labelFromKey(effect.key);
-                    return {
-                        item: effect,
-                        searchText: effect.key + " " + label,
-                        text: label
-                    };
-                })
-                onItemActivated: effect => root.services.setEffect(root.modelData, effect.key, effect.default)
-            }
-        }
-
-        StyledText {
-            Layout.fillWidth: true
-            color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.5)
-            font.pixelSize: Appearance.fonts.size.small
-            text: root.effectSectionHint()
-            wrapMode: Text.Wrap
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: Appearance.spacing.normal
-
-            ColumnLayout {
-                Layout.alignment: Qt.AlignTop
-                Layout.fillWidth: true
-                spacing: Appearance.spacing.normal
+                RuleSummaryChip {
+                    backgroundColor: Colours.m3Colors.m3ErrorContainer
+                    contentColor: Colours.m3Colors.m3OnErrorContainer
+                    text: qsTr("No match properties")
+                    visible: root.allMatchSummaries.length === 0
+                }
 
                 Repeater {
-                    model: root.effectLeftKeys
-                    delegate: RuleValueRow {
-                        id: effectRow
-
+                    model: root.visibleMatchChips
+                    delegate: RuleSummaryChip {
                         required property string modelData
 
-                        readonly property var    effectDescriptor: root.schema.effectByKey(effectRow.modelData)
-
-                        Layout.fillWidth: true
-                        currentValue: root.effects[effectRow.modelData]
-                        descriptor: effectRow.effectDescriptor
-                        label: root.schema.labelFromKey(effectRow.modelData)
-                        showBadge: true
-                        onRemoved: root.services.removeEffect(root.modelData, effectRow.modelData)
-                        onValueChanged: value => root.services.setEffect(root.modelData, effectRow.modelData, value)
+                        backgroundColor: Colours.m3Colors.m3PrimaryContainer
+                        contentColor: Colours.m3Colors.m3OnPrimaryContainer
+                        text: modelData
                     }
+                }
+
+                RuleSummaryChip {
+                    backgroundColor: Colours.m3Colors.m3PrimaryContainer
+                    contentColor: Colours.m3Colors.m3OnPrimaryContainer
+                    monospace: true
+                    text: `+${root.allMatchSummaries.length - root.maxMatchChips}`
+                    tooltipText: root.overflowMatchTooltip
+                    visible: root.allMatchSummaries.length > root.maxMatchChips
+                }
+
+                Item {
+                    height: 24
+                    width: arrowIcon.implicitWidth + 4
+
+                    Icon {
+                        id: arrowIcon
+
+                        anchors.centerIn: parent
+                        color: Colours.m3Colors.m3OnSurfaceVariant
+                        font.pixelSize: Appearance.fonts.size.normal
+                        icon: "arrow_forward"
+                    }
+                }
+
+                RuleSummaryChip {
+                    backgroundColor: Colours.m3Colors.m3SurfaceContainerHighest
+                    contentColor: Colours.m3Colors.m3OnSurfaceVariant
+                    text: qsTr("No effects")
+                    visible: root.allEffectSummaries.length === 0
+                }
+
+                Repeater {
+                    model: root.visibleEffectChips
+                    delegate: RuleSummaryChip {
+                        required property string modelData
+
+                        backgroundColor: Colours.m3Colors.m3SecondaryContainer
+                        contentColor: Colours.m3Colors.m3OnSecondaryContainer
+                        text: modelData
+                    }
+                }
+
+                RuleSummaryChip {
+                    backgroundColor: Colours.m3Colors.m3SecondaryContainer
+                    contentColor: Colours.m3Colors.m3OnSecondaryContainer
+                    monospace: true
+                    text: `+${root.allEffectSummaries.length - root.maxEffectChips}`
+                    tooltipText: root.overflowEffectTooltip
+                    visible: root.allEffectSummaries.length > root.maxEffectChips
                 }
             }
 
-            ColumnLayout {
-                Layout.alignment: Qt.AlignTop
-                Layout.fillWidth: true
-                spacing: Appearance.spacing.normal
-                visible: root.effectSplit
+            HoverHandler {
+                cursorShape: Qt.PointingHandCursor
+            }
 
-                Repeater {
-                    model: root.effectRightKeys
-                    delegate: RuleValueRow {
-                        id: effectRowRight
+            TapHandler {
+                onTapped: root.expandToggled()
+            }
+        }
 
-                        required property string modelData
+        Loader {
+            id: editorLoader
 
-                        readonly property var    effectDescriptor: root.schema.effectByKey(effectRowRight.modelData)
-
-                        Layout.fillWidth: true
-                        currentValue: root.effects[effectRowRight.modelData]
-                        descriptor: effectRowRight.effectDescriptor
-                        label: root.schema.labelFromKey(effectRowRight.modelData)
-                        showBadge: true
-                        onRemoved: root.services.removeEffect(root.modelData, effectRowRight.modelData)
-                        onValueChanged: value => root.services.setEffect(root.modelData, effectRowRight.modelData, value)
-                    }
-                }
+            Layout.fillWidth: true
+            active: root.expanded
+            visible: active
+            sourceComponent: RuleCardEditor {
+                effectKeys: root.effectKeys
+                effects: root.effects
+                invalid: root.invalid
+                match: root.match
+                matchKeys: root.matchKeys
+                rule: root.rule
+                ruleId: root.modelData
+                ruleProblems: root.ruleProblems
+                schema: root.schema
+                services: root.services
             }
         }
     }

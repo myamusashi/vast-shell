@@ -5,101 +5,168 @@ import QtQuick.Layouts
 
 import qs.Components.Base
 import qs.Components.Button
+import qs.Components.Menu
 import qs.Components.Tooltip
 import qs.Core.Configs
 import qs.Services
 
-import "../../Components"
-
-SettingRow {
+RowLayout {
     id: root
 
-    required property var descriptor
-    required property var currentValue
+    required property var    currentValue
+    required property var    descriptor
 
-    property var          pickValues: []
-    property bool         showBadge: false
+    readonly property bool   hasDynamicInfo: root.showBadge && root.descriptor !== null && root.descriptor !== undefined && root.descriptor.dynamic !== undefined
+    readonly property string resolvedDescription: root.descriptionText()
 
-    signal                pickRequested
-    signal                removed
-    signal                valueChanged(var value)
+    property string          label: ""
+    property var             pickValues: []
+    property bool            showBadge: false
 
-    function              descriptionText(): string {
-        const descriptor = root.descriptor;
-        if (!descriptor)
+    signal                   pickRequested
+    signal                   removed
+    signal                   valueChanged(var value)
+
+    function                 descriptionText(): string {
+        const currentDescriptor = root.descriptor;
+        if (!currentDescriptor)
             return "";
         const parts = [];
-        if (descriptor.description !== undefined && descriptor.description !== "")
-            parts.push(descriptor.description);
-        if (descriptor.hint !== undefined && descriptor.hint !== "")
-            parts.push(descriptor.hint);
+        if (currentDescriptor.description !== undefined && currentDescriptor.description !== "")
+            parts.push(currentDescriptor.description);
+        if (currentDescriptor.hint !== undefined && currentDescriptor.hint !== "")
+            parts.push(currentDescriptor.hint);
         return parts.join(" · ");
     }
 
-    description: descriptionText()
+    Layout.fillWidth: true
+    spacing: Appearance.spacing.normal
 
-    Loader {
+    Item {
+        id: labelArea
+
         Layout.alignment: Qt.AlignVCenter
-        active: root.showBadge && root.descriptor !== null
-        visible: active
-        sourceComponent: Rectangle {
-            id: dynamicBadge
+        Layout.fillWidth: true
+        Layout.minimumWidth: 140
+        implicitHeight: labelColumn.implicitHeight
 
-            implicitHeight: badgeText.implicitHeight + 8
-            implicitWidth: badgeText.implicitWidth + 12
-            color: Colours.m3Colors.m3SurfaceContainerHighest
-            radius: height / 2
+        ColumnLayout {
+            id: labelColumn
+
+            anchors {
+                left: parent.left
+                right: parent.right
+                verticalCenter: parent.verticalCenter
+            }
+
+            spacing: 2
+
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: Appearance.spacing.small
+
+                StyledText {
+                    color: Colours.m3Colors.m3OnSurface
+                    elide: Text.ElideRight
+                    font.pixelSize: Appearance.fonts.size.normal
+                    font.weight: Font.Medium
+                    maximumLineCount: 1
+                    text: root.label
+                }
+
+                RuleSummaryChip {
+                    Layout.alignment: Qt.AlignVCenter
+                    backgroundColor: Colours.m3Colors.m3SurfaceContainerHighest
+                    contentColor: Colours.m3Colors.m3OnSurfaceVariant
+                    text: root.descriptor?.dynamic ? qsTr("dynamic") : qsTr("static")
+                    tooltipText: {
+                        if (root.descriptor?.dynamic)
+                            return qsTr("Dynamic — re-applied when matched properties change");
+                        return qsTr("Static — applied once when the window opens");
+                    }
+                    visible: root.hasDynamicInfo
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                }
+            }
 
             StyledText {
-                id: badgeText
+                Layout.fillWidth: true
+                color: Qt.alpha(Colours.m3Colors.m3OnSurface, 0.58)
+                elide: Text.ElideRight
+                font.pixelSize: Appearance.fonts.size.small
+                maximumLineCount: 1
+                text: root.resolvedDescription
+                visible: root.resolvedDescription !== ""
+            }
+        }
+
+        Tooltip {
+            anchorItem: labelArea
+            enabled: root.resolvedDescription !== ""
+            text: root.resolvedDescription
+        }
+    }
+
+    RowLayout {
+        Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+        spacing: Appearance.spacing.small
+
+        Item {
+            id: pickAnchor
+
+            Layout.alignment: Qt.AlignVCenter
+            implicitHeight: pickButton.implicitHeight
+            implicitWidth: pickButton.implicitWidth
+            visible: root.pickValues.length > 0
+
+            FloatingButton {
+                id: pickButton
 
                 anchors.centerIn: parent
-                color: Colours.m3Colors.m3OnSurfaceVariant
-                font.pixelSize: Appearance.fonts.size.small
-                text: root.descriptor?.dynamic ? qsTr("dynamic") : qsTr("static")
+                color: Colours.m3Colors.m3SecondaryContainer
+                icon.color: Colours.m3Colors.m3OnSecondaryContainer
+                icon.name: "list_alt"
+                size: "small"
+                tooltipText: qsTr("Pick from running")
+                onClicked: {
+                    root.pickRequested();
+                    pickMenu.open();
+                }
             }
 
-            Tooltip {
-                anchorItem: dynamicBadge
-                text: root.descriptor?.dynamic ? qsTr("Dynamic — re-applied when matched properties change") : qsTr("Static — applied once when the window opens")
+            DropdownMenu {
+                id: pickMenu
+
+                anchorItem: pickButton
+                maxWidth: 280
+                model: root.pickValues
+                popupParent: pickAnchor
+                showScrollBar: true
+                width: 240
+                onActivated: index => {
+                    if (index >= 0 && index < root.pickValues.length)
+                        root.valueChanged(root.pickValues[index]);
+                }
             }
         }
-    }
 
-    Loader {
-        Layout.alignment: Qt.AlignVCenter
-        active: root.pickValues.length > 0
-        visible: active
-        sourceComponent: SplitButton {
-            id: pickButton
-
-            text: qsTr("Pick from running")
-            icon.name: "list_alt"
-            model: root.pickValues.map(value => {
-                return {
-                    text: value
-                };
-            })
-            showScrollBar: true
-            onClicked: {
-                root.pickRequested();
-                pickButton.openMenu();
-            }
-            onMenuItemActivated: index => root.valueChanged(root.pickValues[index])
+        RuleValueEditor {
+            descriptor: root.descriptor
+            value: root.currentValue
+            onValueCommitted: value => root.valueChanged(value)
         }
-    }
 
-    RuleValueEditor {
-        descriptor: root.descriptor
-        value: root.currentValue
-        onValueCommitted: value => root.valueChanged(value)
-    }
-
-    FloatingButton {
-        size: "small"
-        icon.name: "close"
-        icon.color: Colours.m3Colors.m3OnSurfaceVariant
-        tooltipText: qsTr("Remove %1").arg(root.label)
-        onClicked: root.removed()
+        FloatingButton {
+            Layout.alignment: Qt.AlignVCenter
+            color: "transparent"
+            icon.color: Colours.m3Colors.m3OnSurfaceVariant
+            icon.name: "close"
+            size: "small"
+            tooltipText: qsTr("Remove %1").arg(root.label)
+            onClicked: root.removed()
+        }
     }
 }

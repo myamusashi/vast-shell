@@ -39,10 +39,12 @@ Singleton {
     property var             rules: []
     property var             stored: []
 
-    function                 addRule(): void {
-        const next = root.rules.slice();
-        next.push(root.newRule());
+    function                 addRule(): string {
+        const next    = root.rules.slice();
+        const created = root.newRule();
+        next.push(created);
         root.setRules(next);
+        return created.id;
     }
 
     function                 apply(): void {
@@ -77,10 +79,10 @@ Singleton {
         root.setRules(root.deepCopy(root.stored));
     }
 
-    function                 duplicateRule(id: string): void {
+    function                 duplicateRule(id: string): string {
         const index = root.ruleIndex(id);
         if (index < 0)
-            return;
+            return "";
         const copy = root.deepCopy(root.rules[index]);
         copy.id    = root.newRuleId();
         // The source name would trip the duplicate-name check until renamed.
@@ -88,6 +90,7 @@ Singleton {
         const next = root.rules.slice();
         next.splice(index + 1, 0, copy);
         root.setRules(next);
+        return copy.id;
     }
 
     function                 moveRule(id: string, delta: int): void {

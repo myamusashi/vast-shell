@@ -15,6 +15,13 @@ Scope {
     property string             pendingTitle: ""
     property var                pendingView: null
 
+    function                    clearPending(): void {
+        settleTimer.stop();
+        root.pendingIndex = -1;
+        root.pendingTitle = "";
+        root.pendingView  = null;
+    }
+
     function                    findCard(item, cardTitle) {
         if (item.title === cardTitle)
             return item;
@@ -83,6 +90,12 @@ Scope {
         refreshPending();
     }
 
+    function                    scrollToBottom(): void {
+        root.clearPending();
+        scrollAnim.to = Math.max(0, root.target.contentHeight - root.target.height);
+        scrollAnim.restart();
+    }
+
     function                    scrollToItem(item) {
         if (!item || !item.visible)
             return;
@@ -91,6 +104,12 @@ Scope {
         const maxY    = Math.max(0, target.contentHeight - target.height);
 
         scrollAnim.to = Math.max(0, Math.min(y, maxY));
+        scrollAnim.restart();
+    }
+
+    function                    scrollToTop(): void {
+        root.clearPending();
+        scrollAnim.to = 0;
         scrollAnim.restart();
     }
 

@@ -12,6 +12,10 @@ import "../Components"
 Item {
     id: root
 
+    readonly property bool atBottom: pageFlickable.contentY >= Math.max(0, pageFlickable.contentHeight - pageFlickable.height) - 1
+    readonly property bool atTop: pageFlickable.contentY <= 1
+    readonly property bool canScroll: pageFlickable.contentHeight > pageFlickable.height + 1
+
     default property alias content: contentLayout.data
     property alias         footer: footerLayout.data
     property string        pageTitle
@@ -23,6 +27,14 @@ Item {
 
     function               revealItem(view, index): void {
         cardRevealer.revealItem(view, index);
+    }
+
+    function               scrollToBottom(): void {
+        cardRevealer.scrollToBottom();
+    }
+
+    function               scrollToTop(): void {
+        cardRevealer.scrollToTop();
     }
 
     Layout.fillHeight: true

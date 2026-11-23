@@ -20,6 +20,7 @@ Item {
         });
     }
 
+    property bool         compact: true
     property var          items: []
     property string       placeholderText: ""
     property bool         showScrollBar: false
@@ -44,7 +45,7 @@ Item {
     }
 
     implicitHeight: textField.implicitHeight
-    implicitWidth: 260
+    implicitWidth: 230
     onFilteredItemsChanged: {
         if (textField.activeFocus)
             root.openIfAvailable();
@@ -56,6 +57,7 @@ Item {
         id: textField
 
         anchors.fill: parent
+        compact: root.compact
         placeholderText: root.placeholderText
         trailingIcon.name: dropdownMenu.opened ? "keyboard_arrow_up" : "keyboard_arrow_down"
         Keys.onEscapePressed: event => {
