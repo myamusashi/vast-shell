@@ -27,5 +27,6 @@ target_link_libraries(tst_search PRIVATE
 )
 
 foreach(target IN ITEMS tst_fuzzy tst_search)
+    vast_pch(${target})
     add_test(NAME ${target} COMMAND ${target} ${VAST_TEST_ARGS})
 endforeach()

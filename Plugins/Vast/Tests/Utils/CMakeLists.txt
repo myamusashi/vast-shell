@@ -89,5 +89,6 @@ target_link_libraries(tst_filechooser PRIVATE
 )
 
 foreach(target IN ITEMS tst_colorutils tst_utilsfile tst_paletteanimator tst_bluetoothagent tst_kdeconnectshare tst_kdeconnectreceive tst_filechooser)
+    vast_pch(${target})
     add_test(NAME ${target} COMMAND ${target} ${VAST_TEST_ARGS})
 endforeach()

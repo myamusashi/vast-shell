@@ -39,5 +39,6 @@ target_link_libraries(tst_audiodevices PRIVATE
 )
 
 foreach(target IN ITEMS tst_audioprofiles tst_audiocards tst_audiodevices)
+    vast_pch(${target})
     add_test(NAME ${target} COMMAND ${target} ${VAST_TEST_ARGS})
 endforeach()

@@ -30,7 +30,7 @@ add_custom_target(lint-tidy
   USES_TERMINAL
 )
 
-foreach(VAST_TIDY_DEP IN ITEMS vast-pchset-common vast-pchset-large vast-pchset-plugin wayland-ext-data-control)
+foreach(VAST_TIDY_DEP IN ITEMS vast-pchset-common wayland-ext-data-control)
     if(TARGET ${VAST_TIDY_DEP})
         add_dependencies(lint-tidy ${VAST_TIDY_DEP})
     endif()

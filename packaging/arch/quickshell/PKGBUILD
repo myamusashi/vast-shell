@@ -55,11 +55,11 @@ build() {
     -DINSTALL_QML_PREFIX=lib/qt6/qml \
     -DGIT_REVISION="tag-v$_ver"
 
-  cmake --build build
+  ninja -C build
 }
 
 package() {
-  DESTDIR="$pkgdir" cmake --install build
+  DESTDIR="$pkgdir" ninja -C build install
 
   install -Dm644 "$pkgname-$_rev/LICENSE" \
     "$pkgdir/usr/share/licenses/$pkgname/LICENSE"

@@ -11,6 +11,3 @@ vast_module(vast-brightness
         PkgConfig::DDCUTIL
         vast-jobs
 )
-
-target_include_directories(vast-brightness SYSTEM PRIVATE ${DDCUTIL_INCLUDE_DIRS})
-target_compile_options(vast-brightness PRIVATE ${DDCUTIL_CFLAGS_OTHER})

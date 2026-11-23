@@ -8,6 +8,11 @@ function(vast_module arg_TARGET)
 
     set_source_files_properties(${arg_QML_SINGLETONS} PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
 
+    set(extra_qml_module_flags "")
+    if(NOT arg_QML_FILES AND NOT arg_QML_SINGLETONS)
+        list(APPEND extra_qml_module_flags NO_LINT NO_CACHEGEN)
+    endif()
+
     qt_add_library(${arg_TARGET} SHARED)
     qt_add_qml_module(${arg_TARGET}
         URI ${arg_URI}
@@ -17,6 +22,7 @@ function(vast_module arg_TARGET)
         IMPORTS ${arg_IMPORTS}
         OPTIONAL_IMPORTS ${arg_OPTIONAL_IMPORTS}
         DEFAULT_IMPORTS ${arg_DEFAULT_IMPORTS}
+        ${extra_qml_module_flags}
     )
 
     qt_query_qml_module(${arg_TARGET}

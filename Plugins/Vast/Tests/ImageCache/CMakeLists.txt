@@ -30,5 +30,6 @@ target_link_libraries(tst_imagecache PRIVATE
 )
 
 foreach(target IN ITEMS tst_imagecacheindex tst_imagecache)
+    vast_pch(${target})
     add_test(NAME ${target} COMMAND ${target} ${VAST_TEST_ARGS})
 endforeach()

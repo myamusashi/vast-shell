@@ -53,5 +53,6 @@ target_link_libraries(tst_lyricstimeline PRIVATE
 )
 
 foreach(target IN ITEMS tst_lrcparser tst_lyricscache tst_lyricsscheduler tst_lyricstimeline)
+    vast_pch(${target})
     add_test(NAME ${target} COMMAND ${target} ${VAST_TEST_ARGS})
 endforeach()

@@ -46,6 +46,8 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOGEN_ORIGIN_DEPENDS OFF)
+set(CMAKE_AUTOGEN_PARALLEL AUTO)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
@@ -72,10 +74,12 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-Wunused-lambda-capture)
 endif()
 
-# pipewire's pkg-config target defines _REENTRANT for Vast.Audio only; a
-# per-target define difference invalidates PCH reuse (-Winvalid-pch), so
-# match it project-wide (same workaround quickshell applies).
+# pipewire's pkg-config target defines _REENTRANT and -fno-strict-aliasing /
+# -fno-strict-overflow for Vast.Audio only; a per-target flag difference
+# invalidates PCH reuse (-Winvalid-pch), so match them project-wide (same
+# workaround quickshell applies).
 add_compile_definitions(_REENTRANT)
+add_compile_options(-fno-strict-aliasing -fno-strict-overflow)
 
 set(QT_QML_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/qml")
 

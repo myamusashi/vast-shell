@@ -61,7 +61,7 @@ add_custom_target(lint-clazy
   USES_TERMINAL
 )
 
-foreach(VAST_LINT_DEP IN ITEMS vast-pchset-common vast-pchset-large vast-pchset-plugin wayland-ext-data-control)
+foreach(VAST_LINT_DEP IN ITEMS vast-pchset-common wayland-ext-data-control)
     if(TARGET ${VAST_LINT_DEP})
         add_dependencies(lint-clazy ${VAST_LINT_DEP})
     endif()

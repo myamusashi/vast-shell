@@ -13,6 +13,8 @@ add_library(vast-test-wallpaper-fixtures STATIC
     WallpaperFixtures.cpp
     WallpaperFixtures.hpp
 )
+set_target_properties(vast-test-wallpaper-fixtures PROPERTIES AUTOMOC OFF)
+vast_pch(vast-test-wallpaper-fixtures)
 
 target_include_directories(vast-test-wallpaper-fixtures PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_definitions(vast-test-wallpaper-fixtures PUBLIC
@@ -81,5 +83,6 @@ target_link_libraries(tst_quantizer_parity PRIVATE
 )
 
 foreach(target IN ITEMS tst_palette tst_colormaterial tst_spec_parity tst_quantizer_parity)
+    vast_pch(${target})
     add_test(NAME ${target} COMMAND ${target} ${VAST_TEST_ARGS})
 endforeach()

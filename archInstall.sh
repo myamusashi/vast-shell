@@ -259,7 +259,7 @@ build_vast_plugin() {
 	}
 
 	local -r src="$PROJECT_ROOT"
-	[[ -d $src/CMakeLists.txt ]] || {
+	[[ -f $src/CMakeLists.txt ]] || {
 		warn "CMakeLists.txt not found, skipping"
 		return 0
 	}
@@ -313,7 +313,9 @@ build_m3shapes() {
 	CC=clang CXX=clang++ cmake -S "$src" -B "$src/build" -G Ninja \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_INSTALL_PREFIX="$install_base" \
-		-DINSTALL_QMLDIR="lib/qt6/qml"
+		-DINSTALL_QMLDIR="lib/qt6/qml" \
+		-DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=mold \
+		-DCMAKE_MODULE_LINKER_FLAGS=-fuse-ld=mold
 	ninja -C "$src/build"
 	ninja -C "$src/build" install
 
@@ -419,7 +421,9 @@ build_another_ripple() {
 		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 		-DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
 		-DCMAKE_INSTALL_PREFIX="$install_base" \
-		-DINSTALL_QMLDIR="usr/lib/qt6/qml"
+		-DINSTALL_QMLDIR="usr/lib/qt6/qml" \
+		-DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=mold \
+		-DCMAKE_MODULE_LINKER_FLAGS=-fuse-ld=mold
 	ninja -C "$src/build"
 	ninja -C "$src/build" install
 

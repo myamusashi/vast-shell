@@ -16,5 +16,6 @@ target_link_libraries(tst_keylock PRIVATE
 )
 
 foreach(target IN ITEMS tst_keylock)
+    vast_pch(${target})
     add_test(NAME ${target} COMMAND ${target} ${VAST_TEST_ARGS})
 endforeach()

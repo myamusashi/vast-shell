@@ -8,6 +8,7 @@ set(FZY_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../fzy")
 add_library(fzy_core STATIC
     "${FZY_ROOT}/src/match.c"
 )
+set_target_properties(fzy_core PROPERTIES AUTOMOC OFF)
 
 target_include_directories(fzy_core SYSTEM PUBLIC "${FZY_ROOT}/src")
 

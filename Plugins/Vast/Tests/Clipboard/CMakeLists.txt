@@ -51,6 +51,7 @@ target_link_libraries(tst_clipboardmanager PRIVATE
 )
 
 foreach(target IN ITEMS tst_clipboarddatabase tst_clipboardmodel tst_clipboardhelpers tst_clipboardmanager)
+    vast_pch(${target})
     add_test(NAME ${target} COMMAND ${target} ${VAST_TEST_ARGS})
     set_tests_properties(${target} PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
 endforeach()

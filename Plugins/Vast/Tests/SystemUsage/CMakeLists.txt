@@ -11,4 +11,5 @@ target_link_libraries(tst_systemusage PRIVATE
     vast-jobs
 )
 
+vast_pch(tst_systemusage)
 add_test(NAME tst_systemusage COMMAND tst_systemusage ${VAST_TEST_ARGS})

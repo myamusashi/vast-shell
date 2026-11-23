@@ -27,6 +27,7 @@ add_library(wayland-ext-data-control STATIC
     ${WAYLAND_PROTOCOL_GEN_DIR}/ext-data-control-v1-protocol.c
     ${WAYLAND_PROTOCOL_GEN_DIR}/ext-data-control-v1-client-protocol.h
 )
+set_target_properties(wayland-ext-data-control PROPERTIES AUTOMOC OFF)
 target_include_directories(wayland-ext-data-control PUBLIC ${WAYLAND_PROTOCOL_GEN_DIR})
 target_link_libraries(wayland-ext-data-control PUBLIC PkgConfig::WAYLAND_CLIENT)
 

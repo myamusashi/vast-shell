@@ -48,5 +48,6 @@ target_link_libraries(tst_brightnessmanager PRIVATE
 )
 
 foreach(target IN ITEMS tst_brightnessstore tst_brightnessdisplay tst_brightnessmanager)
+    vast_pch(${target})
     add_test(NAME ${target} COMMAND ${target} ${VAST_TEST_ARGS})
 endforeach()

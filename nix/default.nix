@@ -1,7 +1,6 @@
 {
     lib,
     makeWrapper,
-    cmake,
     stdenv,
     gnugrep,
     findutils,
@@ -63,7 +62,6 @@
         nativeBuildInputs = [
             makeWrapper
             patchelf
-            cmake
             qt6.qttools
             qt6.wrapQtAppsHook
         ];
@@ -82,7 +80,6 @@
               --replace-fail 'ShellRoot {' 'ShellRoot { settings.watchFiles: false'
         '';
 
-        dontUseCmakeConfigure = true;
         dontWrapQtApps = true;
 
         buildPhase = ''

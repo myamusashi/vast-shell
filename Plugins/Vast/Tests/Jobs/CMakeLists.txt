@@ -17,4 +17,5 @@ target_link_libraries(tst_jobexecutor PRIVATE
     vast-jobs
 )
 
+vast_pch(tst_jobexecutor)
 add_test(NAME tst_jobexecutor COMMAND tst_jobexecutor ${VAST_TEST_ARGS})

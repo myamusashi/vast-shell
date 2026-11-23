@@ -2,6 +2,7 @@
     lib,
     clangStdenv,
     cmake,
+    ninja,
     qt6,
     patchelf,
     mold,
@@ -48,6 +49,7 @@ in
 
         nativeBuildInputs = [
             cmake
+            ninja
             qt6.wrapQtAppsHook
             patchelf
             pkg-config

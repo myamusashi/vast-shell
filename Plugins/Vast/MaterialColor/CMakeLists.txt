@@ -12,6 +12,9 @@ add_library(vast-materialcolor STATIC
     PaletteValidation.cpp
 )
 
+set_target_properties(vast-materialcolor PROPERTIES AUTOMOC OFF)
+vast_pch(vast-materialcolor)
+
 target_include_directories(vast-materialcolor PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(vast-materialcolor PUBLIC

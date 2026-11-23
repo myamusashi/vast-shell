@@ -24,5 +24,6 @@ target_compile_definitions(tst_translation PRIVATE
     VAST_TRANSLATIONS_DIR="${CMAKE_SOURCE_DIR}/translations"
 )
 
+vast_pch(tst_translation)
 add_test(NAME tst_translation COMMAND tst_translation ${VAST_TEST_ARGS})
 set_tests_properties(tst_translation PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
