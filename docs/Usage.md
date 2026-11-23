@@ -164,7 +164,7 @@ List what your compositor knows with `vastctl hypr shortcuts list`.
 Call shell functions from a script or keybind:
 
 ```sh
-shell ipc call <target> <function>                  # archInstall.sh or the Nix flake
+vastctl <target> <function> # if you running the shell with vastctl daemon
 qs -c <shell directory> ipc call <target> <function> # otherwise
 ```
 
