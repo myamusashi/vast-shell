@@ -1,4 +1,5 @@
-//@ pragma UseQApplication
+//@ pragma DiskCache
+//@ pragma RenderControl
 //@ pragma NativeTextRendering
 //@ pragma DropExpensiveFonts
 //@ pragma Env QT_FFMPEG_DECODING_HW_DEVICE_TYPES=vaapi
