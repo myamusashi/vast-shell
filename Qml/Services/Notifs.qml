@@ -6,19 +6,20 @@ import Quickshell.Io
 import Quickshell.Services.Notifications
 import Vast.ImageCache
 
+import qs.Core.Configs
 import qs.Core.Utils
 import qs.Services
 
 Singleton {
     id: root
 
+    readonly property int         maxNotificationAge: Math.max(86400000, Configs.notification.maximumNotificationAge)
+    readonly property int         maxNotifications: Math.max(1, Configs.notification.maximumNotification)
     readonly property list<Notif> notClosed: notifications.filter(notif => !notif.closed)
     readonly property list<Notif> popups: notifications.filter(notif => notif.popup)
 
     property alias                dnd: persistentProps.dnd
     property bool                 loaded: false
-    property int                  maxNotificationAge: 604800000
-    property int                  maxNotifications: 100
     property list<Notif>          notifications: []
 
     function                      cleanupOldNotifications() {
@@ -41,14 +42,15 @@ Singleton {
             notif.close();
     }
 
-    function                      enforceNotificationLimit() {
+    function                      enforceNotificationLimit(reserveSlots) {
         cleanupOldNotifications();
 
+        const slots        = reserveSlots === undefined ? 1 : reserveSlots;
         const currentCount = notClosed.length;
 
-        if (currentCount >= maxNotifications) {
+        if (currentCount + slots > maxNotifications) {
             const sortedNotifs = notClosed.slice().sort((a, b) => a.time - b.time);
-            const toRemove     = currentCount - maxNotifications + 1;
+            const toRemove     = currentCount + slots - maxNotifications;
 
             console.log(`Removing ${toRemove} oldest notification(s) to enforce limit`);
             ToastService.show(qsTr("Removing %1 oldest notification(s) to enforce limit").arg(toRemove), qsTr("Notifications"), "dialog-information", 3000);
@@ -67,6 +69,14 @@ Singleton {
         }
     }
 
+    onMaxNotificationAgeChanged: {
+        if (loaded)
+            cleanupOldNotifications();
+    }
+    onMaxNotificationsChanged: {
+        if (loaded)
+            enforceNotificationLimit(0);
+    }
     onNotificationsChanged: {
         if (loaded)
             saveTimer.restart();
@@ -146,7 +156,7 @@ Singleton {
         onNotification: notif => {
             notif.tracked = true;
 
-            root.enforceNotificationLimit();
+            root.enforceNotificationLimit(1);
 
             const comp = notifComponent.createObject(root, {
                 popup: !persistentProps.dnd,

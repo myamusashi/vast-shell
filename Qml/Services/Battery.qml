@@ -5,19 +5,55 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Services.UPower
 
+import qs.Core.Configs
+
 Singleton {
     id: root
 
     readonly property bool charging: UPower.displayDevice.state == UPowerDeviceState.Charging
+    readonly property int  criticalLevel: Configs.generals.battery.criticalLevel
+    readonly property bool discharging: UPower.displayDevice.state === UPowerDeviceState.Discharging
+    readonly property int  percentage: UPower.displayDevice.ready ? Math.round(UPower.displayDevice.percentage * 100) : 100
 
     property var           batteries: []
+    property bool          criticalNotified: false
     property int           foundBattery: 0
     property real          overallBatteryHealth: 0
     property real          totalCurrentCapacity: 0
     property real          totalDesignCapacity: 0
 
+    function               checkCriticalLevel(): void {
+        if (!UPower.displayDevice.ready || !UPower.displayDevice.isLaptopBattery)
+            return;
+
+        if (!root.discharging || root.percentage > root.criticalLevel) {
+            root.criticalNotified = false;
+            return;
+        }
+
+        if (root.criticalNotified)
+            return;
+
+        root.criticalNotified = true;
+        CaptureNotify.sendNotification(qsTr("Critical battery level"), qsTr("Battery is at %1%. Plug in a charger immediately!").arg(root.percentage), "critical", "battery-caution", "vast-shell", []);
+    }
+
     function               formatCapacity(microWh) {
         return (microWh / 1000000).toFixed(2) + " Wh";
+    }
+
+    Component.onCompleted: checkCriticalLevel()
+    onCriticalLevelChanged: checkCriticalLevel()
+    onDischargingChanged: checkCriticalLevel()
+    onPercentageChanged: checkCriticalLevel()
+
+    Connections {
+
+        function onReadyChanged() {
+            root.checkCriticalLevel();
+        }
+
+        target: UPower.displayDevice
     }
 
     Process {

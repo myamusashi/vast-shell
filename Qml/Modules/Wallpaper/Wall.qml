@@ -5,10 +5,11 @@ import Quickshell
 import Quickshell.Wayland
 
 import qs.Components.Base
+import qs.Core.Configs
 import qs.Core.Utils
 
 Variants {
-    model: Quickshell.screens
+    model: Configs.wallpaper.enabledWallpaper ? Quickshell.screens : []
     delegate: PanelWindow {
         id: root
 

@@ -7,39 +7,99 @@
 		},
 		"fonts": {
 			"family": {
-				"material": "Material Symbols Rounded"
+				"material": "Material Symbols Rounded",
+				"mono": "monospace",
+				"nerd": "",
+				"sans": "sans-serif"
 			},
 			"size": {
-				"scale": 1
+				"scale": 1.0
 			}
 		},
 		"icons": {
 			"materialFontPath": "",
 			"phosphorFontPath": "",
 			"type": "material"
+		},
+		"margin": {
+			"large": 15,
+			"larger": 12,
+			"normal": 10,
+			"small": 5,
+			"smaller": 7
+		},
+		"padding": {
+			"large": 15,
+			"larger": 12,
+			"normal": 10,
+			"small": 5,
+			"smaller": 7
+		},
+		"rounding": {
+			"full": 1000,
+			"large": 25,
+			"normal": 17,
+			"small": 12
+		},
+		"spacing": {
+			"large": 20,
+			"larger": 15,
+			"normal": 12,
+			"small": 7,
+			"smaller": 10
 		}
+	},
+	"audio": {
+		"defaultSinkName": "",
+		"showPeakLevels": true,
+		"sinkProfiles": {}
 	},
 	"bar": {
 		"alwaysOpenBar": true,
-		"barHeight": 35,
-		"compact": false,
-		"visibleWorkspace": 4,
-		"workspacesIndicator": "dot"
+		"barHeight": 30,
+		"visibleWorkspace": 5
+	},
+	"captureScreenVideo": {
+		"audioCodec": "",
+		"lowPower": false,
+		"maxFps": 60,
+		"quality": "very_high",
+		"showCursor": true,
+		"videoCodec": ""
+	},
+	"clipboard": {
+		"enabled": false,
+		"enablePreview": false,
+		"enableVimKeybinds": true,
+		"height": 700,
+		"keepOpenAfterCopy": false,
+		"listEntries": 15,
+		"maxEntries": 300,
+		"preview": {
+			"showTruncatedText": true,
+			"sourceWidth": 300
+		},
+		"showTruncatedText": true,
+		"width": 300
 	},
 	"colors": {
 		"isDarkMode": true,
-		"toDarkColor": "$HOME/.config/vast-shell/dark-colors.json",
-		"toWhiteColor": "$HOME/.config/vast-shell/light-colors.json",
+		"scheme": "tonal-spot",
 		"staticColorsPath": "$HOME/.config/vast-shell/colors.json",
 		"useStaticColors": false
 	},
+	"dock": {
+		"dockHeight": 64,
+		"enabled": false,
+		"iconSlot": 44,
+		"pinnedApps": [],
+		"showAllWorkspaces": false
+	},
 	"generals": {
-		"alpha": 1,
+		"alpha": 1.0,
 		"apps": {
-			"audio": "pavucontrol-qt",
 			"fileExplorer": "pcmanfm-qt",
 			"imageViewer": "lximage-qt",
-			"playback": "mpv",
 			"terminal": "foot",
 			"videoViewer": "mpv"
 		},
@@ -49,54 +109,93 @@
 				{
 					"icon": "battery-020",
 					"level": 20,
-					"message": "Kamu mungkin mau colok chargernya",
-					"title": "Baterai lemah"
+					"message": "You might want to plug in a charger",
+					"title": "Low battery"
 				},
 				{
 					"icon": "battery-010",
 					"level": 10,
-					"message": "Kamu mungkin ingin colok charger kamu <b>sekarang</b>",
-					"title": "Kamu bisa lihat pesan sebelumnya kan?"
+					"message": "You should probably plug in a charger <b>now</b>",
+					"title": "Did you see the previous message?"
 				},
 				{
 					"icon": "battery-000",
 					"level": 5,
-					"message": "MASUKAN CHARGER NYA SEKARANG!!",
-					"title": "Level baterai kritis"
+					"message": "PLUG THE CHARGER RIGHT NOW!!",
+					"title": "Critical battery level"
 				}
 			]
 		},
-		"chargingGlowSpread": 20,
-		"coverBlurRadius": 1,
-		"enableOuterBorder": true,
+		"chargingGlowSpread": 10,
+		"coverBlurRadius": 16,
+		"enableOuterBorder": false,
 		"followFocusMonitor": true,
+		"osdTimer": 1500,
 		"outerBorderSize": 10,
-		"transparent": true
+		"showHolidays": true,
+		"transparent": false
+	},
+	"idle": {
+		"enabled": true,
+		"timeouts": [
+			{
+				"on-resume": "",
+				"on-timeout": "",
+				"timeoutMonitor": 60
+			}
+		]
+	},
+	"kdeConnect": {
+		"pollInterval": 15000,
+		"pollingEnabled": true
 	},
 	"language": {
 		"language": ""
 	},
+	"lockscreen": {
+		"blurRadius": 48,
+		"blurWindowsEnabled": false
+	},
 	"mediaPlayer": {
+		"autoSwitchActivePlayer": true,
 		"dynamicColorsCover": true,
 		"showLyrics": false,
-		"sliderType": "WaveForm"
+		"sliderType": "Wavy"
 	},
 	"notification": {
 		"maximumNotification": 100,
 		"maximumNotificationAge": 604800000
 	},
+	"overview": {
+		"alpha": 0.5,
+		"closeOnNewWorkspace": true,
+		"enabled": true,
+		"live": false
+	},
+	"privacy": {
+		"blockPrivacyListNodesName": {},
+		"enablePrivacyIcon": true,
+		"enablePrivacyIndicator": false,
+		"enablePrivacyIndicatorOnDynamicIsland": true
+	},
+	"search": {
+		"fileDirs": [],
+		"maxDepth": 3
+	},
 	"wallpaper": {
 		"enabledWallpaper": true,
-		"transition": "circle",
-		"transitionDuration": 500,
+		"livePreview": true,
+		"transition": "random",
+		"transitionDuration": 300,
 		"transitionLowPerfMode": false,
 		"visibleWallpaper": 3,
 		"wallpaperDir": "$HOME/Pictures/wallpapers"
 	},
 	"weather": {
+		"astronomyApiKey": "",
 		"enableQuickSummary": false,
 		"latitude": "",
 		"longitude": "",
-		"reloadTime": 1800000
+		"reloadTime": 180
 	}
 }

@@ -23,7 +23,13 @@ Item {
             page: 0,
             pageLabel: "General",
             card: "Default Applications",
-            terms: ["Terminal", "File Explorer", "Image Viewer", "Video Viewer", "Audio Settings"]
+            terms: ["Terminal", "File Explorer", "Image Viewer", "Video Viewer"]
+        },
+        {
+            page: 0,
+            pageLabel: "General",
+            card: "Battery",
+            terms: ["Battery", "Critical Battery Level"]
         },
         {
             page: 1,
@@ -83,7 +89,7 @@ Item {
             page: 4,
             pageLabel: "Top Bar",
             card: "Layout & Behavior",
-            terms: ["Always Open Bar", "Compact Navigation Bar", "Bar Height"]
+            terms: ["Always Open Bar", "Bar Height"]
         },
         {
             page: 4,

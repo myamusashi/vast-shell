@@ -62,6 +62,8 @@ Scope {
             root.isOverviewOpen = value;
             return;
         }
+        if (name === "clipboard" && value && !Configs.clipboard.enabled)
+            return;
         if (root.exclusiveDrawers.includes(name)) {
             if (!value && root.activeDrawer !== name)
                 return;
@@ -90,5 +92,15 @@ Scope {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
         }
+    }
+
+    Connections {
+
+        function onEnabledChanged() {
+            if (!Configs.clipboard.enabled)
+                root.isClipboardOpen = false;
+        }
+
+        target: Configs.clipboard
     }
 }

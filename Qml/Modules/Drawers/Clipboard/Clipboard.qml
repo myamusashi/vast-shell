@@ -14,15 +14,15 @@ import qs.Components.Dialog
 WrapperRectangle {
     id: root
 
-    readonly property bool shouldBeActive: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) && GlobalStates.isClipboardOpen // qmllint disable
+    readonly property bool shouldBeActive: Configs.clipboard.enabled && FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) && GlobalStates.isClipboardOpen // qmllint disable
 
     anchors.centerIn: parent
     clip: true
     color: GlobalStates.drawerColors
-    implicitHeight: GlobalStates.isClipboardOpen ? Configs.clipboard.height : 0
+    implicitHeight: (Configs.clipboard.enabled && GlobalStates.isClipboardOpen) ? Configs.clipboard.height : 0
     implicitWidth: ClipboardServices.uiState.listWidth + (Configs.clipboard.enablePreview ? (ClipboardServices.uiState.previewWidth + Appearance.spacing.small * 2) : 0)
     radius: Appearance.rounding.normal
-    visible: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) && implicitHeight > 0 // qmllint disable
+    visible: Configs.clipboard.enabled && FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) && implicitHeight > 0 // qmllint disable
     Behavior on implicitHeight {
         NAnim {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -48,7 +48,7 @@ WrapperRectangle {
         }
 
         sourceComponent: FocusCage {
-            active: GlobalStates.isClipboardOpen
+            active: Configs.clipboard.enabled && GlobalStates.isClipboardOpen
             anchors.fill: parent
             defaultFocus: content.defaultFocusItem
 

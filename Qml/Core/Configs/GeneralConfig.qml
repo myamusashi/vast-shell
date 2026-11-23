@@ -15,10 +15,8 @@ JsonObject {
     property bool    transparent: false
 
     component Apps: JsonObject {
-        property string audio: "pavucontrol-qt"
         property string fileExplorer: "pcmanfm-qt"
         property string imageViewer: "lximage-qt"
-        property string playback: "mpv"
         property string terminal: "foot"
         property string videoViewer: "mpv"
     }

@@ -19,6 +19,12 @@ Singleton {
         value: ToplevelManager.activeToplevel ? ToplevelManager.activeToplevel.appId : ""
     }
 
+    Binding {
+        property: "enabled"
+        target: ClipboardManager
+        value: Configs.clipboard.enabled
+    }
+
     IpcHandler {
 
         function clear(): bool {

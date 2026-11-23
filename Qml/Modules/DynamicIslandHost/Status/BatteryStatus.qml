@@ -9,6 +9,8 @@ import qs.Services
 Scope {
     id: root
 
+    // Reference Battery so the singleton initializes at startup and monitors criticalLevel.
+    readonly property bool      charging: Battery.charging
     readonly property var       device: UPower.displayDevice
     readonly property int       deviceState: root.device ? root.device.state : UPowerDeviceState.Unknown
     readonly property list<int> lowThresholds: [20, 10, 5]

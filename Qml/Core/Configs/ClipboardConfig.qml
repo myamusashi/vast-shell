@@ -15,7 +15,6 @@ JsonObject {
 
     component Preview: JsonObject {
         property bool showTruncatedText: true
-        property real sourceHeight: 300
         property real sourceWidth: 300
     }
 }

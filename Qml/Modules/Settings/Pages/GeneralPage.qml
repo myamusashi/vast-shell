@@ -208,13 +208,25 @@ SettingsPageBase {
                 label: qsTr("Video Viewer:")
                 onConfigChanged: value => Configs.generals.apps.videoViewer = value
             }
+        }
+    }
 
-            AppSettingRow {
-                categories: ["AudioVideo", "Settings"]
-                configValue: Configs.generals.apps.audio
-                description: qsTr("Default app for audio and sound configuration.")
-                label: qsTr("Audio Settings:")
-                onConfigChanged: value => Configs.generals.apps.audio = value
+    SettingsCard {
+        title: qsTr("Battery")
+
+        SettingRow {
+            description: qsTr("Send a critical notification when battery drops to or below this percentage.")
+            label: qsTr("Critical Battery Level (%):")
+
+            StyledSlide {
+                Layout.preferredWidth: 200
+                from: 1
+                showValuePopup: true
+                snapEnabled: true
+                stepSize: 1
+                to: 30
+                value: Configs.generals.battery.criticalLevel
+                onMoved: Configs.generals.battery.criticalLevel = value
             }
         }
     }
@@ -244,8 +256,6 @@ SettingsPageBase {
                     return "imagesmode";
                 case "Video":
                     return "video_file";
-                case "AudioVideo":
-                    return "audio_file";
                 default:
                     return acc;
                 }

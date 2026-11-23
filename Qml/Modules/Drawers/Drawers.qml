@@ -36,7 +36,7 @@ Variants {
                 return true;
             if (GlobalStates.isSessionOpen && !sessionDrawer.showConfirmDialog)
                 return true;
-            if (GlobalStates.isClipboardOpen)
+            if (Configs.clipboard.enabled && GlobalStates.isClipboardOpen)
                 return true;
             if (GlobalStates.hasInlineReply)
                 return true;

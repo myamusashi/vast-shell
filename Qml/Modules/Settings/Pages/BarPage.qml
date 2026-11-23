@@ -23,16 +23,6 @@ SettingsPageBase {
         }
 
         SettingRow {
-            description: qsTr("Use a condensed layout.")
-            label: qsTr("Compact Navigation Bar:")
-
-            StyledSwitch {
-                checked: Configs.bar.compact
-                onCheckedChanged: Configs.bar.compact = checked
-            }
-        }
-
-        SettingRow {
             description: qsTr("Height of the top bar in pixels.")
             label: qsTr("Bar Height:")
 

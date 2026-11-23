@@ -20,7 +20,7 @@ Singleton {
     readonly property bool   hasInlineReply: inlineReplyOwner !== null
     readonly property bool   isCapsLockOSDVisible: osd.isActive("capslock")
     readonly property bool   isNumLockOSDVisible: osd.isActive("numlock")
-    readonly property bool   isShellKeyboardGrabActive: isLauncherOpen || isSessionOpen || isWallpaperSwitcherOpen || isClipboardOpen || hasInlineReply || isAddTodoListOpen || isEditTodoListOpen || isOverviewOpen
+    readonly property bool   isShellKeyboardGrabActive: isLauncherOpen || isSessionOpen || isWallpaperSwitcherOpen || (Configs.clipboard.enabled && isClipboardOpen) || hasInlineReply || isAddTodoListOpen || isEditTodoListOpen || isOverviewOpen
     readonly property bool   isVolumeOSDVisible: osd.isActive("volume")
 
     property alias           activeDrawer: panel.activeDrawer
