@@ -15,8 +15,7 @@ die() {
 PROJECT_ROOT="$(cd "$(dirname "$0")" && pwd)" || die "Failed to determine project root"
 readonly PROJECT_ROOT
 readonly VAST_SHELL_VERSION="0.1.0"
-VAST_SHELL_REVISION="$(git -C "$PROJECT_ROOT" rev-parse HEAD 2>/dev/null || printf 'unknown')"
-readonly VAST_SHELL_REVISION
+VAST_SHELL_REVISION="unknown"
 
 readonly INSTALL_DIR="/usr/local/share/quickshell"
 readonly BIN_DIR="/usr/local/bin"
@@ -61,6 +60,16 @@ install_system_packages() {
 	fi
 }
 
+git_repo() {
+	local owner
+	owner=$(stat -c '%U' "$PROJECT_ROOT" 2>/dev/null || true)
+	if [[ -n $owner && $owner != "root" && $owner != "UNKNOWN" ]] && command -v sudo &>/dev/null; then
+		sudo -H -u "$owner" git -C "$PROJECT_ROOT" "$@"
+	else
+		git -c safe.directory='*' -C "$PROJECT_ROOT" "$@"
+	fi
+}
+
 update_submodules() {
 	local -r fzy_marker="$PROJECT_ROOT/Plugins/third_party/fzy/src/match.c"
 	local -r mcu_marker="$PROJECT_ROOT/Plugins/third_party/material-color-utilities/cpp"
@@ -71,11 +80,11 @@ update_submodules() {
 		return 0
 	}
 
-	git -C "$PROJECT_ROOT" rev-parse --git-dir &>/dev/null ||
+	git_repo rev-parse --git-dir >/dev/null ||
 		die "Submodules missing and $PROJECT_ROOT is not a git repository — cannot fetch them"
 
 	log "Initializing git submodules..."
-	git -C "$PROJECT_ROOT" submodule update --init --recursive ||
+	git_repo submodule update --init --recursive ||
 		die "Failed to initialize git submodules"
 }
 
@@ -597,6 +606,7 @@ main() {
 	mkdir -p "$INSTALL_DIR" "$BIN_DIR" "$LIBEXEC_DIR" "$QML_DIR" "$BUILD_DIR"
 
 	install_system_packages
+	VAST_SHELL_REVISION="$(git_repo rev-parse HEAD 2>/dev/null || printf 'unknown')"
 	update_submodules
 	setup_aur_helper
 	install_aur_packages
