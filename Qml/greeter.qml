@@ -8,30 +8,36 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import Quickshell
 import Quickshell.Services.Greetd
 import Quickshell.Wayland
-import QtMultimedia
 
-import qs.Components.Feedback
-import qs.Components.Base
 import qs.Core.Configs
-import qs.Core.Utils
-import qs.Services
 import qs.Greeter
 
 ShellRoot {
     id: root
 
+    function beginUnlockAndLaunch() {
+        if (!rootFlow.exiting || rootFlow.unlocking)
+            return;
+        rootFlow.unlocking = true;
+        exitFallbackTimer.stop();
+        sessionLock.locked = false;
+        // Wait ~2 frames so Wayland flushes ext_session_lock_v1.unlock_and_destroy
+        // before Greetd.launch() exits Quickshell, avoiding the compositor dead-lock screen.
+        launchCommitTimer.restart();
+    }
+
     WlSessionLock {
         id: sessionLock
 
-        locked: false
+        locked: true
 
         Surface {
             auth: authenticator // qmllint disable
             lock: sessionLock
+            onExitCompleted: root.beginUnlockAndLaunch()
         }
     }
 
@@ -42,18 +48,18 @@ ShellRoot {
     Scope {
         id: rootFlow
 
-        property bool introducing: true
+        property bool exiting: false
         property bool launching: false
+        property bool unlocking: false
     }
 
     Connections {
 
         function onLaunchReady() {
-            if (rootFlow.launching)
+            if (rootFlow.exiting || rootFlow.launching)
                 return;
-            rootFlow.launching   = true;
-            rootFlow.introducing = false;
-            sessionTimer.restart();
+            rootFlow.exiting = true;
+            exitFallbackTimer.restart();
         }
 
         target: authenticator
@@ -62,110 +68,53 @@ ShellRoot {
     Connections {
 
         function onError() {
-            sessionTimer.stop();
+            exitFallbackTimer.stop();
+            launchCommitTimer.stop();
+            rootFlow.exiting   = false;
+            rootFlow.unlocking = false;
             rootFlow.launching = false;
+            sessionLock.locked = true;
         }
 
         target: Greetd
     }
 
+    // Safety fallback if no WlSessionLockSurface instances exist (e.g. headless output).
     Timer {
-        id: introduceTimer
+        id: exitFallbackTimer
 
-        interval: 3000
-        running: true
+        interval: Appearance.animations.durations.expressiveFastSpatial + 150
+        onTriggered: root.beginUnlockAndLaunch()
+    }
+
+    Timer {
+        id: launchCommitTimer
+
+        interval: 32
         onTriggered: {
-            rootFlow.introducing = false;
-            sessionLock.locked   = true;
+            rootFlow.launching = true;
+            authenticator.launch();
         }
     }
 
-    Timer {
-        id: sessionTimer
-
-        interval: 0
-        onTriggered: authenticator.launch()
-    }
-
+    // Solid-black backdrop beneath WlSessionLock so unlocking never flashes a
+    // non-black compositor root background on any Wayland compositor.
     Variants {
         model: Quickshell.screens
         delegate: PanelWindow {
-            id: splashPanel
-
             required property ShellScreen modelData
 
-            readonly property bool        splashVisible: rootFlow.introducing || (rootFlow.launching && !sessionLock.locked)
-
-            color: "transparent"
-            contentItem.opacity: splashVisible ? 1 : 0
+            WlrLayershell.layer: WlrLayer.Background
+            color: "#000000"
+            exclusionMode: ExclusionMode.Ignore
             screen: modelData
-            Behavior on contentItem.opacity {
-                NAnim {
-                    duration: Appearance.animations.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
-                }
-            }
+            surfaceFormat.opaque: true
 
             anchors {
                 bottom: true
                 left: true
                 right: true
                 top: true
-            }
-
-            Item {
-                anchors.fill: parent
-
-                Image {
-                    anchors.fill: parent
-                    asynchronous: true
-                    cache: true
-                    fillMode: Image.PreserveAspectCrop
-                    source: GreetConfigs.greeterConfig.staticWallpaper
-                    visible: !GreetConfigs.greeterConfig.useVideoWallpaper
-                    onStatusChanged: {
-                        if (status === Image.Error)
-                            source = Paths.projectRoot + "/Assets/images/wallpaper.png";
-                    }
-                }
-
-                MediaPlayer {
-                    id: splashVideoPlayer
-
-                    loops: MediaPlayer.Infinite
-                    source: "file://" + GreetConfigs.greeterConfig.videoWallpaper
-                    videoOutput: splashVideoOutput
-                    onMediaStatusChanged: {
-                        if (GreetConfigs.greeterConfig.useVideoWallpaper && mediaStatus === MediaPlayer.LoadedMedia)
-                            play();
-                    }
-                }
-
-                VideoOutput {
-                    id: splashVideoOutput
-
-                    anchors.fill: parent
-                    fillMode: VideoOutput.PreserveAspectCrop
-                    visible: GreetConfigs.greeterConfig.useVideoWallpaper
-                }
-
-                ColumnLayout {
-                    anchors.centerIn: parent
-                    anchors.margins: Appearance.margin.large
-                    spacing: Appearance.spacing.normal
-
-                    LoadingIndicator {
-                        implicitHeight: 64
-                        implicitWidth: 64
-                        status: splashPanel.splashVisible
-                    }
-
-                    StyledText {
-                        color: Colours.m3Colors.m3OnSurface
-                        font.pixelSize: Appearance.fonts.size.extraLarge
-                        text: splashPanel.splashVisible && rootFlow.launching ? qsTr("Session Start") : "Loading..."
-                    }
-                }
             }
         }
     }

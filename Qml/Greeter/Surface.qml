@@ -52,14 +52,23 @@ WlSessionLockSurface {
     property url                    effectiveWallpaper: GreeterWallpaper.effectiveWallpaper(useVideoWallpaper, wallpaperPath, wallpaperPath)
     property int                    thumbnailVersion: 0
 
+    signal                          exitCompleted
+
     function                        playEntrance() {
+        exitSequence.stop();
         background.opacity    = 0;
         background.blurRadius = 0;
+        background.scale      = 1.0;
+        clockColumn.opacity   = 0;
+        userCard.opacity      = 0;
+        userCard.scale        = 1.0;
+        powerControls.opacity = 0;
         entranceSequence.restart();
     }
 
     function                        playExit() {
-        exitSequence.start();
+        entranceSequence.stop();
+        exitSequence.restart();
     }
 
     function                        refreshVideoColorSource() {
@@ -88,7 +97,7 @@ WlSessionLockSurface {
         root.refreshVideoColorSource();
     }
 
-    color: "transparent"
+    color: "#000000"
     Component.onCompleted: {
         playEntrance();
     }
@@ -183,11 +192,13 @@ WlSessionLockSurface {
         Image {
             id: staticProbe
 
-            source: GreeterWallpaper.effectiveWallpaper(root.useVideoWallpaper, root.wallpaperPath, root.wallpaperPath)
+            source: root.useVideoWallpaper ? "" : GreeterWallpaper.effectiveWallpaper(false, root.wallpaperPath, root.wallpaperPath)
             visible: false
             onStatusChanged: {
+                if (root.useVideoWallpaper)
+                    return;
                 if (status === Image.Ready)
-                    root.effectiveWallpaper = GreeterWallpaper.effectiveWallpaper(root.useVideoWallpaper, root.wallpaperPath, root.wallpaperPath);
+                    root.effectiveWallpaper = GreeterWallpaper.effectiveWallpaper(false, root.wallpaperPath, root.wallpaperPath);
                 else if (status === Image.Error)
                     root.effectiveWallpaper = root.assetWallpaper;
                 root.effectiveIsVideo = false;
@@ -226,6 +237,7 @@ WlSessionLockSurface {
     Column {
         id: clockColumn
 
+        opacity: 0
         spacing: Appearance.spacing.smaller
 
         anchors {
@@ -324,6 +336,14 @@ WlSessionLockSurface {
             duration: Appearance.animations.durations.expressiveDefaultSpatial
             easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
             property: "opacity"
+            target: clockColumn
+            to: 1
+        }
+
+        NAnim {
+            duration: Appearance.animations.durations.expressiveDefaultSpatial
+            easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+            property: "opacity"
             target: powerControls
             to: 1
         }
@@ -343,48 +363,68 @@ WlSessionLockSurface {
         ParallelAnimation {
 
             NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                duration: Appearance.animations.durations.expressiveFastSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
                 property: "opacity"
                 target: background
                 to: 0
             }
 
             NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                duration: Appearance.animations.durations.expressiveFastSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
                 property: "blurRadius"
                 target: background
                 to: 0
             }
 
             NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                duration: Appearance.animations.durations.expressiveFastSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
                 property: "scale"
                 target: background
-                to: 1.15
+                to: 1.06
             }
 
             NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                duration: Appearance.animations.durations.expressiveFastSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                property: "opacity"
+                target: clockColumn
+                to: 0
+            }
+
+            NAnim {
+                duration: Appearance.animations.durations.expressiveFastSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
                 property: "opacity"
                 target: powerControls
                 to: 0
             }
 
             NAnim {
-                duration: Appearance.animations.durations.expressiveDefaultSpatial
-                easing.bezierCurve: Appearance.animations.curves.expressiveDefaultSpatial
+                duration: Appearance.animations.durations.expressiveFastSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
                 property: "opacity"
                 target: userCard
                 to: 0
             }
+
+            NAnim {
+                duration: Appearance.animations.durations.expressiveFastSpatial
+                easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                property: "scale"
+                target: userCard
+                to: 0.96
+            }
         }
 
         ScriptAction {
-            script: root.lock.locked = false
+            script: {
+                if (videoPlayer.playbackState === MediaPlayer.PlayingState)
+                    videoPlayer.stop();
+                root.exitCompleted();
+            }
         }
     }
 }

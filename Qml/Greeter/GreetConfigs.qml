@@ -122,7 +122,7 @@ Singleton {
     Process {
         id: etcSync
 
-        command: [Paths.projectRoot + "/Assets/shell/pkexec.sh", "sh", "-c", "mkdir -p /etc/vast-shell && install -m 644 " + JSON.stringify(Paths.shellDir + "/greeter.json") + "/etc/vast-shell/greeter.json"]
+        command: [Paths.projectRoot + "/Assets/shell/pkexec.sh", "sh", "-c", "mkdir -p /etc/vast-shell && install -m 644 " + JSON.stringify(Paths.shellDir + "/greeter.json") + " /etc/vast-shell/greeter.json"]
         stderr: SplitParser {
             onRead: data => console.log("[GreeterConfig] pkexec stderr:", data)
         }

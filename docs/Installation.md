@@ -43,8 +43,10 @@ The module installs a systemd user service (`quickshell-shell.service`) that sta
 | `greetd.enable` | bool | `false` | Install and start a greetd greeter running `Qml/greeter.qml`. |
 | `greetd.user` | string | `"greeter"` | User the greeter runs as. |
 | `greetd.restart` | bool | `true` | Restart the greeter when it exits. Turn off while testing. |
-| `greetd.compositorPackage` | package | `pkgs.mango` | Greeter compositor. It **must implement `ext-session-lock-v1`**; `cage` does not. |
+| `greetd.compositorPackage` | package | `pkgs.mango` | Greeter compositor. It **must implement `ext-session-lock-v1`**; `cage` does not. Built-in presets cover `mango`, `sway`, `hyprland`, `niri`, `river`, and `labwc`. |
 | `greetd.extraConfig` | lines | `""` | Extra lines for the greeter compositor config. |
+| `greetd.exitCommand` | null or string | `null` | Optional exit command run after Quickshell quits to terminate the greeter compositor. Defaults to auto-detection in `Assets/shell/greeter-launch.sh`. |
+| `greetd.command` | null or string | `null` | Optional override for `greetd`'s `default_session.command` when using a custom greeter compositor. |
 
 ---
 

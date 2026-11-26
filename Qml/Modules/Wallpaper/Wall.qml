@@ -17,7 +17,7 @@ Variants {
 
         WlrLayershell.layer: WlrLayer.Background
         WlrLayershell.namespace: LayerNamespaces.wallpaper
-        color: "transparent"
+        color: "#000000"
         exclusionMode: ExclusionMode.Ignore
         screen: modelData
         surfaceFormat.opaque: true
@@ -30,7 +30,17 @@ Variants {
         }
 
         BaseWallpaper {
+            id: wallpaper
+
             anchors.fill: parent
+            opacity: 0
+            Component.onCompleted: opacity = 1
+            Behavior on opacity {
+                NAnim {
+                    duration: Appearance.animations.durations.expressiveFastSpatial
+                    easing.bezierCurve: Appearance.animations.curves.expressiveFastSpatial
+                }
+            }
         }
     }
 }

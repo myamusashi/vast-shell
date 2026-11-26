@@ -6,10 +6,89 @@
 }: let
     cfg = config.programs.quickshell-shell;
 
-    greeterConfig = pkgs.writeText "mango-greeter.conf" ''
-        ${cfg.greetd.extraConfig}
-        exec=${cfg.package}/bin/quickshell -p ${cfg.package}/share/quickshell/Qml/greeter.qml
+    compositorName = lib.getName cfg.greetd.compositorPackage;
+    compositorVersion = lib.getVersion cfg.greetd.compositorPackage;
+    isLegacyHyprland = compositorVersion != "" && lib.versionOlder compositorVersion "0.55";
+
+    greeterLauncher = pkgs.writeShellScript "vast-greeter-launch" ''
+        export PATH="${cfg.greetd.compositorPackage}/bin:${cfg.package}/bin:$PATH"
+        export VAST_QUICKSHELL_BIN="${cfg.package}/bin/quickshell"
+        export VAST_GREETER_QML="${cfg.package}/share/quickshell/Qml/greeter.qml"
+        ${lib.optionalString (cfg.greetd.exitCommand != null) ''
+            export VAST_GREETER_EXIT_CMD=${lib.escapeShellArg cfg.greetd.exitCommand}
+        ''}
+        exec "${cfg.package}/share/quickshell/Assets/shell/greeter-launch.sh"
     '';
+
+    greeterConfig =
+        if lib.hasPrefix "mango" compositorName then
+            pkgs.writeText "mango-greeter.conf" ''
+                animations=0
+                layer_animations=0
+                root_color=0x000000ff
+                ${cfg.greetd.extraConfig}
+                exec_once=${greeterLauncher}
+            ''
+        else if lib.hasPrefix "sway" compositorName then
+            pkgs.writeText "sway-greeter.conf" ''
+                output * bg #000000 solid_color
+                ${cfg.greetd.extraConfig}
+                exec ${greeterLauncher}
+            ''
+        else if lib.hasPrefix "hyprland" compositorName && isLegacyHyprland then
+            pkgs.writeText "hyprland-greeter.conf" ''
+                animations {
+                    enabled = false
+                }
+                misc {
+                    disable_hyprland_logo = true
+                    disable_splash_rendering = true
+                    background_color = 0x000000
+                }
+                ${cfg.greetd.extraConfig}
+                exec-once = ${greeterLauncher}
+            ''
+        else if lib.hasPrefix "hyprland" compositorName then
+            pkgs.writeText "hyprland-greeter.lua" ''
+                hl.config({
+                    animations = {
+                        enabled = false,
+                    },
+                    misc = {
+                        disable_hyprland_logo = true,
+                        disable_splash_rendering = true,
+                        background_color = 0x000000,
+                    },
+                })
+                ${cfg.greetd.extraConfig}
+                hl.on("hyprland.start", function()
+                    hl.exec_cmd(${builtins.toJSON "${greeterLauncher}"})
+                end)
+            ''
+        else if lib.hasPrefix "niri" compositorName then
+            pkgs.writeText "niri-greeter.kdl" ''
+                animations {
+                    off
+                }
+                layout {
+                    background-color "#000000"
+                }
+                ${cfg.greetd.extraConfig}
+                spawn-at-startup "${greeterLauncher}"
+            ''
+        else
+            pkgs.writeText "greeter.conf" ''
+                ${cfg.greetd.extraConfig}
+                exec=${greeterLauncher}
+            '';
+
+    defaultGreeterCommand =
+        if lib.hasPrefix "river" compositorName then
+            "${lib.getExe cfg.greetd.compositorPackage} -c ${greeterLauncher}"
+        else if lib.hasPrefix "labwc" compositorName then
+            "${lib.getExe cfg.greetd.compositorPackage} -S ${greeterLauncher}"
+        else
+            "${lib.getExe cfg.greetd.compositorPackage} -c ${greeterConfig}";
 in {
     options.programs.quickshell-shell = {
         enable = lib.mkEnableOption "quickshell shell";
@@ -72,6 +151,26 @@ in {
                 default = "";
                 description = "Extra lines appended to the greeter compositor config";
             };
+
+            exitCommand = lib.mkOption {
+                type = lib.types.nullOr lib.types.str;
+                default = null;
+                description = ''
+                    Optional command run after quickshell exits to cleanly close
+                    the greeter compositor. When null, greeter-launch.sh
+                    auto-detects the running compositor (mango, hyprland, sway,
+                    niri, labwc, river) and exits it cleanly.
+                '';
+            };
+
+            command = lib.mkOption {
+                type = lib.types.nullOr lib.types.str;
+                default = null;
+                description = ''
+                    Optional override for greetd's default_session.command when
+                    using a custom compositor not covered by the built-in presets.
+                '';
+            };
         };
     };
 
@@ -110,7 +209,11 @@ in {
             enable = true;
 
             settings.default_session = {
-                command = "${lib.getExe cfg.greetd.compositorPackage} -c ${greeterConfig}";
+                command =
+                    if cfg.greetd.command != null then
+                        cfg.greetd.command
+                    else
+                        defaultGreeterCommand;
                 user = cfg.greetd.user;
                 inherit (cfg.greetd) restart;
                 # source_profile = true;

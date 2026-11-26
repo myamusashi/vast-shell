@@ -29,18 +29,77 @@ Scope {
 
     signal                 launchReady
 
+    function               buildSessionEnvironment(session) {
+        const environment = [];
+        if (!session)
+            return environment;
+        if (session.sessionType && session.sessionType.length > 0)
+            environment.push("XDG_SESSION_TYPE=" + session.sessionType);
+        if (session.sessionId && session.sessionId.length > 0) {
+            environment.push("XDG_SESSION_DESKTOP=" + session.sessionId);
+            environment.push("DESKTOP_SESSION=" + session.sessionId);
+        }
+        if (session.desktopNames && session.desktopNames.length > 0)
+            environment.push("XDG_CURRENT_DESKTOP=" + session.desktopNames);
+        return environment;
+    }
+
     function               launch() {
         if (launching || Greetd.state !== GreetdState.ReadyToLaunch)
             return;
-        launching = true;
-        let index = selectedSessionIndex;
-        if (index < 0 || index >= sessions.count)
-            index = 0;
-        const session    = sessions.get(index);
-        const rawCommand = session && session.command ? session.command : "bash";
-        if (session && session.command)
-            saveLastSession(session.command);
-        Greetd.launch(rawCommand.split(" ").filter(part => part.length > 0));
+        launching         = true;
+        const session     = selectedSession();
+        const rawCommand  = session && session.command ? session.command : "bash";
+        const commandArgs = parseCommand(rawCommand);
+        const environment = buildSessionEnvironment(session);
+        Greetd.launch(commandArgs, environment, true);
+    }
+
+    function               parseCommand(rawCommand) {
+        const text = String(rawCommand ?? "").trim();
+        if (text.length === 0)
+            return ["bash"];
+
+        const args  = [];
+        let current = "";
+        let quote   = "";
+        let escaped = false;
+
+        for (let i = 0; i < text.length; i++) {
+            const ch = text.charAt(i);
+            if (escaped) {
+                current += ch;
+                escaped = false;
+                continue;
+            }
+            if (ch === "\\" && quote !== "'") {
+                escaped = true;
+                continue;
+            }
+            if (quote !== "") {
+                if (ch === quote)
+                    quote = "";
+                else
+                    current += ch;
+                continue;
+            }
+            if (ch === "'" || ch === "\"") {
+                quote = ch;
+                continue;
+            }
+            if (/\s/.test(ch)) {
+                if (current.length > 0) {
+                    args.push(current);
+                    current = "";
+                }
+                continue;
+            }
+            current += ch;
+        }
+        if (current.length > 0)
+            args.push(current);
+
+        return args.length > 0 ? args : ["bash"];
     }
 
     function               saveLastSession(command) {
@@ -50,6 +109,15 @@ Scope {
         Quickshell.execDetached({
             command: [Paths.projectRoot + "/Assets/shell/last-session.sh", command]
         });
+    }
+
+    function               selectedSession() {
+        if (sessions.count === 0)
+            return null;
+        let index = selectedSessionIndex;
+        if (index < 0 || index >= sessions.count)
+            index = 0;
+        return sessions.get(index);
     }
 
     function               selectSession(index) {
@@ -134,6 +202,9 @@ Scope {
         }
 
         function onReadyToLaunch() {
+            const session = root.selectedSession();
+            if (session && session.command)
+                root.saveLastSession(session.command);
             root.statusMessage = qsTr("Session Start");
             root.launchReady();
         }
@@ -170,11 +241,14 @@ Scope {
                 const lines = text.trim().split("\n").filter(line => line.length > 0);
                 for (const line of lines) {
                     const parts = line.split("|||");
-                    if (parts.length !== 2)
+                    if (parts.length < 2)
                         continue;
                     root.sessions.append({
                         display: parts[0],
-                        command: parts[1].trim()
+                        command: parts[1].trim(),
+                        sessionType: parts.length > 2 ? parts[2].trim() : "",
+                        desktopNames: parts.length > 3 ? parts[3].trim() : "",
+                        sessionId: parts.length > 4 ? parts[4].trim() : ""
                     });
                 }
                 root.selectSession(root.sessionIndexForCommand(root.lastSessionCommand));
