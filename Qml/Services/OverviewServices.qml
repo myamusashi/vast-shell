@@ -52,6 +52,10 @@ Singleton {
         const lockedAddress          = locked.address ?? "";
         panelState.lockedToplevel    = null;
         if (targetWorkspaceAddress === "" || targetWorkspaceAddress === sourceWorkspaceAddress) {
+            if (Configs.overview.followActiveWorkspace) {
+                const activeAddress                 = panelState.monitorActiveWorkspaceAddress !== "" ? panelState.monitorActiveWorkspaceAddress : "1";
+                panelState.selectedWorkspaceAddress = activeAddress;
+            }
             panelState.focusedCardIndex = root.findWorkspaceCardIndex(panelState.monitorWorkspaces, panelState.selectedWorkspaceAddress, panelState.nextWorkspaceAddress);
             if (panelState.workspaceToplevels.length > 0 && panelState.inputMode === "keyboard") {
                 const existingIndex = root.findToplevelIndexByAddress(panelState.workspaceToplevels, lockedAddress);
@@ -63,10 +67,18 @@ Singleton {
             }
             return;
         }
-        panelState.pendingFocusedWindowAddress = lockedAddress;
-        panelState.selectedWorkspaceAddress    = targetWorkspaceAddress;
-        panelState.focusedCardIndex            = root.findWorkspaceCardIndex(panelState.monitorWorkspaces, targetWorkspaceAddress, panelState.nextWorkspaceAddress);
-        panelState.activeFocusZone             = "cards";
+        if (Configs.overview.followActiveWorkspace) {
+            const activeAddress                    = panelState.monitorActiveWorkspaceAddress !== "" ? panelState.monitorActiveWorkspaceAddress : "1";
+            panelState.pendingFocusedWindowAddress = activeAddress === targetWorkspaceAddress ? lockedAddress : "";
+            panelState.selectedWorkspaceAddress    = activeAddress;
+            panelState.focusedCardIndex            = root.findWorkspaceCardIndex(panelState.monitorWorkspaces, activeAddress, panelState.nextWorkspaceAddress);
+            panelState.activeFocusZone             = "cards";
+        } else {
+            panelState.pendingFocusedWindowAddress = lockedAddress;
+            panelState.selectedWorkspaceAddress    = targetWorkspaceAddress;
+            panelState.focusedCardIndex            = root.findWorkspaceCardIndex(panelState.monitorWorkspaces, targetWorkspaceAddress, panelState.nextWorkspaceAddress);
+            panelState.activeFocusZone             = "cards";
+        }
         root.moveToplevelToWorkspace(locked, targetWorkspaceAddress);
     }
 
@@ -131,17 +143,18 @@ Singleton {
     }
 
     function                ensureCardVisible(flickable: var, repeater: var, trailingCard: var, index: int): void {
-        if (!flickable || !repeater)
+        if (!flickable || !repeater || flickable.width <= 0)
             return;
         const targetCard = index >= 0 && index < repeater.count ? repeater.itemAt(index) : (index === repeater.count ? trailingCard : null);
-        if (!targetCard)
+        if (!targetCard || targetCard.width <= 0)
             return;
-        const leftEdge  = targetCard.x;
-        const rightEdge = targetCard.x + targetCard.width;
+        const maxContentX = Math.max(0, flickable.contentWidth - flickable.width);
+        const leftEdge    = targetCard.x;
+        const rightEdge   = targetCard.x + targetCard.width;
         if (leftEdge < flickable.contentX)
-            flickable.contentX = leftEdge;
+            flickable.contentX = Math.max(0, Math.min(maxContentX, leftEdge));
         else if (rightEdge > flickable.contentX + flickable.width)
-            flickable.contentX = rightEdge - flickable.width;
+            flickable.contentX = Math.max(0, Math.min(maxContentX, rightEdge - flickable.width));
     }
 
     function                findToplevelIndexByAddress(toplevels: var, windowAddress: string): int {
@@ -357,7 +370,9 @@ Singleton {
     }
 
     function                monitorActiveWorkspaceAddress(hyprMonitor: var, targetMonitor: bool): string {
-        const activeAddress = Hypr.workspaceAddress(hyprMonitor?.activeWorkspace) || String(hyprMonitor?.lastIpcObject?.activeWorkspace?.address ?? "");
+        const ipcActive     = hyprMonitor?.lastIpcObject?.activeWorkspace;
+        const ipcAddress    = ipcActive?.address ?? (ipcActive?.id !== undefined && ipcActive?.id !== null ? ipcActive.id : "");
+        const activeAddress = Hypr.workspaceAddress(hyprMonitor?.activeWorkspace) || String(ipcAddress);
         if (activeAddress !== "" && !activeAddress.startsWith("special:"))
             return activeAddress;
         return targetMonitor ? Hypr.activeWsAddress : "1";
@@ -545,6 +560,30 @@ Singleton {
             panelState.lockedToplevel = null;
     }
 
+    function                syncPanelToActiveWorkspace(panelState: var): void {
+        if (!Configs.overview.followActiveWorkspace || !panelState.isTargetMonitor || !root.isOpen)
+            return;
+        if (panelState.draggedToplevel !== null)
+            return;
+        const targetAddress = panelState.monitorActiveWorkspaceAddress !== "" ? panelState.monitorActiveWorkspaceAddress : "1";
+        if (panelState.lockedToplevel !== null) {
+            panelState.hoveredWorkspaceAddress = "";
+            panelState.hoveredWindowAddress    = "";
+            panelState.focusedCardIndex        = root.findWorkspaceCardIndex(panelState.monitorWorkspaces, targetAddress, panelState.nextWorkspaceAddress);
+            return;
+        }
+        panelState.hoveredWorkspaceAddress     = "";
+        panelState.hoveredWindowAddress        = "";
+        panelState.pendingFocusedWindowAddress = "";
+        panelState.selectedWorkspaceAddress    = targetAddress;
+        panelState.focusedCardIndex            = root.findWorkspaceCardIndex(panelState.monitorWorkspaces, targetAddress, panelState.nextWorkspaceAddress);
+        if (panelState.activeFocusZone === "grid") {
+            panelState.focusedWindowIndex = 0;
+            if (panelState.workspaceToplevels.length === 0)
+                panelState.activeFocusZone = "cards";
+        }
+    }
+
     function                syncSelectedWorkspaceToFocusedCard(panelState: var): void {
         const address = root.workspaceAddressForCardIndex(panelState, panelState.focusedCardIndex);
         if (address !== "")
@@ -601,8 +640,12 @@ Singleton {
     }
 
     function                unlockToplevel(panelState: var, returnToGrid: bool): void {
-        const lockedAddress         = panelState.lockedToplevel?.address ?? "";
-        panelState.lockedToplevel   = null;
+        const lockedAddress       = panelState.lockedToplevel?.address ?? "";
+        panelState.lockedToplevel = null;
+        if (Configs.overview.followActiveWorkspace) {
+            const activeAddress                 = panelState.monitorActiveWorkspaceAddress !== "" ? panelState.monitorActiveWorkspaceAddress : "1";
+            panelState.selectedWorkspaceAddress = activeAddress;
+        }
         panelState.focusedCardIndex = root.findWorkspaceCardIndex(panelState.monitorWorkspaces, panelState.selectedWorkspaceAddress, panelState.nextWorkspaceAddress);
         if (returnToGrid && panelState.workspaceToplevels.length > 0) {
             const existingIndex = root.findToplevelIndexByAddress(panelState.workspaceToplevels, lockedAddress);

@@ -81,6 +81,8 @@ Item {
             implicitHeight: cardsRow.implicitHeight + root.cardOverflowPadding * 2
             interactive: contentWidth > width
             pressDelay: 0
+            onContentWidthChanged: OverviewServices.ensureCardVisible(cardsFlickable, workspaceRepeater, newWorkspaceCard, root.focusedCardIndex)
+            onWidthChanged: OverviewServices.ensureCardVisible(cardsFlickable, workspaceRepeater, newWorkspaceCard, root.focusedCardIndex)
 
             RowLayout {
                 id: cardsRow

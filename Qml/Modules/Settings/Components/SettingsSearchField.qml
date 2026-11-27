@@ -185,7 +185,7 @@ Item {
             page: 14,
             pageLabel: "Overview",
             card: "Behavior & Appearance",
-            terms: ["Enable Workspace Overview", "Close on New Workspace", "Show Empty Workspaces", "Live Window Previews", "Background Dimming Alpha", "Workspace Overview"]
+            terms: ["Enable Workspace Overview", "Close on New Workspace", "Follow Active Workspace", "Show Empty Workspaces", "Live Window Previews", "Background Dimming Alpha", "Workspace Overview"]
         },
         {
             page: 15,

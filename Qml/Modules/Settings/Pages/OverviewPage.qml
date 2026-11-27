@@ -40,6 +40,16 @@ SettingsPageBase {
         }
 
         SettingRow {
+            description: qsTr("Automatically move overview focus to match the currently active workspace.")
+            label: qsTr("Follow Active Workspace:")
+
+            StyledSwitch {
+                checked: Configs.overview.followActiveWorkspace
+                onCheckedChanged: Configs.overview.followActiveWorkspace = checked
+            }
+        }
+
+        SettingRow {
             description: qsTr("Show empty workspaces in the range up to the highest active or occupied workspace.")
             label: qsTr("Show Empty Workspaces:")
 

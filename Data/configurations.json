@@ -170,6 +170,7 @@
 		"alpha": 0.5,
 		"closeOnNewWorkspace": true,
 		"enabled": true,
+		"followActiveWorkspace": true,
 		"live": false,
 		"showEmptyWorkspaces": true
 	},

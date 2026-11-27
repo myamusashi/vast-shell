@@ -114,8 +114,19 @@ Variants {
                 panelWindow.pendingFocusedWindowAddress = "";
             }
         }
+        onMonitorActiveWorkspaceAddressChanged: OverviewServices.syncPanelToActiveWorkspace(panelWindow)
         onMonitorWorkspacesChanged: OverviewServices.syncWorkspacesBounds(panelWindow)
         onWorkspaceToplevelsChanged: OverviewServices.syncToplevelsBounds(panelWindow)
+
+        Connections {
+
+            function onFollowActiveWorkspaceChanged(): void {
+                if (Configs.overview.followActiveWorkspace)
+                    OverviewServices.syncPanelToActiveWorkspace(panelWindow);
+            }
+
+            target: Configs.overview
+        }
 
         Connections {
 
@@ -125,6 +136,19 @@ Variants {
             }
 
             target: Hypr
+        }
+
+        Connections {
+
+            function onIsOpenChanged(): void {
+                if (OverviewServices.isOpen && panelWindow.isTargetMonitor) {
+                    OverviewServices.resetPanelToActiveWorkspace(panelWindow);
+                    // Wait for layer surface exclusive keyboard focus before grabbing Qt active focus.
+                    Qt.callLater(() => keyboardFocusScope.forceActiveFocus());
+                }
+            }
+
+            target: OverviewServices
         }
 
         // Catch pointer entry on non-focused monitors even over empty workspaces while an exclusive layer surface is open.
