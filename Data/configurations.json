@@ -170,7 +170,8 @@
 		"alpha": 0.5,
 		"closeOnNewWorkspace": true,
 		"enabled": true,
-		"live": false
+		"live": false,
+		"showEmptyWorkspaces": true
 	},
 	"privacy": {
 		"blockPrivacyListNodesName": {},

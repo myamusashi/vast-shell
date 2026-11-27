@@ -393,9 +393,10 @@ Singleton {
     }
 
     function                monitorWorkspaces(monitorName: string, activeWorkspaceAddress: string): var {
-        const rawList       = Hypr.workspaces.values ?? Hypr.workspaces ?? [];
-        const seenAddresses = {};
-        const collected     = [];
+        const rawList               = Hypr.workspaces.values ?? Hypr.workspaces ?? [];
+        const seenAddresses         = {};
+        const otherMonitorAddresses = {};
+        const collected             = [];
 
         for (let i = 0; i < rawList.length; i++) {
             const workspace = rawList[i];
@@ -403,8 +404,11 @@ Singleton {
             if (!address || address.startsWith("special:") || (workspace?.lastIpcObject?.type ?? "") === "special")
                 continue;
             const workspaceMonitor = workspace.monitor?.name ?? workspace.lastIpcObject?.monitor ?? "";
-            if (workspaceMonitor !== monitorName)
+            if (workspaceMonitor !== monitorName) {
+                if (workspaceMonitor !== "")
+                    otherMonitorAddresses[address] = true;
                 continue;
+            }
             seenAddresses[address] = true;
             collected.push({
                 address: address,
@@ -413,20 +417,41 @@ Singleton {
         }
 
         if (activeWorkspaceAddress !== "" && !seenAddresses[activeWorkspaceAddress]) {
+            seenAddresses[activeWorkspaceAddress] = true;
             collected.push({
                 address: activeWorkspaceAddress,
                 name: activeWorkspaceAddress
             });
         }
 
+        if (Configs.overview.showEmptyWorkspaces) {
+            let maxNumericWorkspace = 0;
+            for (let i = 0; i < collected.length; i++) {
+                const parsedNumber = root.parsePositiveWorkspaceNumber(collected[i].address);
+                if (parsedNumber > maxNumericWorkspace)
+                    maxNumericWorkspace = parsedNumber;
+            }
+
+            for (let workspaceNumber = 1; workspaceNumber <= maxNumericWorkspace; workspaceNumber++) {
+                const address = String(workspaceNumber);
+                if (seenAddresses[address] || otherMonitorAddresses[address])
+                    continue;
+                seenAddresses[address] = true;
+                collected.push({
+                    address: address,
+                    name: address
+                });
+            }
+        }
+
         collected.sort((first, second) => {
-            const firstNumber  = parseInt(first.address, 10);
-            const secondNumber = parseInt(second.address, 10);
-            if (!isNaN(firstNumber) && !isNaN(secondNumber))
+            const firstNumber  = root.parsePositiveWorkspaceNumber(first.address);
+            const secondNumber = root.parsePositiveWorkspaceNumber(second.address);
+            if (firstNumber > 0 && secondNumber > 0)
                 return firstNumber - secondNumber;
-            if (!isNaN(firstNumber))
+            if (firstNumber > 0)
                 return -1;
-            if (!isNaN(secondNumber))
+            if (secondNumber > 0)
                 return 1;
             return first.address.localeCompare(second.address);
         });
@@ -466,15 +491,13 @@ Singleton {
 
     function                nextWorkspaceAddress(activeWorkspaceAddress: string): string {
         const rawList = Hypr.workspaces.values ?? Hypr.workspaces ?? [];
-        let maxNumber = parseInt(activeWorkspaceAddress, 10);
-        if (isNaN(maxNumber) || maxNumber < 0)
-            maxNumber = 0;
+        let maxNumber = root.parsePositiveWorkspaceNumber(activeWorkspaceAddress);
         for (let i = 0; i < rawList.length; i++) {
             const address = Hypr.workspaceAddress(rawList[i]);
             if (!address || address.startsWith("special:"))
                 continue;
-            const numericValue = parseInt(address, 10);
-            if (!isNaN(numericValue) && numericValue > maxNumber)
+            const numericValue = root.parsePositiveWorkspaceNumber(address);
+            if (numericValue > maxNumber)
                 maxNumber = numericValue;
         }
         return String(maxNumber + 1);
@@ -484,6 +507,12 @@ Singleton {
         if (!address)
             return "";
         return address.startsWith("0x") ? address : ("0x" + address);
+    }
+
+    function                parsePositiveWorkspaceNumber(address: string): int {
+        if (!/^[1-9]\d*$/.test(address))
+            return 0;
+        return parseInt(address, 10);
     }
 
     function                requestMonitorFocus(monitorName: string): void {
@@ -551,6 +580,8 @@ Singleton {
         const list = panelState.monitorWorkspaces;
         if (panelState.focusedCardIndex > list.length)
             panelState.focusedCardIndex = list.length;
+        if (panelState.hoveredWorkspaceAddress !== "" && panelState.hoveredWorkspaceAddress !== panelState.nextWorkspaceAddress && !root.hasWorkspaceAddress(list, panelState.hoveredWorkspaceAddress))
+            panelState.hoveredWorkspaceAddress = "";
         if (panelState.selectedWorkspaceAddress !== panelState.nextWorkspaceAddress && !root.hasWorkspaceAddress(list, panelState.selectedWorkspaceAddress)) {
             panelState.selectedWorkspaceAddress = panelState.monitorActiveWorkspaceAddress !== "" ? panelState.monitorActiveWorkspaceAddress : "1";
             panelState.focusedCardIndex         = root.findWorkspaceCardIndex(list, panelState.selectedWorkspaceAddress, panelState.nextWorkspaceAddress);

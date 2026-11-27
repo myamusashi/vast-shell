@@ -40,6 +40,16 @@ SettingsPageBase {
         }
 
         SettingRow {
+            description: qsTr("Show empty workspaces in the range up to the highest active or occupied workspace.")
+            label: qsTr("Show Empty Workspaces:")
+
+            StyledSwitch {
+                checked: Configs.overview.showEmptyWorkspaces
+                onCheckedChanged: Configs.overview.showEmptyWorkspaces = checked
+            }
+        }
+
+        SettingRow {
             description: qsTr("Stream live window contents in the preview grid instead of capturing a single frame.")
             label: qsTr("Live Window Previews:")
 

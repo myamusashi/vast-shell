@@ -5,4 +5,5 @@ JsonObject {
     property bool closeOnNewWorkspace: true
     property bool enabled: true
     property bool live: false
+    property bool showEmptyWorkspaces: true
 }
