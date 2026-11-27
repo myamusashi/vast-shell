@@ -23,9 +23,26 @@ Item {
     required property bool     isDragged
     required property bool     isHovered
     required property bool     isKeyboardFocused
+    required property bool     isLocked
     required property var      toplevel
 
+    readonly property color    cardBorderColor: {
+        if (root.isLocked)
+            return Colours.m3Colors.m3Tertiary;
+        if (root.isKeyboardFocused)
+            return Colours.m3Colors.m3Primary;
+        if (root.isHovered)
+            return Colours.m3Colors.m3Outline;
+        return Colours.m3Colors.m3OutlineVariant;
+    }
     readonly property var      desktopEntry: DockServices.entryForToplevel(root.toplevel)
+    readonly property color    headerBackgroundColor: {
+        if (root.isLocked)
+            return Qt.alpha(Colours.m3Colors.m3Tertiary, 0.24);
+        if (root.isKeyboardFocused)
+            return Qt.alpha(Colours.m3Colors.m3Primary, 0.2);
+        return Colours.m3Colors.m3SurfaceContainerHighest;
+    }
     readonly property string   iconPath: Quickshell.iconPath(desktopEntry?.icon ?? "", "application-x-executable")
     readonly property Toplevel waylandHandle: root.toplevel?.wayland ?? null // qmllint disable
     readonly property string   windowAddress: root.toplevel?.address ?? ""
@@ -40,11 +57,12 @@ Item {
     signal                     dragStarted(var toplevel, real sceneX, real sceneY, real cardWidth, real cardHeight)
     signal                     hoverEntered(string windowAddress, int cardIndex)
     signal                     hoverExited(string windowAddress)
+    signal                     lockToggled(var toplevel, int cardIndex)
 
     implicitHeight: root.cardHeight
     implicitWidth: root.cardWidth
     opacity: root.isDragged ? 0.35 : 1.0
-    scale: root.isKeyboardFocused ? 1.02 : (root.isHovered ? 1.01 : 1.0)
+    scale: root.isLocked ? 1.03 : (root.isKeyboardFocused ? 1.02 : (root.isHovered ? 1.01 : 1.0))
     Behavior on opacity {
         NAnim {
             duration: Appearance.animations.durations.small
@@ -57,17 +75,30 @@ Item {
     }
 
     Elevation {
-        level: root.isKeyboardFocused ? 3 : (root.isHovered ? 2 : 1)
+        level: (root.isLocked || root.isKeyboardFocused) ? 3 : (root.isHovered ? 2 : 1)
         radius: cardSurface.radius
     }
 
     StyledRect {
+
+        anchors {
+            fill: cardSurface
+            margins: -3
+        }
+
+        border.color: Qt.alpha(Colours.m3Colors.m3Tertiary, 0.35)
+        border.width: 3
+        color: "transparent"
+        radius: cardSurface.radius + 3
+        visible: root.isLocked
+    }
+
+    ClippingRectangle {
         id: cardSurface
 
         anchors.fill: parent
-        border.color: root.isKeyboardFocused ? Colours.m3Colors.m3Primary : (root.isHovered ? Colours.m3Colors.m3Outline : Colours.m3Colors.m3OutlineVariant)
-        border.width: root.isKeyboardFocused ? 2 : 1
-        clip: true
+        border.color: root.cardBorderColor
+        border.width: (root.isLocked || root.isKeyboardFocused) ? 2 : 1
         color: Colours.m3Colors.m3SurfaceContainerHigh
         radius: Appearance.rounding.normal
         Behavior on border.color {
@@ -85,7 +116,7 @@ Item {
 
                 Layout.fillWidth: true
                 Layout.preferredHeight: 34
-                color: root.isKeyboardFocused ? Qt.alpha(Colours.m3Colors.m3Primary, 0.2) : Colours.m3Colors.m3SurfaceContainerHighest
+                color: root.headerBackgroundColor
                 radius: 0
 
                 RowLayout {
@@ -119,6 +150,77 @@ Item {
                             anchorItem: titleText
                             enabled: titleText.truncated && !root.dragging && !root.isDragged
                             text: root.windowTitle
+                        }
+                    }
+
+                    StyledRect {
+                        id: lockButton
+
+                        readonly property color  buttonColor: {
+                            if (root.isLocked)
+                                return Colours.m3Colors.m3TertiaryContainer;
+                            if (lockArea.containsMouse)
+                                return Qt.alpha(Colours.m3Colors.m3Primary, 0.16);
+                            return "transparent";
+                        }
+                        readonly property color  iconColor: {
+                            if (root.isLocked)
+                                return Colours.m3Colors.m3OnTertiaryContainer;
+                            if (lockArea.containsMouse)
+                                return Colours.m3Colors.m3Primary;
+                            return Colours.m3Colors.m3OnSurfaceVariant;
+                        }
+                        readonly property string tooltipText: {
+                            if (root.isLocked)
+                                return qsTr("Unlock window (Space / Esc)");
+                            return qsTr("Lock window to move to another workspace (Space / M)");
+                        }
+
+                        Layout.alignment: Qt.AlignVCenter
+                        color: lockButton.buttonColor
+                        implicitHeight: 24
+                        implicitWidth: root.isLocked ? (lockRow.implicitWidth + Appearance.padding.normal * 2) : 24
+                        radius: Appearance.rounding.full
+                        visible: root.isLocked || root.isKeyboardFocused || root.isHovered
+
+                        RowLayout {
+                            id: lockRow
+
+                            anchors.centerIn: parent
+                            spacing: 4
+
+                            Icon {
+                                Layout.alignment: Qt.AlignVCenter
+                                color: lockButton.iconColor
+                                font.pixelSize: Appearance.fonts.size.normal
+                                icon: root.isLocked ? "lock" : "lock_open_right"
+                            }
+
+                            StyledText {
+                                Layout.alignment: Qt.AlignVCenter
+                                color: Colours.m3Colors.m3OnTertiaryContainer
+                                font.pixelSize: Appearance.fonts.size.small - 1
+                                font.weight: Font.DemiBold
+                                text: qsTr("Locked")
+                                visible: root.isLocked
+                            }
+                        }
+
+                        MArea {
+                            id: lockArea
+
+                            acceptedButtons: Qt.LeftButton
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            layerColor: root.isLocked ? Colours.m3Colors.m3Tertiary : Colours.m3Colors.m3Primary
+                            layerRadius: lockButton.radius
+                            onClicked: root.lockToggled(root.toplevel, root.cardIndex)
+                        }
+
+                        Tooltip {
+                            anchorItem: lockButton
+                            enabled: !root.dragging && !root.isDragged
+                            text: lockButton.tooltipText
                         }
                     }
 
@@ -256,18 +358,58 @@ Item {
                         root.dragEnded(releaseScenePoint.x, releaseScenePoint.y);
                     }
                 }
+
+                StyledRect {
+
+                    anchors {
+                        bottom: parent.bottom
+                        bottomMargin: Appearance.margin.normal
+                        horizontalCenter: parent.horizontalCenter
+                    }
+
+                    border.color: Qt.alpha(Colours.m3Colors.m3Tertiary, 0.7)
+                    border.width: 1
+                    color: Qt.alpha(Colours.m3Colors.m3SurfaceContainerHighest, 0.92)
+                    implicitHeight: lockedOverlayRow.implicitHeight + Appearance.padding.small * 2
+                    implicitWidth: lockedOverlayRow.implicitWidth + Appearance.padding.normal * 2
+                    radius: Appearance.rounding.full
+                    visible: root.isLocked
+                    z: 2
+
+                    RowLayout {
+                        id: lockedOverlayRow
+
+                        anchors.centerIn: parent
+                        spacing: Appearance.spacing.small
+
+                        Icon {
+                            Layout.alignment: Qt.AlignVCenter
+                            color: Colours.m3Colors.m3Tertiary
+                            font.pixelSize: Appearance.fonts.size.normal
+                            icon: "lock"
+                        }
+
+                        StyledText {
+                            Layout.alignment: Qt.AlignVCenter
+                            color: Colours.m3Colors.m3OnSurface
+                            font.pixelSize: Appearance.fonts.size.small
+                            font.weight: Font.Medium
+                            text: qsTr("Move to workspace")
+                        }
+                    }
+                }
             }
         }
+    }
 
-        HoverHandler {
-            blocking: false
-            enabled: root.allowHover
-            onHoveredChanged: {
-                if (hovered)
-                    root.hoverEntered(root.windowAddress, root.cardIndex);
-                else
-                    root.hoverExited(root.windowAddress);
-            }
+    HoverHandler {
+        blocking: false
+        enabled: root.allowHover
+        onHoveredChanged: {
+            if (hovered)
+                root.hoverEntered(root.windowAddress, root.cardIndex);
+            else
+                root.hoverExited(root.windowAddress);
         }
     }
 }

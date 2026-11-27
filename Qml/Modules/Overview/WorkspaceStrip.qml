@@ -16,6 +16,7 @@ Item {
     required property string dragTargetWorkspaceAddress
     required property int    focusedCardIndex
     required property string hoveredWorkspaceAddress
+    required property string lockedSourceWorkspaceAddress
     required property string monitorActiveWorkspaceAddress
     required property real   monitorHeight
     required property real   monitorWidth
@@ -103,6 +104,7 @@ Item {
                         isDragOver: root.dragTargetWorkspaceAddress === modelData.address
                         isHovered: root.hoveredWorkspaceAddress === modelData.address
                         isKeyboardFocused: root.activeFocusZone === "cards" && root.focusedCardIndex === index
+                        isLockedSource: root.lockedSourceWorkspaceAddress !== "" && root.lockedSourceWorkspaceAddress === modelData.address
                         isMonitorActive: modelData.address === root.monitorActiveWorkspaceAddress
                         isNewWorkspaceCard: false
                         isSelected: root.selectedWorkspaceAddress === modelData.address
@@ -130,6 +132,7 @@ Item {
                     isDragOver: root.dragTargetWorkspaceAddress === root.nextWorkspaceAddress
                     isHovered: root.hoveredWorkspaceAddress === root.nextWorkspaceAddress
                     isKeyboardFocused: root.activeFocusZone === "cards" && root.focusedCardIndex === cardSlotIndex
+                    isLockedSource: false
                     isMonitorActive: false
                     isNewWorkspaceCard: true
                     isSelected: root.selectedWorkspaceAddress === root.nextWorkspaceAddress

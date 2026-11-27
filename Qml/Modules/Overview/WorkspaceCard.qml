@@ -17,6 +17,7 @@ Item {
     required property bool   isDragOver
     required property bool   isHovered
     required property bool   isKeyboardFocused
+    required property bool   isLockedSource
     required property bool   isMonitorActive
     required property bool   isNewWorkspaceCard
     required property bool   isSelected
@@ -32,6 +33,13 @@ Item {
     readonly property color  cardBorderColor: OverviewServices.workspaceCardBorderColor(root.isDragOver, root.isKeyboardFocused, root.isSelected, root.isHovered)
     readonly property int    cardBorderWidth: (root.isKeyboardFocused || root.isDragOver) ? 2 : 1
     readonly property int    elevationLevel: (root.isKeyboardFocused || root.isDragOver) ? 3 : ((root.isSelected || root.isHovered) ? 2 : 1)
+    readonly property color  headerTextColor: {
+        if (root.isDragOver)
+            return Colours.m3Colors.m3Tertiary;
+        if (root.isMonitorActive || root.isKeyboardFocused)
+            return Colours.m3Colors.m3Primary;
+        return Colours.m3Colors.m3OnSurface;
+    }
     readonly property string resolvedLabel: OverviewServices.workspaceLabel(root.workspaceAddress, root.workspaceName, root.isNewWorkspaceCard)
 
     signal                   clicked(string workspaceAddress)
@@ -102,10 +110,26 @@ Item {
 
                 StyledText {
                     Layout.fillWidth: true
-                    color: (root.isMonitorActive || root.isKeyboardFocused) ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurface
+                    color: root.headerTextColor
                     font.pixelSize: Appearance.fonts.size.small
-                    font.weight: (root.isMonitorActive || root.isKeyboardFocused) ? Font.DemiBold : Font.Medium
+                    font.weight: (root.isDragOver || root.isMonitorActive || root.isKeyboardFocused) ? Font.DemiBold : Font.Medium
                     text: root.resolvedLabel
+                }
+
+                Icon {
+                    Layout.alignment: Qt.AlignVCenter
+                    color: Colours.m3Colors.m3Tertiary
+                    font.pixelSize: Appearance.fonts.size.normal
+                    icon: "arrow_downward"
+                    visible: root.isDragOver
+                }
+
+                Icon {
+                    Layout.alignment: Qt.AlignVCenter
+                    color: Colours.m3Colors.m3Tertiary
+                    font.pixelSize: Appearance.fonts.size.normal
+                    icon: "lock"
+                    visible: !root.isDragOver && root.isLockedSource
                 }
 
                 StyledRect {
@@ -117,12 +141,11 @@ Item {
                 }
             }
 
-            StyledRect {
+            ClippingRectangle {
                 id: thumbnailBox
 
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                clip: true
                 color: Colours.m3Colors.m3SurfaceContainerLow
                 radius: Math.max(4, Appearance.rounding.small - 4)
 

@@ -44,6 +44,32 @@ Singleton {
         GlobalStates.closePanel("overview");
     }
 
+    function                commitLockedWindowMove(panelState: var, targetWorkspaceAddress: string): void {
+        const locked = panelState.lockedToplevel;
+        if (!locked)
+            return;
+        const sourceWorkspaceAddress = Hypr.toplevelWorkspaceAddress(locked) || panelState.selectedWorkspaceAddress;
+        const lockedAddress          = locked.address ?? "";
+        panelState.lockedToplevel    = null;
+        if (targetWorkspaceAddress === "" || targetWorkspaceAddress === sourceWorkspaceAddress) {
+            panelState.focusedCardIndex = root.findWorkspaceCardIndex(panelState.monitorWorkspaces, panelState.selectedWorkspaceAddress, panelState.nextWorkspaceAddress);
+            if (panelState.workspaceToplevels.length > 0 && panelState.inputMode === "keyboard") {
+                const existingIndex = root.findToplevelIndexByAddress(panelState.workspaceToplevels, lockedAddress);
+                if (existingIndex >= 0)
+                    panelState.focusedWindowIndex = existingIndex;
+                else
+                    panelState.focusedWindowIndex = Math.min(panelState.focusedWindowIndex, panelState.workspaceToplevels.length - 1);
+                panelState.activeFocusZone = "grid";
+            }
+            return;
+        }
+        panelState.pendingFocusedWindowAddress = lockedAddress;
+        panelState.selectedWorkspaceAddress    = targetWorkspaceAddress;
+        panelState.focusedCardIndex            = root.findWorkspaceCardIndex(panelState.monitorWorkspaces, targetWorkspaceAddress, panelState.nextWorkspaceAddress);
+        panelState.activeFocusZone             = "cards";
+        root.moveToplevelToWorkspace(locked, targetWorkspaceAddress);
+    }
+
     function                computeGridMetrics(count: int, availableWidth: real, availableHeight: real, cardAspectRatio: real, cardSpacing: int): var {
         if (count <= 0) {
             return {
@@ -118,6 +144,16 @@ Singleton {
             flickable.contentX = rightEdge - flickable.width;
     }
 
+    function                findToplevelIndexByAddress(toplevels: var, windowAddress: string): int {
+        if (!toplevels || windowAddress === "")
+            return -1;
+        for (let i = 0; i < toplevels.length; i++) {
+            if ((toplevels[i]?.address ?? "") === windowAddress)
+                return i;
+        }
+        return -1;
+    }
+
     function                findWorkspaceCardIndex(workspaceList: var, workspaceAddress: string, nextAddress: string): int {
         for (let i = 0; i < workspaceList.length; i++) {
             if (workspaceList[i].address === workspaceAddress)
@@ -126,34 +162,84 @@ Singleton {
         return workspaceAddress === nextAddress ? workspaceList.length : 0;
     }
 
-    function                handleKeyPress(panelState: var, eventKey: int, gridColumns: int, gridRows: int): bool {
+    function                handleKeyPress(panelState: var, eventKey: int, eventModifiers: int, gridColumns: int, gridRows: int): bool {
         if (!panelState.isTargetMonitor || !root.isOpen)
             return false;
+
+        const hasShift            = (eventModifiers & Qt.ShiftModifier) !== 0;
+        const hasNonShiftModifier = (eventModifiers & (Qt.ControlModifier | Qt.AltModifier | Qt.MetaModifier)) !== 0;
+        const isLeft              = eventKey === Qt.Key_Left || (!hasNonShiftModifier && eventKey === Qt.Key_H);
+        const isRight             = eventKey === Qt.Key_Right || (!hasNonShiftModifier && eventKey === Qt.Key_L);
+        const isUp                = eventKey === Qt.Key_Up || (!hasNonShiftModifier && eventKey === Qt.Key_K);
+        const isDown              = eventKey === Qt.Key_Down || (!hasNonShiftModifier && eventKey === Qt.Key_J);
+        const isConfirm           = eventKey === Qt.Key_Return || eventKey === Qt.Key_Enter;
+        const isLockKey           = !hasNonShiftModifier && (eventKey === Qt.Key_Space || eventKey === Qt.Key_M);
+
+        if (panelState.lockedToplevel !== null) {
+            if (eventKey === Qt.Key_Escape || isLockKey || isUp) {
+                panelState.inputMode = "keyboard";
+                root.unlockToplevel(panelState, true);
+                return true;
+            }
+            if (isLeft) {
+                panelState.inputMode               = "keyboard";
+                panelState.hoveredWorkspaceAddress = "";
+                panelState.hoveredWindowAddress    = "";
+                panelState.focusedCardIndex        = Math.max(0, panelState.focusedCardIndex - 1);
+                return true;
+            }
+            if (isRight) {
+                panelState.inputMode               = "keyboard";
+                panelState.hoveredWorkspaceAddress = "";
+                panelState.hoveredWindowAddress    = "";
+                panelState.focusedCardIndex        = Math.min(panelState.monitorWorkspaces.length, panelState.focusedCardIndex + 1);
+                return true;
+            }
+            if (isDown) {
+                panelState.inputMode = "keyboard";
+                return true;
+            }
+            if (isConfirm) {
+                panelState.inputMode = "keyboard";
+                const targetAddress  = root.workspaceAddressForCardIndex(panelState, panelState.focusedCardIndex);
+                root.commitLockedWindowMove(panelState, targetAddress);
+                return true;
+            }
+            if (!hasNonShiftModifier && eventKey >= Qt.Key_1 && eventKey <= Qt.Key_9) {
+                panelState.inputMode = "keyboard";
+                const digitAddress   = String(eventKey - Qt.Key_0);
+                if (root.hasWorkspaceAddress(panelState.monitorWorkspaces, digitAddress) || panelState.nextWorkspaceAddress === digitAddress)
+                    root.commitLockedWindowMove(panelState, digitAddress);
+                return true;
+            }
+            return false;
+        }
 
         if (eventKey === Qt.Key_Escape) {
             GlobalStates.closePanel("overview");
             return true;
         }
 
-        if ([Qt.Key_Left, Qt.Key_Right, Qt.Key_Up, Qt.Key_Down].includes(eventKey)) {
-            panelState.inputMode               = "keyboard";
-            panelState.hoveredWorkspaceAddress = "";
-            panelState.hoveredWindowAddress    = "";
+        if (isLeft || isRight || isUp || isDown) {
+            panelState.inputMode                   = "keyboard";
+            panelState.hoveredWorkspaceAddress     = "";
+            panelState.hoveredWindowAddress        = "";
+            panelState.pendingFocusedWindowAddress = "";
         }
 
         if (panelState.activeFocusZone === "cards") {
             const maxCardIndex = panelState.monitorWorkspaces.length;
-            if (eventKey === Qt.Key_Left) {
+            if (isLeft) {
                 panelState.focusedCardIndex = Math.max(0, panelState.focusedCardIndex - 1);
                 root.syncSelectedWorkspaceToFocusedCard(panelState);
                 return true;
             }
-            if (eventKey === Qt.Key_Right) {
+            if (isRight) {
                 panelState.focusedCardIndex = Math.min(maxCardIndex, panelState.focusedCardIndex + 1);
                 root.syncSelectedWorkspaceToFocusedCard(panelState);
                 return true;
             }
-            if (eventKey === Qt.Key_Up) {
+            if (isUp) {
                 if (panelState.workspaceToplevels.length > 0) {
                     panelState.activeFocusZone    = "grid";
                     const bottomRowStart          = Math.max(0, (gridRows - 1) * gridColumns);
@@ -161,7 +247,7 @@ Singleton {
                 }
                 return true;
             }
-            if (eventKey === Qt.Key_Return || eventKey === Qt.Key_Enter) {
+            if (isConfirm) {
                 if (panelState.focusedCardIndex === maxCardIndex)
                     root.createNewWorkspace(panelState);
                 else
@@ -177,21 +263,31 @@ Singleton {
                 panelState.activeFocusZone = "cards";
                 return false;
             }
+            if (isLockKey) {
+                panelState.inputMode = "keyboard";
+                root.lockToplevel(panelState, panelState.workspaceToplevels[panelState.focusedWindowIndex], panelState.focusedWindowIndex);
+                return true;
+            }
+            if (hasShift && isLeft)
+                return root.moveFocusedWindowByStep(panelState, -1);
+            if (hasShift && isRight)
+                return root.moveFocusedWindowByStep(panelState, 1);
+
             const columns = Math.max(1, gridColumns);
-            if (eventKey === Qt.Key_Left) {
+            if (isLeft) {
                 panelState.focusedWindowIndex = Math.max(0, panelState.focusedWindowIndex - 1);
                 return true;
             }
-            if (eventKey === Qt.Key_Right) {
+            if (isRight) {
                 panelState.focusedWindowIndex = Math.min(windowCount - 1, panelState.focusedWindowIndex + 1);
                 return true;
             }
-            if (eventKey === Qt.Key_Up) {
+            if (isUp) {
                 if (panelState.focusedWindowIndex - columns >= 0)
                     panelState.focusedWindowIndex -= columns;
                 return true;
             }
-            if (eventKey === Qt.Key_Down) {
+            if (isDown) {
                 const currentRow = Math.floor(panelState.focusedWindowIndex / columns);
                 const bottomRow  = Math.max(0, gridRows - 1);
                 if (currentRow < bottomRow) {
@@ -202,7 +298,7 @@ Singleton {
                 }
                 return true;
             }
-            if (eventKey === Qt.Key_Return || eventKey === Qt.Key_Enter) {
+            if (isConfirm) {
                 root.activateToplevel(panelState.workspaceToplevels[panelState.focusedWindowIndex], panelState.effectiveWorkspaceAddress);
                 return true;
             }
@@ -224,6 +320,27 @@ Singleton {
 
     function                isTargetMonitor(monitorName: string): bool {
         return Configs.generals.followFocusMonitor ? FocusedMonitor.isOnFocusedMonitor(monitorName) : (monitorName === root.openedMonitorName);
+    }
+
+    function                keyboardMoveTargetWorkspaceAddress(panelState: var): string {
+        if (!panelState.lockedToplevel)
+            return "";
+        const targetAddress = root.workspaceAddressForCardIndex(panelState, panelState.focusedCardIndex);
+        const sourceAddress = Hypr.toplevelWorkspaceAddress(panelState.lockedToplevel) || panelState.selectedWorkspaceAddress;
+        return (targetAddress !== "" && targetAddress !== sourceAddress) ? targetAddress : "";
+    }
+
+    function                lockToplevel(panelState: var, toplevel: var, cardIndex: int): void {
+        if (!toplevel)
+            return;
+        panelState.hoveredWorkspaceAddress     = "";
+        panelState.hoveredWindowAddress        = "";
+        panelState.pendingFocusedWindowAddress = "";
+        if (cardIndex >= 0)
+            panelState.focusedWindowIndex = cardIndex;
+        panelState.lockedToplevel   = toplevel;
+        panelState.activeFocusZone  = "cards";
+        panelState.focusedCardIndex = root.findWorkspaceCardIndex(panelState.monitorWorkspaces, panelState.selectedWorkspaceAddress, panelState.nextWorkspaceAddress);
     }
 
     function                miniTileMetrics(ipc: var, index: int, monitorX: real, monitorY: real, monitorWidth: real, monitorHeight: real): var {
@@ -316,6 +433,26 @@ Singleton {
         return collected;
     }
 
+    function                moveFocusedWindowByStep(panelState: var, delta: int): bool {
+        const list = panelState.workspaceToplevels;
+        if (list.length === 0 || panelState.focusedWindowIndex < 0 || panelState.focusedWindowIndex >= list.length)
+            return false;
+        const focusedToplevel  = list[panelState.focusedWindowIndex];
+        const currentCardIndex = root.findWorkspaceCardIndex(panelState.monitorWorkspaces, panelState.effectiveWorkspaceAddress, panelState.nextWorkspaceAddress);
+        const maxCardIndex     = panelState.monitorWorkspaces.length;
+        const targetCardIndex  = Math.max(0, Math.min(maxCardIndex, currentCardIndex + delta));
+        if (targetCardIndex === currentCardIndex)
+            return true;
+        const targetAddress = root.workspaceAddressForCardIndex(panelState, targetCardIndex);
+        if (targetAddress === "")
+            return false;
+        panelState.pendingFocusedWindowAddress = focusedToplevel?.address ?? "";
+        panelState.selectedWorkspaceAddress    = targetAddress;
+        panelState.focusedCardIndex            = targetCardIndex;
+        root.moveToplevelToWorkspace(focusedToplevel, targetAddress);
+        return true;
+    }
+
     function                moveToplevelToWorkspace(toplevel: var, targetWorkspaceAddress: string): void {
         if (targetWorkspaceAddress === "" || !toplevel || targetWorkspaceAddress === Hypr.toplevelWorkspaceAddress(toplevel))
             return;
@@ -358,30 +495,50 @@ Singleton {
     }
 
     function                resetPanelToActiveWorkspace(panelState: var): void {
-        const targetAddress                   = panelState.monitorActiveWorkspaceAddress !== "" ? panelState.monitorActiveWorkspaceAddress : "1";
-        panelState.hoveredWorkspaceAddress    = "";
-        panelState.hoveredWindowAddress       = "";
-        panelState.selectedWorkspaceAddress   = targetAddress;
-        panelState.activeFocusZone            = "cards";
-        panelState.focusedWindowIndex         = 0;
-        panelState.draggedToplevel            = null;
-        panelState.dragTargetWorkspaceAddress = "";
-        panelState.focusedCardIndex           = root.findWorkspaceCardIndex(panelState.monitorWorkspaces, targetAddress, panelState.nextWorkspaceAddress);
+        const targetAddress                    = panelState.monitorActiveWorkspaceAddress !== "" ? panelState.monitorActiveWorkspaceAddress : "1";
+        panelState.hoveredWorkspaceAddress     = "";
+        panelState.hoveredWindowAddress        = "";
+        panelState.selectedWorkspaceAddress    = targetAddress;
+        panelState.activeFocusZone             = "cards";
+        panelState.focusedWindowIndex          = 0;
+        panelState.draggedToplevel             = null;
+        panelState.dragTargetWorkspaceAddress  = "";
+        panelState.lockedToplevel              = null;
+        panelState.pendingFocusedWindowAddress = "";
+        panelState.focusedCardIndex            = root.findWorkspaceCardIndex(panelState.monitorWorkspaces, targetAddress, panelState.nextWorkspaceAddress);
+    }
+
+    function                syncLockedToplevel(panelState: var): void {
+        if (!panelState.lockedToplevel)
+            return;
+        const lockedAddress = panelState.lockedToplevel.address ?? "";
+        if (root.findToplevelIndexByAddress(panelState.workspaceToplevels, lockedAddress) < 0)
+            panelState.lockedToplevel = null;
     }
 
     function                syncSelectedWorkspaceToFocusedCard(panelState: var): void {
-        const list = panelState.monitorWorkspaces;
-        if (panelState.focusedCardIndex >= 0 && panelState.focusedCardIndex < list.length)
-            panelState.selectedWorkspaceAddress = list[panelState.focusedCardIndex].address;
-        else if (panelState.focusedCardIndex === list.length)
-            panelState.selectedWorkspaceAddress = panelState.nextWorkspaceAddress;
+        const address = root.workspaceAddressForCardIndex(panelState, panelState.focusedCardIndex);
+        if (address !== "")
+            panelState.selectedWorkspaceAddress = address;
     }
 
     function                syncToplevelsBounds(panelState: var): void {
-        const count = panelState.workspaceToplevels.length;
+        root.syncLockedToplevel(panelState);
+        const list  = panelState.workspaceToplevels;
+        const count = list.length;
+        if (panelState.pendingFocusedWindowAddress !== "") {
+            const pendingIndex = root.findToplevelIndexByAddress(list, panelState.pendingFocusedWindowAddress);
+            if (pendingIndex >= 0) {
+                panelState.focusedWindowIndex          = pendingIndex;
+                panelState.pendingFocusedWindowAddress = "";
+                if (panelState.inputMode === "keyboard")
+                    panelState.activeFocusZone = "grid";
+                return;
+            }
+        }
         if (count === 0) {
             panelState.focusedWindowIndex = 0;
-            if (panelState.activeFocusZone === "grid") {
+            if (panelState.activeFocusZone === "grid" && panelState.pendingFocusedWindowAddress === "") {
                 panelState.activeFocusZone  = "cards";
                 panelState.focusedCardIndex = root.findWorkspaceCardIndex(panelState.monitorWorkspaces, panelState.effectiveWorkspaceAddress, panelState.nextWorkspaceAddress);
             }
@@ -397,6 +554,32 @@ Singleton {
         if (panelState.selectedWorkspaceAddress !== panelState.nextWorkspaceAddress && !root.hasWorkspaceAddress(list, panelState.selectedWorkspaceAddress)) {
             panelState.selectedWorkspaceAddress = panelState.monitorActiveWorkspaceAddress !== "" ? panelState.monitorActiveWorkspaceAddress : "1";
             panelState.focusedCardIndex         = root.findWorkspaceCardIndex(list, panelState.selectedWorkspaceAddress, panelState.nextWorkspaceAddress);
+        } else if (panelState.lockedToplevel === null) {
+            panelState.focusedCardIndex = root.findWorkspaceCardIndex(list, panelState.selectedWorkspaceAddress, panelState.nextWorkspaceAddress);
+        }
+    }
+
+    function                toggleLockedToplevel(panelState: var, toplevel: var, cardIndex: int): void {
+        if (!toplevel)
+            return;
+        const targetAddress = toplevel.address ?? "";
+        if (panelState.lockedToplevel !== null && (panelState.lockedToplevel.address ?? "") === targetAddress)
+            root.unlockToplevel(panelState, panelState.inputMode === "keyboard");
+        else
+            root.lockToplevel(panelState, toplevel, cardIndex);
+    }
+
+    function                unlockToplevel(panelState: var, returnToGrid: bool): void {
+        const lockedAddress         = panelState.lockedToplevel?.address ?? "";
+        panelState.lockedToplevel   = null;
+        panelState.focusedCardIndex = root.findWorkspaceCardIndex(panelState.monitorWorkspaces, panelState.selectedWorkspaceAddress, panelState.nextWorkspaceAddress);
+        if (returnToGrid && panelState.workspaceToplevels.length > 0) {
+            const existingIndex = root.findToplevelIndexByAddress(panelState.workspaceToplevels, lockedAddress);
+            if (existingIndex >= 0)
+                panelState.focusedWindowIndex = existingIndex;
+            else
+                panelState.focusedWindowIndex = Math.min(panelState.focusedWindowIndex, panelState.workspaceToplevels.length - 1);
+            panelState.activeFocusZone = "grid";
         }
     }
 
@@ -431,6 +614,15 @@ Singleton {
         return "";
     }
 
+    function                workspaceAddressForCardIndex(panelState: var, cardIndex: int): string {
+        const list = panelState.monitorWorkspaces;
+        if (cardIndex >= 0 && cardIndex < list.length)
+            return list[cardIndex].address;
+        if (cardIndex === list.length)
+            return panelState.nextWorkspaceAddress;
+        return "";
+    }
+
     function                workspaceCardBorderColor(isDragOver: bool, isKeyboardFocused: bool, isSelected: bool, isHovered: bool): color {
         if (isDragOver)
             return Colours.m3Colors.m3Tertiary;
@@ -449,6 +641,15 @@ Singleton {
         if (workspaceName !== "" && workspaceName !== workspaceAddress)
             return workspaceName;
         return qsTr("Workspace %1").arg(workspaceAddress);
+    }
+
+    function                workspaceLabelForCardIndex(panelState: var, cardIndex: int): string {
+        const list = panelState.monitorWorkspaces;
+        if (cardIndex >= 0 && cardIndex < list.length)
+            return root.workspaceLabel(list[cardIndex].address, list[cardIndex].name, false);
+        if (cardIndex === list.length)
+            return root.workspaceLabel(panelState.nextWorkspaceAddress, "", true);
+        return "";
     }
 
     Timer {

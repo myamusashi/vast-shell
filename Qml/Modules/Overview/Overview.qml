@@ -20,9 +20,27 @@ Variants {
 
         required property ShellScreen     modelData
 
+        readonly property string          activeMoveTargetWorkspaceAddress: {
+            if (panelWindow.dragTargetWorkspaceAddress !== "")
+                return panelWindow.dragTargetWorkspaceAddress;
+            return panelWindow.keyboardMoveTargetWorkspaceAddress;
+        }
         readonly property HyprlandMonitor currentHyprMonitor: Hypr.monitorFor(panelWindow.modelData)
-        readonly property string          effectiveWorkspaceAddress: (panelWindow.inputMode === "mouse" && panelWindow.draggedToplevel === null && panelWindow.hoveredWorkspaceAddress !== "") ? panelWindow.hoveredWorkspaceAddress : panelWindow.selectedWorkspaceAddress
+        readonly property string          effectiveWorkspaceAddress: {
+            if (panelWindow.inputMode === "mouse" && panelWindow.draggedToplevel === null && panelWindow.lockedToplevel === null && panelWindow.hoveredWorkspaceAddress !== "")
+                return panelWindow.hoveredWorkspaceAddress;
+            return panelWindow.selectedWorkspaceAddress;
+        }
+        readonly property string          focusedCardWorkspaceAddress: OverviewServices.workspaceAddressForCardIndex(panelWindow, panelWindow.focusedCardIndex)
+        readonly property string          focusedCardWorkspaceLabel: OverviewServices.workspaceLabelForCardIndex(panelWindow, panelWindow.focusedCardIndex)
         readonly property bool            isTargetMonitor: OverviewServices.isTargetMonitor(panelWindow.modelData.name)
+        readonly property string          keyboardMoveTargetWorkspaceAddress: OverviewServices.keyboardMoveTargetWorkspaceAddress(panelWindow)
+        readonly property string          lockedSourceWorkspaceAddress: {
+            if (panelWindow.lockedToplevel)
+                return Hypr.toplevelWorkspaceAddress(panelWindow.lockedToplevel) || panelWindow.selectedWorkspaceAddress;
+            return "";
+        }
+        readonly property string          lockedWindowAddress: panelWindow.lockedToplevel?.address ?? ""
         readonly property string          monitorActiveWorkspaceAddress: OverviewServices.monitorActiveWorkspaceAddress(panelWindow.currentHyprMonitor, panelWindow.isTargetMonitor)
         readonly property real            monitorAspectRatio: panelWindow.monitorHeight > 0 ? panelWindow.monitorWidth / panelWindow.monitorHeight : (16.0 / 9.0)
         readonly property real            monitorHeight: panelWindow.currentHyprMonitor?.height ?? panelWindow.modelData.height
@@ -45,6 +63,8 @@ Variants {
         property string                   hoveredWorkspaceAddress: ""
         property string                   inputMode: "mouse"
         property point                    lastPointerPosition: Qt.point(-1, -1)
+        property var                      lockedToplevel: null
+        property string                   pendingFocusedWindowAddress: ""
         property string                   selectedWorkspaceAddress: "1"
 
         anchors {
@@ -86,10 +106,12 @@ Variants {
                 OverviewServices.resetPanelToActiveWorkspace(panelWindow);
                 Qt.callLater(() => keyboardFocusScope.forceActiveFocus());
             } else {
-                panelWindow.hoveredWorkspaceAddress    = "";
-                panelWindow.hoveredWindowAddress       = "";
-                panelWindow.draggedToplevel            = null;
-                panelWindow.dragTargetWorkspaceAddress = "";
+                panelWindow.hoveredWorkspaceAddress     = "";
+                panelWindow.hoveredWindowAddress        = "";
+                panelWindow.draggedToplevel             = null;
+                panelWindow.dragTargetWorkspaceAddress  = "";
+                panelWindow.lockedToplevel              = null;
+                panelWindow.pendingFocusedWindowAddress = "";
             }
         }
         onMonitorWorkspacesChanged: OverviewServices.syncWorkspacesBounds(panelWindow)
@@ -121,7 +143,7 @@ Variants {
             anchors.fill: parent
             focus: panelWindow.isTargetMonitor && OverviewServices.isOpen
             Keys.onPressed: event => {
-                if (OverviewServices.handleKeyPress(panelWindow, event.key, previewGrid.gridColumns, previewGrid.gridRows))
+                if (OverviewServices.handleKeyPress(panelWindow, event.key, event.modifiers, previewGrid.gridColumns, previewGrid.gridRows))
                     event.accepted = true;
             }
 
@@ -162,7 +184,7 @@ Variants {
 
                     anchors {
                         bottom: workspaceStrip.top
-                        bottomMargin: Appearance.margin.large
+                        bottomMargin: Appearance.margin.large * 2 + 24
                         left: parent.left
                         leftMargin: Appearance.margin.large * 2
                         right: parent.right
@@ -172,11 +194,12 @@ Variants {
                     }
 
                     activeFocusZone: panelWindow.activeFocusZone
-                    allowHover: panelWindow.isTargetMonitor && panelWindow.inputMode === "mouse" && panelWindow.draggedToplevel === null
+                    allowHover: panelWindow.isTargetMonitor && panelWindow.inputMode === "mouse" && panelWindow.draggedToplevel === null && panelWindow.lockedToplevel === null
                     captureEnabled: panelWindow.isTargetMonitor && OverviewServices.isOpen
                     draggedWindowAddress: panelWindow.draggedToplevel?.address ?? ""
                     focusedWindowIndex: panelWindow.focusedWindowIndex
                     hoveredWindowAddress: panelWindow.hoveredWindowAddress
+                    lockedWindowAddress: panelWindow.lockedWindowAddress
                     monitorAspectRatio: panelWindow.monitorAspectRatio
                     opacity: contentLayer.openProgress
                     scale: 0.94 + 0.06 * contentLayer.openProgress
@@ -196,12 +219,14 @@ Variants {
                         panelWindow.dragTargetWorkspaceAddress = workspaceStrip.workspaceAddressAtScenePoint(sceneX, sceneY);
                     }
                     onWindowDragStarted: (toplevel, sceneX, sceneY, cardWidth, cardHeight) => {
-                        panelWindow.hoveredWorkspaceAddress    = "";
-                        panelWindow.hoveredWindowAddress       = "";
-                        panelWindow.draggedToplevel            = toplevel;
-                        panelWindow.dragScenePoint             = Qt.point(sceneX, sceneY);
-                        panelWindow.dragCardSize               = Qt.size(Math.min(260, cardWidth * 0.65), Math.min(165, cardHeight * 0.65));
-                        panelWindow.dragTargetWorkspaceAddress = workspaceStrip.workspaceAddressAtScenePoint(sceneX, sceneY);
+                        panelWindow.hoveredWorkspaceAddress     = "";
+                        panelWindow.hoveredWindowAddress        = "";
+                        panelWindow.lockedToplevel              = null;
+                        panelWindow.pendingFocusedWindowAddress = "";
+                        panelWindow.draggedToplevel             = toplevel;
+                        panelWindow.dragScenePoint              = Qt.point(sceneX, sceneY);
+                        panelWindow.dragCardSize                = Qt.size(Math.min(260, cardWidth * 0.65), Math.min(165, cardHeight * 0.65));
+                        panelWindow.dragTargetWorkspaceAddress  = workspaceStrip.workspaceAddressAtScenePoint(sceneX, sceneY);
                     }
                     onWindowHoverEntered: (windowAddress, cardIndex) => {
                         panelWindow.hoveredWindowAddress = windowAddress;
@@ -211,6 +236,26 @@ Variants {
                         if (panelWindow.hoveredWindowAddress === windowAddress)
                             panelWindow.hoveredWindowAddress = "";
                     }
+                    onWindowLockToggled: (toplevel, cardIndex) => OverviewServices.toggleLockedToplevel(panelWindow, toplevel, cardIndex)
+                }
+
+                LockedWindowIndicator {
+                    id: lockedWindowIndicator
+
+                    anchors {
+                        bottom: workspaceStrip.top
+                        bottomMargin: Appearance.margin.normal
+                        horizontalCenter: parent.horizontalCenter
+                    }
+
+                    activeFocusZone: panelWindow.activeFocusZone
+                    inputMode: panelWindow.inputMode
+                    isTargetSameWorkspace: panelWindow.focusedCardWorkspaceAddress === "" || panelWindow.focusedCardWorkspaceAddress === panelWindow.lockedSourceWorkspaceAddress
+                    lockedToplevel: panelWindow.lockedToplevel
+                    openProgress: contentLayer.openProgress
+                    targetWorkspaceLabel: panelWindow.focusedCardWorkspaceLabel
+                    z: 5
+                    onUnlockRequested: OverviewServices.unlockToplevel(panelWindow, panelWindow.inputMode === "keyboard")
                 }
 
                 WorkspaceStrip {
@@ -224,9 +269,10 @@ Variants {
 
                     activeFocusZone: panelWindow.activeFocusZone
                     allowHover: panelWindow.isTargetMonitor && panelWindow.inputMode === "mouse" && panelWindow.draggedToplevel === null
-                    dragTargetWorkspaceAddress: panelWindow.dragTargetWorkspaceAddress
+                    dragTargetWorkspaceAddress: panelWindow.activeMoveTargetWorkspaceAddress
                     focusedCardIndex: panelWindow.focusedCardIndex
                     hoveredWorkspaceAddress: panelWindow.hoveredWorkspaceAddress
+                    lockedSourceWorkspaceAddress: panelWindow.lockedSourceWorkspaceAddress
                     monitorActiveWorkspaceAddress: panelWindow.monitorActiveWorkspaceAddress
                     monitorHeight: panelWindow.monitorHeight
                     monitorWidth: panelWindow.monitorWidth
@@ -240,14 +286,27 @@ Variants {
                     transform: Translate {
                         y: (1.0 - contentLayer.openProgress) * 48
                     }
-                    onNewWorkspaceClicked: OverviewServices.createNewWorkspace(panelWindow)
+                    onNewWorkspaceClicked: {
+                        if (panelWindow.lockedToplevel !== null)
+                            OverviewServices.commitLockedWindowMove(panelWindow, panelWindow.nextWorkspaceAddress);
+                        else
+                            OverviewServices.createNewWorkspace(panelWindow);
+                    }
                     onWorkspaceClicked: (workspaceAddress, cardIndex) => {
-                        panelWindow.inputMode                = "mouse";
+                        panelWindow.inputMode                   = "mouse";
+                        panelWindow.pendingFocusedWindowAddress = "";
+                        if (panelWindow.lockedToplevel !== null) {
+                            OverviewServices.commitLockedWindowMove(panelWindow, workspaceAddress);
+                            return;
+                        }
                         panelWindow.activeFocusZone          = "cards";
                         panelWindow.focusedCardIndex         = cardIndex;
                         panelWindow.selectedWorkspaceAddress = workspaceAddress;
                     }
-                    onWorkspaceDoubleClicked: workspaceAddress => OverviewServices.activateWorkspaceAndClose(workspaceAddress, panelWindow.modelData.name)
+                    onWorkspaceDoubleClicked: workspaceAddress => {
+                        if (panelWindow.lockedToplevel === null)
+                            OverviewServices.activateWorkspaceAndClose(workspaceAddress, panelWindow.modelData.name);
+                    }
                     onWorkspaceHoverEntered: workspaceAddress => panelWindow.hoveredWorkspaceAddress = workspaceAddress
                     onWorkspaceHoverExited: workspaceAddress => {
                         if (panelWindow.hoveredWorkspaceAddress === workspaceAddress)

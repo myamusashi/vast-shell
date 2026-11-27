@@ -18,6 +18,7 @@ Item {
     required property string draggedWindowAddress
     required property int    focusedWindowIndex
     required property string hoveredWindowAddress
+    required property string lockedWindowAddress
     required property real   monitorAspectRatio
     required property var    toplevels
     required property string workspaceAddress
@@ -35,6 +36,7 @@ Item {
     signal                   windowDragStarted(var toplevel, real sceneX, real sceneY, real cardWidth, real cardHeight)
     signal                   windowHoverEntered(string windowAddress, int cardIndex)
     signal                   windowHoverExited(string windowAddress)
+    signal                   windowLockToggled(var toplevel, int cardIndex)
 
     Grid {
         id: previewGrid
@@ -62,6 +64,7 @@ Item {
                 isDragged: root.draggedWindowAddress !== "" && root.draggedWindowAddress === (modelData?.address ?? "")
                 isHovered: root.hoveredWindowAddress !== "" && root.hoveredWindowAddress === (modelData?.address ?? "")
                 isKeyboardFocused: root.activeFocusZone === "grid" && root.focusedWindowIndex === index
+                isLocked: root.lockedWindowAddress !== "" && root.lockedWindowAddress === (modelData?.address ?? "")
                 toplevel: modelData
                 onActivated: toplevel => root.windowActivated(toplevel)
                 onCloseRequested: toplevel => root.windowCloseRequested(toplevel)
@@ -70,6 +73,7 @@ Item {
                 onDragStarted: (toplevel, sceneX, sceneY, cardWidth, cardHeight) => root.windowDragStarted(toplevel, sceneX, sceneY, cardWidth, cardHeight)
                 onHoverEntered: (windowAddress, cardIndex) => root.windowHoverEntered(windowAddress, cardIndex)
                 onHoverExited: windowAddress => root.windowHoverExited(windowAddress)
+                onLockToggled: (toplevel, cardIndex) => root.windowLockToggled(toplevel, cardIndex)
             }
         }
     }
