@@ -1,0 +1,39 @@
+name: Lint QML (qmllint)
+description: Lint shell.qml and greeter.qml import closures and verify coverage
+
+runs:
+  using: composite
+  steps:
+    - name: Lint shell.qml and its imports
+      shell: bash
+      run: |
+        entry=shell.qml
+        echo "::group::${entry} closure"
+        Assets/shell/qml-entry-files.sh "${entry}" | tee /tmp/entry-files.txt | head -5
+        echo "... $(wc -l < /tmp/entry-files.txt) files"
+        echo "::endgroup::"
+        .github/scripts/qmllint-entry.sh "${entry}" /tmp/entry-files.txt
+
+    - name: Lint greeter.qml and its imports
+      shell: bash
+      run: |
+        entry=greeter.qml
+        echo "::group::${entry} closure"
+        Assets/shell/qml-entry-files.sh "${entry}" | tee /tmp/entry-files.txt | head -5
+        echo "... $(wc -l < /tmp/entry-files.txt) files"
+        echo "::endgroup::"
+        .github/scripts/qmllint-entry.sh "${entry}" /tmp/entry-files.txt
+
+    - name: Verify coverage
+      shell: bash
+      run: |
+        all=$(find Qml -name '*.qml' | sed 's|^Qml/||' | sort)
+        covered=$(cat <(Assets/shell/qml-entry-files.sh shell.qml) \
+                      <(Assets/shell/qml-entry-files.sh greeter.qml) | sort -u)
+        missing=$(comm -23 <(echo "${all}") <(echo "${covered}"))
+        if [ -n "${missing}" ]; then
+          echo "::error::these files are unreachable from both entry points and are not linted:"
+          echo "${missing}"
+          exit 1
+        fi
+        echo "all $(echo "${all}" | wc -l) QML files are covered by an entry point"

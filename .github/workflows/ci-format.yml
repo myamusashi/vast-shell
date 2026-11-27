@@ -16,10 +16,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - uses: DeterminateSystems/nix-installer-action@v14
-    - uses: DeterminateSystems/magic-nix-cache-action@v8
+    - uses: ./.github/actions/setup-nix
       with:
-        use-flakehub: false
-    - uses: nicknovitski/nix-develop@v1
+        devshell: "true"
     - name: Check formatting
       run: bash Assets/shell/check-format.sh

@@ -1,0 +1,18 @@
+name: Setup Nix (GitHub)
+description: Install Nix, enable Magic Nix Cache, and optionally load the flake devShell
+
+inputs:
+  devshell:
+    description: Load the flake devShell via nicknovitski/nix-develop
+    required: false
+    default: "false"
+
+runs:
+  using: composite
+  steps:
+    - uses: DeterminateSystems/nix-installer-action@v14
+    - uses: DeterminateSystems/magic-nix-cache-action@v8
+      with:
+        use-flakehub: false
+    - if: inputs.devshell == 'true'
+      uses: nicknovitski/nix-develop@v1

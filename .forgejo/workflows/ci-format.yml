@@ -1,0 +1,18 @@
+name: format
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  format:
+    name: format check
+    runs-on: nixos
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: https://github.com/nicknovitski/nix-develop@v1
+    - name: Check formatting
+      run: bash Assets/shell/check-format.sh

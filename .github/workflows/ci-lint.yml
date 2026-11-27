@@ -21,18 +21,10 @@ jobs:
     - uses: actions/checkout@v4
       with:
         submodules: recursive
-
-    - uses: DeterminateSystems/nix-installer-action@v14
-    - uses: DeterminateSystems/magic-nix-cache-action@v8
+    - uses: ./.github/actions/setup-nix
       with:
-        use-flakehub: false
-    - uses: nicknovitski/nix-develop@v1
-
-    - name: Configure
-      run: cmake --preset clazy
-
-    - name: Run linting
-      run: cmake --build --preset clazy
+        devshell: "true"
+    - uses: ./.github/actions/lint-clazy
 
   qmllint:
     name: qmllint
@@ -45,38 +37,7 @@ jobs:
     - uses: actions/checkout@v4
       with:
         submodules: recursive
-
-    - uses: DeterminateSystems/nix-installer-action@v14
-    - uses: DeterminateSystems/magic-nix-cache-action@v8
-    - uses: nicknovitski/nix-develop@v1
-
-    - name: Lint shell.qml and its imports
-      run: |
-        entry=shell.qml
-        echo "::group::${entry} closure"
-        Assets/shell/qml-entry-files.sh "${entry}" | tee /tmp/entry-files.txt | head -5
-        echo "... $(wc -l < /tmp/entry-files.txt) files"
-        echo "::endgroup::"
-        .github/scripts/qmllint-entry.sh "${entry}" /tmp/entry-files.txt
-
-    - name: Lint greeter.qml and its imports
-      run: |
-        entry=greeter.qml
-        echo "::group::${entry} closure"
-        Assets/shell/qml-entry-files.sh "${entry}" | tee /tmp/entry-files.txt | head -5
-        echo "... $(wc -l < /tmp/entry-files.txt) files"
-        echo "::endgroup::"
-        .github/scripts/qmllint-entry.sh "${entry}" /tmp/entry-files.txt
-
-    - name: Verify coverage
-      run: |
-        all=$(find Qml -name '*.qml' | sed 's|^Qml/||' | sort)
-        covered=$(cat <(Assets/shell/qml-entry-files.sh shell.qml) \
-                      <(Assets/shell/qml-entry-files.sh greeter.qml) | sort -u)
-        missing=$(comm -23 <(echo "${all}") <(echo "${covered}"))
-        if [ -n "${missing}" ]; then
-          echo "::error::these files are unreachable from both entry points and are not linted:"
-          echo "${missing}"
-          exit 1
-        fi
-        echo "all $(echo "${all}" | wc -l) QML files are covered by an entry point"
+    - uses: ./.github/actions/setup-nix
+      with:
+        devshell: "true"
+    - uses: ./.github/actions/lint-qmllint

@@ -1,0 +1,22 @@
+name: Nix
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: build
+    runs-on: nixos
+    concurrency:
+      group: nix-build-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build
+      run: nix build . --log-format bar-with-logs

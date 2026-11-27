@@ -1,0 +1,37 @@
+name: test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  cpp-test:
+    name: ctest
+    runs-on: nixos
+    concurrency:
+      group: cpp-test-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    - uses: https://github.com/nicknovitski/nix-develop@v1
+    - uses: ./.github/actions/test-cpp
+
+  go-test:
+    name: go test
+    runs-on: nixos
+    timeout-minutes: 25
+    concurrency:
+      group: go-test-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    - uses: https://github.com/nicknovitski/nix-develop@v1
+    - uses: ./.github/actions/test-go

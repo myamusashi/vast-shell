@@ -1,0 +1,35 @@
+name: Test Go (vastctl)
+description: Run gofmt, go vet, go build, and go test for vastctl
+
+runs:
+  using: composite
+  steps:
+    - name: gofmt
+      shell: bash
+      working-directory: vastctl
+      run: |
+        unformatted="$(gofmt -l .)"
+        if [ -n "$unformatted" ]; then
+          echo "::error::gofmt needed on: $unformatted"
+          exit 1
+        fi
+
+    - name: go vet
+      shell: bash
+      working-directory: vastctl
+      run: go vet ./...
+
+    - name: go build
+      shell: bash
+      working-directory: vastctl
+      run: go build ./...
+
+    - name: go test
+      shell: bash
+      working-directory: vastctl
+      run: go test -race -covermode=atomic -coverprofile=coverage.out ./...
+
+    - name: Report coverage
+      shell: bash
+      working-directory: vastctl
+      run: go tool cover -func=coverage.out | tail -n 1

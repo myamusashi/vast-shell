@@ -1,0 +1,32 @@
+name: Test C++ (ctest)
+description: Configure, build, and run the CMake CTest suite
+
+runs:
+  using: composite
+  steps:
+    - name: Check tst_bluetoothagent can reach a bus
+      shell: bash
+      run: |
+        if ! command -v dbus-daemon; then
+          echo "::error::dbus-daemon is not on PATH. Add dbus to shell.nix packages."
+          echo "$PATH" | tr ':' '\n'
+          exit 1
+        fi
+        dbus-daemon --version | head -1
+
+    - name: Configure
+      shell: bash
+      run: cmake --preset test -DVAST_TEST_VERBOSE=ON
+
+    - name: Build
+      shell: bash
+      run: cmake --build --preset test
+
+    - name: Test
+      shell: bash
+      run: QT_QPA_PLATFORM=offscreen ctest --test-dir build/test --output-on-failure --no-tests=error
+
+    - name: List built test binaries
+      if: failure()
+      shell: bash
+      run: ls -1 build/test/Plugins/Vast/Tests/*/ 2>/dev/null || true

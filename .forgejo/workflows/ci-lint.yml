@@ -1,0 +1,33 @@
+name: lint
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  clazy:
+    name: clazy + clang-tidy
+    runs-on: nixos
+    concurrency:
+      group: clazy-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    - uses: https://github.com/nicknovitski/nix-develop@v1
+    - uses: ./.github/actions/lint-clazy
+
+  qmllint:
+    name: qmllint
+    runs-on: nixos
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    - uses: https://github.com/nicknovitski/nix-develop@v1
+    - uses: ./.github/actions/lint-qmllint

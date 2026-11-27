@@ -20,10 +20,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - uses: DeterminateSystems/nix-installer-action@v14
-    - uses: DeterminateSystems/magic-nix-cache-action@v8
-      with:
-        use-flakehub: false
+    - uses: ./.github/actions/setup-nix
 
     - name: Build
       run: nix build . --log-format bar-with-logs
@@ -39,8 +36,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - uses: DeterminateSystems/nix-installer-action@v14
-    - uses: DeterminateSystems/magic-nix-cache-action@v8
+    - uses: ./.github/actions/setup-nix
     - uses: cachix/cachix-action@v16
       with:
         name: myamusashi

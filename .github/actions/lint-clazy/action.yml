@@ -1,0 +1,13 @@
+name: Lint C++ (clazy + clang-tidy)
+description: Configure and build the CMake clazy linting preset
+
+runs:
+  using: composite
+  steps:
+    - name: Configure
+      shell: bash
+      run: cmake --preset clazy
+
+    - name: Run linting
+      shell: bash
+      run: cmake --build --preset clazy
