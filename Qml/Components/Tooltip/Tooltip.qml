@@ -14,7 +14,7 @@ Scope {
 
     required property Item anchorItem
 
-    readonly property bool active: root.enabled && root.anchorItem !== null && root.anchorItem.visible && root.text.length > 0
+    readonly property bool active: root.alive && root.enabled && root.anchorItem !== null && root.anchorItem.visible && root.text.length > 0
     readonly property int  gap: 4
     readonly property bool isHorizontal: root.position === Edges.Left || root.position === Edges.Right
 
@@ -41,6 +41,8 @@ Scope {
 
     function               destroySensors(): void {
         if (root.sensor) {
+            root.sensor.visible = false;
+            root.sensor.parent  = null;
             root.sensor.destroy();
             root.sensor = null;
         }
@@ -65,9 +67,18 @@ Scope {
         });
     }
 
-    Component.onCompleted: Qt.callLater(root.syncSensors)
+    Component.onCompleted: {
+        if (root.alive)
+            syncTimer.restart();
+    }
     Component.onDestruction: {
-        root.alive = false;
+        syncTimer.stop();
+        showTimer.stop();
+        hideTimer.stop();
+        unmapTimer.stop();
+        root.mapped = false;
+        root.shown  = false;
+        root.alive  = false;
         root.destroySensors();
     }
     onActiveChanged: {
@@ -79,7 +90,8 @@ Scope {
     onAnchorItemChanged: {
         showTimer.stop();
         root.close();
-        Qt.callLater(root.syncSensors);
+        if (root.alive)
+            syncTimer.restart();
     }
     onMappedChanged: {
         if (!root.mapped) {
@@ -125,6 +137,15 @@ Scope {
 
         interval: root.showDelay
         onTriggered: root.open()
+    }
+
+    // Coalesce initial anchorItemChanged + Component.onCompleted and cancel
+    // automatically when root is destroyed (unlike Qt.callLater).
+    Timer {
+        id: syncTimer
+
+        interval: 0
+        onTriggered: root.syncSensors()
     }
 
     Component {
