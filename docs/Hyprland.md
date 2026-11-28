@@ -37,7 +37,7 @@ The two Lua files are created once, when you first open a Hyprland settings page
 
 ## Monitors
 
-- Options: mode, scale, transform, bit depth, color preset (`cm`), SDR brightness and saturation, ICC profile (absolute path) and a disabled switch.
+- Options: mode, scale, transform, bit depth, color preset (`cm`), SDR brightness and saturation, ICC profile (absolute path), a primary monitor switch (pins the bar, dock, OSD, and shell drawers to that monitor; only one monitor can be primary), and a disabled switch.
 - `monitor.json` only holds monitors you changed and applied. If the file is missing, vast-shell emits nothing and your setup is untouched.
 - Monitors are identified by `description` (falling back to `model`), not connector name, so settings survive unplugging.
 - Monitors that are saved but disconnected or disabled are listed below the connected ones, so you can edit or re-enable them.

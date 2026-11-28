@@ -353,7 +353,7 @@ Item {
             page: 23,
             pageLabel: "Hyprland Monitors",
             card: "Monitors",
-            terms: ["Resolution", "Refresh Rate", "Scale", "Transform", "Bit Depth", "Color Preset", "SDR Brightness", "SDR Saturation", "ICC Profile", "Disable Monitor"]
+            terms: ["Resolution", "Refresh Rate", "Scale", "Transform", "Bit Depth", "Color Preset", "SDR Brightness", "SDR Saturation", "ICC Profile", "Primary Monitor", "Disable Monitor"]
         },
         {
             page: 24,

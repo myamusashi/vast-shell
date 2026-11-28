@@ -6,6 +6,7 @@ import Quickshell
 
 import qs.Components.Button
 import qs.Core.Configs
+import qs.Core.Utils
 import qs.Services
 import qs.Components.Base
 
@@ -37,7 +38,7 @@ SettingsPageBase {
         title: qsTr("Window & Focus")
 
         SettingRow {
-            description: qsTr("Automatically switch the active drawers to the monitor where cursor in.")
+            description: FocusedMonitor.hasPrimaryMonitor ? qsTr("Overridden while %1 is set as the primary monitor in Hyprland Monitors.").arg(FocusedMonitor.primaryMonitorName) : qsTr("Automatically switch the active drawers to the monitor where cursor in.")
             label: qsTr("Follow Focus Monitor:")
 
             StyledSwitch {

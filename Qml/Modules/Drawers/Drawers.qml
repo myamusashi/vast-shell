@@ -31,12 +31,7 @@ Variants {
 
         readonly property bool        barOpen: FocusedMonitor.isOnFocusedMonitor(modelData.name) && GlobalStates.isBarOpen
         readonly property bool        dockVisible: FocusedMonitor.isOnFocusedMonitor(modelData.name) && Configs.dock.enabled
-        readonly property bool        isKeyboardFocusMonitor: {
-            const focusedName = Hypr.focusedMonitor?.name ?? "";
-            if (focusedName !== "")
-                return modelData.name === focusedName;
-            return Quickshell.screens.length > 0 && Quickshell.screens[0]?.name === modelData.name;
-        }
+        readonly property bool        isKeyboardFocusMonitor: modelData.name === FocusedMonitor.targetMonitorName
         readonly property bool        needFocusKeyboard: {
             if (GlobalStates.hasInlineReply) {
                 const owner = GlobalStates.inlineReplyOwner;

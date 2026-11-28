@@ -47,15 +47,31 @@ Rectangle {
             dragStateChanged(false);
     }
 
-    StyledText {
+    Column {
         anchors.centerIn: parent
-        color: Colours.m3Colors.m3OnSurface
-        elide: Text.ElideRight
-        font.pixelSize: Appearance.fonts.size.small
-        horizontalAlignment: Text.AlignHCenter
-        text: root.rectData?.label ?? ""
+        spacing: 2
         visible: root.height > 40
         width: parent.width - 8
+
+        StyledText {
+            color: Colours.m3Colors.m3OnSurface
+            elide: Text.ElideRight
+            font.pixelSize: Appearance.fonts.size.small
+            horizontalAlignment: Text.AlignHCenter
+            text: root.rectData?.label ?? ""
+            width: parent.width
+        }
+
+        StyledText {
+            color: Colours.m3Colors.m3Primary
+            elide: Text.ElideRight
+            font.pixelSize: Appearance.fonts.size.small
+            font.weight: Font.DemiBold
+            horizontalAlignment: Text.AlignHCenter
+            text: qsTr("Primary")
+            visible: root.rectData?.primary === true && root.height > 64
+            width: parent.width
+        }
     }
 
     Rectangle {
@@ -122,6 +138,6 @@ Rectangle {
     Tooltip {
         anchorItem: root
         enabled: !root.dragActive && root.rectData !== null
-        text: root.rectData ? `${root.rectData.label} (${Math.round(root.rectData.width)}×${Math.round(root.rectData.height)})` : ""
+        text: root.rectData ? `${root.rectData.label} (${Math.round(root.rectData.width)}×${Math.round(root.rectData.height)})${root.rectData.primary ? ` · ${qsTr("Primary")}` : ""}` : ""
     }
 }

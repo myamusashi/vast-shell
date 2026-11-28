@@ -25,7 +25,7 @@ Rectangle {
             entry: {},
             live: false
         })
-    readonly property bool   modified: MonitorServices.pending[modelData] !== undefined
+    readonly property bool   modified: MonitorServices.isMonitorModified(modelData)
     readonly property var    transformLabels: [qsTr("Normal"), qsTr("90°"), qsTr("180°"), qsTr("270°"), qsTr("Flipped"), qsTr("Flipped 90°"), qsTr("Flipped 180°"), qsTr("Flipped 270°")]
 
     function                 applyMode(mode: string): void {
@@ -104,7 +104,7 @@ Rectangle {
                     color: Colours.m3Colors.m3OnSurfaceVariant
                     elide: Text.ElideRight
                     font.pixelSize: Appearance.fonts.size.small
-                    text: (root.item.live ? qsTr("connected") : qsTr("not connected")) + (root.entry.lastConnector ? ` · ${root.entry.lastConnector}` : "")
+                    text: (root.item.live ? qsTr("connected") : qsTr("not connected")) + (root.entry.lastConnector ? ` · ${root.entry.lastConnector}` : "") + (root.entry.primary === true ? ` · ${qsTr("primary")}` : "")
                 }
             }
 
@@ -322,6 +322,17 @@ Rectangle {
                 icon.size: Appearance.fonts.size.normal
                 tooltipText: qsTr("Browse ICC profile")
                 onClicked: iccFileDialog.openFileDialog()
+            }
+        }
+
+        SettingRow {
+            Layout.fillWidth: true
+            description: qsTr("Keep the bar, dock, volume, OSD, and shell drawers focused on this monitor on Apply. Only one monitor can be primary.")
+            label: qsTr("Primary:")
+
+            StyledSwitch {
+                checked: root.entry.primary === true
+                onToggled: MonitorServices.setPrimary(root.modelData, checked)
             }
         }
 

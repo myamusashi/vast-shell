@@ -13,21 +13,39 @@ import qs.Services.Hyprland
 Singleton {
     id: root
 
-    readonly property bool dirty: canonical(pending) !== canonical(stored)
-    readonly property var  liveMonitors: Hyprland.monitors?.values ?? []
-    readonly property bool loaded: monitorFile.loaded
+    readonly property bool   dirty: canonical(pending) !== canonical(stored)
+    readonly property var    liveMonitors: Hyprland.monitors?.values ?? []
+    readonly property bool   loaded: monitorFile.loaded
+    readonly property string primaryMonitorKey: {
+        for (const monitor of liveMonitors) {
+            const key   = identityOf(monitor);
+            const entry = stored[key];
+            if (entry?.primary === true && entry?.disabled !== true)
+                return key;
+        }
+        return "";
+    }
+    readonly property string primaryMonitorName: {
+        for (const monitor of liveMonitors) {
+            const key   = identityOf(monitor);
+            const entry = stored[key];
+            if (entry?.primary === true && entry?.disabled !== true)
+                return monitor.name ?? "";
+        }
+        return "";
+    }
 
-    property var           pending: ({})
-    property var           stored: ({})
+    property var             pending: ({})
+    property var             stored: ({})
 
-    function               apply(): void {
+    function                 apply(): void {
         resolveOverlaps();
         stored           = deepCopy(pending);
         adapter.monitors = deepCopy(stored);
         monitorFile.writeAdapter();
     }
 
-    function               canonical(value: var): string {
+    function                 canonical(value: var): string {
         if (value === null || value === undefined)
             return "null";
 
@@ -42,7 +60,7 @@ Singleton {
         return JSON.stringify(value);
     }
 
-    function               currentMode(monitor: HyprlandMonitor): var {
+    function                 currentMode(monitor: HyprlandMonitor): var {
         const modes = (monitor?.lastIpcObject.availableModes ?? []).map(mode => parseModeString(mode)).filter(mode => mode !== null);
         if (modes.length === 0)
             return {
@@ -66,15 +84,15 @@ Singleton {
         return bySize ?? modes[0];
     }
 
-    function               deepCopy(value: var): var {
+    function                 deepCopy(value: var): var {
         return JSON.parse(JSON.stringify(value ?? {}));
     }
 
-    function               discardAll(): void {
+    function                 discardAll(): void {
         pending = deepCopy(stored);
     }
 
-    function               drawableRects(): var {
+    function                 drawableRects(): var {
         const rects = [];
         for (const monitor of liveMonitors) {
             const key   = identityOf(monitor);
@@ -86,6 +104,7 @@ Singleton {
                 height: size.height,
                 key: key,
                 label: monitor.name,
+                primary: entry.primary === true,
                 width: size.width,
                 x: entry.x ?? 0,
                 y: entry.y ?? 0
@@ -95,7 +114,7 @@ Singleton {
         return rects;
     }
 
-    function               duplicateIdentities(): var {
+    function                 duplicateIdentities(): var {
         const counts = {};
         for (const monitor of liveMonitors) {
             const key   = identityOf(monitor);
@@ -105,7 +124,7 @@ Singleton {
         return Object.keys(counts).filter(key => counts[key] > 1);
     }
 
-    function               entryFor(monitor: HyprlandMonitor, key: string): var {
+    function                 entryFor(monitor: HyprlandMonitor, key: string): var {
         if (pending[key] !== undefined)
             return pending[key];
         if (stored[key] !== undefined)
@@ -114,7 +133,7 @@ Singleton {
         return seedEntry(monitor);
     }
 
-    function               identityOf(monitor: HyprlandMonitor): string {
+    function                 identityOf(monitor: HyprlandMonitor): string {
         const description = monitor?.description ?? "";
         if (description !== "")
             return description;
@@ -122,11 +141,15 @@ Singleton {
         return monitor?.lastIpcObject.model ?? monitor?.name ?? "";
     }
 
-    function               liveMonitorFor(key: string): HyprlandMonitor {
+    function                 isMonitorModified(key: string): bool {
+        return canonical(pending[key]) !== canonical(stored[key]);
+    }
+
+    function                 liveMonitorFor(key: string): HyprlandMonitor {
         return liveMonitors.find(monitor => identityOf(monitor) === key) ?? null;
     }
 
-    function               monitorList(): var {
+    function                 monitorList(): var {
         const result = [];
         const seen   = {};
         for (const monitor of liveMonitors) {
@@ -164,7 +187,7 @@ Singleton {
         return result;
     }
 
-    function               parseModeString(mode: string): var {
+    function                 parseModeString(mode: string): var {
         const match = /^(\d+)x(\d+)@([\d.]+)(Hz)?$/.exec(mode.trim());
         if (!match)
             return null;
@@ -176,12 +199,20 @@ Singleton {
         };
     }
 
-    function               resetFromDisk(): void {
+    function                 pruneUnmodifiedPending(map: var, key: string): void {
+        if (stored[key] !== undefined || map[key] === undefined)
+            return;
+        const monitor = liveMonitorFor(key);
+        if (monitor && canonical(map[key]) === canonical(seedEntry(monitor)))
+            delete map[key];
+    }
+
+    function                 resetFromDisk(): void {
         stored  = deepCopy(adapter.monitors ?? {});
         pending = deepCopy(stored);
     }
 
-    function               resolveOverlaps(): void {
+    function                 resolveOverlaps(): void {
         for (let pass = 0; pass < 4; pass++) {
             let moved = false;
             for (const rect of drawableRects()) {
@@ -197,16 +228,25 @@ Singleton {
         }
     }
 
-    function               revertMonitor(key: string): void {
+    function                 revertMonitor(key: string): void {
         const next = Object.assign({}, pending);
         if (stored[key] !== undefined)
             next[key] = deepCopy(stored[key]);
         else
             delete next[key];
+        if (next[key]?.primary === true) {
+            for (const otherKey of Object.keys(next)) {
+                if (otherKey === key || next[otherKey]?.primary !== true)
+                    continue;
+                next[otherKey]         = Object.assign({}, next[otherKey]);
+                next[otherKey].primary = false;
+                pruneUnmodifiedPending(next, otherKey);
+            }
+        }
         pending = next;
     }
 
-    function               seedEntry(monitor: HyprlandMonitor): var {
+    function                 seedEntry(monitor: HyprlandMonitor): var {
         const ipc  = monitor?.lastIpcObject ?? {};
         const mode = currentMode(monitor);
 
@@ -218,6 +258,7 @@ Singleton {
             icc: "",
             lastConnector: monitor?.name ?? "",
             model: ipc.model ?? "",
+            primary: false,
             refreshRate: mode.refreshRate,
             sdrbrightness: 1.0,
             sdrsaturation: 1.0,
@@ -229,7 +270,7 @@ Singleton {
         };
     }
 
-    function               setField(key: string, field: string, value: var): void {
+    function                 setField(key: string, field: string, value: var): void {
         const monitor    = liveMonitorFor(key);
         const base       = pending[key] ?? (stored[key] !== undefined ? deepCopy(stored[key]) : (monitor ? seedEntry(monitor) : {}));
         const next       = Object.assign({}, pending);
@@ -238,12 +279,39 @@ Singleton {
         pending          = next;
     }
 
-    function               transformSwapsDimensions(transform: int): bool {
+    function                 setPrimary(key: string, enabled: bool): void {
+        const monitor = liveMonitorFor(key);
+        const base    = pending[key] ?? (stored[key] !== undefined ? deepCopy(stored[key]) : (monitor ? seedEntry(monitor) : {}));
+
+        const next    = Object.assign({}, pending);
+        if (enabled) {
+            const allKeys = new Set([...Object.keys(next), ...Object.keys(stored)]);
+            for (const otherKey of allKeys) {
+                if (otherKey === key)
+                    continue;
+                const otherEntry = next[otherKey] ?? (stored[otherKey] !== undefined ? deepCopy(stored[otherKey]) : null);
+                if (otherEntry && otherEntry.primary === true) {
+                    next[otherKey]         = Object.assign({}, otherEntry);
+                    next[otherKey].primary = false;
+                    pruneUnmodifiedPending(next, otherKey);
+                }
+            }
+            next[key]         = Object.assign({}, base);
+            next[key].primary = true;
+        } else if (next[key] !== undefined || stored[key]?.primary === true) {
+            next[key]         = Object.assign({}, base);
+            next[key].primary = false;
+            pruneUnmodifiedPending(next, key);
+        }
+        pending = next;
+    }
+
+    function                 transformSwapsDimensions(transform: int): bool {
         return transform === 1 || transform === 3 || transform === 5 || transform === 7;
     }
 
     // Logical (post-scale, transform-aware) size used by the layout canvas.
-    function               logicalSize(entry: var): var {
+    function                 logicalSize(entry: var): var {
         const scale = (typeof entry.scale === "number" && entry.scale > 0) ? entry.scale : 1;
         let width   = (entry.width ?? 1920) / scale;
         let height  = (entry.height ?? 1080) / scale;
@@ -259,15 +327,15 @@ Singleton {
         };
     }
 
-    function               monitorItemForKey(key: string): var {
+    function                 monitorItemForKey(key: string): var {
         return monitorList().find(item => item.key === key) ?? null;
     }
 
-    function               rectForKey(key: string): var {
+    function                 rectForKey(key: string): var {
         return drawableRects().find(rect => rect.key === key) ?? null;
     }
 
-    function               snappedPosition(key: string, x: real, y: real, threshold: real): var {
+    function                 snappedPosition(key: string, x: real, y: real, threshold: real): var {
         const others = drawableRects().filter(rect => rect.key !== key);
         const me     = drawableRects().find(rect => rect.key === key);
         if (!me)

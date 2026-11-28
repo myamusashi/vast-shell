@@ -11,6 +11,7 @@ import Quickshell.Widgets
 import qs.Components.Base
 import qs.Core.Configs
 import qs.Core.States
+import qs.Core.Utils
 import qs.Services
 
 import "../Base"
@@ -39,6 +40,7 @@ Scope {
             implicitWidth: 320
             margins.bottom: Appearance.margin.large // qmllint disable
             mask: Region {}
+            screen: FocusedMonitor.hasPrimaryMonitor ? FocusedMonitor.targetScreen : null
             HyprlandWindow.visibleMask: Region {
                 item: toastListView
             }

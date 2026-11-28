@@ -7,7 +7,6 @@ import Quickshell.Hyprland
 
 import qs.Core.Configs
 import qs.Core.States
-import qs.Core.Utils
 import qs.Services
 
 Singleton {
@@ -332,7 +331,7 @@ Singleton {
     }
 
     function                isTargetMonitor(monitorName: string): bool {
-        return Configs.generals.followFocusMonitor ? FocusedMonitor.isOnFocusedMonitor(monitorName) : (monitorName === root.openedMonitorName);
+        return Configs.generals.followFocusMonitor ? (monitorName === (Hypr.focusedMonitor?.name ?? "")) : (monitorName === root.openedMonitorName);
     }
 
     function                keyboardMoveTargetWorkspaceAddress(panelState: var): string {

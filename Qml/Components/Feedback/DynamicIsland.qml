@@ -64,6 +64,7 @@ LazyLoader {
         WlrLayershell.namespace: LayerNamespaces.dynamicIsland
         color: "transparent"
         exclusionMode: ExclusionMode.Ignore
+        screen: FocusedMonitor.hasPrimaryMonitor ? FocusedMonitor.targetScreen : null
         HyprlandWindow.visibleMask: Region {
             item: islandBox
         }

@@ -6,12 +6,15 @@ import Quickshell
 import qs.Components.Base.DrawerComponents
 import qs.Core.Configs
 import qs.Core.States
+import qs.Core.Utils
 import qs.Services
 
 import "Components"
 
 Drawer {
     id: root
+
+    readonly property bool onFocusedMonitor: FocusedMonitor.isOnFocusedMonitor(panelWindow.modelData.name) // qmllint disable
 
     alignment: Qt.AlignRight
     animationDuration: Appearance.animations.durations.expressiveDefaultSpatial
@@ -22,12 +25,12 @@ Drawer {
     edge: Qt.TopEdge
     filletRadius: 40
     length: Math.min(Math.round(parent.width * 0.22), 360)
-    open: Notifs.popups.length > 0
+    open: onFocusedMonitor && Notifs.popups.length > 0
 
     Loader {
         id: notifListLoader
 
-        active: root.open || root.visible
+        active: root.onFocusedMonitor && (root.open || root.visible)
         anchors.fill: parent
         asynchronous: false
         sourceComponent: ListView {

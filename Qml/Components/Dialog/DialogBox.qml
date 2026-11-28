@@ -36,6 +36,7 @@ LazyLoader {
 
         WlrLayershell.keyboardFocus: root.needKeyboardFocus ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
         WlrLayershell.layer: WlrLayer.Overlay
+        screen: FocusedMonitor.hasPrimaryMonitor ? FocusedMonitor.targetScreen : null
         BackgroundEffect.blurRegion: Region {
             item: dialogCard
             radius: dialogCard.radius
