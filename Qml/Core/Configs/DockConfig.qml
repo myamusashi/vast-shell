@@ -5,5 +5,5 @@ JsonObject {
     property bool      enabled: false
     property int       iconSlot: 44
     property list<var> pinnedApps: []
-    property bool      showAllWorkspaces: false
+    property bool      showAllWorkspaces: true
 }
