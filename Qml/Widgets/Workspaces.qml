@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Widgets
-import M3Shapes
 
 import qs.Components.Base
 import qs.Components.Tooltip
@@ -17,33 +16,66 @@ StyledRect {
 
     required property ShellScreen monitor
 
+    readonly property list<real>  effectsCurve: Appearance.animations.curves.expressiveEffects
+    readonly property int         effectsDuration: Appearance.animations.durations.expressiveEffects
+    readonly property string      focusedToplevelAddress: {
+        if (Hypr.activeToplevel?.address)
+            return Hypr.activeToplevel.address;
+        if (GlobalStates.isShellKeyboardGrabActive)
+            return Hypr.lastActiveToplevelAddress;
+        return "";
+    }
+    readonly property int         focusedWorkspace: Hypr.activeWsId
+    readonly property real        iconSize: 11
+    readonly property real        iconSpacing: 3
+    readonly property var         previewToplevels: root.toplevelsByWorkspace[root.shownWorkspace] ?? []
+    // Caelestia credit
+    readonly property var         toplevelsByWorkspace: Hypr.toplevelsByWorkspace
+    readonly property list<real>  transitionCurve: Appearance.animations.curves.expressiveDefaultSpatial
+    readonly property int         transitionDuration: Appearance.animations.durations.expressiveDefaultSpatial
+    readonly property real        unfocusedIconOpacity: 0.45
+    readonly property var         workspaceToplevels: {
+        const result = {};
+        for (const [workspaceKey, list] of Object.entries(root.toplevelsByWorkspace)) {
+            if (list && list.length > 0)
+                result[workspaceKey] = [...list].sort((first, second) => root.compareToplevelAddress(first, second));
+        }
+        return result;
+    }
+
     property real                 containerHeight: 22
     property real                 containerWidth: 44
     // Screen x of the hovered dot's left edge. The bar window is anchored to
     // the screen's top-left, so the dot's scene position is its screen position.
-    readonly property var         previewToplevels: root.toplevelsByWorkspace[root.shownWorkspace] ?? []
-
     property real                 previewDotX: 0
-
     // Live hover target, 0 when the pointer is not on a dot.
     property int                  previewWorkspace: 0
     // Latched to the last hovered dot so the board keeps its content and its
     // size while its surface stays up after the pointer has left the dot.
     property int                  shownWorkspace: 0
 
-    // Caelestia credit
-    readonly property var         toplevelsByWorkspace: Hypr.toplevelsByWorkspace
+    function                      compareToplevelAddress(first: var, second: var): int {
+        const firstKey  = parseInt(first?.address ?? "", 16);
+        const secondKey = parseInt(second?.address ?? "", 16);
+        if (!isNaN(firstKey) && !isNaN(secondKey) && firstKey !== secondKey)
+            return firstKey < secondKey ? -1 : 1;
+        return String(first?.address ?? "").localeCompare(String(second?.address ?? ""));
+    }
+
+    function                      iconForToplevel(toplevel: var): string {
+        const windowClass = toplevel?.lastIpcObject?.class;
+        if (!windowClass)
+            return "";
+
+        const entry = DesktopEntries.heuristicLookup(windowClass);
+        if (!entry?.icon)
+            return "";
+
+        return Quickshell.iconPath(entry.icon, true);
+    }
 
     implicitHeight: 22
-    implicitWidth: loader.item?.implicitWidth ?? 0 // qmllint disable
-
-    Loader {
-        id: loader
-
-        active: true
-        anchors.fill: parent
-        sourceComponent: dotWorkspaceIndicator
-    }
+    implicitWidth: container.implicitWidth
 
     WorkspacePreview {
         dotHovered: root.previewWorkspace > 0
@@ -52,184 +84,170 @@ StyledRect {
         toplevels: root.previewToplevels
     }
 
-    Component {
-        id: dotWorkspaceIndicator
+    Row {
+        id: container
 
-        Row {
-            id: container
+        anchors {
+            left: parent.left
+            verticalCenter: parent.verticalCenter
+        }
 
-            property int                 focusedWorkspace: Hypr.activeWsId
+        clip: true
+        height: parent.height
+        spacing: 0
 
-            // Caelestia credit
-            readonly property var        occupied: {
-                const acc = {};
-                for (const [ws, tls] of Object.entries(root.toplevelsByWorkspace))
-                    acc[ws] = tls[0] ?? null;
-                return acc;
+        Repeater {
+            model: {
+                const maxOccupied  = Object.keys(root.workspaceToplevels).reduce((max, id) => {
+                    const parsed = parseInt(id, 10);
+                    return isNaN(parsed) ? max : Math.max(max, parsed);
+                }, 0);
+                const minFromFocus = root.focusedWorkspace >= Configs.bar.visibleWorkspace ? root.focusedWorkspace : Configs.bar.visibleWorkspace;
+                return Math.max(Configs.bar.visibleWorkspace, minFromFocus, maxOccupied);
             }
-            readonly property list<real> transitionCurve: Appearance.animations.curves.expressiveDefaultSpatial
-            readonly property int        transitionDuration: Appearance.animations.durations.expressiveDefaultSpatial
+            delegate: Item {
+                id: delegateRoot
 
-            function                     iconForToplevel(toplevel: var): string {
-                const windowClass = toplevel?.lastIpcObject?.class;
-                if (!windowClass)
-                    return "";
+                required property int  index
 
-                const entry = DesktopEntries.heuristicLookup(windowClass);
-                if (!entry?.icon)
-                    return "";
-
-                return Quickshell.iconPath(entry.icon, true);
-            }
-
-            anchors {
-                left: parent.left
-                verticalCenter: parent.verticalCenter
-            }
-
-            clip: true
-            spacing: 0
-
-            Repeater {
-                model: {
-                    const maxOccupied  = Object.keys(container.occupied).reduce((max, id) => {
-                        const n = parseInt(id, 10);
-                        return isNaN(n) ? max : Math.max(max, n);
-                    }, 0);
-                    const minFromFocus = container.focusedWorkspace >= Configs.bar.visibleWorkspace ? container.focusedWorkspace : Configs.bar.visibleWorkspace;
-                    return Math.max(Configs.bar.visibleWorkspace, minFromFocus, maxOccupied);
+                readonly property bool isActive: root.focusedWorkspace === delegateRoot.workspaceId
+                readonly property bool isEmpty: !delegateRoot.isOccupied && !delegateRoot.isActive
+                readonly property bool isOccupied: delegateRoot.toplevels.length > 0
+                readonly property real pillWidth: {
+                    if (delegateRoot.isEmpty)
+                        return 6;
+                    if (delegateRoot.isActive)
+                        return Math.max(24, iconRow.implicitWidth + 12);
+                    return iconRow.implicitWidth > root.iconSize ? iconRow.implicitWidth + 8 : 16;
                 }
-                delegate: Item {
-                    id: delegateRoot
+                readonly property var  primaryToplevel: (root.toplevelsByWorkspace[delegateRoot.workspaceId] ?? [])[0] ?? null
+                readonly property var  toplevels: root.workspaceToplevels[delegateRoot.workspaceId] ?? []
+                readonly property int  workspaceId: index + 1
 
-                    required property int index
+                implicitHeight: parent.height
+                implicitWidth: Math.max(delegateRoot.isActive ? 26 : 18, delegateRoot.pillWidth + 2)
+                Behavior on implicitWidth {
+                    NAnim {
+                        duration: root.transitionDuration
+                        easing.bezierCurve: root.transitionCurve
+                    }
+                }
 
-                    property bool         isActive: container.focusedWorkspace === workspaceId
-                    property bool         isEmpty: !isOccupied && !isActive
-                    property bool         isOccupied: delegateRoot.toplevel !== null
-                    property var          toplevel: container.occupied[workspaceId] ?? null
-                    property int          workspaceId: index + 1
+                MArea {
+                    anchors.fill: parent
+                    layerColor: Qt.alpha(Colours.m3Colors.m3Primary, 0.8)
+                    layerRadius: 6
+                    visible: !delegateRoot.isActive
+                    onClicked: Workspaces.focusToplevel(delegateRoot.workspaceId, delegateRoot.primaryToplevel?.address ?? "")
+                }
 
-                    implicitHeight: parent.height
-                    implicitWidth: isActive ? 26 : 18
-                    Behavior on implicitWidth {
+                HoverHandler {
+                    onHoveredChanged: {
+                        if (hovered) {
+                            root.previewDotX      = delegateRoot.mapToItem(null, 0, 0).x; // qmllint disable
+                            root.shownWorkspace   = delegateRoot.workspaceId;
+                            root.previewWorkspace = delegateRoot.workspaceId;
+                        } else if (root.previewWorkspace === delegateRoot.workspaceId) {
+                            root.previewWorkspace = 0;
+                        }
+                    }
+                }
+
+                StyledRect {
+                    id: shapeIndicator
+
+                    anchors.centerIn: parent
+                    color: delegateRoot.isEmpty ? Colours.m3Colors.m3OutlineVariant : (delegateRoot.isActive ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3PrimaryFixedDim)
+                    height: delegateRoot.isEmpty ? 6 : 16
+                    opacity: delegateRoot.isActive ? 1.0 : 0.5
+                    radius: height / 2
+                    width: delegateRoot.pillWidth
+                    Behavior on color {
+                        CAnim {
+                            duration: root.transitionDuration
+                        }
+                    }
+                    Behavior on height {
                         NAnim {
-                            duration: container.transitionDuration
-                            easing.bezierCurve: container.transitionCurve
+                            duration: root.transitionDuration
+                            easing.bezierCurve: root.transitionCurve
                         }
                     }
-
-                    MArea {
-                        anchors.fill: parent
-                        layerColor: Qt.alpha(Colours.m3Colors.m3Primary, 0.8)
-                        layerRadius: 6
-                        visible: !delegateRoot.isActive
-                        onClicked: Workspaces.focusToplevel(delegateRoot.workspaceId, delegateRoot.toplevel?.address ?? "")
+                    Behavior on opacity {
+                        NAnim {
+                            duration: root.transitionDuration
+                            easing.bezierCurve: root.transitionCurve
+                        }
                     }
+                    Behavior on width {
+                        NAnim {
+                            duration: root.transitionDuration
+                            easing.bezierCurve: root.transitionCurve
+                        }
+                    }
+                }
 
-                    HoverHandler {
-                        onHoveredChanged: {
-                            if (hovered) {
-                                root.previewDotX      = delegateRoot.mapToItem(null, 0, 0).x; // qmllint disable
-                                root.shownWorkspace   = delegateRoot.workspaceId;
-                                root.previewWorkspace = delegateRoot.workspaceId;
-                            } else if (root.previewWorkspace === delegateRoot.workspaceId) {
-                                root.previewWorkspace = 0;
+                Item {
+                    anchors.centerIn: parent
+                    clip: true
+                    height: shapeIndicator.height
+                    width: shapeIndicator.width
+
+                    Row {
+                        id: iconRow
+
+                        anchors.centerIn: parent
+                        spacing: root.iconSpacing
+                        visible: delegateRoot.isOccupied
+
+                        Repeater {
+                            model: ScriptModel {
+                                objectProp: "address"
+                                values: delegateRoot.toplevels
                             }
-                        }
-                    }
+                            delegate: Item {
+                                id: toplevelDelegate
 
-                    MaterialShape {
-                        id: shapeIndicator
+                                required property var    modelData
 
-                        animationDuration: container.transitionDuration
-                        animationEasing.bezierCurve: container.transitionCurve
-                        animationEasing.type: Easing.BezierSpline
-                        shape: isEmpty ? MaterialShape.Circle : MaterialShape.Pill
-                        state: isEmpty ? "empty" : (isActive ? "active" : (isOccupied ? "occupied" : "inactive"))
+                                readonly property string iconSource: root.iconForToplevel(toplevelDelegate.modelData)
+                                readonly property bool   isFocused: toplevelDelegate.modelData !== null && toplevelDelegate.modelData !== undefined && (toplevelDelegate.modelData.wayland?.activated === true || (root.focusedToplevelAddress !== "" && toplevelDelegate.modelData.address === root.focusedToplevelAddress))
 
-                        // qmllint disable
-                        states: [
-                            State {
-                                name: "empty"
+                                implicitHeight: 16
+                                implicitWidth: root.iconSize
+                                visible: toplevelDelegate.iconSource !== ""
 
-                                PropertyChanges {
-                                    color: Colours.m3Colors.m3OutlineVariant
-                                    height: 6
-                                    opacity: 0.5
-                                    target: shapeIndicator
-                                    width: 6
+                                IconImage {
+                                    anchors.centerIn: parent
+                                    asynchronous: false
+                                    backer.cache: true
+                                    implicitSize: root.iconSize
+                                    opacity: toplevelDelegate.isFocused ? 1.0 : root.unfocusedIconOpacity
+                                    source: toplevelDelegate.iconSource
+                                    Behavior on opacity {
+                                        NAnim {
+                                            duration: root.effectsDuration
+                                            easing.bezierCurve: root.effectsCurve
+                                        }
+                                    }
                                 }
-                            },
-                            State {
-                                name: "active"
 
-                                PropertyChanges {
-                                    color: Colours.m3Colors.m3Primary
-                                    height: 16
-                                    opacity: 1.0
-                                    target: shapeIndicator
-                                    width: 24
-                                }
-                            },
-                            State {
-                                name: "occupied"
-
-                                PropertyChanges {
-                                    color: Colours.m3Colors.m3PrimaryFixedDim
-                                    height: 16
-                                    opacity: 0.5
-                                    target: shapeIndicator
-                                    width: 16
-                                }
-                            },
-                            State {
-                                name: "inactive"
-
-                                PropertyChanges {
-                                    color: Colours.m3Colors.m3OutlineVariant
-                                    height: 14
-                                    opacity: 0.5
-                                    target: shapeIndicator
-                                    width: 14
+                                MouseArea {
+                                    anchors.fill: parent
+                                    cursorShape: toplevelDelegate.isFocused ? Qt.ArrowCursor : Qt.PointingHandCursor
+                                    enabled: !toplevelDelegate.isFocused
+                                    hoverEnabled: true
+                                    onClicked: Workspaces.focusToplevel(delegateRoot.workspaceId, toplevelDelegate.modelData?.address ?? "")
                                 }
                             }
-                        ]
-                        // qmllint enable
-
-                        transitions: Transition {
-
-                            NAnim {
-                                duration: container.transitionDuration
-                                easing.bezierCurve: container.transitionCurve
-                                properties: "width,height,opacity"
-                            }
-
-                            CAnim {
-                                duration: container.transitionDuration
-                            }
-                        }
-
-                        anchors {
-                            horizontalCenter: parent.horizontalCenter
-                            verticalCenter: parent.verticalCenter
-                        }
-
-                        IconImage {
-                            anchors.centerIn: parent
-                            asynchronous: false
-                            backer.cache: true
-                            implicitSize: 11
-                            source: container.iconForToplevel(delegateRoot.toplevel)
-                            visible: source !== ""
                         }
                     }
+                }
 
-                    Tooltip {
-                        anchorItem: delegateRoot
-                        enabled: !delegateRoot.isOccupied
-                        text: delegateRoot.isActive ? qsTr("Workspace %1 (Active)").arg(delegateRoot.workspaceId) : qsTr("Workspace %1 · Empty").arg(delegateRoot.workspaceId)
-                    }
+                Tooltip {
+                    anchorItem: delegateRoot
+                    enabled: !delegateRoot.isOccupied
+                    text: delegateRoot.isActive ? qsTr("Workspace %1 (Active)").arg(delegateRoot.workspaceId) : qsTr("Workspace %1 · Empty").arg(delegateRoot.workspaceId)
                 }
             }
         }
