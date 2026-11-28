@@ -85,7 +85,10 @@ Item {
                         }
                     }
                     onActivated: DockServices.activatePinned(modelData)
-                    onContextMenuRequested: (anchorX, anchorY) => dockContextMenu.openAt(anchorX, anchorY, modelData, null)
+                    onContextMenuRequested: (anchorX, anchorY) => {
+                        dockPreview.closePopup();
+                        dockContextMenu.openAt(anchorX, anchorY, modelData, null);
+                    }
                     onDragStarted: {
                         dockPreview.closePopup();
                         pinnedTrack.draggingIndex  = index;
@@ -151,7 +154,10 @@ Item {
                     toplevel: modelData
                     iconSlot: Configs.dock.iconSlot
                     onActivated: DockServices.focusToplevel(modelData)
-                    onContextMenuRequested: (anchorX, anchorY) => dockContextMenu.openAt(anchorX, anchorY, toplevelEntry, modelData)
+                    onContextMenuRequested: (anchorX, anchorY) => {
+                        dockPreview.closePopup();
+                        dockContextMenu.openAt(anchorX, anchorY, toplevelEntry, modelData);
+                    }
                     onHoverEntered: {
                         const point = mapToItem(null, 0, 0);
                         dockPreview.showForIcon(entryId, point.x, point.y, width, height);

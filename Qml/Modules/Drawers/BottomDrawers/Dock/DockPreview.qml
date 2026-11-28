@@ -22,15 +22,7 @@ Scope {
     readonly property real      cellGap: Appearance.margin.small
     readonly property real      cellSize: 150
     readonly property int       columns: 3
-    readonly property var       hoveredToplevels: {
-        if (root.hoveredEntryId === "")
-            return [];
-        const out = [];
-        for (const toplevel of (Hypr.toplevels.values ?? Hypr.toplevels))
-            if (DockServices.entryForToplevel(toplevel)?.id === root.hoveredEntryId)
-                out.push(toplevel);
-        return out;
-    }
+    readonly property var       hoveredToplevels: DockServices.scopedToplevelsForEntry(root.hoveredEntryId)
     readonly property real      maxBoardHeight: 3 * root.cellSize + 2 * root.cellGap + root.cardPadding * 2
     readonly property list<var> orderedToplevels: {
         const live = [...(root.hoveredToplevels ?? [])];
@@ -43,7 +35,8 @@ Scope {
 
         return root.latchedOrder.map(address => byAddress[address]).filter(toplevel => toplevel !== undefined);
     }
-    readonly property bool      showing: root.shownCount > 0 && (root.iconHovered || root.popupPointerInside || root.grace)
+    readonly property real      popupBottomMargin: root.parentWindow ? Math.max(0, Math.round(root.parentWindow.height - root.hoveredIconTop + Appearance.spacing.small)) : Appearance.spacing.small
+    readonly property bool      showing: root.shownCount > 0 && (root.iconHovered || root.popupPointerInside || root.grace || previewContextMenu.opened)
     readonly property int       shownColumns: Math.min(root.columns, root.shownCount === 0 ? 1 : root.shownCount)
     readonly property int       shownCount: root.orderedToplevels.length
     readonly property int       shownRows: root.shownCount === 0 ? 0 : Math.min(3, Math.ceil(root.shownCount / root.columns))
@@ -69,6 +62,7 @@ Scope {
     }
 
     function                    closePopup(): void {
+        previewContextMenu.closeMenu();
         root.iconHovered        = false;
         root.popupPointerInside = false;
         root.grace              = false;
@@ -93,11 +87,20 @@ Scope {
         return [...(list ?? [])].map(toplevel => toplevel.address);
     }
 
+    function                    openPreviewContextMenu(toplevel: var, windowX: real, windowY: real, popupHeight: real): void {
+        if (!toplevel)
+            return;
+        const targetScreen = root.parentWindow ? root.parentWindow.screen : null;
+        const screenHeight = targetScreen ? targetScreen.height : (root.parentWindow ? root.parentWindow.height : 0);
+        const screenY      = screenHeight - root.popupBottomMargin - popupHeight + windowY;
+
+        closeTimer.stop();
+        root.grace = false;
+        previewContextMenu.openAt(windowX, screenY, toplevel);
+    }
+
     function                    showForIcon(entryId: string, iconLeft: real, iconTop: real, iconWidth: real, iconHeight: real): void {
-        const toplevels = [];
-        for (const toplevel of (Hypr.toplevels.values ?? Hypr.toplevels))
-            if (DockServices.entryForToplevel(toplevel)?.id === entryId)
-                toplevels.push(toplevel);
+        const toplevels = DockServices.scopedToplevelsForEntry(entryId);
 
         if (toplevels.length === 0) {
             root.closePopup();
@@ -176,9 +179,7 @@ Scope {
                 right: true
             }
 
-            margins { // qmllint disable
-                bottom: root.parentWindow ? Math.max(0, Math.round(root.parentWindow.height - root.hoveredIconTop + Appearance.spacing.small)) : Appearance.spacing.small
-            }
+            margins.bottom: root.popupBottomMargin // qmllint disable
 
             StyledRect {
                 id: board
@@ -218,6 +219,7 @@ Scope {
                             model: root.shownCount
                             delegate: PreviewCell {
                                 toplevel: root.orderedToplevels[index]
+                                onContextMenuRequested: (targetToplevel, windowX, windowY) => root.openPreviewContextMenu(targetToplevel, windowX, windowY, popupWindow.height)
                             }
                         }
                     }
@@ -239,6 +241,19 @@ Scope {
         }
     }
 
+    DockPreviewContextMenu {
+        id: previewContextMenu
+
+        screen: root.parentWindow ? root.parentWindow.screen : null
+        onMenuClosed: {
+            if (!root.iconHovered && !root.popupPointerInside) {
+                root.grace = true;
+                closeTimer.restart();
+            }
+        }
+        onWindowFocused: root.closePopup()
+    }
+
     component PreviewCell: StyledRect {
         id: cell
 
@@ -247,6 +262,8 @@ Scope {
 
         property var          toplevelData: toplevel?.lastIpcObject
         property var          waylandHandle: toplevel?.wayland ?? null
+
+        signal                contextMenuRequested(var targetToplevel, real windowX, real windowY)
 
         border.color: Colours.m3Colors.m3OutlineVariant
         border.width: 1
@@ -299,9 +316,17 @@ Scope {
         }
 
         MouseArea {
+            acceptedButtons: Qt.LeftButton | Qt.RightButton
             anchors.fill: parent
             cursorShape: Qt.PointingHandCursor
-            onClicked: root.activatePreview(cell.index)
+            onClicked: mouse => {
+                if (mouse.button === Qt.RightButton) {
+                    const point = cell.mapToItem(null, mouse.x, mouse.y);
+                    cell.contextMenuRequested(cell.toplevel, point.x, point.y);
+                    return;
+                }
+                root.activatePreview(cell.index);
+            }
         }
     }
 }

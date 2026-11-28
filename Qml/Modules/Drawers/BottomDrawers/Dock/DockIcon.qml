@@ -18,8 +18,19 @@ Item {
     required property var    entry
     required property var    toplevel
 
-    readonly property bool   isFocusedToplevel: toplevel !== null && (toplevel.wayland?.activated === true || (GlobalStates.isShellKeyboardGrabActive && toplevel.address === Hypr.lastActiveToplevelAddress))
-    readonly property bool   showsIndicator: toplevel !== null || (isPinned && entry !== null && DockServices.runningEntryIds.includes(entryId))
+    readonly property var    entryToplevels: isPinned ? DockServices.scopedToplevelsForEntry(entryId) : (toplevel !== null ? [toplevel] : [])
+    readonly property bool   hasFocusedToplevel: {
+        const focusedAddress = DockServices.focusedToplevelAddress;
+        for (const item of entryToplevels) {
+            if (item !== null && item !== undefined && (item.wayland?.activated === true || (focusedAddress !== "" && item.address === focusedAddress)))
+                return true;
+        }
+        return false;
+    }
+    readonly property int    runningCount: entryToplevels.length
+    readonly property bool   showsDots: showsIndicator && !showsNumberBadge
+    readonly property bool   showsIndicator: runningCount > 0
+    readonly property bool   showsNumberBadge: isPinned && runningCount > 3
 
     property bool            draggable: false
     property bool            dragging: false
@@ -61,18 +72,55 @@ Item {
         }
     }
 
-    StyledRect {
+    Row {
+        id: dotIndicatorRow
+
         anchors.bottom: parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        color: root.isFocusedToplevel || root.toplevel === null ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
-        height: 4
-        radius: 2
-        visible: root.showsIndicator
-        width: root.isFocusedToplevel ? 16 : 4
-        Behavior on width {
-            NAnim {
-                duration: Appearance.animations.durations.small
+        spacing: 3
+        visible: root.showsDots
+
+        Repeater {
+            model: root.showsDots ? root.entryToplevels : []
+            delegate: StyledRect {
+                required property var  modelData
+
+                readonly property bool isFocused: modelData !== null && modelData !== undefined && (modelData.wayland?.activated === true || (DockServices.focusedToplevelAddress !== "" && modelData.address === DockServices.focusedToplevelAddress))
+
+                color: isFocused ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3OnSurfaceVariant
+                height: 4
+                radius: 2
+                width: isFocused ? 16 : 4
+                Behavior on width {
+                    NAnim {
+                        duration: Appearance.animations.durations.small
+                    }
+                }
             }
+        }
+    }
+
+    StyledRect {
+        id: countBadge
+
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        border.color: root.hasFocusedToplevel ? "transparent" : Colours.m3Colors.m3OutlineVariant
+        border.width: root.hasFocusedToplevel ? 0 : 1
+        color: root.hasFocusedToplevel ? Colours.m3Colors.m3Primary : Colours.m3Colors.m3SurfaceContainerHighest
+        height: 14
+        radius: Appearance.rounding.full
+        visible: root.showsNumberBadge
+        width: Math.max(16, countBadgeText.implicitWidth + 8)
+
+        StyledText {
+            id: countBadgeText
+
+            anchors.centerIn: parent
+            color: root.hasFocusedToplevel ? Colours.m3Colors.m3OnPrimary : Colours.m3Colors.m3OnSurface
+            font.pixelSize: Math.max(9, Math.round(Appearance.fonts.size.small * 0.78))
+            font.weight: Font.DemiBold
+            text: String(root.runningCount)
         }
     }
 
